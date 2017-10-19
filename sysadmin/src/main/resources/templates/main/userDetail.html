@@ -1,0 +1,111 @@
+<#body>
+    <form id="userDetailForm" class="easyui-form" fit="true">
+        <input name="id" id="id" type="hidden">
+        <table width="460px">
+            <tr>
+                <td style="padding:5px;">
+                    <input class="easyui-textbox" name="userName" id="userName" style="width:100%" data-options="label:'用户名:', validType:'length[0,50]',readonly:true,labelWidth:100,labelAlign:'right'"/>
+                </td>
+            </tr>
+            <tr>
+                <td style="padding:5px;">
+                    <input class="easyui-textbox" name="realName" id="realName" style="width:100%" data-options="label:'真实姓名:', validType:'length[0,64]',readonly:true,labelWidth:100,labelAlign:'right'"/>
+                </td>
+            </tr>
+            <tr>
+                <td style="padding:5px;">
+                    <input class="easyui-textbox" name="serialNumber" id="serialNumber" style="width:100%" data-options="label:'用户编号:', validType:'length[0,128]',readonly:true,labelWidth:100,labelAlign:'right'"/>
+                </td>
+            </tr>
+            <tr>
+                <td style="padding:5px;">
+                    <input class="easyui-textbox" name="fixedLineTelephone" id="fixedLineTelephone" style="width:100%" data-options="label:'固定电话:', validType:'length[0,24]',readonly:true,labelWidth:100,labelAlign:'right'"/>
+                </td>
+            </tr>
+            <tr>
+                <td style="padding:5px;">
+                    <input class="easyui-textbox" name="cellphone" id="cellphone" style="width:100%" data-options="label:'手机号码:', validType:'length[0,24]',readonly:true,labelWidth:100,labelAlign:'right'"/>
+                </td>
+            </tr>
+            <tr>
+                <td style="padding:5px;">
+                    <input class="easyui-textbox" name="email" id="email" style="width:100%" data-options="label:'邮箱:', validType:'length[0,64]',readonly:true,labelWidth:100,labelAlign:'right'"/>
+                </td>
+            </tr>
+            <tr>
+                <td style="padding:5px;" id="_lastLoginIpTd">
+                    <input class="easyui-textbox" name="lastLoginIp" id="lastLoginIp" style="width:100%" data-options="label:'最后登录ip:', validType:'length[0,20]',readonly:true,labelWidth:100,labelAlign:'right'" />
+                </td>
+            </tr>
+            <tr>
+                <td style="padding:5px;" id="_lastLoginTimeTd">
+                    <input class="easyui-textbox" id="lastLoginTime" style="width:100%" data-options="label:'最后登录时间:',readonly:true,labelWidth:100,labelAlign:'right'"/>
+                </td>
+            </tr>
+            <tr>
+                <td style="padding:5px;" id="_createdTd">
+                    <input class="easyui-textbox" id="created" style="width:100%" data-options="label:'创建时间:',readonly:true,labelWidth:100,labelAlign:'right'"/>
+                </td>
+            </tr>
+            <tr>
+                <td style="padding:5px;" id="_modifiedTd">
+                    <input class="easyui-textbox" id="modified" style="width:100%" data-options="label:'修改时间:',readonly:true,labelWidth:100,labelAlign:'right'"/>
+                </td>
+            </tr>
+            <tr>
+                <td style="padding:5px;" id="_statusTd">
+                    <input class="easyui-textbox" id="status" style="width:100%" data-options="label:'状态:',readonly:true,labelWidth:100,labelAlign:'right'"/>
+                </td>
+            </tr>
+            <tr>
+                <td style="padding:5px;">
+                    <input class="easyui-textbox" id="validTimeBegin" style="width:100%" data-options="label:'有效时间开始点:',readonly:true,labelWidth:100,labelAlign:'right'"/>
+                </td>
+            </tr>
+            <tr>
+                <td style="padding:5px;">
+                    <input class="easyui-textbox" id="validTimeEnd" style="width:100%" data-options="label:'有效时间结束点:',readonly:true,labelWidth:100,labelAlign:'right'"/>
+                </td>
+            </tr>
+        </table>
+    </form>
+
+    <script type="text/javascript">
+        function setUserInfo(userinfo) {
+            $('#userDetailForm').form('load', userinfo);
+            $('#status').textbox({value:0 == userinfo.status ? "已停用" : "已启用"});
+            var createdTime = dateFtt("yyyy-MM-dd hh:mm:ss", new Date(userinfo.created));
+            $('#created').textbox({value:createdTime});
+            var lastLoginTime = dateFtt("yyyy-MM-dd hh:mm:ss", new Date(userinfo.lastLoginTime));
+            $('#lastLoginTime').textbox({value:lastLoginTime});
+            var modified = dateFtt("yyyy-MM-dd hh:mm:ss", new Date(userinfo.modified));
+            $('#modified').textbox({value:modified});
+            var validTimeBegin = dateFtt("yyyy-MM-dd hh:mm:ss", new Date(userinfo.validTimeBegin));
+            $('#validTimeBegin').textbox({value:validTimeBegin});
+            var validTimeEnd = dateFtt("yyyy-MM-dd hh:mm:ss", new Date(userinfo.validTimeEnd));
+            $('#validTimeEnd').textbox({value:validTimeEnd});
+        }
+
+        $(function () {
+            $.ajax({
+                type: "POST",
+                url: "${contextPath}/user/fetchLoginUserInfo",
+                data: {},
+                processData:true,
+                dataType: "json",
+                async : true,
+                success: function (data) {
+                    if ("200" == data.code) {
+                        setUserInfo(data.data);
+                    } else {
+                        parent.closeTab("用户信息");
+                        $.messager.alert('错误', data.result);
+                    }
+                },
+                error: function(){
+                    $.messager.alert('错误','远程访问失败');
+                }
+            });
+        });
+    </script>
+</#body>

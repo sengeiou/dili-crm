@@ -1,0 +1,202 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.dili.sysadmin.dao.UserMapper">
+	<resultMap id="BaseResultMap" type="com.dili.sysadmin.domain.User">
+		<!-- WARNING - @mbg.generated -->
+		<id column="id" jdbcType="BIGINT" property="id" />
+		<result column="user_name" jdbcType="VARCHAR" property="userName" />
+		<result column="password" jdbcType="VARCHAR" property="password" />
+		<result column="last_login_ip" jdbcType="VARCHAR" property="lastLoginIp" />
+		<result column="last_login_time" jdbcType="TIMESTAMP" property="lastLoginTime" />
+		<result column="created" jdbcType="TIMESTAMP" property="created" />
+		<result column="modified" jdbcType="TIMESTAMP" property="modified" />
+		<result column="status" jdbcType="TINYINT" property="status" />
+		<result column="yn" jdbcType="TINYINT" property="yn" />
+		<result column="real_name" jdbcType="VARCHAR" property="realName" />
+		<result column="serial_number" jdbcType="VARCHAR" property="serialNumber" />
+		<result column="fixed_line_telephone" jdbcType="VARCHAR"
+			property="fixedLineTelephone" />
+		<result column="cellphone" jdbcType="VARCHAR" property="cellphone" />
+		<result column="email" jdbcType="VARCHAR" property="email" />
+		<result column="valid_time_begin" jdbcType="TIMESTAMP"
+			property="validTimeBegin" />
+		<result column="valid_time_end" jdbcType="TIMESTAMP" property="validTimeEnd" />
+	</resultMap>
+
+	<sql id="Base_Column_List">
+		<!-- WARNING - @mbg.generated -->
+		id,
+		user_name,
+		password,
+		last_login_ip,
+		last_login_time,
+		created,
+		modified,
+		status,
+		yn,
+		real_name,
+		serial_number,
+		fixed_line_telephone,
+		cellphone,
+		email,
+		valid_time_begin,
+		valid_time_end
+	</sql>
+	<sql id="Join_Column_List">
+		u.id
+		,u.user_name
+		,u.password
+		,u.last_login_ip
+		,u.last_login_time
+		,u.created
+		,u.modified
+		,u.status
+		,u.yn
+		,u.real_name
+		,u.serial_number
+		,u.fixed_line_telephone
+		,u.cellphone
+		,u.email
+		,u.valid_time_begin
+		,u.valid_time_end
+	</sql>
+	<select id="selectBy" parameterType="java.lang.Long" resultMap="BaseResultMap">
+		<!-- WARNING - @mbg.generated -->
+		select
+		<include refid="Base_Column_List" />
+		from user
+		where id = #{id,jdbcType=BIGINT}
+	</select>
+	<update id="updateBy" parameterType="com.dili.sysadmin.domain.User">
+		<!-- WARNING - @mbg.generated -->
+		update user
+		<set>
+			<if test="userName != null">
+				user_name = #{userName,jdbcType=VARCHAR},
+			</if>
+			<if test="password != null">
+				password = #{password,jdbcType=VARCHAR},
+			</if>
+			<if test="lastLoginIp != null">
+				last_login_ip = #{lastLoginIp,jdbcType=VARCHAR},
+			</if>
+			<if test="lastLoginTime != null">
+				last_login_time = #{lastLoginTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="created != null">
+				created = #{created,jdbcType=TIMESTAMP},
+			</if>
+			<if test="modified != null">
+				modified = #{modified,jdbcType=TIMESTAMP},
+			</if>
+			<if test="status != null">
+				status = #{status,jdbcType=TINYINT},
+			</if>
+			<if test="yn != null">
+				yn = #{yn,jdbcType=TINYINT},
+			</if>
+			<if test="realName != null">
+				real_name = #{realName,jdbcType=VARCHAR},
+			</if>
+			<if test="serialNumber != null">
+				serial_number = #{serialNumber,jdbcType=VARCHAR},
+			</if>
+			<if test="fixedLineTelephone != null">
+				fixed_line_telephone =
+				#{fixedLineTelephone,jdbcType=VARCHAR},
+			</if>
+			<if test="cellphone != null">
+				cellphone = #{cellphone,jdbcType=VARCHAR},
+			</if>
+			<if test="email != null">
+				email = #{email,jdbcType=VARCHAR},
+			</if>
+			<if test="validTimeBegin != null">
+				valid_time_begin = #{validTimeBegin,jdbcType=TIMESTAMP},
+			</if>
+			<if test="validTimeEnd != null">
+				valid_time_end = #{validTimeEnd,jdbcType=TIMESTAMP},
+			</if>
+			<if test="note != null">
+				note = #{note,jdbcType=VARCHAR},
+			</if>
+		</set>
+		where id = #{id,jdbcType=BIGINT}
+	</update>
+
+	<select id="findUserByRole" parameterType="Long" resultMap="BaseResultMap">
+        <![CDATA[
+        SELECT u.*
+        FROM user u
+        LEFT JOIN user_role ur on ur.user_id = u.id
+        WHERE
+        1 = 1
+        AND ur.role_id=#{id}
+		]]>
+	</select>
+
+	<select id="countByRoleId" parameterType="Long" resultType="Long">
+		SELECT
+		count(id)
+		FROM user_role u
+		INNER JOIN `user` u
+		WHERE
+		u.role_id=#{id} AND u.yn = 1
+	</select>
+
+	<select id="receptByUsername" parameterType="String" resultMap="BaseResultMap">
+		SELECT
+		<include refid="Join_Column_List" />
+		FROM user u
+		LEFT JOIN user_role ur on ur.user_id=u.id
+		LEFT JOIN role r
+		on r.id=ur.role_id
+		WHERE u.user_name like <![CDATA[concat(#{username},'%')]]>
+		and
+		(u.yn is null or u.yn = 1)
+	</select>
+
+	<delete id="deleteUserRole" parameterType="Long">
+		delete from user_role
+		where
+		user_id = #{pk}
+	</delete>
+
+	<select id="findUserByMenu" parameterType="Long" resultMap="BaseResultMap">
+		SELECT
+		<include refid="Join_Column_List" />
+		FROM
+		role_menu rm
+		LEFT JOIN
+		user_role ur ON
+		rm.role_id
+		= ur.role_id
+		INNER
+		JOIN `user` u ON ur.user_id
+		= u.id
+		WHERE
+		rm.menu_id = #{menuId} AND u.yn
+		= 1
+	</select>
+
+	<select id="findByDepartmentId" parameterType="Long" resultMap="BaseResultMap">
+		SELECT
+		<include refid="Join_Column_List" />
+		FROM
+		`user` u
+		INNER JOIN
+		user_department ud ON u.id = ud.user_id
+		WHERE
+		ud.department_id = #{deptId} AND u.yn = 1
+	</select>
+
+	<select id="countByDepartmentId" parameterType="Long"
+		resultType="Integer">
+		SELECT
+		count(u.id)
+		FROM `user` u
+		INNER JOIN user_department ud
+		ON u.id = ud.user_id
+		WHERE ud.department_id = #{deptId} AND u.yn = 1
+	</select>
+</mapper>

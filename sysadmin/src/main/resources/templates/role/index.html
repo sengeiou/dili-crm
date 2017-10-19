@@ -1,0 +1,146 @@
+<#body>
+<link rel="stylesheet" href="${contextPath}/resources/ztree/css/zTreeStyle/zTreeStyle.css" type="text/css" />
+<script type="text/javascript" src="${contextPath}/resources/ztree/js/jquery.ztree.all.min.js"></script>
+<div id="win" style="display: none;"></div>
+<div class="easyui-layout" fit="true">
+	<!-- ====================================================================================================================== -->
+	<!-- 上方布局 -->
+	<!-- ====================================================================================================================== -->
+	<div region="north" height="auto" align="center">
+		<!-- =========================================================表单========================================================= -->
+		<div class="easyui-panel" style="width: 100%;" align="left">
+			<form id="form" class="easyui-form" method="post" fit="true">
+				<div style="padding: 10px; float: left;">
+					<table>
+						<tr>
+							<td style="padding: 5px;"><input class="easyui-textbox" name="roleName" id="roleName" style="width: 100%" data-options="label:'角色名:', validType:'length[0,255]'" /></td>
+							<td style="padding: 5px;"><input class="easyui-textbox" name="description" id="description" style="width: 100%" data-options="label:'角色描述:', validType:'length[0,255]'" /></td>
+						</tr>
+					</table>
+				</div>
+
+				<div style="padding: 10px; float: right;">
+					<a href="#" class="easyui-linkbutton" iconCls="icon-search" id="queryBtn" onclick="queryGrid()">查询</a> <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-reload"
+						onclick="$('#form').form('clear');">重置</a>
+				</div>
+			</form>
+		</div>
+	</div>
+	<!-- ====================================================================================================================== -->
+	<!-- 中央布局 -->
+	<!-- ====================================================================================================================== -->
+	<!-- 表格 -->
+	<div region="center" style="width: 100%;" height="auto">
+		<!-- =========================================================表格========================================================= -->
+		<table class="easyui-datagrid" title="角色列表" id="roleGrid" fitColumns="true" pagination="true" pageSize="30" pageNumber="1" pagePosition="bottom" rownumbers="false" remoteSort="false"
+			loadMsg="数据加载中..." singleSelect="true" method="post" multiSort="true" sortName="id" align="center" fit="true" striped="true" toolbar="#toolbar" idField="id"
+			data-options="onBeforeEdit:onBeforeEdit, onAfterEdit:onAfterEdit, onCancelEdit:onCancelEdit, onHeaderContextMenu:headerContextMenu, onDblClickRow:onDblClickRow">
+			<thead>
+				<tr>
+					<th data-options="field:'id',   sortable:'true', order:'asc', align:'center', resizable:'true', fixed:'false'">角色编号</th>
+					<th data-options="field:'roleName',   sortable:'true', order:'asc', align:'center', resizable:'true', fixed:'false',
+                         editor:{type:'textbox',options:{required:true}}">
+						角色名</th>
+					<th data-options="field:'description',   sortable:'true', order:'asc', align:'center', resizable:'true', fixed:'false',
+                         editor:{type:'textbox',options:{required:true}}">
+						角色描述</th>
+					<th data-options="field:'created',  _provider:'datetimeProvider', sortable:'true', order:'asc', align:'center', resizable:'true', fixed:'false'">创建时间</th>
+					<th data-options="field:'modified',  _provider:'datetimeProvider', sortable:'true', order:'asc', align:'center', resizable:'true', fixed:'false'">修改时间</th>
+					<th data-options="field:'options', formatter:roleGridFormatter, align:'center', resizable:'true', fixed:'false'">操作</th>
+				</tr>
+			</thead>
+		</table>
+		<!-- datagrid工具栏 -->
+		<div id="toolbar" style="padding: 2px 5px;">
+			<#resource code='addRole'> <a href="#" class="easyui-linkbutton" iconCls="icon-add" onclick="onAddClicked()" plain="true"></a> </#resource>
+			<#resource code="editRole"> <a href="#" class="easyui-linkbutton" iconCls="icon-edit" onclick="onEditClicked()" plain="true"></a> </#resource>
+			<#resource code="removeRole"> <a href="#" class="easyui-linkbutton" iconCls="icon-remove" onclick="onRemoveClicked()" plain="true"></a> </#resource>
+			<a href="#" class="easyui-linkbutton" iconCls="icon-export" onclick="doExport('roleGrid')" plain="true"></a>
+			<div style="float: right">
+				边框显示:<select onchange="changeBorder('roleGrid',this.value)">
+					<option value="lines-both">全边框</option>
+					<option value="lines-no">无边框</option>
+					<option value="lines-right">右边框</option>
+					<option value="lines-bottom">下边框</option>
+				</select> 行条纹:<input type="checkbox" checked="checked" onclick="$('#roleGrid').datagrid({striped:$(this).is(':checked')})">
+			</div>
+		</div>
+	</div>
+</div>
+
+<!-- 隐藏编辑框 -->
+<div id="userListDlg" class="easyui-dialog" resizable="false" constrain="true" shadow="true" draggable="false" title="角色的用户列表" style="padding: 20px; height: 300px; width: 330px" modal="true"
+	border="thin" closed="true" data-options="
+				iconCls: 'icon-save',
+				buttons: [{
+					text:'返回',
+					handler:function(){
+						$('#userListDlg').dialog('close');
+					}
+				}]
+			">
+	<table class="easyui-datagrid" id="userListGrid" rownumbers="false" remoteSort="false" loadMsg="数据加载中..." singleSelect="true" method="post" multiSort="true" sortName="serialNumber" align="center"
+		fit="true" striped="true" idField="id">
+		<thead>
+			<tr>
+				<th data-options="field:'serialNumber',   sortable:'true', order:'asc', align:'center', resizable:'true', fixed:'false'">用户编号</th>
+				<th data-options="field:'userName',   sortable:'true', order:'asc', align:'center', resizable:'true', fixed:'false'">用户名</th>
+				<th data-options="field:'realName',   sortable:'true', order:'asc', align:'center', resizable:'true', fixed:'false'">真实姓名</th>
+				<th data-options="field:'options', formatter:userListGridFormatter, align:'center', resizable:'true', fixed:'false'">操作</th>
+			</tr>
+		</thead>
+	</table>
+
+</div>
+<!-- ====================================================================================================================== --> <!-- style & script 分隔线 --> <!-- ====================================================================================================================== -->
+<script type="text/javascript">
+	var dataAuth = {
+		removeRole : <%if(hasResource('removeRole')){%>true<%}else{%>false<%}%>,
+		addRole : <%if(hasResource('addRole')){%>true<%}else{%>false<%}%>,
+		editRole : <%if(hasResource('editRole')){%>true<%}else{%>false<%}%>,
+		saveRole : <%if(hasResource('saveRole')){%>true<%}else{%>false<%}%>,
+		cancelSaveRole : <%if(hasResource('cancelSaveRole')){%>true<%}else{%>false<%}%>,
+		viewRoleUserList : <%if(hasResource('viewRoleUserList')){%>true<%}else{%>false<%}%>,
+		unBindRoleUser : <%if(hasResource('unBindRoleUser')){%>true<%}else{%>false<%}%>,
+		viewRoleAuth : <%if(hasResource('viewRoleAuth')){%>true<%}else{%>false<%}%>
+	};
+
+	function userListGridFormatter(value, row, index) {
+		return '<#resource code="unBindRoleUser">'
+				+ getHyperlinkContext('解除绑定', 'unbindRoleUser', row.id)
+				+ '</#resource>'
+	}
+
+	// 每一行的操作
+	function roleGridFormatter(value, row, index) {
+		if (row.editing) {
+			return '<#resource code="saveRole">'
+					+ getHyperlinkContext('保存', 'onSaveClicked', row.id)
+					+ '</#resource>' + '<#resource code="cancelSaveRole">'
+					+ getHyperlinkContext('取消', 'onCancelClicked', row.id)
+					+ '</#resource>';
+		} else {
+			return '<#resource code="viewRoleAuth">'
+					+ getHyperlinkContext('权限', 'editRoleMenuAndResource',
+							row.id) + '</#resource>'
+					+ getHyperlinkContext('数据权限', 'editRoleDataAuth', row.id)
+					+ '<#resource code="viewRoleUserList">'
+					+ getHyperlinkContext('用户列表', 'onUserListClicked', row.id)
+					+ '</#resource>';
+		}
+	}
+
+	$.messager.progress({
+		title : "提示",
+		msg : "加载中,请稍候...",
+		value : '10',
+		text : '{value}%',
+		interval : 200
+	});
+
+	$.parser.onComplete = function() {
+		$.messager.progress("close");
+	}
+</script> <script type="text/javascript">
+					<#role_indexJs />
+				</script> </#body>

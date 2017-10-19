@@ -1,0 +1,136 @@
+<#body>
+    <style>
+        td div div:first-child {
+            border: 0;
+            background-color: #EEEEEE;
+        }
+         body {
+             margin: 0;
+             padding: 0;
+         }
+    </style>
+
+    <div class="easyui-layout" fit="true">
+        <!-- ====================================================================================================================== -->
+        <!-- 上方布局 -->
+        <!-- ====================================================================================================================== -->
+        <div region="north" height="auto" align="center">
+            <table width="100%" style="padding: 0px; margin:0px;border-spacing: 0; border: 0px inset #0092DC;background-color: #EEEEEE;" >
+                <tr>
+                    <td width="100%">
+                        <#menubutton _divId="mainMenu" _service="menuServiceImpl" _method="findUserMenu" _queryParams="${userid}"
+                                _textField="name" _idField="id" _parentIdField="parentId" plain="true" hasDownArrow="true"
+                                align="left" noline="true" onClick="menuClickHandler">
+                        </#menubutton>
+                    </td>
+
+                    <td style="align:right;">
+                        <div id="userMenu" class="easyui-panel" style="padding:5px; width: 100px;background-color: #EEEEEE;">
+                            <a id="menubutton_right" href="#" class="easyui-menubutton" data-options="menu:'#menu_right', plain:true, hasDownArrow:true">${username}</a>
+                        </div>
+                        <div id="menu_right" data-options="zIndex:'110000' , align:'left', noline:true, onClick:menuClickHandler">
+                            <div id="menu_userDetail" data-options="blankKey:'' ">
+                                用户信息
+                            </div>
+                            <div id="menu_changePwd" data-options="blankKey:'' ">
+                                修改密码
+                            </div>
+                            <div id="menu_logout" data-options="blankKey:'' ">
+                                注销
+                            </div>
+                        </div>
+                    </td>
+                </tr>
+            </table>
+        </div>
+        <!-- ====================================================================================================================== -->
+        <!-- 中央布局 -->
+        <!-- ====================================================================================================================== -->
+        <div region="center" style="width:100%;" height="auto">
+            <div id="tabs" class="easyui-tabs" style="width: 100%; height: 100%" data-options="tabWidth:130">
+                <!--<div title="主页" style="background-color:#24A6B1">-->
+                <!--</div>-->
+            </div>
+        </div>
+    </div>
+
+    <!-- ====================================================================================================================== -->
+    <!-- style & script 分隔线 -->
+    <!-- ====================================================================================================================== -->
+    <script type="text/javascript">
+
+        function menuClickHandler(item) {
+            var title = item.text;
+            var url = item.menuUrl;
+
+            if ("menu_logout" == item.id) {
+                logout();
+                return;
+            }
+
+            if ($('#tabs').tabs('exists', title)){
+                $('#tabs').tabs('select', title);
+            } else {
+                var tabs = $('#tabs').tabs("tabs");
+                if ( 4 > tabs.length) {
+                    addOneTab(title,url);
+                } else {
+                    $.messager.alert('提示','已打开的功能面板过多，请先关闭无用面板');
+                }
+            }
+        }
+        
+        function addOneTab(title, url) {
+            if ("用户信息" == title) {
+                url = "${contextPath}/main/userDetail.html";
+
+            } else if ("修改密码" == title) {
+                url = "${contextPath}/main/changePwd.html"
+            }
+
+            var content = '<iframe scrolling="auto" frameborder="0"  src="'+url+'" style="width:100%; height: 100%;"></iframe>';
+
+            $('#tabs').tabs('add',{
+                title:title,
+                content:content,
+                cache:false,
+                closable:true
+            });
+
+            setHoverTabs();
+        }
+
+        function closeTab(title) {
+            if ($('#tabs').tabs('exists', title)) {
+                $('#tabs').tabs('close', title);
+            }
+        }
+        
+        function backToLogin() {
+            window.location.href = "${contextPath}/login/index.html";
+        }
+        
+        function logout() {
+            $.post('${contextPath!}/login/logoutAction',null,function(data){
+            	if ("200" == data.code) {
+                    window.location.href = "${contextPath}/login/index.html";
+                } else {
+                    $.messager.alert('提示','注销失败');
+                }
+            });
+        }
+
+        function setHoverTabs() {
+            var tabs = $('#tabs').tabs('tabs');
+            for(var i=0; i<tabs.length; i++){
+                tabs[i].panel('options').tab.unbind().bind('mouseenter',{index:i},function(e){
+                    $('#tabs').tabs('select', e.data.index);
+                });
+            }
+        }
+        
+        $(function () {
+            $('#tabs').tabs({pill:true});
+        });
+    </script>
+</#body>

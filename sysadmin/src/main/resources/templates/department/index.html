@@ -1,0 +1,42 @@
+
+<#body>
+<div class="easyui-layout" fit="true">
+	<!-- ====================================================================================================================== -->
+	<!-- 中央布局 -->
+	<!-- ====================================================================================================================== -->
+	<!-- 表格 -->
+	<div region="center" style="width: 100%;" height="auto">
+		<!-- =========================================================表格========================================================= -->
+		<table class="easyui-treegrid" title="部门列表" id="grid" sortName="id" sortOrder="asc" fitColumns="true" remoteSort="false" loadMsg="数据加载中..." singleSelect="true" method="post" multiSort="true"
+			sortName="id" align="center" fit="true" striped="true" toolbar="#toolbar" idField="id" treeField="name" url="${contextPath!}/department/list"
+			data-options="loadFilter:loadFilter,onClickRow:onClickRow,onDblClickRow:onDblClickRow, onAfterEdit:onAfterEdit,onCancelEdit:onCancelEdit,onBeforeEdit:onBeforeEdit,onEndEdit:onEndEdit">
+			<thead>
+				<tr>
+					<th data-options="field:'id',hidden:true">id</th>
+					<th data-options="field:'name',width:'20%',editor : {
+								type : 'textbox',
+								options : {
+									required : true
+								}
+							}">部门名称</th>
+					<th data-options="field:'notes',width:'60%',editor : 'textbox'">描述</th>
+					<th data-options="field:'opt',width:'20%',hidden:true,formatter:columnFormatter">操作</th>
+				</tr>
+			</thead>
+		</table>
+		<div id="toolbar" style="padding: 2px 5px;">
+			<#resource code="addDept"> <a href="#" class="easyui-linkbutton" iconCls="icon-add" onclick="openInsert()" plain="true"></a> </#resource>
+			<#resource code="editDept"> <a href="#" class="easyui-linkbutton" iconCls="icon-edit" onclick="openUpdate()" plain="true"></a> </#resource>
+			<#resource code="deleteDept"> <a href="#" class="easyui-linkbutton" iconCls="icon-remove" onclick="del()" plain="true"></a> </#resource>
+		</div>
+	</div>
+</div>
+<script type="text/javascript">
+	var dataAuth = {
+		addDept : <%if(hasResource('addDept')){%>true<%}else{%>false<%}%>,
+		editDept : <%if(hasResource('editDept')){%>true<%}else{%>false<%}%>,
+		deleteDept : <%if(hasResource('deleteDept')){%>true<%}else{%>false<%}%>
+	};
+</script> <script type="text/javascript">
+	<#department_indexJs/>
+</script> </#body>

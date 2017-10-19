@@ -1,0 +1,23 @@
+<#body> <input type="hidden" id="roleId" name="roleId" value="${roleId!}">
+<style type="text/css">
+.menuRes {
+	display: inline-block;
+	float: left;
+}
+.menuRes span.button.switch {
+	background-image: none;
+	background-color: #fff;
+}
+.clearfix{
+	clear:both;
+}
+</style>
+<div class="easyui-layout" fit="true">
+	<div region="center" style="width: 100%;" height="auto">
+		<div id="tree" class="ztree"></div>
+	</div>
+	<div region="south" style="width: 100%;" height="auto">
+		<a id="btn" href="#" class="easyui-linkbutton" style="margin: 0px 400px;" data-options="iconCls:'icon-save',onClick:saveRoleMenuResource">保存</a>
+	</div>
+</div>
+</#body>

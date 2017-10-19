@@ -1,0 +1,171 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.dili.sysadmin.dao.DataAuthMapper">
+	<resultMap id="BaseResultMap" type="com.dili.sysadmin.domain.DataAuth">
+		<!-- WARNING - @mbg.generated -->
+		<id column="id" jdbcType="BIGINT" property="id" />
+		<result column="type" jdbcType="VARCHAR" property="type" />
+		<result column="data_id" jdbcType="VARCHAR" property="dataId" />
+		<result column="name" jdbcType="VARCHAR" property="name" />
+		<result column="parent_data_id" jdbcType="BIGINT" property="parentDataId" />
+	</resultMap>
+	<sql id="Base_Column_List">
+		<!-- WARNING - @mbg.generated -->
+		id, type, data_id, name, parent_data_id
+	</sql>
+	<select id="selectBy" parameterType="java.lang.Long" resultMap="BaseResultMap">
+		<!-- WARNING - @mbg.generated -->
+		select
+		<include refid="Base_Column_List" />
+		from data_auth
+		where id = #{id,jdbcType=BIGINT}
+	</select>
+	<update id="updateBy" parameterType="com.dili.sysadmin.domain.DataAuth">
+		<!-- WARNING - @mbg.generated -->
+		update data_auth
+		<set>
+			<if test="type != null">
+				type = #{type,jdbcType=VARCHAR},
+			</if>
+			<if test="dataId != null">
+				data_id = #{dataId,jdbcType=VARCHAR},
+			</if>
+			<if test="name != null">
+				name = #{name,jdbcType=VARCHAR},
+			</if>
+			<if test="parentDataId != null">
+				parent_data_id = #{parentDataId,jdbcType=BIGINT},
+			</if>
+		</set>
+		where id = #{id,jdbcType=BIGINT}
+	</update>
+
+	<update id="refreshBackup" parameterType="com.dili.sysadmin.domain.DataAuth">
+    <![CDATA[
+            UPDATE data_auth set
+              name=#{name}
+            where 1=1
+            and data_id = #{dataId}
+            and type = #{type}
+            ]]>
+	</update>
+
+	<select id="findByUserId" parameterType="Long" resultMap="BaseResultMap">
+		SELECT
+		t.id,
+		t.type,
+		t.data_id,
+		t.`name`,
+		t.parent_data_id
+		FROM
+		(
+		SELECT
+		d.id,
+		d.type,
+		d.data_id,
+		d.`name`,
+		d.parent_data_id
+		FROM
+		data_auth d
+		INNER JOIN
+		user_data_auth ud ON d.data_id = ud.data_auth_id
+		WHERE
+		ud.user_id = #{userId}
+		UNION
+		SELECT
+		d.id,
+		d.type,
+		d.data_id,
+		d.`name`,
+		d.parent_data_id
+		FROM
+		data_auth d
+		RIGHT JOIN role_data_auth rd ON d.data_id = rd.data_auth_id
+		RIGHT JOIN user_role ur ON ur.role_id = rd.role_id
+		WHERE
+		ur.user_id = #{userId}
+		) t
+		WHERE t.id IS NOT NULL
+	</select>
+	
+	<select id="findByRoleId" parameterType="Long" resultMap="BaseResultMap">
+		SELECT
+		d.id,
+		d.type,
+		d.data_id,
+		d.`name`,
+		d.parent_data_id
+		FROM
+		data_auth d
+		RIGHT JOIN role_data_auth rd ON d.data_id = rd.data_auth_id
+		WHERE rd.role_id = #{roleId}
+	</select>
+	
+	<select id="findByRoleIdAndType" parameterType="java.util.Map" resultMap="BaseResultMap">
+		SELECT
+		d.id,
+		d.type,
+		d.data_id,
+		d.`name`,
+		d.parent_data_id
+		FROM
+		data_auth d
+		INNER JOIN role_data_auth rd ON d.data_id = rd.data_auth_id
+		WHERE rd.role_id = #{roleId} AND d.type=#{type}
+	</select>
+
+	<select id="findByUserIdAndTypeAndDataId" parameterType="java.util.Map"
+		resultMap="BaseResultMap">
+		SELECT
+		t.id,
+		t.type,
+		t.data_id,
+		t.`name`,
+		t.parent_data_id
+		FROM
+		(
+		SELECT
+		d.id,
+		d.type,
+		d.data_id,
+		d.`name`,
+		d.parent_data_id
+		FROM
+		data_auth d
+		INNER JOIN
+		user_data_auth ud ON d.data_id = ud.data_auth_id
+		WHERE 1=1
+		<if test="dataId != null">
+			AND d.data_id = #{dataId}
+		</if>
+		<if test="type != null">
+			AND d.type = #{type}
+		</if>
+		<if test="userId != null">
+			AND ud.user_id = #{userId}
+		</if>
+		UNION
+		SELECT
+		d.id,
+		d.type,
+		d.data_id,
+		d.`name`,
+		d.parent_data_id
+		FROM
+		data_auth d
+		RIGHT JOIN role_data_auth rd ON d.data_id = rd.data_auth_id
+		RIGHT JOIN user_role ur ON ur.role_id = rd.role_id
+		WHERE 1=1
+		<if test="dataId != null">
+			AND d.data_id = #{dataId}
+		</if>
+		<if test="type != null">
+			AND d.type = #{type}
+		</if>
+		<if test="userId != null">
+			AND ur.user_id = #{userId}
+		</if>
+		) t
+		WHERE t.id IS NOT NULL
+	</select>
+</mapper>

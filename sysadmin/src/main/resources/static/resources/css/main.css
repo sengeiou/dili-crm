@@ -1,0 +1,21 @@
+body {
+    font-family:verdana,helvetica,arial,sans-serif;
+    padding:20px;
+    font-size:12px;
+    margin:0;
+}
+
+/* datagrid row border start */
+.lines-both .datagrid-body td{
+}
+.lines-no .datagrid-body td{
+    border-right:1px dotted transparent;
+    border-bottom:1px dotted transparent;
+}
+.lines-right .datagrid-body td{
+    border-bottom:1px dotted transparent;
+}
+.lines-bottom .datagrid-body td{
+    border-right:1px dotted transparent;
+}
+/* datagrid row border end */

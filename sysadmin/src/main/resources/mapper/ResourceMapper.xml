@@ -1,0 +1,145 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.dili.sysadmin.dao.ResourceMapper">
+	<resultMap id="BaseResultMap" type="com.dili.sysadmin.domain.Resource">
+		<!-- WARNING - @mbg.generated -->
+		<id column="id" jdbcType="BIGINT" property="id" />
+		<result column="name" jdbcType="VARCHAR" property="name" />
+		<result column="description" jdbcType="VARCHAR" property="description" />
+		<result column="menu_id" jdbcType="BIGINT" property="menuId" />
+		<result column="code" jdbcType="VARCHAR" property="code" />
+		<result column="status" jdbcType="SMALLINT" property="status" />
+		<result column="created" jdbcType="TIMESTAMP" property="created" />
+		<result column="modified" jdbcType="TIMESTAMP" property="modified" />
+		<result column="yn" jdbcType="TINYINT" property="yn" />
+	</resultMap>
+	<sql id="Base_Column_List">
+		<!-- WARNING - @mbg.generated -->
+		id, `name`, description, menu_id, `code`, status, created,
+		modified, yn
+	</sql>
+	<select id="selectBy" parameterType="java.lang.Long" resultMap="BaseResultMap">
+		<!-- WARNING - @mbg.generated -->
+		select
+		<include refid="Base_Column_List" />
+		from resource
+		where id = #{id,jdbcType=BIGINT}
+	</select>
+	<update id="updateBy" parameterType="com.dili.sysadmin.domain.Resource">
+		<!-- WARNING - @mbg.generated -->
+		update resource
+		<set>
+			<if test="name != null">
+				`name` = #{name,jdbcType=VARCHAR},
+			</if>
+			<if test="description != null">
+				description = #{description,jdbcType=VARCHAR},
+			</if>
+			<if test="menuId != null">
+				menu_id = #{menuId,jdbcType=BIGINT},
+			</if>
+			<if test="code != null">
+				`code` = #{code,jdbcType=VARCHAR},
+			</if>
+			<if test="status != null">
+				status = #{status,jdbcType=SMALLINT},
+			</if>
+			<if test="created != null">
+				created = #{created,jdbcType=TIMESTAMP},
+			</if>
+			<if test="modified != null">
+				modified = #{modified,jdbcType=TIMESTAMP},
+			</if>
+			<if test="yn != null">
+				yn = #{yn,jdbcType=TINYINT},
+			</if>
+		</set>
+		where id = #{id,jdbcType=BIGINT}
+	</update>
+
+	<select id="findByRole" parameterType="Long" resultMap="BaseResultMap">
+    <![CDATA[
+
+    	select sr.id
+		    ,`name`
+		    ,description
+		    ,menu_id
+		    ,`code`
+		    ,status
+		    ,created
+		    ,modified
+		from 
+			resource sr left join role_resource srp on sr.id = srp.resource_id 
+		where srp.role_id = #{id} and sr.yn = 1 and sr.status = 1
+
+        ]]>
+	</select>
+
+	<select id="checkResourceUrlUnique" parameterType="map"
+		resultType="Boolean">
+		select
+		count(*) = 0
+		from resource
+		where yn = 1
+		and `code` = #{code}
+
+		<if test="id != null">
+			and id &lt;&gt; #{id}
+		</if>
+	</select>
+
+	<select id="checkResourceNameUnique" parameterType="map"
+		resultType="Boolean">
+		select
+		count(*) = 0
+		from resource
+		where yn = 1
+		and `name` =
+		#{name}
+		<if test="id != null">
+			and id &lt;&gt; #{id}
+		</if>
+	</select>
+
+	<select id="listAllResourceJson" resultMap="BaseResultMap"
+		parameterType="com.dili.sysadmin.domain.Resource">
+		SELECT
+		<include refid="Base_Column_List" />
+		FROM resource
+		where
+		1=1
+		and yn = 1
+		<if test="code != null and code != ''">
+			and code like CONCAT('%','${code}', '%')
+		</if>
+
+		<if test="name != null and name != ''">
+			and `name` like CONCAT('%','${name}', '%')
+		</if>
+
+
+        <![CDATA[
+		order by id desc
+		 ]]>
+
+	</select>
+
+	<select id="findByUserId" parameterType="Long" resultMap="BaseResultMap">
+		SELECT
+		re.id, re.`code`, re.created, re.description, re.menu_id,
+		re.`name`,
+		re.`status`
+		FROM
+		role_resource rp, role r, resource re, user_role ur
+		where rp.role_id = r.id and rp.resource_id = re.id
+		and ur.role_id =
+		r.id and ur.user_id = #{userId}
+		and re.yn = 1
+	</select>
+
+	<select id="findByMenuId" parameterType="Long" resultMap="BaseResultMap">
+		SELECT
+		<include refid="Base_Column_List" /> 
+		FROM resource WHERE menu_id = #{menuId} AND yn = 1;		
+	</select>
+</mapper>

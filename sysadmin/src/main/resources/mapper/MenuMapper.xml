@@ -1,0 +1,227 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.dili.sysadmin.dao.MenuMapper">
+  <resultMap id="BaseResultMap" type="com.dili.sysadmin.domain.Menu">
+    <!--
+      WARNING - @mbg.generated
+    -->
+    <id column="id" jdbcType="BIGINT" property="id" />
+    <result column="parent_id" jdbcType="BIGINT" property="parentId" />
+    <result column="order_number" jdbcType="INTEGER" property="orderNumber" />
+    <result column="menu_url" jdbcType="VARCHAR" property="menuUrl" />
+    <result column="name" jdbcType="VARCHAR" property="name" />
+    <result column="description" jdbcType="VARCHAR" property="description" />
+    <result column="target" jdbcType="INTEGER" property="target" />
+    <result column="created" jdbcType="TIMESTAMP" property="created" />
+    <result column="modified" jdbcType="TIMESTAMP" property="modified" />
+    <result column="yn" jdbcType="INTEGER" property="yn" />
+    <result column="type" jdbcType="INTEGER" property="type" />
+    <result column="icon_cls" jdbcType="VARCHAR" property="iconCls" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    <!--
+      WARNING - @mbg.generated
+    -->
+    id, parent_id, order_number, menu_url, name, description, target, created, modified, 
+    yn, type, icon_cls
+  </sql>
+  <select id="selectBy" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    <!--
+      WARNING - @mbg.generated
+    -->
+    select 
+    <include refid="Base_Column_List" />
+    from menu
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <update id="updateBy" parameterType="com.dili.sysadmin.domain.Menu">
+    <!--
+      WARNING - @mbg.generated
+    -->
+    update menu
+    <set>
+      <if test="parentId != null">
+        parent_id = #{parentId,jdbcType=BIGINT},
+      </if>
+      <if test="orderNumber != null">
+        order_number = #{orderNumber,jdbcType=INTEGER},
+      </if>
+      <if test="menuUrl != null">
+        menu_url = #{menuUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="name != null">
+        name = #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="description != null">
+        description = #{description,jdbcType=VARCHAR},
+      </if>
+      <if test="target != null">
+        target = #{target,jdbcType=INTEGER},
+      </if>
+      <if test="created != null">
+        created = #{created,jdbcType=TIMESTAMP},
+      </if>
+      <if test="modified != null">
+        modified = #{modified,jdbcType=TIMESTAMP},
+      </if>
+      <if test="yn != null">
+        yn = #{yn,jdbcType=INTEGER},
+      </if>
+      <if test="type != null">
+        type = #{type,jdbcType=INTEGER},
+      </if>
+      <if test="iconCls != null">
+        icon_cls = #{iconCls,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+
+	<resultMap id="DtoResultMap" type="com.dili.sysadmin.domain.dto.MenuDto">
+		<id column="id" jdbcType="BIGINT" property="id" />
+		<result column="parent_id" jdbcType="BIGINT" property="parentId" />
+		<result column="order_number" jdbcType="INTEGER" property="orderNumber" />
+		<result column="menu_url" jdbcType="VARCHAR" property="menuUrl" />
+		<result column="name" jdbcType="VARCHAR" property="name" />
+		<result column="description" jdbcType="VARCHAR" property="description" />
+		<result column="target" jdbcType="INTEGER" property="target" />
+		<result column="created" jdbcType="TIMESTAMP" property="created" />
+		<result column="modified" jdbcType="TIMESTAMP" property="modified" />
+		<result column="yn" jdbcType="TINYINT" property="yn" />
+		<result column="type" jdbcType="INTEGER" property="type" />
+		<collection ofType="com.dili.sysadmin.domain.Resource" property="resources">
+			<id column="resource_id" jdbcType="BIGINT" property="id" />
+			<result column="resource_name" jdbcType="VARCHAR" property="name" />
+			<result column="resource_description" jdbcType="VARCHAR" property="description" />
+			<result column="menu_id" jdbcType="BIGINT" property="menuId" />
+			<result column="code" jdbcType="VARCHAR" property="code" />
+			<result column="status" jdbcType="SMALLINT" property="status" />
+			<result column="resource_created" jdbcType="TIMESTAMP" property="created" />
+			<result column="resource_modified" jdbcType="TIMESTAMP" property="modified" />
+			<result column="resource_yn" jdbcType="TINYINT" property="yn" />
+		</collection>
+	</resultMap>
+
+	<sql id="Table_Name">menu</sql>
+	<sql id="Dto_Column_List">
+		m.id,
+		m.parent_id,
+		m.order_number,
+		m.menu_url,
+		m.`name`,
+		m.description,
+		m.target,
+		m.created,
+		m.modified,
+		m.yn,
+		m.type,
+		r.id AS resource_id,
+		r.`name` AS
+		resource_name,
+		r.description AS resource_description,
+		r.menu_id,
+		r.`code`,
+		r.`status`,
+		r.created AS
+		resource_created,
+		r.modified
+		AS
+		resource_modified,
+		r.yn AS resource_yn
+	</sql>
+
+	<sql id="Join_Column_List">
+		m.id
+		,m.parent_id
+		,m.order_number
+		,m.menu_url
+		,m.`name`
+		,m.description
+		,m.target
+		,m.created
+		,m.modified
+		,type
+	</sql>
+
+	<select id="findByUserId" parameterType="Long" resultMap="BaseResultMap">
+		SELECT DISTINCT
+		<include refid="Join_Column_List" />
+		FROM
+		`user` u
+		INNER JOIN user_role ur ON u.id = ur.user_id
+		LEFT JOIN
+		role_menu rm ON ur.role_id = rm.role_id
+		INNER JOIN menu m ON rm.menu_id
+		= m.id
+		WHERE
+		(u.yn = 1 OR u.yn IS NULL)
+		AND u.id = #{userId}
+	</select>
+
+	<select id="findByRoleId" parameterType="Long" resultMap="BaseResultMap">
+		select
+		<include refid="Join_Column_List" />
+		FROM
+		<include refid="Table_Name" />
+		m
+		left join role_menu srm on srm.menu_id =
+		m.id
+		left join
+		role sr on
+		srm.role_id = sr.id
+		where sr.id =
+		#{pk}
+		and (m.yn is
+		null or m.yn = 1)
+	</select>
+
+	<resultMap id="MenuJsonRM" type="com.dili.sysadmin.domain.dto.MenuJsonDto">
+		<id column="id" property="id" />
+		<result column="parent_id" property="parentId" />
+		<result column="order_number" property="orderNumber" />
+		<result column="menu_url" property="menuUrl" />
+		<result column="name" property="name" />
+		<result column="description" property="description" />
+		<result column="created" property="created" />
+		<result column="modified" property="modified" />
+		<result column="yn" property="yn" />
+	</resultMap>
+
+	<select id="getAllMenuJson" resultMap="BaseResultMap">
+		SELECT
+		id
+		,parent_id
+		,order_number
+		,menu_url
+		,name
+		,description
+		,created
+		,modified
+		FROM
+		<include refid="Table_Name" />
+		WHERE (yn is null or yn = 1) order by order_number asc
+	</select>
+
+	<select id="selectMenuDto" parameterType="Long" resultMap="DtoResultMap">
+		SELECT
+		<include refid="Dto_Column_List" />
+		FROM
+		menu m
+		LEFT JOIN resource
+		r ON m.id = r.menu_id
+	</select>
+
+	<select id="selectRoleMenuDto" parameterType="Long" resultMap="DtoResultMap">
+		SELECT
+		<include refid="Dto_Column_List" />
+		FROM
+		role_menu rm
+		INNER JOIN menu m ON rm.menu_id = m.id
+		LEFT JOIN
+		role_resource rr ON rm.role_id = rr.role_id
+		LEFT JOIN resource r ON
+		rr.resource_id = r.id
+		WHERE
+		rm.role_id = #{roleId}
+	</select>
+</mapper>

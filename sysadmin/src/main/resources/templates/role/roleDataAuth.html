@@ -1,0 +1,19 @@
+<#body> <input type="hidden" id="roleId" name="roleId" value="${roleId!}">
+<style type="text/css">
+</style>
+<div class="easyui-layout" fit="true">
+	<div region="west" style="width: 20%;" height="auto">
+		<select id="dataAuthType" name="dataAuthType" class="easyui-combobox" style="width: 100%;" data-options="editable:false,onChange:onTypeChange">
+			<%for(item in allTypes){%>
+			 <option value="${item.type!}" <%if(item.type == type){%>selected<%}%>>${item.name!}</option>
+			<%}%>
+		</select>
+	</div>
+	<div region="center" style="width: 80%;" height="auto">
+		<div id="tree" class="ztree"></div>
+	</div>
+	<div region="south" style="width: 100%;" height="10%">
+		<a id="btn" href="#" class="easyui-linkbutton" style="margin: 0px 400px;" data-options="iconCls:'icon-save',onClick:saveRoleDataAuth">保存</a>
+	</div>
+</div>
+</#body>

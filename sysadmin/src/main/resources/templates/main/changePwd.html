@@ -1,0 +1,56 @@
+<#body>
+    <form id="changePwdForm" class="easyui-form" fit="true" method="post">
+        <table width="360px">
+            <tr>
+                <td style="padding:5px;">
+                    <input class="easyui-textbox" id="currentPwd" name="oldPassword" style="width:100%" data-options="label:'当前密码:', validType:'length[0,32]',labelAlign:'right'"
+                           type="password"/>
+                </td>
+            </tr>
+            <tr>
+                <td style="padding:5px;">
+                    <input class="easyui-textbox" id="newPwd" name="newPassword" style="width:100%" data-options="label:'新密码:',validType:'length[0,32]',labelAlign:'right'"
+                           type="password"/>
+                </td>
+            </tr>
+            <tr>
+                <td style="padding:5px;">
+                    <input class="easyui-textbox" id="reNewPwd" name="confirmPassword" style="width:100%" data-options="label:'确认新密码:',labelAlign:'right'"
+                           type="password" validType="pwdEquals['#newPwd']"/>
+                </td>
+            </tr>
+            <tr>
+                <td colspan="2"><input type="submit" value="确认" onclick="changePwd()"></td>
+            </tr>
+        </table>
+    </form>
+
+    <script type="text/javascript">
+        function changePwd() {
+            if(!$('#changePwdForm').form("validate")){
+                return;
+            }
+
+            var formData = $("#changePwdForm").serializeObject();
+
+            $.ajax({
+                type: "POST",
+                url: "/user/changePwd",
+                data: formData,
+                processData:true,
+                dataType: "json",
+                async : true,
+                success: function (data) {
+                    if(data.code=="200"){
+                        parent.closeTab("修改密码");
+                    }else{
+                        $.messager.alert('错误',data.result);
+                    }
+                },
+                error: function(){
+                    $.messager.alert('错误','远程访问失败');
+                }
+            });
+        }
+    </script>
+</#body>
