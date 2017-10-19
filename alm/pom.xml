@@ -3,7 +3,6 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.dili</groupId>
     <artifactId>alm</artifactId>
-    <version>0.0.1-SNAPSHOT</version>
     <description>alm</description>
     <packaging>jar</packaging>
     <properties>
@@ -71,6 +70,7 @@
 			<artifactId>sharp-sword</artifactId>
 			<version>1.5.5-SNAPSHOT</version>
 		</dependency>
+
         <dependency>
             <groupId>org.mybatis.generator</groupId>
             <artifactId>mybatis-generator-core</artifactId>
@@ -312,7 +312,11 @@
             <version>${springloaded.version}</version>
         </dependency>
         <!-- 内部包  -->
-
+        <dependency>
+            <groupId>com.dili</groupId>
+            <artifactId>sysadmin-sdk</artifactId>
+            <version>${project.parent.version}</version>
+        </dependency>
     </dependencies>
 
 

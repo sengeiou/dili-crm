@@ -1,5 +1,6 @@
 package com.dili;
 
+import com.dili.ss.retrofitful.annotation.RestfulScan;
 import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
@@ -25,6 +26,7 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 @MapperScan(basePackages = {"com.dili.alm.dao", "com.dili.ss.dao"})
 //@ImportResource(locations = "classpath:applicationContext.xml")
 @ComponentScan(basePackages={"com.dili.ss","com.dili.alm"})
+@RestfulScan("com.dili.alm.rpc")
 //@EnableEncryptableProperties
 //@PropertySource(name="EncryptedProperties", value = "classpath:security.properties")
 //@EncryptablePropertySource(name = "EncryptedProperties", value = "classpath:security.properties")
