@@ -60,7 +60,7 @@
         <plugin type="com.dili.ss.mbg.beetl.BeetlTemplatesPlugin">
             <property name="targetDir" value="${targetResourcesProject}"></property>
             <property name="templateRootDir" value="${templateRootDir}"></property>
-            <property name="basePackage_dir" value="com/dili/utils" />
+            <property name="projectName" value="alm" />
             <property name="overwrite" value="true" />
         </plugin>
 
@@ -84,7 +84,7 @@
         <javaClientGenerator targetPackage="${targetMapperPackage}" targetProject="${targetJavaProject}" type="XMLMAPPER" />
 
         <!-- 生成所有表模型 -->
-        <table tableName="project">
+        <table tableName="files">
             <generatedKey column="id" sqlStatement="Mysql" identity="true"/>
         </table>
         <!-- 生成指定表模型 -->

@@ -7,7 +7,7 @@
 <!-- easyui扩展 -->
 <script type="text/javascript" src="${contextPath}/common/easyui/js/easyui_extend.js"></script>
 <!-- 本项目全局js -->
-<script type="text/javascript" src="${contextPath}/resources/js/alm.js"></script>
+<script type="text/javascript" src="${contextPath}/resources/js/main.js"></script>
 <!-- 导出功能 -->
 <#export/>
 <!-- 框架提供的js -->

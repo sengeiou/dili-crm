@@ -179,6 +179,7 @@
                 <a href="#" class="easyui-linkbutton" iconCls="icon-add" onclick="openInsert()" plain="true"></a>
                 <a href="#" class="easyui-linkbutton" iconCls="icon-edit" onclick="openUpdate()" plain="true"></a>
                 <a href="#" class="easyui-linkbutton" iconCls="icon-remove" onclick="del()" plain="true"></a>
+                <a href="#" class="easyui-linkbutton" iconCls="icon-large-clipart" onclick="openFiles()" plain="true"></a>
                 <a href="#" class="easyui-linkbutton" iconCls="icon-export" onclick="doExport('grid')" plain="true"></a>
                 <div style="float:right">
                 边框显示:<select onchange="changeBorder('grid',this.value)">
@@ -318,12 +319,37 @@
             </tr>
         </table>
     </form>
-
     </div>
+
+     <!-- 文件面板 -->
+     <div id="filesWindow"></div>
     <!-- ====================================================================================================================== -->
     <!-- style & script 分隔线 -->
     <!-- ====================================================================================================================== -->
     <script type="text/javascript">
+        function callback(returnmsg){
+            $('#filesForm').form('clear');
+            $("#filesGrid").datagrid("reload");
+            alert(returnmsg);
+        }
+        //打开文件
+        function openFiles(){
+            var selected = $("#grid").datagrid("getSelected");
+            if (null == selected) {
+                $.messager.alert('警告','请选中一条数据');
+                return;
+            }
+            $('#filesWindow').window({
+                href:'${contextPath}/milestones/files.html',
+                queryParams:{milestonesId:selected.id},
+                title:"文件列表",
+                width:720,
+                height:420,
+                onLoad:function(){
+//                    alert('loaded successfully');
+                }
+            });
+        }
         //打开新增窗口
         function openInsert(){
             $('#dlg').dialog('open');

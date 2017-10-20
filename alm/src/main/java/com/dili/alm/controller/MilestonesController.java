@@ -1,5 +1,6 @@
 package com.dili.alm.controller;
 
+import com.dili.alm.domain.Files;
 import com.dili.alm.domain.Milestones;
 import com.dili.alm.service.MilestonesService;
 import com.dili.ss.domain.BaseOutput;
@@ -7,13 +8,15 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
-import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
+
+import javax.servlet.http.HttpServletRequest;
+import java.util.List;
 
 /**
  * 由MyBatis Generator工具自动生成
@@ -27,10 +30,17 @@ public class MilestonesController {
     MilestonesService milestonesService;
 
     @ApiOperation("跳转到Milestones页面")
-    @RequestMapping(value="/index", method = RequestMethod.GET)
+    @RequestMapping(value="/index.html", method = RequestMethod.GET)
     public String index(ModelMap modelMap) {
         return "milestones/index";
     }
+
+	@ApiOperation("跳转到Files页面")
+	@RequestMapping(value="/files.html", method = RequestMethod.GET)
+	public String files(Files files, ModelMap modelMap, HttpServletRequest request) {
+		request.setAttribute("milestonesId", files.getMilestonesId());
+		return "milestones/files";
+	}
 
     @ApiOperation(value="查询Milestones", notes = "查询Milestones，返回列表信息")
     @ApiImplicitParams({
