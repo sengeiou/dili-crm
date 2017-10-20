@@ -3,6 +3,7 @@ package com.dili.alm.controller;
 import com.dili.alm.domain.Files;
 import com.dili.alm.service.FilesService;
 import com.dili.ss.domain.BaseOutput;
+import com.dili.ss.dto.DTOUtils;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
@@ -92,9 +93,8 @@ public class FilesController {
 	 * */
 	@RequestMapping(value = "filesUpload", method = RequestMethod.POST)
 	@ResponseBody
-	public void filesUpload(@RequestParam("file") MultipartFile[] files, HttpServletRequest request, HttpServletResponse response) throws IOException {
+	public void filesUpload(@RequestParam("file") MultipartFile[] files, HttpServletRequest request, HttpServletResponse response, @RequestParam String milestonesId) throws IOException {
 		if(files == null || files.length == 0){
-//			return "文件不存在";
 			response.getWriter().write("文件不存在");
 		}
 		//指定当前项目的相对路径
@@ -113,7 +113,6 @@ public class FilesController {
 			System.out.println(fileName + "-->" + size);
 			File dest = new File(path + fileName);
 			try {
-//			file.transferTo(dest);//这种方式只能使用绝对路径
 				byte[] bytes = file.getBytes();
 				BufferedOutputStream buffStream =
 						new BufferedOutputStream(new FileOutputStream(dest));
@@ -121,11 +120,17 @@ public class FilesController {
 				buffStream.close();
 			} catch (Exception e) {
 				System.out.println("You failed to upload " + fileName + ": " + e.getMessage());
-//				return "<script>parent.callback('You failed to upload " + fileName + ": " + e.getMessage() + "')</script>";
 				response.getWriter().write("<script>parent.callback('You failed to upload " + fileName + ": " + e.getMessage() + "')</script>");
 			}
+			Files tmpFiles = DTOUtils.newDTO(Files.class);
+			tmpFiles.setName(file.getOriginalFilename());
+			tmpFiles.setLength(file.getSize());
+			tmpFiles.setMilestonesId(Long.parseLong(milestonesId));
+			tmpFiles.setSuffix(file.getOriginalFilename().substring(file.getOriginalFilename().lastIndexOf(".")+1));
+			//todo 先查找文件名是否存在，存在则覆盖
+
+			filesService.insert(tmpFiles);
 		}
-//		return "<script>parent.callback('upload file success')</script>";
 		response.getWriter().write("<script>parent.callback('upload file success')</script>");
 	}
 
