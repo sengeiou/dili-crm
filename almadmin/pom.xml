@@ -55,7 +55,7 @@
 		<!-- 内部包 -->
 		<dependency>
 			<groupId>com.dili</groupId>
-			<artifactId>sysadmin-sdk</artifactId>
+			<artifactId>almadmin-sdk</artifactId>
 			<version>${project.parent.version}</version>
 		</dependency>
 		<!-- 利刃框架引入 -->

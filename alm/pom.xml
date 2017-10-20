@@ -68,7 +68,7 @@
 		<dependency>
 			<groupId>com.dili</groupId>
 			<artifactId>sharp-sword</artifactId>
-			<version>1.5.5-SNAPSHOT</version>
+			<version>1.5.4-SNAPSHOT</version>
 		</dependency>
 
         <dependency>
@@ -314,7 +314,7 @@
         <!-- 内部包  -->
         <dependency>
             <groupId>com.dili</groupId>
-            <artifactId>sysadmin-sdk</artifactId>
+            <artifactId>almadmin-sdk</artifactId>
             <version>${project.parent.version}</version>
         </dependency>
     </dependencies>
