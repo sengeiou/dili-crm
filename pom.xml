@@ -11,8 +11,8 @@
 	<packaging>pom</packaging>
 
 	<modules>
-		<module>sysadmin-sdk</module>
-		<module>sysadmin</module>
+		<module>almadmin-sdk</module>
+		<module>almadmin</module>
 		<module>alm</module>
 	</modules>
 

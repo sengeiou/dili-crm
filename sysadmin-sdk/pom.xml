@@ -3,9 +3,9 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.dili</groupId>
-    <artifactId>sysadmin-sdk</artifactId>
-    <description>sysadmin-sdk</description>
-    <name>sysadmin-sdk</name>
+    <artifactId>almadmin-sdk</artifactId>
+    <description>almadmin-sdk</description>
+    <name>almadmin-sdk</name>
     <packaging>jar</packaging>
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>

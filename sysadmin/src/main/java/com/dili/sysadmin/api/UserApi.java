@@ -1,4 +1,4 @@
-package com.dili.sysadmin.restful;
+package com.dili.sysadmin.api;
 
 import com.dili.ss.domain.BaseOutput;
 import com.dili.sysadmin.domain.User;
