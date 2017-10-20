@@ -53,6 +53,7 @@ public class ProjectProvider implements ValueProvider, ApplicationListener<Conte
 
 	@Override
 	public String getDisplayText(Object o, Map map, FieldMeta fieldMeta) {
+		if(o == null) return null;
 		init();
 		Project project = AlmCache.projectMap.get(o);
 		return project == null ? null : project.getName();

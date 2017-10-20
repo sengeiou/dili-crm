@@ -49,6 +49,7 @@ public class MemberProvider implements ValueProvider {
 
 	@Override
 	public String getDisplayText(Object o, Map map, FieldMeta fieldMeta) {
+		if(o == null) return null;
 		init();
 		User user = AlmCache.userMap.get(o);
 		return user == null ? null : user.getRealName();
