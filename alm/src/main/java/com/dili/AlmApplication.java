@@ -25,7 +25,7 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 @EnableAutoConfiguration(exclude = {ThymeleafAutoConfiguration.class, VelocityAutoConfiguration.class})
 @MapperScan(basePackages = {"com.dili.alm.dao", "com.dili.ss.dao"})
 //@ImportResource(locations = "classpath:applicationContext.xml")
-@ComponentScan(basePackages={"com.dili.ss","com.dili.alm"})
+@ComponentScan(basePackages={"com.dili.ss","com.dili.alm","com.dili.sysadmin"})
 @RestfulScan("com.dili.alm.rpc")
 //@EnableEncryptableProperties
 //@PropertySource(name="EncryptedProperties", value = "classpath:security.properties")

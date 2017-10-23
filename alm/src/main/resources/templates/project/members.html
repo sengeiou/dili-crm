@@ -1,0 +1,6 @@
+<#body>
+<ul class="easyui-datalist" id="smGridList" title="选择用户" style="width: 100%; height: 100%" singleSelect="true" checkbox="true">
+	<%for(item in members){%>
+	<li value="${item.id!}">${item.userName!}</li> <%}%>
+</ul>
+</#body>
