@@ -23,6 +23,7 @@ public class FilesServiceImpl extends BaseServiceImpl<Files, Long> implements Fi
     public int delete(Long aLong) {
         //先根据路径+文件名删除文件
         Files files = getActualDao().selectByPrimaryKey(aLong);
+        if(files == null) return 0;
         File dest = new File(files.getUrl() + files.getName());
         dest.delete();
         return super.delete(aLong);

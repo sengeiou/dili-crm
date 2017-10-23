@@ -38,6 +38,7 @@
             <div id="filesToolbar" style="padding:2px 5px;">
                 <a href="#" class="easyui-linkbutton" iconCls="icon-add" onclick="openInsert()" plain="true"></a>
                 <a href="#" class="easyui-linkbutton" iconCls="icon-remove" onclick="del()" plain="true"></a>
+                <a href="#" class="easyui-linkbutton" iconCls="icon-save" onclick="downloadFiles()" plain="true"></a>
                 <div style="float:right">
                 边框显示:<select onchange="changeBorder('filesGrid',this.value)">
                     <option value="lines-both">全边框</option>
@@ -91,7 +92,6 @@
     <!-- style & script 分隔线 -->
     <!-- ====================================================================================================================== -->
     <script type="text/javascript">
-
         function uploadFiles(){
             $("#filesForm").submit();
         }
@@ -182,8 +182,19 @@
         }
 
         function downloadFiles(name){
-            $("#name").val(name);
-            $("#downloadForm").submit();
+            //在行上点击时
+            if(name){
+                $("#name").val(name);
+                $("#downloadForm").submit();
+            }else{//在工具栏上点击时
+                var selected = $("#filesGrid").datagrid("getSelected");
+                if (null == selected) {
+                    $.messager.alert('警告','请选中一条数据');
+                    return;
+                }
+                $("#name").val(selected["name"]);
+                $("#downloadForm").submit();
+            }
         }
 
         function filesGridOptsFmt(value, row, index) {
