@@ -139,10 +139,18 @@
             </table>
             <!-- datagrid工具栏 -->
             <div id="toolbar" style="padding:2px 5px;">
+                <#resource code="milestones_add_root">
                 <a href="#" class="easyui-linkbutton" iconCls="icon-add" onclick="openRootInsert()" plain="true">添加顶级</a>
+                </#resource>
+                <#resource code="milestones_add_child">
                 <a href="#" class="easyui-linkbutton" iconCls="icon-add" onclick="openChildInsert()" plain="true">添加子级</a>
+                </#resource>
+                <#resource code="milestones_modify">
                 <a href="#" class="easyui-linkbutton" iconCls="icon-edit" onclick="openUpdate()" plain="true">修改</a>
+                </#resource>
+                <#resource code="milestones_delete">
                 <a href="#" class="easyui-linkbutton" iconCls="icon-remove" onclick="del()" plain="true">删除</a>
+                </#resource>
                 <a href="#" class="easyui-linkbutton" iconCls="icon-large-clipart" onclick="openFiles()" plain="true">管理文件</a>
                 <a href="#" class="easyui-linkbutton" iconCls="icon-export" onclick="doExport('grid',true)" plain="true">导出</a>
                 <div style="float:right">
@@ -291,14 +299,17 @@
         }
         //打开新增顶级窗口
         function openRootInsert(){
+        <#resource code="milestones_add_root">
             $('#dlg').dialog('open');
             $('#dlg').dialog('center');
             $('#_form').form('clear');
             formFocus("_form", "_code");
+        </#resource>
         }
 
         //打开新增子级窗口
         function openChildInsert(){
+            <#resource code="milestones_add_child">
             var selected = $("#grid").datagrid("getSelected");
             if (null == selected) {
                 $.messager.alert('警告','请选中一条数据');
@@ -310,10 +321,12 @@
             $("#_parentCode").textbox("setValue", selected["code"]);
             $("#_parentId").val(selected["id"]);
             formFocus("_form", "_code");
+            </#resource>
         }
 
         //打开修改窗口
         function openUpdate(){
+            <#resource code="milestones_modify">
             var selected = $("#grid").datagrid("getSelected");
             if (null == selected) {
                 $.messager.alert('警告','请选中一条数据');
@@ -326,6 +339,7 @@
             formData = addKeyStartWith(getOriginalData(formData),"_");
             $('#_form').form('clear');
             $('#_form').form('load', formData);
+            </#resource>
         }
 
         function saveOrUpdate(){
@@ -363,6 +377,7 @@
 
         //根据主键删除
         function del() {
+        <#resource code="milestones_delete">
             var selected = $("#grid").datagrid("getSelected");
             if (null == selected) {
                 $.messager.alert('警告','请选中一条数据');
@@ -391,7 +406,7 @@
                     });
                 }
             });
-
+        </#resource>
         }
         //表格查询
         function queryGrid() {

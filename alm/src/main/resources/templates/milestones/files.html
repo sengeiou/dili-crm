@@ -36,8 +36,12 @@
             </table>
             <!-- datagrid工具栏 -->
             <div id="filesToolbar" style="padding:2px 5px;">
+                <#resource code="milestones_files_add">
                 <a href="#" class="easyui-linkbutton" iconCls="icon-add" onclick="openInsert()" plain="true"></a>
-                <a href="#" class="easyui-linkbutton" iconCls="icon-remove" onclick="del()" plain="true"></a>
+                </#resource>
+                <#resource code="milestones_files_delete">
+                <a href="#" class="easyui-linkbutton" iconCls="icon-remove" onclick="delFiles()" plain="true"></a>
+                </#resource>
                 <a href="#" class="easyui-linkbutton" iconCls="icon-save" onclick="downloadFiles()" plain="true"></a>
                 <div style="float:right">
                 边框显示:<select onchange="changeBorder('filesGrid',this.value)">
@@ -137,7 +141,7 @@
         }
 
         //根据主键删除
-        function del() {
+        function delFiles() {
             var selected = $("#filesGrid").datagrid("getSelected");
             if (null == selected) {
                 $.messager.alert('警告','请选中一条数据');
@@ -198,7 +202,7 @@
         }
 
         function filesGridOptsFmt(value, row, index) {
-            var content = '<input type="button" id="btnDel' + index + '" style="margin:0px 4px;" value="删除" onclick="javascript:del();">';
+            var content = '<input type="button" id="btnDel' + index + '" style="margin:0px 4px;" value="删除" onclick="javascript:delFiles();">';
             content += '<input type="button" id="btnDownload' + index + '" value="下载" onclick="javascript:downloadFiles(\''+row.name+'\');">';
             return content;
         }
@@ -232,7 +236,7 @@
             if(keycode == 46){ //如果按下删除键
                 var selected = $("#filesGrid").datagrid("getSelected");
                 if(selected && selected!= null){
-                    del();
+                    delFiles();
                 }
             }
         }
