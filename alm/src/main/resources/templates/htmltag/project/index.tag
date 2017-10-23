@@ -173,7 +173,7 @@ function selectMember() {
 				title : '用户选择',
 				width : 400,
 				height : 200,
-				href : '${contextPath!}/project/mebers',
+				href : '${contextPath!}/project/members',
 				modal : true,
 				buttons : [{
 							text : '确定',

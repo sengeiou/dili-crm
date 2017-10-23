@@ -2,6 +2,7 @@ package com.dili.sysadmin.service.impl;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.Iterator;
 import java.util.List;
 
 import org.apache.commons.lang3.StringUtils;
@@ -48,7 +49,15 @@ public class MenuServiceImpl extends BaseServiceImpl<Menu, Long> implements Menu
 		if (StringUtils.isBlank(userId)) {
 			throw new MenuException("请先登录");
 		}
-		return this.menuDao.findByUserId(Long.valueOf(userId));
+		List<Menu> menus = this.menuDao.findByUserId(Long.valueOf(userId));
+		Iterator<Menu> it = menus.iterator();
+		while(it.hasNext()) {
+			Menu menu = it.next();
+			if(menu.getType().equals(2)) {
+				it.remove();
+			}
+		}
+		return menus;
 	}
 
 	@Override
