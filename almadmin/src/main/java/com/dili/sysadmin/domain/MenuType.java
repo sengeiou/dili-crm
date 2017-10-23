@@ -16,4 +16,9 @@ public class MenuType {
 	 * 链接
 	 */
 	public static final int LEAF = 1;
+
+	/**
+	 * 内链
+	 */
+	public static final int INTERNAL_LINKS = 2;
 }
