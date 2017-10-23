@@ -105,10 +105,36 @@
         jdbcTypeName:String:TIMESTAMP,
         jdbcType:int:93:TIMESTAMP
         ===========================================================================
+        actualColumnName:String:modified,
+        javaProperty:String:modified,
+        defaultValue:String:CURRENT_TIMESTAMP,
+        remarks:String:修改时间,
+        length:int:19,
+        nullable:boolean:false,
+        identity:boolean:false,
+        tableAlias:String:,
+        jdbcTypeName:String:TIMESTAMP,
+        scale:int:0,
+        jdbcTypeName:String:TIMESTAMP,
+        jdbcType:int:93:TIMESTAMP
+        ===========================================================================
         actualColumnName:String:create_member_id,
         javaProperty:String:createMemberId,
         defaultValue:String:,
         remarks:String:创建人id##{provider:"memberProvider"},
+        length:int:19,
+        nullable:boolean:true,
+        identity:boolean:false,
+        tableAlias:String:,
+        jdbcTypeName:String:BIGINT,
+        scale:int:0,
+        jdbcTypeName:String:BIGINT,
+        jdbcType:int:-5:BIGINT
+        ===========================================================================
+        actualColumnName:String:modify_member_id,
+        javaProperty:String:modifyMemberId,
+        defaultValue:String:,
+        remarks:String:修改人id##{provider:"memberProvider"},
         length:int:19,
         nullable:boolean:true,
         identity:boolean:false,

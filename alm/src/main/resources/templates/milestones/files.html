@@ -3,7 +3,6 @@
             <table class="easyui-datagrid" id="filesGrid" fitColumns="true"
                    pagination="false" pageSize="30" pageNumber="1" pagePosition="both" rownumbers="true" remoteSort="false"
                    loadMsg="数据加载中..." singleSelect="true" method="post" multiSort="false" sortName="name"
-                   url="${contextPath}/files/listPage"
                    align="center" fit="true" striped="true" toolbar="#filesToolbar" idField="id" data-options="onDblClickRow:openUpdate, onHeaderContextMenu:headerContextMenu">
                 <thead>
                     <tr>
@@ -22,9 +21,16 @@
                         <th data-options="field:'created',  _provider:'datetimeProvider', sortable:'true', order:'asc', align:'center', resizable:'true', fixed:'false'">
                             创建时间
                         </th>
-                        <th data-options="field:'createMemberId',  _provider:'memberProvider', sortable:'true', order:'asc', align:'center', resizable:'true', fixed:'false'">
-                            创建人id
+                        <th data-options="field:'modified',  _provider:'datetimeProvider', sortable:'true', order:'asc', align:'center', resizable:'true', fixed:'false'">
+                            修改时间
                         </th>
+                        <th data-options="field:'createMemberId',  _provider:'memberProvider', sortable:'true', order:'asc', align:'center', resizable:'true', fixed:'false'">
+                            创建人
+                        </th>
+                        <th data-options="field:'modifyMemberId',  _provider:'memberProvider', sortable:'true', order:'asc', align:'center', resizable:'true', fixed:'false'">
+                            修改人
+                        </th>
+                        <th data-options="field:'opt',width:110,fixed:true,formatter:filesGridOptsFmt">操作</th>
                     </tr>
                 </thead>
             </table>
@@ -75,6 +81,9 @@
             <p>
                 <input class="easyui-filebox" style="width: 240px;" name="file" buttonText="文件5" />
             </p>
+        </form>
+        <form method="POST" id="downloadForm" action="${contextPath}/files/download" target="hiddenFrame" target="hiddenFrame">
+            <input type="hidden" name="name" id="name" /> <input type="hidden" name="milestonesId" id="milestonesId" value="${milestonesId}" />
         </form>
         <iframe name='hiddenFrame' id="hiddenFrame" style="display:none"></iframe>
     </div>
@@ -165,19 +174,22 @@
             if (null == opts.url || "" == opts.url) {
                 opts.url = "${contextPath}/files/listPage";
             }
-            if(!$('#form').form("validate")){
-                return;
-            }
+
             var param = bindMetadata("filesGrid", true);
-            var formData = $("#form").serializeObject();
+            var formData = {milestonesId:'${milestonesId}'};
             $.extend(param, formData);
             $("#filesGrid").datagrid("load", param);
         }
 
+        function downloadFiles(name){
+            $("#name").val(name);
+            $("#downloadForm").submit();
+        }
 
-        //清空表单
-        function clearForm() {
-            $('#form').form('clear');
+        function filesGridOptsFmt(value, row, index) {
+            var content = '<input type="button" id="btnDel' + index + '" style="margin:0px 4px;" value="删除" onclick="javascript:del();">';
+            content += '<input type="button" id="btnDownload' + index + '" value="下载" onclick="javascript:downloadFiles(\''+row.name+'\');">';
+            return content;
         }
 
         //表格表头右键菜单
@@ -224,8 +236,7 @@
          *          表单提交需执行的任务
          */
         $(function () {
-            bindFormEvent("form", "name", queryFilesGrid);
-            bindFormEvent("filesForm", "_name", saveOrUpdate, function (){$('#filesDlg').dialog('close');});
+//            bindFormEvent("filesForm", "_name", saveOrUpdate, function (){$('#filesDlg').dialog('close');});
             if (document.addEventListener) {
                 document.addEventListener("keyup",getKey,false);
             } else if (document.attachEvent) {
@@ -233,5 +244,6 @@
             } else {
                 document.onkeyup = getKey;
             }
+            queryFilesGrid();
         })
     </script>

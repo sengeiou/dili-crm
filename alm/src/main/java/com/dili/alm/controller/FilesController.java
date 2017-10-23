@@ -4,10 +4,13 @@ import com.dili.alm.domain.Files;
 import com.dili.alm.service.FilesService;
 import com.dili.ss.domain.BaseOutput;
 import com.dili.ss.dto.DTOUtils;
+import com.dili.sysadmin.sdk.domain.UserTicket;
+import com.dili.sysadmin.sdk.session.SessionContext;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
+import org.apache.commons.collections4.ListUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -21,6 +24,7 @@ import org.springframework.web.multipart.MultipartFile;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.*;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -33,6 +37,8 @@ import java.util.List;
 public class FilesController {
     @Autowired
     FilesService filesService;
+
+    private static final String MILESTONES_PATH_PREFIX = "fileupload/milestones/";
 
     @ApiOperation("跳转到Files页面")
     @RequestMapping(value="/index", method = RequestMethod.GET)
@@ -98,11 +104,11 @@ public class FilesController {
 			response.getWriter().write("文件不存在");
 		}
 		//指定当前项目的相对路径
-		String path = "fileupload/";
+		String path = MILESTONES_PATH_PREFIX + milestonesId + "/";
 		File pathFile = new File(path);
 		//父目录不存在则创建
 		if (!pathFile.exists()) {
-			pathFile.mkdir();
+			pathFile.mkdirs();
 		}
 		for(MultipartFile file : files) {
 			String fileName = file.getOriginalFilename();
@@ -121,24 +127,43 @@ public class FilesController {
 			} catch (Exception e) {
 				System.out.println("You failed to upload " + fileName + ": " + e.getMessage());
 				response.getWriter().write("<script>parent.callback('You failed to upload " + fileName + ": " + e.getMessage() + "')</script>");
+				break;
 			}
 			Files tmpFiles = DTOUtils.newDTO(Files.class);
 			tmpFiles.setName(file.getOriginalFilename());
 			tmpFiles.setLength(file.getSize());
 			tmpFiles.setMilestonesId(Long.parseLong(milestonesId));
 			tmpFiles.setSuffix(file.getOriginalFilename().substring(file.getOriginalFilename().lastIndexOf(".")+1));
-			//todo 先查找文件名是否存在，存在则覆盖
-
-			filesService.insert(tmpFiles);
+			tmpFiles.setUrl(path);
+			tmpFiles.setModified(new Date());
+			UserTicket userTicket = SessionContext.getSessionContext().getUserTicket();
+			//			先查找文件名是否存在，存在则覆盖
+			Files filesCondition = DTOUtils.newDTO(Files.class);
+			filesCondition.setMilestonesId(Long.parseLong(milestonesId));
+			filesCondition.setName(file.getOriginalFilename());
+			List<Files> files1 = filesService.list(filesCondition);
+			if(ListUtils.emptyIfNull(files1).isEmpty()) {
+				tmpFiles.setCreated(new Date());
+				if(userTicket != null) {
+					tmpFiles.setCreateMemberId(userTicket.getId());
+				}
+				filesService.insertSelective(tmpFiles);
+			}else{
+				tmpFiles.setId(files1.get(0).getId());
+				if(userTicket != null) {
+					tmpFiles.setModifyMemberId(userTicket.getId());
+				}
+				filesService.updateSelective(tmpFiles);
+			}
 		}
 		response.getWriter().write("<script>parent.callback('upload file success')</script>");
 	}
 
 	@RequestMapping("download")
-	public String downLoad(@RequestParam(value="fileName", required = true) String fileName, HttpServletRequest request, HttpServletResponse response){
-		String filePath = "fileupload/" ;
+	public String downLoad(@RequestParam(value="name", required = true) String fileName, HttpServletRequest request, HttpServletResponse response, @RequestParam String milestonesId){
+		String filePath = MILESTONES_PATH_PREFIX + milestonesId + "/";
 		File file = new File(filePath + fileName);
-		if(file.exists()){ //判断文件父目录是否存在
+		if(file.exists()){//判断文件父目录是否存在
 			FileInputStream fis = null; //文件输入流
 			BufferedInputStream bis = null;
 			OutputStream os = null; //输出流

@@ -121,10 +121,10 @@
                             项目发布编号
                         </th>
                         <th data-options="field:'projectId',  _provider:'projectProvider', sortable:'true', order:'asc', align:'center', resizable:'true', fixed:'false'">
-                            项目id
+                            项目
                         </th>
                         <th data-options="field:'parentId',   sortable:'true', order:'asc', align:'center', resizable:'true', fixed:'false'">
-                            上级id
+                            上级里程碑
                         </th>
                         <th data-options="field:'git',   sortable:'true', order:'asc', align:'center', resizable:'true', fixed:'false'">
                             git地址
@@ -145,10 +145,10 @@
                             备注
                         </th>
                         <th data-options="field:'publishMemberId',  _provider:'memberProvider', sortable:'true', order:'asc', align:'center', resizable:'true', fixed:'false'">
-                            发布人id
+                            发布人
                         </th>
                         <th data-options="field:'modifyMemberId',  _provider:'memberProvider', sortable:'true', order:'asc', align:'center', resizable:'true', fixed:'false'">
-                            修改人id
+                            修改人
                         </th>
                         <th data-options="field:'created',  _provider:'datetimeProvider', sortable:'true', order:'asc', align:'center', resizable:'true', fixed:'false'">
                             发布时间
@@ -330,7 +330,8 @@
         function callback(returnmsg){
             $('#filesForm').form('clear');
             $("#filesGrid").datagrid("reload");
-            alert(returnmsg);
+            $("#filesDlg").dialog("close");
+            $.messager.alert('提示',returnmsg);
         }
         //打开文件
         function openFiles(){
@@ -343,7 +344,7 @@
                 href:'${contextPath}/milestones/files.html',
                 queryParams:{milestonesId:selected.id},
                 title:"文件列表",
-                width:720,
+                width:800,
                 height:420,
                 onLoad:function(){
 //                    alert('loaded successfully');

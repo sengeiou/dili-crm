@@ -14,7 +14,7 @@ import javax.persistence.Id;
 /**
  * 由MyBatis Generator工具自动生成
  * 
- * This file was generated on 2017-10-20 14:47:50.
+ * This file was generated on 2017-10-23 11:17:08.
  */
 @Table(name = "`files`")
 public interface Files extends IBaseDomain {
@@ -69,10 +69,24 @@ public interface Files extends IBaseDomain {
 
     void setCreated(Date created);
 
+    @Column(name = "`modified`")
+    @FieldDef(label="修改时间")
+    @EditMode(editor = FieldEditor.Datetime, required = true)
+    Date getModified();
+
+    void setModified(Date modified);
+
     @Column(name = "`create_member_id`")
     @FieldDef(label="创建人id")
     @EditMode(editor = FieldEditor.Combo, required = false, params="{\"provider\":\"memberProvider\"}")
     Long getCreateMemberId();
 
     void setCreateMemberId(Long createMemberId);
+
+    @Column(name = "`modify_member_id`")
+    @FieldDef(label="修改人id")
+    @EditMode(editor = FieldEditor.Combo, required = false, params="{\"provider\":\"memberProvider\"}")
+    Long getModifyMemberId();
+
+    void setModifyMemberId(Long modifyMemberId);
 }
