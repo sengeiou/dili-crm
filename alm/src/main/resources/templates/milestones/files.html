@@ -44,10 +44,10 @@
             </div>
 
     <!-- 隐藏编辑框 -->
-    <div id="filesDlg" class="easyui-dialog" resizable="false" constrain="true" shadow="true" draggable="false" title="Files信息" style="padding:20px" modal="true" border="thin" closed="true"
+    <div id="filesDlg" class="easyui-dialog" resizable="false" constrain="true" shadow="true" draggable="false" title="上传文件" style="padding:20px" modal="true" border="thin" closed="true"
          data-options="
 				iconCls: 'icon-save',
-				height: 480,
+				height: 300,
 				buttons: [{
 					text:'上传',
 					iconCls:'icon-ok',
@@ -59,7 +59,7 @@
 					}
 				}]
 			">
-        <form method="POST" id="filesForm" enctype="multipart/form-data" action="${contextPath}/files/filesUpload" target="hiddenFrame">
+        <form method="POST" id="filesForm" enctype="multipart/form-data" action="${contextPath}/files/filesUpload?milestonesId=${milestonesId}" target="hiddenFrame">
             <p>
                 <input class="easyui-filebox" style="width: 240px;" name="file" buttonText="文件1" />
             </p>
@@ -84,7 +84,7 @@
     <script type="text/javascript">
 
         function uploadFiles(){
-
+            $("#filesForm").submit();
         }
         //打开新增窗口
         function openInsert(){
