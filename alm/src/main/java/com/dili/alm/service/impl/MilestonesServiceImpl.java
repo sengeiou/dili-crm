@@ -42,6 +42,7 @@ public class MilestonesServiceImpl extends BaseServiceImpl<Milestones, Long> imp
         UserTicket userTicket = SessionContext.getSessionContext().getUserTicket();
         milestones.setPublishMemberId(userTicket.getId());
         milestones.setCreated(new Date());
+        int rowCnt = super.insertSelective(milestones);
         //如果要通知，则生成调度信息
         if(milestones.getEmailNotice().equals(1)){
             ScheduleJob scheduleJob = DTOUtils.newDTO(ScheduleJob.class);
@@ -57,7 +58,7 @@ public class MilestonesServiceImpl extends BaseServiceImpl<Milestones, Long> imp
             scheduleJob.setJobData(JSONObject.toJSONStringWithDateFormat(milestones, "yyyy-MM-dd HH:mm:ss"));
             scheduleJobService.insertSelective(scheduleJob);
         }
-        return super.insertSelective(milestones);
+        return rowCnt;
     }
 
     @Override
