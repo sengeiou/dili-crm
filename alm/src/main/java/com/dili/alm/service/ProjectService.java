@@ -5,6 +5,7 @@ import java.util.List;
 import com.dili.alm.domain.Project;
 import com.dili.alm.domain.dto.DataDictionaryValueDto;
 import com.dili.ss.base.BaseService;
+import com.dili.ss.domain.BaseOutput;
 
 /**
  * 由MyBatis Generator工具自动生成
@@ -13,4 +14,6 @@ import com.dili.ss.base.BaseService;
 public interface ProjectService extends BaseService<Project, Long> {
 
 	List<DataDictionaryValueDto> getPojectTypes();
+
+	BaseOutput<Object> deleteBeforeCheck(Long id);
 }

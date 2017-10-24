@@ -9,14 +9,19 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.dili.alm.cache.AlmCache;
+import com.dili.alm.dao.MilestonesMapper;
 import com.dili.alm.dao.ProjectMapper;
+import com.dili.alm.dao.TeamMapper;
+import com.dili.alm.domain.Milestones;
 import com.dili.alm.domain.Project;
+import com.dili.alm.domain.Team;
 import com.dili.alm.domain.dto.DataDictionaryDto;
 import com.dili.alm.domain.dto.DataDictionaryValueDto;
 import com.dili.alm.rpc.DataDictionaryRPC;
 import com.dili.alm.service.ProjectService;
 import com.dili.ss.base.BaseServiceImpl;
 import com.dili.ss.domain.BaseOutput;
+import com.dili.ss.dto.DTOUtils;
 
 /**
  * 由MyBatis Generator工具自动生成 This file was generated on 2017-10-18 17:22:54.
@@ -29,6 +34,10 @@ public class ProjectServiceImpl extends BaseServiceImpl<Project, Long> implement
 
 	@Autowired
 	private DataDictionaryRPC dataDictionaryRPC;
+	@Autowired
+	private MilestonesMapper milestonesMapper;
+	@Autowired
+	private TeamMapper teamMapper;
 
 	public ProjectMapper getActualDao() {
 		return (ProjectMapper) getDao();
@@ -77,5 +86,32 @@ public class ProjectServiceImpl extends BaseServiceImpl<Project, Long> implement
 			return null;
 		}
 		return dto.getValues();
+	}
+
+	@Override
+	public BaseOutput<Object> deleteBeforeCheck(Long projectId) {
+		Milestones record = DTOUtils.newDTO(Milestones.class);
+		record.setProjectId(projectId);
+		int count = this.milestonesMapper.selectCount(record);
+		if (count > 0) {
+			return BaseOutput.failure("项目关联了里程碑，不能删除");
+		}
+		Team teamQuery = DTOUtils.newDTO(Team.class);
+		teamQuery.setProjectId(projectId);
+		count = this.teamMapper.selectCount(teamQuery);
+		if (count > 0) {
+			return BaseOutput.failure("项目关联了团队，不能删除");
+		}
+		Project projectQuery = DTOUtils.newDTO(Project.class);
+		projectQuery.setParentId(projectId);
+		count = this.getActualDao().selectCount(projectQuery);
+		if (count > 0) {
+			return BaseOutput.failure("项目包含子项目，不能删除");
+		}
+		count = this.getActualDao().deleteByPrimaryKey(projectId);
+		if (count > 0) {
+			return BaseOutput.success("删除成功");
+		}
+		return BaseOutput.failure("删除失败");
 	}
 }

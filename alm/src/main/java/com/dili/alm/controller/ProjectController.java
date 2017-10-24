@@ -1,22 +1,26 @@
 package com.dili.alm.controller;
 
+import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
-import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.alibaba.fastjson.JSONObject;
 import com.dili.alm.domain.Project;
 import com.dili.alm.domain.User;
 import com.dili.alm.domain.dto.DataDictionaryValueDto;
 import com.dili.alm.rpc.UserRpc;
 import com.dili.alm.service.ProjectService;
 import com.dili.ss.domain.BaseOutput;
+import com.dili.ss.metadata.ValueProviderUtils;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
@@ -45,7 +49,19 @@ public class ProjectController {
 	@ApiImplicitParams({ @ApiImplicitParam(name = "Project", paramType = "form", value = "Project的form信息", required = false, dataType = "string") })
 	@RequestMapping(value = "/list", method = { RequestMethod.GET, RequestMethod.POST })
 	public @ResponseBody List<Project> list(Project project) {
-		return projectService.list(project);
+		Map<Object, Object> metadata = new HashMap<>();
+		JSONObject datetimeProvider = new JSONObject();
+		datetimeProvider.put("provider", "datetimeProvider");
+		metadata.put("created", datetimeProvider);
+		metadata.put("modified", datetimeProvider);
+
+		// 测试数据
+		List<Project> list = this.projectService.listByExample(project);
+		try {
+			return ValueProviderUtils.buildDataByProvider(metadata, list);
+		} catch (Exception e) {
+			return null;
+		}
 	}
 
 	@ApiOperation(value = "分页查询Project", notes = "分页查询Project，返回easyui分页信息")
@@ -60,7 +76,7 @@ public class ProjectController {
 	@RequestMapping(value = "/insert", method = { RequestMethod.GET, RequestMethod.POST })
 	public @ResponseBody BaseOutput insert(Project project) {
 		projectService.insertSelective(project);
-		return BaseOutput.success("新增成功");
+		return BaseOutput.success("新增成功").setData(project);
 	}
 
 	@ApiOperation("修改Project")
@@ -68,15 +84,14 @@ public class ProjectController {
 	@RequestMapping(value = "/update", method = { RequestMethod.GET, RequestMethod.POST })
 	public @ResponseBody BaseOutput update(Project project) {
 		projectService.updateSelective(project);
-		return BaseOutput.success("修改成功");
+		return BaseOutput.success("修改成功").setData(project);
 	}
 
 	@ApiOperation("删除Project")
 	@ApiImplicitParams({ @ApiImplicitParam(name = "id", paramType = "form", value = "Project的主键", required = true, dataType = "long") })
 	@RequestMapping(value = "/delete", method = { RequestMethod.GET, RequestMethod.POST })
-	public @ResponseBody BaseOutput delete(Long id) {
-		projectService.delete(id);
-		return BaseOutput.success("删除成功");
+	public @ResponseBody BaseOutput<Object> delete(Long id) {
+		return projectService.deleteBeforeCheck(id);
 	}
 
 	@ResponseBody
@@ -85,7 +100,6 @@ public class ProjectController {
 		return this.projectService.getPojectTypes();
 	}
 
-	@ResponseBody
 	@RequestMapping(value = "/members", method = RequestMethod.GET)
 	public String members(ModelMap modelMap) {
 		BaseOutput<List<User>> output = this.userRPC.list(new User());
@@ -93,5 +107,15 @@ public class ProjectController {
 			modelMap.addAttribute("members", output.getData());
 		}
 		return "project/members";
+	}
+
+	@ResponseBody
+	@RequestMapping(value = "/members", method = { RequestMethod.GET, RequestMethod.POST }, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+	public List<User> membersJson(ModelMap modelMap) {
+		BaseOutput<List<User>> output = this.userRPC.list(new User());
+		if (output.isSuccess()) {
+			return output.getData();
+		}
+		return null;
 	}
 }

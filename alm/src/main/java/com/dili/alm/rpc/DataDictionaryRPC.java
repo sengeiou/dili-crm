@@ -6,7 +6,7 @@ import com.dili.ss.retrofitful.annotation.POST;
 import com.dili.ss.retrofitful.annotation.Restful;
 import com.dili.ss.retrofitful.annotation.VOSingleParameter;
 
-@Restful("http://alm.dili.com/alm")
+@Restful("http://alm.dili.com:8083/alm")
 public interface DataDictionaryRPC {
 
 	@POST("/dataDictionary")
