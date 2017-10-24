@@ -54,7 +54,7 @@
                             任务分组
                         </th>
                         <th data-options="field:'jobStatus',  _provider:'jobStatusProvider', sortable:'true', order:'asc', align:'center', resizable:'true', fixed:'false'">
-                            是否启动任务
+                            任务状态
                         </th>
                         <th data-options="field:'jobData',   sortable:'true', order:'asc', align:'center', resizable:'true', fixed:'false'">
                             json
@@ -97,10 +97,12 @@
             </table>
             <!-- datagrid工具栏 -->
             <div id="toolbar" style="padding:2px 5px;">
-                <a href="#" class="easyui-linkbutton" iconCls="icon-add" onclick="openInsert()" plain="true"></a>
-                <a href="#" class="easyui-linkbutton" iconCls="icon-edit" onclick="openUpdate()" plain="true"></a>
-                <a href="#" class="easyui-linkbutton" iconCls="icon-remove" onclick="del()" plain="true"></a>
-                <a href="#" class="easyui-linkbutton" iconCls="icon-export" onclick="doExport('grid')" plain="true"></a>
+                <a href="#" class="easyui-linkbutton" iconCls="icon-add" onclick="openInsert()" plain="true">新增</a>
+                <a href="#" class="easyui-linkbutton" iconCls="icon-edit" onclick="openUpdate()" plain="true">修改</a>
+                <a href="#" class="easyui-linkbutton" iconCls="icon-remove" onclick="del()" plain="true">删除</a>
+                <a href="#" class="easyui-linkbutton" iconCls="icon-remove" onclick="pause()" plain="true">暂停</a>
+                <a href="#" class="easyui-linkbutton" iconCls="icon-remove" onclick="resume()" plain="true">恢复</a>
+                <a href="#" class="easyui-linkbutton" iconCls="icon-export" onclick="doExport('grid')" plain="true">导出</a>
                 <div style="float:right">
                 边框显示:<select onchange="changeBorder('grid',this.value)">
                     <option value="lines-both">全边框</option>
@@ -201,6 +203,69 @@
     <!-- style & script 分隔线 -->
     <!-- ====================================================================================================================== -->
     <script type="text/javascript">
+
+        //暂停
+        function pause(){
+            var selected = $("#grid").datagrid("getSelected");
+            if (null == selected) {
+                $.messager.alert('警告','请选中一条数据');
+                return;
+            }
+            $.messager.confirm('确认','您确认想要暂停吗？',function(r){
+                if (r){
+                    $.ajax({
+                        type: "POST",
+                        url: "${contextPath}/scheduleJob/pause",
+                        data: {id:selected.id, jobName:selected.jobName, jobGroup:selected.jobGroup},
+                        processData:true,
+                        dataType: "json",
+                        async : true,
+                        success: function (data) {
+                            if(data.code=="200"){
+                                $("#grid").datagrid("reload");
+                                $('#dlg').dialog('close');
+                            }else{
+                                $.messager.alert('错误',data.result);
+                            }
+                        },
+                        error: function(){
+                            $.messager.alert('错误','远程访问失败');
+                        }
+                    });
+                }
+            });
+        }
+        //恢复
+        function resume() {
+            var selected = $("#grid").datagrid("getSelected");
+            if (null == selected) {
+                $.messager.alert('警告','请选中一条数据');
+                return;
+            }
+            $.messager.confirm('确认','您确认想要暂停吗？',function(r){
+                if (r){
+                    $.ajax({
+                        type: "POST",
+                        url: "${contextPath}/scheduleJob/resume",
+                        data: {id:selected.id, jobName:selected.jobName, jobGroup:selected.jobGroup},
+                        processData:true,
+                        dataType: "json",
+                        async : true,
+                        success: function (data) {
+                            if(data.code=="200"){
+                                $("#grid").datagrid("reload");
+                                $('#dlg').dialog('close');
+                            }else{
+                                $.messager.alert('错误',data.result);
+                            }
+                        },
+                        error: function(){
+                            $.messager.alert('错误','远程访问失败');
+                        }
+                    });
+                }
+            });
+        }
         //打开新增窗口
         function openInsert(){
             $('#dlg').dialog('open');
@@ -287,7 +352,6 @@
                     });
                 }
             });
-
         }
         //表格查询
         function queryGrid() {

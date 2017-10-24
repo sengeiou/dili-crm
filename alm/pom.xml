@@ -246,6 +246,11 @@
             <artifactId>jasypt-spring-boot-starter</artifactId>
             <version>1.8</version>
         </dependency>
+
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-mail</artifactId>
+        </dependency>
         <!-- https://mvnrepository.com/artifact/org.jasypt/jasypt-spring31 -->
         <dependency>
             <groupId>org.jasypt</groupId>

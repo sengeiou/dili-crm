@@ -23,7 +23,7 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 //@EnableScheduling
 @EnableTransactionManagement
 @EnableAutoConfiguration(exclude = {ThymeleafAutoConfiguration.class, VelocityAutoConfiguration.class})
-@MapperScan(basePackages = {"com.dili.alm.dao", "com.dili.ss.dao"})
+@MapperScan(basePackages = {"com.dili.alm.dao", "com.dili.ss.dao", "com.dili.ss.quartz.dao"})
 //@ImportResource(locations = "classpath:applicationContext.xml")
 @ComponentScan(basePackages={"com.dili.ss","com.dili.alm","com.dili.sysadmin"})
 @RestfulScan("com.dili.alm.rpc")

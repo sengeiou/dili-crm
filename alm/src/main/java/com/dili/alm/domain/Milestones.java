@@ -4,12 +4,9 @@ import com.dili.ss.dto.IBaseDomain;
 import com.dili.ss.metadata.FieldEditor;
 import com.dili.ss.metadata.annotation.EditMode;
 import com.dili.ss.metadata.annotation.FieldDef;
-import java.util.Date;
+
 import javax.persistence.*;
-import javax.persistence.Column;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import java.util.Date;
 
 /**
  * 由MyBatis Generator工具自动生成
@@ -127,7 +124,7 @@ public interface Milestones extends IBaseDomain {
 
     @Column(name = "`email_notice`")
     @FieldDef(label="是否上线通知")
-    @EditMode(editor = FieldEditor.Combo, required = false, params="{\"data\":[{\"text\":\"通知\",\"value\":0},{\"text\":\"不通知\",\"value\":1}],\"provider\":\"emailNoticeProvider\"}")
+    @EditMode(editor = FieldEditor.Combo, required = false, params="{\"data\":[{\"text\":\"通知\",\"value\":1},{\"text\":\"不通知\",\"value\":0}],\"provider\":\"emailNoticeProvider\"}")
     Integer getEmailNotice();
 
     void setEmailNotice(Integer emailNotice);
