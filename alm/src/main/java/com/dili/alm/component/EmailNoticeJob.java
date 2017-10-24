@@ -1,5 +1,8 @@
 package com.dili.alm.component;
 
+import com.alibaba.fastjson.JSONObject;
+import com.dili.alm.domain.Milestones;
+import com.dili.alm.service.TeamService;
 import com.dili.ss.quartz.domain.ScheduleJob;
 import com.dili.ss.quartz.domain.ScheduleMessage;
 import com.dili.ss.quartz.service.ScheduleJobService;
@@ -30,6 +33,9 @@ public class EmailNoticeJob implements ApplicationListener<ContextRefreshedEvent
 	ScheduleJobService scheduleJobService;
 
 	@Autowired
+	TeamService teamService;
+
+	@Autowired
 	private JavaMailSender mailSender;
 
 	@Override
@@ -48,14 +54,7 @@ public class EmailNoticeJob implements ApplicationListener<ContextRefreshedEvent
 	 * @param scheduleMessage
 	 */
 	public void scan(ScheduleMessage scheduleMessage) {
-		System.out.println("发email:" + scheduleMessage.getJobData());
-//		SimpleMailMessage message = new SimpleMailMessage();
-//		message.setFrom("wangmi@diligrp.com");
-//		message.setTo("asiamastor@vip.qq.com");
-//		message.setSubject("主题：简单邮件");
-//		message.setText("测试邮件内容:"+scheduleMessage.getJobData());
-//		mailSender.send(message);
-
+		Milestones milestones = JSONObject.parseObject(scheduleMessage.getJobData(), Milestones.class);
 		MimeMessage mimeMessage = mailSender.createMimeMessage();
 		MimeMessageHelper helper = null;
 		try {
@@ -64,8 +63,8 @@ public class EmailNoticeJob implements ApplicationListener<ContextRefreshedEvent
 			helper.setTo("asiamastor@vip.qq.com");
 			helper.setSubject("主题：有附件");
 			helper.setText("有附件的邮件");
-			String prefix = "fileupload/milestones/1";
-			FileSystemResource file = new FileSystemResource(new File("front.jpg"));
+			String prefix = "fileupload/milestones/";
+			FileSystemResource file = new FileSystemResource(new File(prefix+"front.jpg"));
 			helper.addAttachment("附件-1.jpg", file);
 			helper.addAttachment("附件-2.jpg", file);
 		} catch (MessagingException e) {
