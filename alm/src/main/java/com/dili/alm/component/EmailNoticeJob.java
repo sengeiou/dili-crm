@@ -105,15 +105,15 @@ public class EmailNoticeJob implements ApplicationListener<ContextRefreshedEvent
 				helper.setFrom(from);
 				helper.setTo(AlmCache.userMap.get(team.getMemberId()).getEmail());
 				helper.setSubject("主题：里程碑[" + milestones.getCode() + "]发布");
-				helper.setText("里程碑[" + milestones.getCode() + "]发布, <br/>版本号:" + milestones.getVersion()
-						+ ", <br/>市场:" + milestones.getMarket()
-						+ ", <br/>文档地址:" + milestones.getDocUrl()
-						+ ", <br/>git地址:" + milestones.getGit()
-						+ ", <br/>项目阶段:" + milestones.getProjectPhase()
-						+ ", <br/>发布人:" + AlmCache.userMap.get(milestones.getPublishMemberId()).getRealName()
-						+ ", <br/>发布时间:" + sdf.format(milestones.getReleaseTime())
-						+ ", <br/>访问地址:" + milestones.getVisitUrl()
-						+ ", <br/>备注:" + milestones.getNotes());
+				helper.setText("里程碑[" + milestones.getCode() + "]发布, \r\n版本号:" + milestones.getVersion()
+						+ ", \r\n市场:" + milestones.getMarket()
+						+ ", \r\n文档地址:" + milestones.getDocUrl()
+						+ ", \r\ngit地址:" + milestones.getGit()
+						+ ", \r\n项目阶段:" + milestones.getProjectPhase()
+						+ ", \r\n发布人:" + AlmCache.userMap.get(milestones.getPublishMemberId()).getRealName()
+						+ ", \r\n发布时间:" + sdf.format(milestones.getReleaseTime())
+						+ ", \r\n访问地址:" + milestones.getVisitUrl()
+						+ ", \r\n备注:" + milestones.getNotes());
 				//给团队所有成员发送附件
 				for (Files files1 : files) {
 					FileSystemResource file = new FileSystemResource(new File(path + files1.getName()));
