@@ -10,44 +10,18 @@
                     <table style="padding:10px;">
                         <tr>
                             <td style="padding:5px;">
-                                <input class="easyui-textbox" name="name" id="name" style="width:100%" data-options="label:'文件名:', validType:'length[0,200]'" />
-
+                                <input class="easyui-textbox" name="jobName" id="jobName" style="width:100%" data-options="label:'任务名:', validType:'length[0,40]'" />
                             </td>
                             <td style="padding:5px;">
-                                <input class="easyui-textbox" name="suffix" id="suffix" style="width:100%" data-options="label:'文件后缀:', validType:'length[0,10]'" />
-
+                                <input class="easyui-textbox" name="jobGroup" id="jobGroup" style="width:100%" data-options="label:'任务分组:', validType:'length[0,40]'" />
                             </td>
                             <td style="padding:5px;">
-                                <input class="easyui-numberbox" name="length" id="length" style="width:100%" data-options="label:'文件大小:', validType:'length[0,19]'" />
-
+                                <input name="jobStatus" id="jobStatus" style="width:100%;" panelWidth="auto" panelHeight="auto" label="任务状态:"/>
+                                <#comboProvider _id="jobStatus" _provider='jobStatusProvider'/>
                             </td>
                             <td style="padding:5px;">
-                                <input class="easyui-textbox" name="url" id="url" style="width:100%" data-options="label:'文件地址:', validType:'length[0,120]'" />
-
-                            </td>
-                            <td style="padding:5px;">
-                                <input class="easyui-numberbox" name="milestonesId" id="milestonesId" style="width:100%" data-options="label:'里程碑id:', validType:'length[0,19]'" />
-
-                            </td>
-                        </tr>
-                        <tr>
-                            <td style="padding:5px;">
-                                <input class="easyui-datetimebox" name="created" id="created" style="width:100%" data-options="label:'创建时间:'" />
-
-                            </td>
-                            <td style="padding:5px;">
-                                <input class="easyui-datetimebox" name="modified" id="modified" style="width:100%" data-options="label:'修改时间:'" />
-
-                            </td>
-                            <td style="padding:5px;">
-                                    <input name="createMemberId" id="createMemberId" style="width:100%;" panelWidth="auto" panelHeight="auto" label="创建人id:"/>
-                                    <#comboProvider _id="createMemberId" _provider='memberProvider'/>
-
-                            </td>
-                            <td style="padding:5px;">
-                                    <input name="modifyMemberId" id="modifyMemberId" style="width:100%;" panelWidth="auto" panelHeight="auto" label="修改人id:"/>
-                                    <#comboProvider _id="modifyMemberId" _provider='memberProvider'/>
-
+                                <input name="isConcurrent" id="isConcurrent" style="width:100%;" panelWidth="auto" panelHeight="auto" label="同步/异步:" />
+                                <#comboProvider _id="isConcurrent" _provider='isConcurrentProvider'/>
                             </td>
                         </tr>
                         <tr>
@@ -67,38 +41,56 @@
         <!-- 表格 -->
         <div region="center" style="width:100%;" height="auto">
             <!-- =========================================================表格========================================================= -->
-            <table class="easyui-datagrid" title="Files列表" id="grid" fitColumns="true"
+            <table class="easyui-datagrid" title="ScheduleJob列表" id="grid" fitColumns="true"
                    pagination="true" pageSize="30" pageNumber="1" pagePosition="both" rownumbers="true" remoteSort="false"
-                   loadMsg="数据加载中..." singleSelect="true" method="post" multiSort="false" sortName="name"
+                   loadMsg="数据加载中..." singleSelect="true" method="post" multiSort="false" sortName="created"
                    align="center" fit="true" striped="true" toolbar="#toolbar" idField="id" data-options="onDblClickRow:openUpdate, onHeaderContextMenu:headerContextMenu">
                 <thead>
                     <tr>
-                        <th data-options="field:'name',   sortable:'true', order:'asc', align:'center', resizable:'true', fixed:'false'">
-                            文件名
+                        <th data-options="field:'jobName',   sortable:'true', order:'asc', align:'center', resizable:'true', fixed:'false'">
+                            任务名
                         </th>
-                        <th data-options="field:'suffix',   sortable:'true', order:'asc', align:'center', resizable:'true', fixed:'false'">
-                            文件后缀
+                        <th data-options="field:'jobGroup',   sortable:'true', order:'asc', align:'center', resizable:'true', fixed:'false'">
+                            任务分组
                         </th>
-                        <th data-options="field:'length',   sortable:'true', order:'asc', align:'center', resizable:'true', fixed:'false'">
-                            文件大小
+                        <th data-options="field:'jobStatus',  _provider:'jobStatusProvider', sortable:'true', order:'asc', align:'center', resizable:'true', fixed:'false'">
+                            是否启动任务
+                        </th>
+                        <th data-options="field:'jobData',   sortable:'true', order:'asc', align:'center', resizable:'true', fixed:'false'">
+                            json
+                        </th>
+                        <th data-options="field:'cronExpression',   sortable:'true', order:'asc', align:'center', resizable:'true', fixed:'false'">
+                            cron表达式
+                        </th>
+                        <th data-options="field:'repeatInterval',   sortable:'true', order:'asc', align:'center', resizable:'true', fixed:'false'">
+                            重复间隔(s)
+                        </th>
+                        <th data-options="field:'startDelay',   sortable:'true', order:'asc', align:'center', resizable:'true', fixed:'false'">
+                            启动间隔(s)
+                        </th>
+                        <th data-options="field:'description',   sortable:'true', order:'asc', align:'center', resizable:'true', fixed:'false'">
+                            描述
+                        </th>
+                        <th data-options="field:'beanClass',   sortable:'true', order:'asc', align:'center', resizable:'true', fixed:'false'">
+                            任务调用类
+                        </th>
+                        <th data-options="field:'springId',   sortable:'true', order:'asc', align:'center', resizable:'true', fixed:'false'">
+                            SpringBeanId
                         </th>
                         <th data-options="field:'url',   sortable:'true', order:'asc', align:'center', resizable:'true', fixed:'false'">
-                            文件地址
+                            url
                         </th>
-                        <th data-options="field:'milestonesId',   sortable:'true', order:'asc', align:'center', resizable:'true', fixed:'false'">
-                            里程碑id
+                        <th data-options="field:'isConcurrent',  _provider:'isConcurrentProvider', sortable:'true', order:'asc', align:'center', resizable:'true', fixed:'false'">
+                            同步/异步
+                        </th>
+                        <th data-options="field:'methodName',   sortable:'true', order:'asc', align:'center', resizable:'true', fixed:'false'">
+                            方法名
                         </th>
                         <th data-options="field:'created',  _provider:'datetimeProvider', sortable:'true', order:'asc', align:'center', resizable:'true', fixed:'false'">
                             创建时间
                         </th>
                         <th data-options="field:'modified',  _provider:'datetimeProvider', sortable:'true', order:'asc', align:'center', resizable:'true', fixed:'false'">
                             修改时间
-                        </th>
-                        <th data-options="field:'createMemberId',  _provider:'memberProvider', sortable:'true', order:'asc', align:'center', resizable:'true', fixed:'false'">
-                            创建人id
-                        </th>
-                        <th data-options="field:'modifyMemberId',  _provider:'memberProvider', sortable:'true', order:'asc', align:'center', resizable:'true', fixed:'false'">
-                            修改人id
                         </th>
                     </tr>
                 </thead>
@@ -122,7 +114,7 @@
         </div>
     </div>
     <!-- 隐藏编辑框 -->
-    <div id="dlg" class="easyui-dialog" resizable="false" constrain="true" shadow="true" draggable="false" title="Files信息" style="padding:20px" modal="true" border="thin" closed="true"
+    <div id="dlg" class="easyui-dialog" resizable="false" constrain="true" shadow="true" draggable="false" title="ScheduleJob信息" style="padding:20px" modal="true" border="thin" closed="true"
          data-options="
 				iconCls: 'icon-save',
 				height: 480,
@@ -142,53 +134,63 @@
         <table width="360px">
             <tr>
                 <td style="padding:5px;">
-                    <input class="easyui-textbox" name="_name" id="_name" style="width:100%" data-options="label:'文件名:', validType:'length[0,200]'" />
+                    <input class="easyui-textbox" name="_jobName" id="_jobName" style="width:100%" data-options="label:'任务名:', validType:'length[0,40]'" />
                 </td>
             </tr>
             <tr>
                 <td style="padding:5px;">
-                    <input class="easyui-textbox" name="_suffix" id="_suffix" style="width:100%" data-options="label:'文件后缀:', validType:'length[0,10]'" />
+                    <input class="easyui-textbox" name="_jobGroup" id="_jobGroup" style="width:100%" data-options="label:'任务分组:', validType:'length[0,40]'" />
                 </td>
             </tr>
             <tr>
                 <td style="padding:5px;">
-                    <input class="easyui-numberbox" name="_length" id="_length" style="width:100%" data-options="label:'文件大小:'" />
+                    <input class="easyui-textbox" name="_jobData" id="_jobData" style="width:100%" data-options="label:'json:', validType:'length[0,1000]'" />
                 </td>
             </tr>
             <tr>
                 <td style="padding:5px;">
-                    <input class="easyui-textbox" name="_url" id="_url" style="width:100%" data-options="label:'文件地址:', validType:'length[0,120]'" />
+                    <input class="easyui-textbox" name="_cronExpression" id="_cronExpression" style="width:100%" data-options="label:'cron表达式:', validType:'length[0,40]'" />
                 </td>
             </tr>
             <tr>
                 <td style="padding:5px;">
-                    <input class="easyui-numberbox" name="_milestonesId" id="_milestonesId" style="width:100%" data-options="label:'里程碑id:'" />
+                    <input class="easyui-numberbox" name="_repeatInterval" id="_repeatInterval" style="width:100%" data-options="label:'重复间隔(s):'" />
                 </td>
             </tr>
             <tr>
                 <td style="padding:5px;">
-                    <input class="easyui-datetimebox" name="_created" id="_created" style="width:100%" data-options="label:'创建时间:'" 
-                        required="true" />
+                    <input class="easyui-numberbox" name="_startDelay" id="_startDelay" style="width:100%" data-options="label:'启动间隔(s):'" />
                 </td>
             </tr>
             <tr>
                 <td style="padding:5px;">
-                    <input class="easyui-datetimebox" name="_modified" id="_modified" style="width:100%" data-options="label:'修改时间:'" 
-                        required="true" />
+                    <input class="easyui-textbox" name="_description" id="_description" style="width:100%" data-options="label:'描述:', validType:'length[0,200]'" />
                 </td>
             </tr>
             <tr>
                 <td style="padding:5px;">
-                       <input name="_createMemberId" id="_createMemberId" style="width:100%;" panelWidth="auto" panelHeight="auto" label="创建人id:" />
-                       <#comboProvider _id="_createMemberId" _provider='memberProvider'/>
-
+                    <input class="easyui-textbox" name="_beanClass" id="_beanClass" style="width:100%" data-options="label:'任务调用类:', validType:'length[0,100]'" />
                 </td>
             </tr>
             <tr>
                 <td style="padding:5px;">
-                       <input name="_modifyMemberId" id="_modifyMemberId" style="width:100%;" panelWidth="auto" panelHeight="auto" label="修改人id:" />
-                       <#comboProvider _id="_modifyMemberId" _provider='memberProvider'/>
-
+                    <input class="easyui-textbox" name="_springId" id="_springId" style="width:100%" data-options="label:'SpringBeanId:', validType:'length[0,40]'" />
+                </td>
+            </tr>
+            <tr>
+                <td style="padding:5px;">
+                    <input class="easyui-textbox" name="_url" id="_url" style="width:100%" data-options="label:'url:', validType:'length[0,100]'" />
+                </td>
+            </tr>
+            <tr>
+                <td style="padding:5px;">
+                       <input name="_isConcurrent" id="_isConcurrent" style="width:100%;" panelWidth="auto" panelHeight="auto" label="同步/异步:" />
+                       <#comboProvider _id="_isConcurrent" _provider='isConcurrentProvider'/>
+                </td>
+            </tr>
+            <tr>
+                <td style="padding:5px;">
+                    <input class="easyui-textbox" name="_methodName" id="_methodName" style="width:100%" data-options="label:'方法名:', validType:'length[0,40]'" />
                 </td>
             </tr>
         </table>
@@ -204,7 +206,7 @@
             $('#dlg').dialog('open');
             $('#dlg').dialog('center');
             $('#_form').form('clear');
-            formFocus("_form", "_name");
+            formFocus("_form", "_created");
         }
 
         //打开修改窗口
@@ -216,7 +218,7 @@
             }
             $('#dlg').dialog('open');
             $('#dlg').dialog('center');
-            formFocus("_form", "_name");
+            formFocus("_form", "_created");
             var formData = $.extend({},selected);
             formData = addKeyStartWith(getOriginalData(formData),"_");
             $('#_form').form('load', formData);
@@ -230,9 +232,9 @@
             var _url = null;
             //没有id就新增
             if(_formData.id == null || _formData.id==""){
-                _url = "${contextPath}/files/insert";
+                _url = "${contextPath}/scheduleJob/insert";
             }else{//有id就修改
-                _url = "${contextPath}/files/update";
+                _url = "${contextPath}/scheduleJob/update";
             }
             $.ajax({
                 type: "POST",
@@ -266,7 +268,7 @@
                 if (r){
                     $.ajax({
                         type: "POST",
-                        url: "${contextPath}/files/delete",
+                        url: "${contextPath}/scheduleJob/delete",
                         data: {id:selected.id},
                         processData:true,
                         dataType: "json",
@@ -291,7 +293,7 @@
         function queryGrid() {
             var opts = $("#grid").datagrid("options");
             if (null == opts.url || "" == opts.url) {
-                opts.url = "${contextPath}/files/listPage";
+                opts.url = "${contextPath}/scheduleJob/listPage";
             }
             if(!$('#form').form("validate")){
                 return;
@@ -352,8 +354,8 @@
          *          表单提交需执行的任务
          */
         $(function () {
-            bindFormEvent("form", "name", queryGrid);
-            bindFormEvent("_form", "_name", saveOrUpdate, function (){$('#dlg').dialog('close');});
+            bindFormEvent("form", "created", queryGrid);
+            bindFormEvent("_form", "_created", saveOrUpdate, function (){$('#dlg').dialog('close');});
             if (document.addEventListener) {
                 document.addEventListener("keyup",getKey,false);
             } else if (document.attachEvent) {

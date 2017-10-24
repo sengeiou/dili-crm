@@ -68,7 +68,7 @@
 		<dependency>
 			<groupId>com.dili</groupId>
 			<artifactId>sharp-sword</artifactId>
-			<version>1.5.4-SNAPSHOT</version>
+			<version>1.5.5-SNAPSHOT</version>
 		</dependency>
 
         <dependency>

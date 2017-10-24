@@ -14,64 +14,34 @@
 
                             </td>
                             <td style="padding:5px;">
-                                    <input name="projectId" id="projectId" style="width:100%;" panelWidth="auto" panelHeight="auto" label="项目id:"/>
+                                    <input name="projectId" id="projectId" style="width:100%;" panelWidth="auto" panelHeight="auto" label="所属项目:"/>
                                     <#comboProvider _id="projectId" _provider='projectProvider'/>
 
                             </td>
-                            <td style="padding:5px;">
-                                <input class="easyui-numberbox" name="parentId" id="parentId" style="width:100%" data-options="label:'上级id:', validType:'length[0,19]'" />
-
-                            </td>
-                            <td style="padding:5px;">
-                                <input class="easyui-textbox" name="git" id="git" style="width:100%" data-options="label:'git地址:', validType:'length[0,255]'" />
-
-                            </td>
-                            <td style="padding:5px;">
-                                <input class="easyui-textbox" name="docUrl" id="docUrl" style="width:100%" data-options="label:'redmine文档地址:', validType:'length[0,255]'" />
-
-                            </td>
-                        </tr>
-                        <tr>
                             <td style="padding:5px;">
                                 <input class="easyui-textbox" name="version" id="version" style="width:100%" data-options="label:'版本号:', validType:'length[0,40]'" />
 
                             </td>
                             <td style="padding:5px;">
-                                    <input name="market" id="market" style="width:100%;" panelWidth="auto" panelHeight="auto" label="所属市场:"/>
+                                <input name="market" id="market" style="width:100%;" panelWidth="auto" panelHeight="auto" label="所属市场:"/>
                                 <#comboProvider _id="market" _table="data_dictionary_value" _valueField="value" _textField="code" _orderByClause="order_number asc" _queryParams='{"yn":1,"dd_id":1}'/>
 
                             </td>
                             <td style="padding:5px;">
-                                    <input name="projectPhase" id="projectPhase" style="width:100%;" panelWidth="auto" panelHeight="auto" label="项目阶段:"/>
+                                <input name="projectPhase" id="projectPhase" style="width:100%;" panelWidth="auto" panelHeight="auto" label="项目阶段:"/>
                                 <#comboProvider _id="projectPhase" _table="data_dictionary_value" _valueField="value" _textField="code" _orderByClause="order_number asc" _queryParams='{"yn":1,"dd_id":2}'/>
-
-                            </td>
-                            <td style="padding:5px;">
-                                <input class="easyui-textbox" name="notes" id="notes" style="width:100%" data-options="label:'备注:', validType:'length[0,255]'" />
-
-                            </td>
-                            <td style="padding:5px;">
-                                    <input name="publishMemberId" id="publishMemberId" style="width:100%;" panelWidth="auto" panelHeight="auto" label="发布人id:"/>
-                                    <#comboProvider _id="publishMemberId" _provider='memberProvider'/>
 
                             </td>
                         </tr>
                         <tr>
                             <td style="padding:5px;">
-                                    <input name="modifyMemberId" id="modifyMemberId" style="width:100%;" panelWidth="auto" panelHeight="auto" label="修改人id:"/>
+                                    <input name="publishMemberId" id="publishMemberId" style="width:100%;" panelWidth="auto" panelHeight="auto" label="发布人:"/>
+                                    <#comboProvider _id="publishMemberId" _provider='memberProvider'/>
+
+                            </td>
+                            <td style="padding:5px;">
+                                    <input name="modifyMemberId" id="modifyMemberId" style="width:100%;" panelWidth="auto" panelHeight="auto" label="修改人:"/>
                                     <#comboProvider _id="modifyMemberId" _provider='memberProvider'/>
-
-                            </td>
-                            <td style="padding:5px;">
-                                <input class="easyui-datetimebox" name="created" id="created" style="width:100%" data-options="label:'发布时间:'" />
-
-                            </td>
-                            <td style="padding:5px;">
-                                <input class="easyui-datetimebox" name="modified" id="modified" style="width:100%" data-options="label:'修改时间:'" />
-
-                            </td>
-                            <td style="padding:5px;">
-                                <input class="easyui-datetimebox" name="releaseTime" id="releaseTime" style="width:100%" data-options="label:'上线时间:'" />
 
                             </td>
                             <td style="padding:5px;">
@@ -80,20 +50,7 @@
 
                             </td>
                         </tr>
-                        <tr>
-                            <td style="padding:5px;">
-                                <input class="easyui-textbox" name="host" id="host" style="width:100%" data-options="label:'主机:', validType:'length[0,120]'" />
 
-                            </td>
-                            <td style="padding:5px;">
-                                <input class="easyui-numberbox" name="port" id="port" style="width:100%" data-options="label:'端口:', validType:'length[0,10]'" />
-
-                            </td>
-                            <td style="padding:5px;">
-                                <input class="easyui-textbox" name="visitUrl" id="visitUrl" style="width:100%" data-options="label:'访问地址:', validType:'length[0,120]'" />
-
-                            </td>
-                        </tr>
                         <tr>
                             <td>
                                 <a href="#" class="easyui-linkbutton" iconCls="icon-search" id="queryBtn"
@@ -111,20 +68,26 @@
         <!-- 表格 -->
         <div region="center" style="width:100%;" height="auto">
             <!-- =========================================================表格========================================================= -->
-            <table class="easyui-datagrid" title="Milestones列表" id="grid" fitColumns="true"
+            <table class="easyui-treegrid" title="Milestones列表" id="grid" fitColumns="true"
                    pagination="true" pageSize="30" pageNumber="1" pagePosition="both" rownumbers="true" remoteSort="false"
                    loadMsg="数据加载中..." singleSelect="true" method="post" multiSort="false" sortName="code"
-                   align="center" fit="true" striped="true" toolbar="#toolbar" idField="id" data-options="onDblClickRow:openUpdate, onHeaderContextMenu:headerContextMenu">
+                   align="center" fit="true" striped="true" toolbar="#toolbar" idField="id"
+                   data-options="onDblClickRow:openUpdate,
+                    onHeaderContextMenu:headerContextMenu,
+                    idField: 'id',
+                    treeField: 'code',
+                    _parentIdField:'parentId',
+                    loadFilter:treegridLoadFilter">
                 <thead>
                     <tr>
                         <th data-options="field:'code',   sortable:'true', order:'asc', align:'center', resizable:'true', fixed:'false'">
                             项目发布编号
                         </th>
-                        <th data-options="field:'projectId',  _provider:'projectProvider', sortable:'true', order:'asc', align:'center', resizable:'true', fixed:'false'">
-                            项目id
+                        <th data-options="field:'parentCode', _provider:'milestonesProvider',  sortable:'true', order:'asc', align:'center', resizable:'true', fixed:'false'">
+                            上级里程碑
                         </th>
-                        <th data-options="field:'parentId',   sortable:'true', order:'asc', align:'center', resizable:'true', fixed:'false'">
-                            上级id
+                        <th data-options="field:'projectId',  _provider:'projectProvider', sortable:'true', order:'asc', align:'center', resizable:'true', fixed:'false'">
+                            所属项目
                         </th>
                         <th data-options="field:'git',   sortable:'true', order:'asc', align:'center', resizable:'true', fixed:'false'">
                             git地址
@@ -145,10 +108,10 @@
                             备注
                         </th>
                         <th data-options="field:'publishMemberId',  _provider:'memberProvider', sortable:'true', order:'asc', align:'center', resizable:'true', fixed:'false'">
-                            发布人id
+                            发布人
                         </th>
                         <th data-options="field:'modifyMemberId',  _provider:'memberProvider', sortable:'true', order:'asc', align:'center', resizable:'true', fixed:'false'">
-                            修改人id
+                            修改人
                         </th>
                         <th data-options="field:'created',  _provider:'datetimeProvider', sortable:'true', order:'asc', align:'center', resizable:'true', fixed:'false'">
                             发布时间
@@ -176,11 +139,20 @@
             </table>
             <!-- datagrid工具栏 -->
             <div id="toolbar" style="padding:2px 5px;">
-                <a href="#" class="easyui-linkbutton" iconCls="icon-add" onclick="openInsert()" plain="true"></a>
-                <a href="#" class="easyui-linkbutton" iconCls="icon-edit" onclick="openUpdate()" plain="true"></a>
-                <a href="#" class="easyui-linkbutton" iconCls="icon-remove" onclick="del()" plain="true"></a>
-                <a href="#" class="easyui-linkbutton" iconCls="icon-large-clipart" onclick="openFiles()" plain="true"></a>
-                <a href="#" class="easyui-linkbutton" iconCls="icon-export" onclick="doExport('grid')" plain="true"></a>
+                <#resource code="milestones_add_root">
+                <a href="#" class="easyui-linkbutton" iconCls="icon-add" onclick="openRootInsert()" plain="true">添加顶级</a>
+                </#resource>
+                <#resource code="milestones_add_child">
+                <a href="#" class="easyui-linkbutton" iconCls="icon-add" onclick="openChildInsert()" plain="true">添加子级</a>
+                </#resource>
+                <#resource code="milestones_modify">
+                <a href="#" class="easyui-linkbutton" iconCls="icon-edit" onclick="openUpdate()" plain="true">修改</a>
+                </#resource>
+                <#resource code="milestones_delete">
+                <a href="#" class="easyui-linkbutton" iconCls="icon-remove" onclick="del()" plain="true">删除</a>
+                </#resource>
+                <a href="#" class="easyui-linkbutton" iconCls="icon-large-clipart" onclick="openFiles()" plain="true">管理文件</a>
+                <a href="#" class="easyui-linkbutton" iconCls="icon-export" onclick="doExport('grid',true)" plain="true">导出</a>
                 <div style="float:right">
                 边框显示:<select onchange="changeBorder('grid',this.value)">
                     <option value="lines-both">全边框</option>
@@ -219,14 +191,15 @@
             </tr>
             <tr>
                 <td style="padding:5px;">
-                       <input name="_projectId" id="_projectId" style="width:100%;" panelWidth="auto" panelHeight="auto" label="项目id:" />
-                       <#comboProvider _id="_projectId" _provider='projectProvider'/>
-
+                    <input class="easyui-textbox" name="_parentCode" id="_parentCode" readonly="true" style="width:100%" label="上级里程碑:" />
+                    <input name="_parentId" type="hidden" id="_parentId" />
                 </td>
             </tr>
             <tr>
                 <td style="padding:5px;">
-                    <input class="easyui-numberbox" name="_parentId" id="_parentId" style="width:100%" data-options="label:'上级id:'" />
+                       <input name="_projectId" id="_projectId" style="width:100%;" panelWidth="auto" panelHeight="auto" label="所属项目:" required="true"/>
+                       <#comboProvider _id="_projectId" _provider='projectProvider'/>
+
                 </td>
             </tr>
             <tr>
@@ -265,39 +238,12 @@
             </tr>
             <tr>
                 <td style="padding:5px;">
-                       <input name="_publishMemberId" id="_publishMemberId" style="width:100%;" panelWidth="auto" panelHeight="auto" label="发布人id:" />
-                       <#comboProvider _id="_publishMemberId" _provider='memberProvider'/>
-
+                    <input class="easyui-datetimebox" name="_releaseTime" id="_releaseTime" style="width:100%" data-options="label:'上线时间:'"  />
                 </td>
             </tr>
             <tr>
                 <td style="padding:5px;">
-                       <input name="_modifyMemberId" id="_modifyMemberId" style="width:100%;" panelWidth="auto" panelHeight="auto" label="修改人id:" />
-                       <#comboProvider _id="_modifyMemberId" _provider='memberProvider'/>
-
-                </td>
-            </tr>
-            <tr>
-                <td style="padding:5px;">
-                    <input class="easyui-datetimebox" name="_created" id="_created" style="width:100%" data-options="label:'发布时间:'" 
-                        required="true" />
-                </td>
-            </tr>
-            <tr>
-                <td style="padding:5px;">
-                    <input class="easyui-datetimebox" name="_modified" id="_modified" style="width:100%" data-options="label:'修改时间:'" 
-                        required="true" />
-                </td>
-            </tr>
-            <tr>
-                <td style="padding:5px;">
-                    <input class="easyui-datetimebox" name="_releaseTime" id="_releaseTime" style="width:100%" data-options="label:'上线时间:'" 
-                        required="true" />
-                </td>
-            </tr>
-            <tr>
-                <td style="padding:5px;">
-                       <input name="_emailNotice" id="_emailNotice" style="width:100%;" panelWidth="auto" panelHeight="auto" label="是否上线通知:" />
+                       <input name="_emailNotice" id="_emailNotice" style="width:100%;" panelWidth="auto" panelHeight="auto" label="是否上线通知:" required="true"/>
                        <#comboProvider _id="_emailNotice" _provider='emailNoticeProvider'/>
 
                 </td>
@@ -330,7 +276,8 @@
         function callback(returnmsg){
             $('#filesForm').form('clear');
             $("#filesGrid").datagrid("reload");
-            alert(returnmsg);
+            $("#filesDlg").dialog("close");
+            $.messager.alert('提示',returnmsg);
         }
         //打开文件
         function openFiles(){
@@ -343,23 +290,43 @@
                 href:'${contextPath}/milestones/files.html',
                 queryParams:{milestonesId:selected.id},
                 title:"文件列表",
-                width:720,
+                width:800,
                 height:420,
                 onLoad:function(){
 //                    alert('loaded successfully');
                 }
             });
         }
-        //打开新增窗口
-        function openInsert(){
+        //打开新增顶级窗口
+        function openRootInsert(){
+        <#resource code="milestones_add_root">
             $('#dlg').dialog('open');
             $('#dlg').dialog('center');
             $('#_form').form('clear');
             formFocus("_form", "_code");
+        </#resource>
+        }
+
+        //打开新增子级窗口
+        function openChildInsert(){
+            <#resource code="milestones_add_child">
+            var selected = $("#grid").datagrid("getSelected");
+            if (null == selected) {
+                $.messager.alert('警告','请选中一条数据');
+                return;
+            }
+            $('#dlg').dialog('open');
+            $('#dlg').dialog('center');
+            $('#_form').form('clear');
+            $("#_parentCode").textbox("setValue", selected["code"]);
+            $("#_parentId").val(selected["id"]);
+            formFocus("_form", "_code");
+            </#resource>
         }
 
         //打开修改窗口
         function openUpdate(){
+            <#resource code="milestones_modify">
             var selected = $("#grid").datagrid("getSelected");
             if (null == selected) {
                 $.messager.alert('警告','请选中一条数据');
@@ -370,7 +337,9 @@
             formFocus("_form", "_code");
             var formData = $.extend({},selected);
             formData = addKeyStartWith(getOriginalData(formData),"_");
+            $('#_form').form('clear');
             $('#_form').form('load', formData);
+            </#resource>
         }
 
         function saveOrUpdate(){
@@ -394,7 +363,7 @@
                 async : true,
                 success: function (data) {
                     if(data.code=="200"){
-                        $("#grid").datagrid("reload");
+                        $("#grid").treegrid("reload");
                         $('#dlg').dialog('close');
                     }else{
                         $.messager.alert('错误',data.result);
@@ -408,6 +377,7 @@
 
         //根据主键删除
         function del() {
+        <#resource code="milestones_delete">
             var selected = $("#grid").datagrid("getSelected");
             if (null == selected) {
                 $.messager.alert('警告','请选中一条数据');
@@ -424,7 +394,7 @@
                         async : true,
                         success: function (data) {
                             if(data.code=="200"){
-                                $("#grid").datagrid("reload");
+                                $("#grid").treegrid("reload");
                                 $('#dlg').dialog('close');
                             }else{
                                 $.messager.alert('错误',data.result);
@@ -436,11 +406,11 @@
                     });
                 }
             });
-
+        </#resource>
         }
         //表格查询
         function queryGrid() {
-            var opts = $("#grid").datagrid("options");
+            var opts = $("#grid").treegrid("options");
             if (null == opts.url || "" == opts.url) {
                 opts.url = "${contextPath}/milestones/listPage";
             }
@@ -450,7 +420,7 @@
             var param = bindMetadata("grid", true);
             var formData = $("#form").serializeObject();
             $.extend(param, formData);
-            $("#grid").datagrid("load", param);
+            $("#grid").treegrid("load", param);
         }
 
 
