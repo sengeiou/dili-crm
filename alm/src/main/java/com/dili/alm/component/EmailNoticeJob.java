@@ -15,6 +15,7 @@ import com.dili.ss.dto.DTOUtils;
 import com.dili.ss.quartz.domain.ScheduleJob;
 import com.dili.ss.quartz.domain.ScheduleMessage;
 import com.dili.ss.quartz.service.ScheduleJobService;
+import com.dili.ss.util.SystemConfigUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -87,44 +88,42 @@ public class EmailNoticeJob implements ApplicationListener<ContextRefreshedEvent
 		MimeMessageHelper helper = null;
 		initUserMap();
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-
-		try {
-			helper = new MimeMessageHelper(mimeMessage, true);
-			helper.setFrom("wangmi@diligrp.com");
-			helper.setTo("asiamastor@vip.qq.com");
-			helper.setSubject("主题：里程碑["+milestones.getCode()+"]发布");
-			helper.setText("里程碑["+milestones.getCode()+"]发布, 版本号:"+milestones.getVersion()
-					+ ", 市场:" + milestones.getMarket()
-					+ ", 文档地址:" + milestones.getDocUrl()
-					+ ", git地址:" + milestones.getGit()
-					+ ", 项目阶段:" + milestones.getProjectPhase()
-					+ ", 发布人:" + AlmCache.userMap.get(milestones.getPublishMemberId()).getRealName()
-					+ ", 发布时间:" + sdf.format(milestones.getReleaseTime())
-					+ ", 访问地址:" + milestones.getVisitUrl()
-					+ ", 备注:" + milestones.getNotes());
-			String path = "fileupload/milestones/"+milestones.getId()+"/";
-			Team team = DTOUtils.newDTO(Team.class);
-			team.setProjectId(milestones.getProjectId());
-			team.setMemberState(AlmConstants.MemberState.JOIN.getCode());
-			//获取团队成员
-			List<Team> teams = teamService.list(team);
-			//获取里程碑相关文件
-			Files filesCondition = DTOUtils.newDTO(Files.class);
-			filesCondition.setMilestonesId(milestones.getId());
-			List<Files> files = filesService.list(filesCondition);
-			//给团队所有成员发送附件
-			if(!files.isEmpty()) {
-				for (Team t : teams) {
-					for(Files files1 : files) {
-						FileSystemResource file = new FileSystemResource(new File(path +files1.getName()));
-						helper.addAttachment(files1.getName(), file);
-					}
+		Team teamCondition = DTOUtils.newDTO(Team.class);
+		teamCondition.setProjectId(milestones.getProjectId());
+		teamCondition.setMemberState(AlmConstants.MemberState.JOIN.getCode());
+		//获取团队成员
+		List<Team> teams = teamService.list(teamCondition);
+		String path = "fileupload/milestones/" + milestones.getId() + "/";
+		//获取里程碑相关文件
+		Files filesCondition = DTOUtils.newDTO(Files.class);
+		filesCondition.setMilestonesId(milestones.getId());
+		List<Files> files = filesService.list(filesCondition);
+		String from = SystemConfigUtils.getProperty("spring.mail.username");
+		for (Team team : teams) {
+			try {
+				helper = new MimeMessageHelper(mimeMessage, true);
+				helper.setFrom(from);
+				helper.setTo(AlmCache.userMap.get(team.getMemberId()).getEmail());
+				helper.setSubject("主题：里程碑[" + milestones.getCode() + "]发布");
+				helper.setText("里程碑[" + milestones.getCode() + "]发布, <br/>版本号:" + milestones.getVersion()
+						+ ", <br/>市场:" + milestones.getMarket()
+						+ ", <br/>文档地址:" + milestones.getDocUrl()
+						+ ", <br/>git地址:" + milestones.getGit()
+						+ ", <br/>项目阶段:" + milestones.getProjectPhase()
+						+ ", <br/>发布人:" + AlmCache.userMap.get(milestones.getPublishMemberId()).getRealName()
+						+ ", <br/>发布时间:" + sdf.format(milestones.getReleaseTime())
+						+ ", <br/>访问地址:" + milestones.getVisitUrl()
+						+ ", <br/>备注:" + milestones.getNotes());
+				//给团队所有成员发送附件
+				for (Files files1 : files) {
+					FileSystemResource file = new FileSystemResource(new File(path + files1.getName()));
+					helper.addAttachment(files1.getName(), file);
 				}
+				mailSender.send(mimeMessage);
+			} catch (MessagingException e) {
+				e.printStackTrace();
+				return;
 			}
-			mailSender.send(mimeMessage);
-		} catch (MessagingException e) {
-			e.printStackTrace();
-			return;
 		}
 
 	}
