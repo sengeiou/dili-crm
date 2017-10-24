@@ -86,7 +86,11 @@ public class MilestonesController {
 	})
     @RequestMapping(value="/delete", method = {RequestMethod.GET, RequestMethod.POST})
     public @ResponseBody BaseOutput delete(Long id) {
-        milestonesService.delete(id);
-        return BaseOutput.success("删除成功");
+        int rowCnt = milestonesService.delete(id);
+        if(rowCnt > 0) {
+	        return BaseOutput.success("删除成功");
+        }else{
+	        return BaseOutput.failure("删除失败, 请先删除子里程碑");
+        }
     }
 }

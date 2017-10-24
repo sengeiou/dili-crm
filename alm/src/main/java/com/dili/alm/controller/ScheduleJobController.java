@@ -95,5 +95,23 @@ public class ScheduleJobController {
         return BaseOutput.success("删除成功");
     }
 
+	@ApiOperation("暂停ScheduleJob")
+	@ApiImplicitParams({
+			@ApiImplicitParam(name="scheduleJob", paramType="form", value = "ScheduleJob的主键", required = true)
+	})
+	@RequestMapping(value="/pause", method = {RequestMethod.GET, RequestMethod.POST})
+	public @ResponseBody BaseOutput pause(ScheduleJob scheduleJob) {
+		scheduleJobService.pauseJob(scheduleJob);
+		return BaseOutput.success("暂停成功");
+	}
 
+	@ApiOperation("恢复ScheduleJob")
+	@ApiImplicitParams({
+			@ApiImplicitParam(name="scheduleJob", paramType="form", value = "ScheduleJob的主键", required = true)
+	})
+	@RequestMapping(value="/resume", method = {RequestMethod.GET, RequestMethod.POST})
+	public @ResponseBody BaseOutput resume(ScheduleJob scheduleJob) {
+		scheduleJobService.resumeJob(scheduleJob);
+		return BaseOutput.success("恢复成功");
+	}
 }

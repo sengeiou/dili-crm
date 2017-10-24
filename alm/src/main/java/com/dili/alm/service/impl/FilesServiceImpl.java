@@ -28,4 +28,15 @@ public class FilesServiceImpl extends BaseServiceImpl<Files, Long> implements Fi
         dest.delete();
         return super.delete(aLong);
     }
+
+    @Override
+    public int delete(Files files) {
+        //先根据路径+文件名删除文件
+        if(files == null) return 0;
+        File dest = new File(files.getUrl() + files.getName());
+        dest.delete();
+        return super.delete(files.getId());
+    }
+
+
 }
