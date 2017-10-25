@@ -15,6 +15,7 @@ import com.dili.sysadmin.dao.MenuMapper;
 import com.dili.sysadmin.dao.ResourceMapper;
 import com.dili.sysadmin.dao.RoleMenuMapper;
 import com.dili.sysadmin.domain.Menu;
+import com.dili.sysadmin.domain.MenuType;
 import com.dili.sysadmin.domain.Resource;
 import com.dili.sysadmin.domain.RoleMenu;
 import com.dili.sysadmin.domain.dto.MenuListDto;
@@ -51,9 +52,9 @@ public class MenuServiceImpl extends BaseServiceImpl<Menu, Long> implements Menu
 		}
 		List<Menu> menus = this.menuDao.findByUserId(Long.valueOf(userId));
 		Iterator<Menu> it = menus.iterator();
-		while(it.hasNext()) {
+		while (it.hasNext()) {
 			Menu menu = it.next();
-			if(menu.getType().equals(2)) {
+			if (menu.getType().equals(2)) {
 				it.remove();
 			}
 		}
@@ -63,6 +64,13 @@ public class MenuServiceImpl extends BaseServiceImpl<Menu, Long> implements Menu
 	@Override
 	public List<MenuListDto> listContainAndParseResource() {
 		List<Menu> menus = this.menuDao.selectAll();
+		Iterator<Menu> it = menus.iterator();
+		while (it.hasNext()) {
+			Menu item = it.next();
+			if (item.getType().equals(MenuType.INTERNAL_LINKS)) {
+				it.remove();
+			}
+		}
 		List<MenuListDto> targetList = new ArrayList<>(menus.size());
 		for (Menu menu : menus) {
 			MenuListDto vo = new MenuListDto();

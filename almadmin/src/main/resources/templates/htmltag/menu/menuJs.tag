@@ -1,19 +1,23 @@
 var gridType;
 // 编辑行索引
-var editIndex = undefined;
+var editIndexMap = {
+	grid : undefined,
+	inlineGrid : undefined
+};
 
-function isEditing() {
-	return undefined != editIndex;
+function isEditing(gridId) {
+	return undefined != editIndexMap[gridId];
 }
 
 // 结束行编辑
-function endEditing() {
-	if (editIndex == undefined) {
+function endEditing(gridId) {
+	var grid = $('#' + gridId);
+	if (editIndexMap[gridId] == undefined) {
 		return true
 	}
-	if (menuGrid.datagrid('validateRow', editIndex)) {
-		menuGrid.datagrid('endEdit', editIndex);
-		editIndex = undefined;
+	if (grid.datagrid('validateRow', editIndexMap[gridId])) {
+		grid.datagrid('endEdit', editIndexMap[gridId]);
+		editIndexMap[gridId] = undefined;
 		return true;
 	} else {
 		return false;
@@ -21,45 +25,46 @@ function endEditing() {
 }
 
 // 新增一行空数据并开启编辑模式
-function openInsert() {
+function openInsert(gridId) {
 	if (!dataAuth.addMenu) {
 		return;
 	}
+	var grid = $('#' + gridId);
 	if (!endEditing()) {
 		$.messager.alert('警告', '有数据正在编辑');
 		return;
 	}
-	editIndex = menuGrid.datagrid('getRows').length;
-	menuGrid.datagrid('appendRow', {
-				type : 0
-			});
-	menuGrid.datagrid('selectRow', editIndex);
-	menuGrid.datagrid('beginEdit', editIndex);
+	editIndexMap[gridId] = grid.datagrid('getRows').length;
+	grid.datagrid('appendRow', {});
+	grid.datagrid('selectRow', editIndexMap[gridId]);
+	grid.datagrid('beginEdit', editIndexMap[gridId]);
 }
 
 // 开启选中行的编辑模式
-function openUpdate() {
+function openUpdate(gridId) {
 	if (!dataAuth.editMenu) {
 		return;
 	}
-	var selected = menuGrid.datagrid("getSelected");
+	var grid = $('#' + gridId);
+	var selected = grid.datagrid("getSelected");
 	if (!selected) {
 		$.messager.alert('警告', '请选中一条数据');
 		return;
 	}
-	var index = menuGrid.datagrid('getRowIndex', selected);
-	if (endEditing()) {
-		menuGrid.datagrid('selectRow', index).datagrid('beginEdit', index);
-		editIndex = index;
+	var index = grid.datagrid('getRowIndex', selected);
+	if (endEditing(gridId)) {
+		grid.datagrid('selectRow', index).datagrid('beginEdit', index);
+		editIndexMap[gridId] = index;
 	}
 }
 
 // 根据主键删除
-function del() {
+function del(gridId) {
 	if (!dataAuth.deleteMenu) {
 		return;
 	}
-	var selected = menuGrid.datagrid("getSelected");
+	var grid = $('#' + gridId);
+	var selected = grid.datagrid("getSelected");
 	if (null == selected) {
 		$.messager.alert('警告', '请选中一条数据');
 		return;
@@ -68,7 +73,7 @@ function del() {
 				if (r) {
 					$.ajax({
 								type : "POST",
-								url : (gridType == 1 ? '${contextPath!}/resource/' : '${contextPath!}/menu/') + '/delete',
+								url : (gridType == 1 && gridId == 'grid' ? '${contextPath!}/resource/' : '${contextPath!}/menu/') + '/delete',
 								data : {
 									id : selected.id
 								},
@@ -77,7 +82,7 @@ function del() {
 								async : true,
 								success : function(data) {
 									if (data.code == "200") {
-										menuGrid.datagrid('deleteRow', menuGrid.datagrid('getRowIndex', selected));
+										grid.datagrid('deleteRow', grid.datagrid('getRowIndex', selected));
 										$('#dlg').dialog('close');
 										if (gridType == 0) {
 											var removeNode = menuTree.tree('find', selected.id);
@@ -102,11 +107,52 @@ function del() {
  *            node 页面布局左边树形菜单节点数据，根据这个参数来判断是显示menu还是resource
  */
 function queryGrid(node) {
-	cancelEdit();
+	cancelEdit('grid');
+	cancelEdit('inlineGrid');
 	gridType = node.attributes.type;
 	if (node.attributes.type == 1) {
+		$('#center').height('50%');
+		$('#south').show();
 		menuGrid.datagrid({
+					title : "菜单列表",
+					fitColumns : true,
+					remoteSort : false,
+					loadMsg : "数据加载中...",
+					singleSelect : true,
+					method : "post",
+					multiSort : true,
+					sortName : "id",
+					align : "center",
+					height : '100%',
+					striped : true,
+					onClickRow : onClickRow,
+					onDblClickRow : onDblClickRow,
+					onAfterEdit : onAfterEdit,
+					onCancelEdit : onCancelEdit,
+					onBeginEdit : onBeginEdit,
+					onEndEdit : onEndEdit,
+					onLoadSuccess : onGridLoadSuccess,
+					idField : "id",
 					url : '${contextPath!}/resource/list',
+					toolbar : [{
+								iconCls : 'icon-add',
+								plain : true,
+								handler : function() {
+									openInsert('grid');
+								}
+							}, {
+								iconCls : 'icon-edit',
+								plain : true,
+								handler : function() {
+									openUpdate('grid');
+								}
+							}, {
+								iconCls : 'icon-remove',
+								plain : true,
+								handler : function() {
+									del('grid');
+								}
+							}],
 					queryParams : {
 						menuId : node.id
 					},
@@ -146,15 +192,174 @@ function queryGrid(node) {
 								width : '10%',
 								hidden : true,
 								formatter : function(value, row, index) {
-									var content = '<input type="button" id="btnSave' + index + '" style="margin:0px 4px;display:none;" value="保存" onclick="javascript:endEditing();">';
-									content += '<input type="button" id="btnCancel' + index + '" style="margin:0px 4px;display:none;" value="取消" onclick="javascript:cancelEdit();">';
+									var content = '<input type="button" id="gridBtnSave' + index + '" style="margin:0px 4px;display:none;" value="保存" onclick="javascript:endEditing(\'grid\');">';
+									content += '<input type="button" id="gridBtnCancel' + index + '" style="margin:0px 4px;display:none;" value="取消" onclick="javascript:cancelEdit(\'grid\');">';
+									return content;
+								}
+							}]]
+				});
+		inlineGrid.datagrid({
+					title : "内链菜单",
+					fitColumns : true,
+					remoteSort : false,
+					loadMsg : "数据加载中...",
+					singleSelect : true,
+					method : "post",
+					multiSort : true,
+					sortName : "id",
+					align : "center",
+					fit : true,
+					striped : true,
+					onClickRow : onClickRow,
+					onDblClickRow : onDblClickRow,
+					onAfterEdit : onAfterEdit,
+					onCancelEdit : onCancelEdit,
+					onBeginEdit : onBeginEdit,
+					onEndEdit : onEndEdit,
+					onLoadSuccess : onGridLoadSuccess,
+					idField : "id",
+					url : '${contextPath!}/menu/list',
+					toolbar : [{
+								iconCls : 'icon-add',
+								plain : true,
+								handler : function() {
+									openInsert('inlineGrid');
+								}
+							}, {
+								iconCls : 'icon-edit',
+								plain : true,
+								handler : function() {
+									openUpdate('inlineGrid');
+								}
+							}, {
+								iconCls : 'icon-remove',
+								plain : true,
+								handler : function() {
+									del('inlineGrid');
+								}
+							}],
+					queryParams : {
+						parentId : node.id,
+						type : 2
+					},
+					columns : [[{
+								field : 'id',
+								title : 'id',
+								hidden : true
+							}, {
+								field : 'name',
+								title : '菜单名称',
+								width : '10%',
+								editor : {
+									type : 'textbox',
+									options : {
+										required : true,
+										validType : 'length[1, 50]',
+										missingMessage : '菜单名称不能为空',
+										invalidMessage : '菜单名称必须是1-50个字符'
+									}
+								}
+							}, {
+								field : 'type',
+								title : '类型',
+								width : '10%',
+								formatter : function(value, row, index) {
+									if (value == 0) {
+										return '目录';
+									} else if (value == 1) {
+										return '链接';
+									} else if (value == 2) {
+										return '内联';
+									}
+								},
+								editor : {
+									type : 'combobox',
+									options : {
+										valueField : 'value',
+										textField : 'name',
+										editable : false,
+										data : [{
+													name : '内联',
+													value : 2
+												}]
+									}
+								}
+
+							}, {
+								field : 'menuUrl',
+								title : '菜单链接地址',
+								width : '35%',
+								editor : {
+									type : 'textbox'
+								}
+							}, {
+								field : 'description',
+								title : '描述',
+								width : '40%',
+								editor : 'text'
+							}, {
+								field : 'orderNumber',
+								title : '排序',
+								width : '5%',
+								editor : {
+									type : 'numberbox'
+								}
+							}, {
+								field : 'opt',
+								title : '操作',
+								width : '10%',
+								hidden : true,
+								formatter : function(value, row, index) {
+									var content = '<input type="button" id="inlineGridBtnSave' + index
+											+ '" style="margin:0px 4px;display:none;" value="保存" onclick="javascript:endEditing(\'inlineGrid\');">';
+									content += '<input type="button" id="inlineGridBtnCancel' + index
+											+ '" style="margin:0px 4px;display:none;" value="取消" onclick="javascript:cancelEdit(\'inlineGrid\');">';
 									return content;
 								}
 							}]]
 				});
 	} else if (node.attributes.type == 0) {
+		$('#south').hide();
+		$('#center').height('100%');
 		menuGrid.datagrid({
+					title : "内链菜单",
+					fitColumns : true,
+					remoteSort : false,
+					loadMsg : "数据加载中...",
+					singleSelect : true,
+					method : "post",
+					multiSort : true,
+					sortName : "orderNumber",
+					align : "center",
+					striped : true,
+					onClickRow : onClickRow,
+					onDblClickRow : onDblClickRow,
+					onAfterEdit : onAfterEdit,
+					onCancelEdit : onCancelEdit,
+					onBeginEdit : onBeginEdit,
+					onEndEdit : onEndEdit,
+					onLoadSuccess : onGridLoadSuccess,
+					idField : "id",
 					url : '${contextPath!}/menu/list',
+					toolbar : [{
+								iconCls : 'icon-add',
+								plain : true,
+								handler : function() {
+									openInsert('grid');
+								}
+							}, {
+								iconCls : 'icon-edit',
+								plain : true,
+								handler : function() {
+									openUpdate('grid');
+								}
+							}, {
+								iconCls : 'icon-remove',
+								plain : true,
+								handler : function() {
+									del('grid');
+								}
+							}],
 					queryParams : {
 						parentId : node.id
 					},
@@ -184,6 +389,8 @@ function queryGrid(node) {
 										return '目录';
 									} else if (value == 1) {
 										return '链接';
+									} else if (value == 2) {
+										return '内联';
 									}
 								},
 								editor : {
@@ -219,7 +426,7 @@ function queryGrid(node) {
 								title : '排序',
 								width : '5%',
 								editor : {
-									type : 'numberbox'									
+									type : 'numberbox'
 								}
 							}, {
 								field : 'opt',
@@ -227,70 +434,13 @@ function queryGrid(node) {
 								width : '10%',
 								hidden : true,
 								formatter : function(value, row, index) {
-									var content = '<input type="button" id="btnSave' + index + '" style="margin:0px 4px;display:none;" value="保存" onclick="javascript:endEditing();">';
-									content += '<input type="button" id="btnCancel' + index + '" style="margin:0px 4px;display:none;" value="取消" onclick="javascript:cancelEdit();">';
+									var content = '<input type="button" id="gridBtnSave' + index + '" style="margin:0px 4px;display:none;" value="保存" onclick="javascript:endEditing(\'grid\');">';
+									content += '<input type="button" id="gridBtnCancel' + index + '" style="margin:0px 4px;display:none;" value="取消" onclick="javascript:cancelEdit(\'grid\');">';
 									return content;
 								}
 							}]]
 				});
 
-	}
-}
-
-// 全局按键事件
-function getKey(e) {
-	e = e || window.event;
-	var keycode = e.which ? e.which : e.keyCode;
-	switch (keycode) {
-		case 46 :
-			if (isEditing())
-				return;
-			var selected = menuGrid.datagrid("getSelected");
-			if (selected && selected != null) {
-				del();
-			}
-			break;
-		case 13 :
-			endEditing();
-			break;
-		case 27 :
-			cancelEdit();
-			break;
-		case 38 :
-			if (!endEditing()) {
-				return;
-			}
-			var selected = menuGrid.datagrid("getSelected");
-			if (!selected) {
-				return;
-			}
-			var selectedIndex = menuGrid.datagrid('getRowIndex', selected);
-			if (selectedIndex <= 0) {
-				return;
-			}
-			endEditing();
-			menuGrid.datagrid('selectRow', --selectedIndex);
-			break;
-		case 40 :
-			if (!endEditing()) {
-				return;
-			}
-			if (menuGrid.datagrid('getRows').length <= 0) {
-				openInsert();
-				return;
-			}
-			var selected = menuGrid.datagrid("getSelected");
-			if (!selected) {
-				menuGrid.datagrid('selectRow', 0);
-				return;
-			}
-			var selectedIndex = menuGrid.datagrid('getRowIndex', selected);
-			if (selectedIndex == menuGrid.datagrid('getRows').length - 1) {
-				openInsert();
-			} else {
-				menuGrid.datagrid('selectRow', ++selectedIndex);
-			}
-			break;
 	}
 }
 
@@ -303,7 +453,7 @@ function getKey(e) {
  *            field 行数据
  */
 function onDblClickRow(index, field) {
-	openUpdate();
+	openUpdate(this.id);
 }
 
 /**
@@ -312,8 +462,8 @@ function onDblClickRow(index, field) {
  * @param {}
  *            index 行索引
  */
-function showOptButtons(index) {
-	$('#btnSave' + index + ',#btnCancel' + index).show();
+function showOptButtons(gridId, index) {
+	$('#' + gridId + 'BtnSave' + index + ',#' + gridId + 'BtnCancel' + index).show();
 }
 
 /**
@@ -322,8 +472,8 @@ function showOptButtons(index) {
  * @param {}
  *            index 行索引
  */
-function hideOptButtons(index) {
-	$('#btnSave' + index + ',#btnCancel' + index).hide();
+function hideOptButtons(gridId, index) {
+	$('#' + gridId + 'BtnSave' + index + ',#' + gridId + 'BtnCancel' + index).hide();
 }
 
 /**
@@ -335,14 +485,15 @@ function hideOptButtons(index) {
  *            row 行数据
  */
 function onBeginEdit(index, row) {
-	showOptButtons(index);
-	if (gridType == 1) {
-		menuGrid.datagrid('resizeColumn', {
+	var grid = $('#' + this.id);
+	showOptButtons(this.id, index);
+	if (gridType == 1 && this.id == 'grid') {
+		grid.datagrid('resizeColumn', {
 					field : 'description',
 					width : '40%'
 				});
 	} else {
-		menuGrid.datagrid('resizeColumn', [{
+		grid.datagrid('resizeColumn', [{
 							field : 'menuUrl',
 							width : '30%'
 						}, {
@@ -351,8 +502,8 @@ function onBeginEdit(index, row) {
 						}]);
 	}
 
-	menuGrid.datagrid('showColumn', 'opt');
-	var editors = menuGrid.datagrid('getEditors', index);
+	grid.datagrid('showColumn', 'opt');
+	var editors = grid.datagrid('getEditors', index);
 	editors[0].target.trigger('focus');
 }
 
@@ -367,13 +518,14 @@ function onBeginEdit(index, row) {
  *            changes 当前行被修改的数据
  */
 function onAfterEdit(index, row, changes) {
-	var isValid = menuGrid.datagrid('validateRow', index);
+	var grid = $('#' + this.id);
+	var isValid = grid.datagrid('validateRow', index);
 	if (!isValid) {
 		return false;
 	}
-	hideOptButtons(index);
+	hideOptButtons(this.id, index);
 	var selectedTreeNode = menuTree.tree('getSelected');
-	if (selectedTreeNode.attributes.type == 0) {
+	if (selectedTreeNode.attributes.type == 0 || this.id == 'inlineGrid') {
 		insertOrUpdateMenu(selectedTreeNode, index, row, changes);
 	} else if (selectedTreeNode.attributes.type == 1) {
 		insertOrUpdateResource(selectedTreeNode, index, row, changes);
@@ -441,7 +593,7 @@ function insertOrUpdateMenu(node, index, row, changes) {
 							row : row
 						});
 				if (changes.orderNumber) {
-					menuGrid.datagrid('orderNumber', {
+					menuGrid.datagrid('sort', {
 								sortName : 'orderNumber',
 								sortOrder : 'asc'
 							});
@@ -525,15 +677,16 @@ function onLoadSuccess(node, data) {
  *            row
  */
 function onClickRow(index, row) {
-	if (editIndex == index) {
+	var grid = $('#' + this.id);
+	if (editIndexMap[this.id] == index) {
 		return;
 	}
-	if (endEditing()) {
+	if (endEditing(this.id)) {
 		return;
 	}
-	menuGrid.datagrid('cancelEdit', editIndex);
+	grid.datagrid('cancelEdit', editIndexMap[this.id]);
 	if (!row.id) {
-		menuGrid.datagrid('deleteRow', editIndex);
+		grid.datagrid('deleteRow', editIndexMap[this.id]);
 		editIndex = undefined;
 	}
 }
@@ -541,12 +694,13 @@ function onClickRow(index, row) {
 /**
  * 取消行编辑
  */
-function cancelEdit() {
-	if (editIndex == undefined) {
+function cancelEdit(gridId) {
+	var grid = $('#' + gridId);
+	if (editIndexMap[gridId] == undefined) {
 		return;
 	}
-	menuGrid.datagrid('cancelEdit', editIndex);
-	editIndex = undefined;
+	grid.datagrid('cancelEdit', editIndexMap[gridId]);
+	editIndexMap[gridId] = undefined;
 };
 
 /**
@@ -558,17 +712,18 @@ function cancelEdit() {
  *            row
  */
 function onCancelEdit(index, row) {
+	var grid = $('#' + this.id);
 	if (!row.id) {
-		menuGrid.datagrid('deleteRow', index);
+		grid.datagrid('deleteRow', index);
 	}
-	hideOptButtons(index);
-	if (gridType == 1) {
-		menuGrid.datagrid('resizeColumn', [{
+	hideOptButtons(this.id, index);
+	if (gridType == 1 && this.id == 'grid') {
+		grid.datagrid('resizeColumn', [{
 							field : 'description',
 							width : '60%'
 						}]);
 	} else {
-		menuGrid.datagrid('resizeColumn', [{
+		grid.datagrid('resizeColumn', [{
 							field : 'menuUrl',
 							width : '35%'
 						}, {
@@ -576,7 +731,7 @@ function onCancelEdit(index, row) {
 							width : '40%'
 						}]);
 	}
-	menuGrid.datagrid('hideColumn', 'opt');
+	grid.datagrid('hideColumn', 'opt');
 }
 
 /**
@@ -588,8 +743,9 @@ function onCancelEdit(index, row) {
  *            row
  */
 function onEndEdit(index, row) {
-	hideOptButtons(index);
-	if (gridType == 1) {
+	var grid = $('#' + this.id);
+	hideOptButtons(this.id, index);
+	if (gridType == 1 && this.id == 'grid') {
 		menuGrid.datagrid('resizeColumn', [{
 							field : 'description',
 							width : '60%'
@@ -606,6 +762,71 @@ function onEndEdit(index, row) {
 	menuGrid.datagrid('hideColumn', 'opt');
 }
 
+function onGridLoadSuccess() {
+	$(this).datagrid('keyCtr');
+}
+
+$.extend($.fn.datagrid.methods, {
+			keyCtr : function(jq) {
+				return jq.each(function() {
+							var grid = $(this);
+							var gridId = this.id;
+							grid.datagrid('getPanel').panel('panel').attr('tabindex', 1).bind('keydown', function(e) {
+										switch (e.keyCode) {
+											case 46 :
+												if (isEditing(gridId))
+													return;
+												var selected = grid.datagrid("getSelected");
+												if (selected && selected != null) {
+													del(gridId);
+												}
+												break;
+											case 13 :
+												endEditing(gridId);
+												break;
+											case 27 :
+												cancelEdit(gridId);
+												break;
+											case 38 :
+												if (!endEditing(gridId)) {
+													return;
+												}
+												var selected = grid.datagrid("getSelected");
+												if (!selected) {
+													return;
+												}
+												var selectedIndex = menuGrid.datagrid('getRowIndex', selected);
+												if (selectedIndex <= 0) {
+													return;
+												}
+												endEditing(gridId);
+												grid.datagrid('selectRow', --selectedIndex);
+												break;
+											case 40 :
+												if (!endEditing(gridId)) {
+													return;
+												}
+												if (grid.datagrid('getRows').length <= 0) {
+													openInsert(gridId);
+													return;
+												}
+												var selected = grid.datagrid("getSelected");
+												if (!selected) {
+													grid.datagrid('selectRow', 0);
+													return;
+												}
+												var selectedIndex = grid.datagrid('getRowIndex', selected);
+												if (selectedIndex == grid.datagrid('getRows').length - 1) {
+													openInsert(gridId);
+												} else {
+													grid.datagrid('selectRow', ++selectedIndex);
+												}
+												break;
+										}
+									});
+						});
+			}
+		});
 /**
  * 绑定页面回车事件，以及初始化页面时的光标定位
  * 
@@ -615,14 +836,15 @@ function onEndEdit(index, row) {
  */
 $(function() {
 
-			window.menuGrid = $('#grid');
-			window.menuTree = $('#menuTree');
-			if (document.addEventListener) {
-				document.addEventListener("keyup", getKey, false);
-			} else if (document.attachEvent) {
-				document.attachEvent("onkeyup", getKey);
-			} else {
-				document.onkeyup = getKey;
-			}
+	window.menuGrid = $('#grid');
+	window.inlineGrid = $('#inlineGrid');
+	window.menuTree = $('#menuTree');
+		// if (document.addEventListener) {
+		// document.addEventListener("keyup", getKey, false);
+		// } else if (document.attachEvent) {
+		// document.attachEvent("onkeyup", getKey);
+		// } else {
+		// document.onkeyup = getKey;
+		// }
 
-		});
+	});

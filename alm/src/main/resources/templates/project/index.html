@@ -61,7 +61,7 @@
 									valueField:'id',
 									textField:'code'
 								}
-							},formatter:projectColumnFormatter">
+							}">
 						项目类型</th>
 					<th
 						data-options="field:'projectManager',width:'10%',  _provider:'memberProvider', align:'center', editor : {
@@ -72,7 +72,7 @@
 									buttonText:'选择',
 									onClickButton:selectProjectManager
 								}
-							},formatter:memberColumnFormatter">开发负责人</th>
+							}">开发负责人</th>
 					<th
 						data-options="field:'testManager',width:'10%',  _provider:'memberProvider', align:'center', editor : {
 								type : 'textbox',
@@ -82,7 +82,7 @@
 									buttonText:'选择',
 									onClickButton:selectTestManager
 								}
-							},formatter:memberColumnFormatter">测试负责人</th>
+							}">测试负责人</th>
 					<th
 						data-options="field:'productManager',width:'10%',  _provider:'memberProvider', align:'center',editor : {
 								type : 'textbox',
@@ -92,7 +92,7 @@
 									buttonText:'选择',
 									onClickButton:selectProductManager
 								}
-							},formatter:memberColumnFormatter">产品负责人</th>
+							}">产品负责人</th>
 					<th class="easyui-datetimebox" data-options="field:'created',width:'20%',  _provider:'datetimeProvider', align:'center'">创建时间</th>
 					<th class="easyui-datetimebox" data-options="field:'modified',width:'20%',  _provider:'datetimeProvider', align:'center'">修改时间</th>
 					<th data-options="field:'opt',width:'20%',hidden:true,formatter:columnFormatter">操作</th>
@@ -103,7 +103,7 @@
 		<div id="toolbar" style="padding: 2px 5px;">
 			<a href="#" class="easyui-linkbutton" iconCls="icon-add" onclick="openInsert(true)" plain="true">添加根项目</a> <a href="#" class="easyui-linkbutton" iconCls="icon-add" onclick="openInsert()"
 				plain="true">添加子项目</a> <a href="#" class="easyui-linkbutton" iconCls="icon-edit" onclick="openUpdate()" plain="true"></a> <a href="#" class="easyui-linkbutton" iconCls="icon-remove"
-				onclick="del()" plain="true"></a> <a href="#" class="easyui-linkbutton" iconCls="icon-export" onclick="doExport('grid')" plain="true"></a>
+				onclick="del()" plain="true"></a> <a href="#" class="easyui-linkbutton" iconCls="icon-export" onclick="doExport('grid', true)" plain="true"></a>
 			<div style="float: right">
 				边框显示:<select onchange="changeBorder('grid',this.value)">
 					<option value="lines-both">全边框</option>

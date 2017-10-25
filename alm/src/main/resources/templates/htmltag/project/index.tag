@@ -170,7 +170,6 @@ function del() {
 
 // 表格查询
 function queryGrid() {
-	debugger;
 	var opts = projectGrid.datagrid("options");
 	if (null == opts.url || "" == opts.url) {
 		opts.url = "${contextPath!}/project/list";
@@ -267,49 +266,44 @@ function resizeColumn(original) {
 }
 
 function onBeginEdit(row) {
-	var fn = function(txtbox) {
-		$(members).each(function(index, item) {
-					if (item.id == txtbox.textbox('getValue')) {
-						txtbox.textbox('setText', item.realName);
-						return false;
-					}
-				});
-	};
 	var editor = projectGrid.datagrid('getEditor', {
 				id : row.id,
 				field : 'projectManager'
 			});
-	fn.call(this, editor.target)
+	editor.target.textbox('setValue',row.$_projectManager);
+	editor.target.textbox('setText',row.projectManager);
 	editor = projectGrid.datagrid('getEditor', {
 				id : row.id,
 				field : 'testManager'
 			});
-	fn.call(this, editor.target);
+	editor.target.textbox('setValue',row.$_testManager);
+	editor.target.textbox('setText',row.testManager);
 	editor = projectGrid.datagrid('getEditor', {
 				id : row.id,
 				field : 'productManager'
 			});
-	fn.call(this, editor.target);
+	editor.target.textbox('setValue',row.$_productManager);
+	editor.target.textbox('setText',row.productManager);
 }
 
 function selectMember(field) {
 	window.smDialog = $('#smDialog');
 	smDialog.dialog({
 				title : '用户选择',
-				width : 400,
-				height : 200,
+				width : 800,
+				height : 600,
 				href : '${contextPath!}/project/members',
 				modal : true,
 				buttons : [{
 							text : '确定',
 							handler : function() {
-								var selected = memberList.datalist('getSelected');
+								var selected = memberList.datagrid('getSelected');
 								var editor = projectGrid.datagrid('getEditor', {
 											index : editId,
 											field : field
 										});
-								editor.target.textbox('setValue', selected.value);
-								editor.target.textbox('setText', selected.text);
+								editor.target.textbox('setValue', selected.id);
+								editor.target.textbox('setText', selected.realName);
 								smDialog.dialog('close');
 							}
 						}, {
@@ -328,16 +322,17 @@ function selectFormMember(id) {
 	window.smDialog = $('#smDialog');
 	smDialog.dialog({
 				title : '用户选择',
-				width : 400,
-				height : 200,
+				width : 800,
+				height : 400,
 				href : '${contextPath!}/project/members',
 				modal : true,
 				buttons : [{
 							text : '确定',
 							handler : function() {
-								var selected = memberList.datalist('getSelected');
-								$('#' + id).textbox('setValue', selected.value);
-								$('#' + id).textbox('setText', selected.text);
+								debugger;
+								var selected = memberList.datagrid('getSelected');
+								$('#' + id).textbox('setValue', selected.id);
+								$('#' + id).textbox('setText', selected.realName);
 								smDialog.dialog('close');
 							}
 						}, {
@@ -553,64 +548,6 @@ function onEndEdit(row) {
 	hideOptButtons(row.id);
 	projectGrid.treegrid('hideColumn', 'opt');
 	showColumn();
-}
-
-var projectTypes = undefined;
-var projectTypesIsNull = undefined;
-
-function projectColumnFormatter(value, row) {
-	if (!projectTypes) {
-		$.ajax({
-					async : false,
-					url : '${contextPath!}/project/type.json',
-					success : function(res) {
-						projectTypes = res;
-						if (!projectTypes) {
-							projectTypesIsNull = true;
-						}
-					}
-				});
-	}
-	if (projectTypesIsNull) {
-		return '';
-	}
-	var target = '';
-	$(projectTypes).each(function(index, item) {
-				if (item.id == value) {
-					target = item.code;
-					return false;
-				}
-			});
-	return target;
-}
-
-var members = undefined;
-var membersIsNull = undefined;
-
-function memberColumnFormatter(value, row) {
-	if (!members) {
-		$.ajax({
-					async : false,
-					url : '${contextPath!}/project/members.json',
-					success : function(res) {
-						members = res;
-						if (!members) {
-							membersIsNull = true;
-						}
-					}
-				});
-	}
-	if (membersIsNull) {
-		return '';
-	}
-	var target = '';
-	$(members).each(function(index, item) {
-				if (item.id == value) {
-					target = item.realName;
-					return false;
-				}
-			});
-	return target;
 }
 
 /**
