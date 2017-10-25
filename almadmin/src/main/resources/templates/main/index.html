@@ -47,7 +47,7 @@
         <!-- 中央布局 -->
         <!-- ====================================================================================================================== -->
         <div region="center" style="width:100%;" height="auto">
-            <div id="tabs" class="easyui-tabs" style="width: 100%; height: 100%" data-options="tabWidth:130">
+            <div id="tabs" class="easyui-tabs" style="width: 100%; height: 100%" data-options="tabWidth:130, pill:true,onAdd:disableHover">
                 <!--<div title="主页" style="background-color:#24A6B1">-->
                 <!--</div>-->
             </div>
@@ -79,6 +79,21 @@
                 }
             }
         }
+
+        function panelLoaded(){
+            window.setTimeout(function() {
+                setHoverTabs();
+            }, 1200);
+
+        }
+
+        function disableHover(){
+            var tabs = $('#tabs').tabs('tabs');
+
+            for(var i=0; i<tabs.length; i++){
+                tabs[i].panel('options').tab.unbind();
+            }
+        }
         
         function addOneTab(title, url) {
             if ("用户信息" == title) {
@@ -88,16 +103,16 @@
                 url = "${contextPath}/main/changePwd.html"
             }
 
-            var content = '<iframe scrolling="auto" frameborder="0"  src="'+url+'" style="width:100%; height: 100%;"></iframe>';
+            var content = '<iframe scrolling="auto" frameborder="0"  src="'+url+'" onLoad="panelLoaded()" style="width:100%; height: 99.6%;"></iframe>';
 
             $('#tabs').tabs('add',{
                 title:title,
                 content:content,
                 cache:false,
                 closable:true
+
             });
 
-            setHoverTabs();
         }
 
         function closeTab(title) {
@@ -130,7 +145,7 @@
         }
         
         $(function () {
-            $('#tabs').tabs({pill:true});
+
         });
     </script>
 </#body>
