@@ -105,7 +105,7 @@ public class EmailNoticeJob implements ApplicationListener<ContextRefreshedEvent
 				helper.setFrom(from);
 				helper.setTo(AlmCache.userMap.get(team.getMemberId()).getEmail());
 				helper.setSubject("主题：里程碑[" + milestones.getCode() + "]发布");
-				helper.setText("里程碑[" + milestones.getCode() + "]发布, \r\n版本号:" + milestones.getVersion()
+ 				helper.setText("里程碑[" + milestones.getCode() + "]发布, \r\n版本号:" + milestones.getVersion()
 						+ ", \r\n市场:" + milestones.getMarket()
 						+ ", \r\n文档地址:" + milestones.getDocUrl()
 						+ ", \r\ngit地址:" + milestones.getGit()
