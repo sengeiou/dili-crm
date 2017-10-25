@@ -50,23 +50,22 @@ public class ProjectController {
 	@RequestMapping(value = "/list", method = { RequestMethod.GET, RequestMethod.POST })
 	public @ResponseBody List<Project> list(Project project) {
 		Map<Object, Object> metadata = new HashMap<>();
-		
+
 		JSONObject projectTypeProvider = new JSONObject();
 		projectTypeProvider.put("provider", "projectTypeProvider");
 		metadata.put("type", projectTypeProvider);
-		
+
 		JSONObject datetimeProvider = new JSONObject();
 		datetimeProvider.put("provider", "datetimeProvider");
 		metadata.put("created", datetimeProvider);
 		metadata.put("modified", datetimeProvider);
-		
+
 		JSONObject memberProvider = new JSONObject();
 		memberProvider.put("provider", "memberProvider");
 		metadata.put("projectManager", memberProvider);
 		metadata.put("testManager", memberProvider);
 		metadata.put("productManager", memberProvider);
-		
-		
+
 		// 测试数据
 		List<Project> list = this.projectService.listByExample(project);
 		try {
@@ -112,22 +111,4 @@ public class ProjectController {
 		return this.projectService.getPojectTypes();
 	}
 
-	@RequestMapping(value = "/members", method = RequestMethod.GET)
-	public String members(ModelMap modelMap) {
-		BaseOutput<List<User>> output = this.userRPC.list(new User());
-		if (output.isSuccess()) {
-			modelMap.addAttribute("members", output.getData());
-		}
-		return "project/members";
-	}
-
-	@ResponseBody
-	@RequestMapping(value = "/members", method = { RequestMethod.GET, RequestMethod.POST }, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-	public List<User> membersJson(ModelMap modelMap) {
-		BaseOutput<List<User>> output = this.userRPC.list(new User());
-		if (output.isSuccess()) {
-			return output.getData();
-		}
-		return null;
-	}
 }

@@ -292,7 +292,7 @@ function selectMember(field) {
 				title : '用户选择',
 				width : 800,
 				height : 600,
-				href : '${contextPath!}/project/members',
+				href : '${contextPath!}/member/members',
 				modal : true,
 				buttons : [{
 							text : '确定',
@@ -324,12 +324,11 @@ function selectFormMember(id) {
 				title : '用户选择',
 				width : 800,
 				height : 400,
-				href : '${contextPath!}/project/members',
+				href : '${contextPath!}/member/members.html',
 				modal : true,
 				buttons : [{
 							text : '确定',
 							handler : function() {
-								debugger;
 								var selected = memberList.datagrid('getSelected');
 								$('#' + id).textbox('setValue', selected.id);
 								$('#' + id).textbox('setText', selected.realName);
