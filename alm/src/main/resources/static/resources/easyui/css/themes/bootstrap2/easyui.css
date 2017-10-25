@@ -1990,8 +1990,8 @@ body {
 }
 
 .tabs-header .tabs-pill li.tabs-selected a.tabs-inner {
-    background: #579bff;
-    color: #fff;
+    background: #b1d1ff;
+    color: #333;
     filter: none;
     border-color: #D4D4D4;
 }
