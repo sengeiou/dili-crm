@@ -35,19 +35,14 @@
                         </tr>
                         <tr>
                             <td style="padding:5px;">
-                                    <input name="publishMemberId" id="publishMemberId" style="width:100%;" panelWidth="auto" panelHeight="auto" label="发布人:"/>
-                                    <#comboProvider _id="publishMemberId" _provider='memberProvider'/>
-
+                                    <input class="easyui-textbox" name="publishMemberId" id="publishMemberId" data-options="editable:false, buttonText:'选择', onClickButton:selectMember, onChange:_changeTextboxShowClear" style="width:100%;" label="发布人:"/>
                             </td>
                             <td style="padding:5px;">
-                                    <input name="modifyMemberId" id="modifyMemberId" style="width:100%;" panelWidth="auto" panelHeight="auto" label="修改人:"/>
-                                    <#comboProvider _id="modifyMemberId" _provider='memberProvider'/>
-
+                                    <input  class="easyui-textbox" data-options="editable:false, buttonText:'选择', onClickButton:selectMember, onChange:_changeTextboxShowClear" name="modifyMemberId" id="modifyMemberId" style="width:100%;" label="修改人:"/>
                             </td>
                             <td style="padding:5px;">
                                     <input name="emailNotice" id="emailNotice" style="width:100%;" panelWidth="auto" panelHeight="auto" label="是否上线通知:"/>
                                     <#comboProvider _id="emailNotice" _provider='emailNoticeProvider'/>
-
                             </td>
                         </tr>
 
@@ -268,10 +263,14 @@
 
      <!-- 文件面板 -->
      <div id="filesWindow"></div>
+     <!-- 选择用户对话框 -->
+     <div id="smDialog" style="display: none;"></div>
     <!-- ====================================================================================================================== -->
     <!-- style & script 分隔线 -->
     <!-- ====================================================================================================================== -->
     <script type="text/javascript">
+        <#members_index/>
+
         function callback(returnmsg){
             $('#filesForm').form('clear');
             $("#filesGrid").treegrid("reload");
@@ -461,6 +460,15 @@
                 }
             }
         }
+        
+        function changeMember(newValue, oldValue) {
+            var icon = $(this).textbox('getIcon',0);
+            if(newValue == null || newValue == ""){
+                icon.css('visibility','hidden');
+            } else {
+                icon.css('visibility','visible');
+            }
+        }
 
         /**
          * 绑定页面回车事件，以及初始化页面时的光标定位
@@ -472,6 +480,8 @@
          *          表单提交需执行的任务
          */
         $(function () {
+            $('#publishMemberId').textbox('addClearBtn', 'icon-clear');
+            $('#modifyMemberId').textbox('addClearBtn', 'icon-clear');
             bindFormEvent("form", "code", queryGrid);
             bindFormEvent("_form", "_code", saveOrUpdate, function (){$('#dlg').dialog('close');});
             if (document.addEventListener) {

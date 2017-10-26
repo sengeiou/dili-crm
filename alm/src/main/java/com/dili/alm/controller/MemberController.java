@@ -1,18 +1,18 @@
 package com.dili.alm.controller;
 
-import java.util.List;
-
+import com.dili.alm.domain.User;
+import com.dili.alm.rpc.UserRpc;
+import com.dili.ss.domain.BaseOutput;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.dili.alm.domain.User;
-import com.dili.alm.rpc.UserRpc;
-import com.dili.ss.domain.BaseOutput;
+import java.util.List;
 
 @RequestMapping("/member")
 @Controller
@@ -22,11 +22,8 @@ public class MemberController {
 	private UserRpc userRPC;
 
 	@RequestMapping(value = "/members.html", method = RequestMethod.GET)
-	public String members(ModelMap modelMap) {
-		BaseOutput<List<User>> output = this.userRPC.list(new User());
-		if (output.isSuccess()) {
-			modelMap.addAttribute("members", output.getData());
-		}
+	public String members(ModelMap modelMap, @RequestParam("textboxId") String textboxId) {
+		modelMap.put("textboxId", textboxId);
 		return "member/members";
 	}
 
