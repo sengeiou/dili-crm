@@ -21,7 +21,7 @@ public class MemberController {
 	@Autowired
 	private UserRpc userRPC;
 
-	@RequestMapping(value = "/members", method = RequestMethod.GET)
+	@RequestMapping(value = "/members.html", method = RequestMethod.GET)
 	public String members(ModelMap modelMap) {
 		BaseOutput<List<User>> output = this.userRPC.list(new User());
 		if (output.isSuccess()) {
@@ -32,8 +32,8 @@ public class MemberController {
 
 	@ResponseBody
 	@RequestMapping(value = "/members", method = { RequestMethod.GET, RequestMethod.POST }, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-	public List<User> membersJson(ModelMap modelMap) {
-		BaseOutput<List<User>> output = this.userRPC.list(new User());
+	public List<User> membersJson(ModelMap modelMap,User user) {
+		BaseOutput<List<User>> output = this.userRPC.listByExample(user);
 		if (output.isSuccess()) {
 			return output.getData();
 		}

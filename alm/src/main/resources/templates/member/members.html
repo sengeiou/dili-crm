@@ -1,3 +1,6 @@
+<div style="margin: 5px 5px;">
+	<input id="searchTextbox" class="easyui-textbox" data-options="buttonText:'查询',buttonIcon:'icon-search',onClickButton:search" style="width: 300px">
+</div>
 <table class="easyui-datagrid" id="smGridList" sortName="userName" sortOrder="asc" fitColumns="true" remoteSort="false" loadMsg="数据加载中..." singleSelect="true" method="post" multiSort="true"
 	align="center" fit="true" striped="true" idField="id" data-options="">
 	<thead>
@@ -9,15 +12,15 @@
 			<th data-options="field:'email',width:'25%'">邮箱</th>
 		</tr>
 	</thead>
-	<tbody>
-		<%for(item in members){%>
-		<tr>
-			<td>${item.id!}</td>
-			<td>${item.userName!}</td>
-			<td>${item.realName!}</td>
-			<td>${item.cellPhone!}</td>
-			<td>${item.email!}</td>
-		</tr>
-		<%}%>
-	</tbody>
 </table>
+
+<script type="text/javascript">
+	function search() {
+		var opts = $("#smGridList").datagrid("options");
+		opts.url = '${contextPath!}/member/members';
+		var param = $('#searchTextbox').textbox('getText');
+		$('#smGridList').datagrid('load', {
+			realName : param
+		});
+	}
+</script>

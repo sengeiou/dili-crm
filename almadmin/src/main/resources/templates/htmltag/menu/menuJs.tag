@@ -63,6 +63,7 @@ function del(gridId) {
 	if (!dataAuth.deleteMenu) {
 		return;
 	}
+	deleting = true;
 	var grid = $('#' + gridId);
 	var selected = grid.datagrid("getSelected");
 	if (null == selected) {
@@ -84,8 +85,9 @@ function del(gridId) {
 									if (data.code == "200") {
 										grid.datagrid('deleteRow', grid.datagrid('getRowIndex', selected));
 										$('#dlg').dialog('close');
-										if (gridType == 0) {
-											var removeNode = menuTree.tree('find', selected.id);
+										debugger;
+										var removeNode = menuTree.tree('find', selected.id);
+										if (removeNode) {
 											menuTree.tree('remove', removeNode.target);
 										}
 									} else {
@@ -97,6 +99,7 @@ function del(gridId) {
 								}
 							});
 				}
+				deleting = undefined;
 			});
 }
 
@@ -110,11 +113,17 @@ function queryGrid(node) {
 	cancelEdit('grid');
 	cancelEdit('inlineGrid');
 	gridType = node.attributes.type;
-	if (node.attributes.type == 1) {
-		$('#center').height('50%');
-		$('#south').show();
+	if (gridType == 1 || gridType == 2) {
+		$('#p1').panel('resize', {
+					height : '50%'
+				});
+		$('#p2').panel('resize', {
+					height : '50%'
+				});
+		$('#p1').panel('open');
+		$('#p2').panel('open');
 		menuGrid.datagrid({
-					title : "菜单列表",
+					title : "权限列表",
 					fitColumns : true,
 					remoteSort : false,
 					loadMsg : "数据加载中...",
@@ -122,6 +131,7 @@ function queryGrid(node) {
 					method : "post",
 					multiSort : true,
 					sortName : "id",
+					sortOrder : 'asc',
 					align : "center",
 					height : '100%',
 					striped : true,
@@ -199,7 +209,7 @@ function queryGrid(node) {
 							}]]
 				});
 		inlineGrid.datagrid({
-					title : "内链菜单",
+					title : "内链菜单列表",
 					fitColumns : true,
 					remoteSort : false,
 					loadMsg : "数据加载中...",
@@ -207,8 +217,9 @@ function queryGrid(node) {
 					method : "post",
 					multiSort : true,
 					sortName : "id",
+					sortOrder : 'asc',
 					align : "center",
-					fit : true,
+					height : '100%',
 					striped : true,
 					onClickRow : onClickRow,
 					onDblClickRow : onDblClickRow,
@@ -318,11 +329,14 @@ function queryGrid(node) {
 								}
 							}]]
 				});
-	} else if (node.attributes.type == 0) {
-		$('#south').hide();
-		$('#center').height('100%');
+	} else if (gridType == 0) {
+		$('#p2').panel('close');
+		$('#p1').panel('open');
+		$('#p1').panel('resize', {
+					height : '100%'
+				});
 		menuGrid.datagrid({
-					title : "内链菜单",
+					title : "菜单列表",
 					fitColumns : true,
 					remoteSort : false,
 					loadMsg : "数据加载中...",
@@ -330,7 +344,9 @@ function queryGrid(node) {
 					method : "post",
 					multiSort : true,
 					sortName : "orderNumber",
+					sortOrder : 'asc',
 					align : "center",
+					height : '100%',
 					striped : true,
 					onClickRow : onClickRow,
 					onDblClickRow : onDblClickRow,
@@ -440,7 +456,6 @@ function queryGrid(node) {
 								}
 							}]]
 				});
-
 	}
 }
 
@@ -526,9 +541,9 @@ function onAfterEdit(index, row, changes) {
 	hideOptButtons(this.id, index);
 	var selectedTreeNode = menuTree.tree('getSelected');
 	if (selectedTreeNode.attributes.type == 0 || this.id == 'inlineGrid') {
-		insertOrUpdateMenu(selectedTreeNode, index, row, changes);
+		insertOrUpdateMenu(this.id, selectedTreeNode, index, row, changes);
 	} else if (selectedTreeNode.attributes.type == 1) {
-		insertOrUpdateResource(selectedTreeNode, index, row, changes);
+		insertOrUpdateResource(this.id, selectedTreeNode, index, row, changes);
 	}
 }
 
@@ -544,7 +559,7 @@ function onAfterEdit(index, row, changes) {
  * @param {}
  *            changes 被修改的数据
  */
-function insertOrUpdateMenu(node, index, row, changes) {
+function insertOrUpdateMenu(gridId, node, index, row, changes) {
 	var oldRecord;
 	var url = '${contextPath!}/menu/';
 	var parentId = node.id;
@@ -557,14 +572,15 @@ function insertOrUpdateMenu(node, index, row, changes) {
 		url += 'update'
 	}
 	$.post(url, row, function(data) {
+				var grid = $('#' + gridId);
 				if (data.code != 200) {
 					if (oldRecord) {
-						menuGrid.datagrid('updateRow', {
+						grid.datagrid('updateRow', {
 									index : index,
 									row : oldRecord
 								});
 					} else {
-						menuGrid.datagrid('deleteRow', index);
+						grid.datagrid('deleteRow', index);
 					}
 					$.messager.alert('提示', data.result);
 					return;
@@ -588,17 +604,17 @@ function insertOrUpdateMenu(node, index, row, changes) {
 								text : row.name
 							});
 				}
-				menuGrid.datagrid('updateRow', {
+				grid.datagrid('updateRow', {
 							index : index,
 							row : row
 						});
 				if (changes.orderNumber) {
-					menuGrid.datagrid('sort', {
+					grid.datagrid('sort', {
 								sortName : 'orderNumber',
 								sortOrder : 'asc'
 							});
 				}
-				menuGrid.datagrid('refreshRow', index);
+				grid.datagrid('refreshRow', index);
 			}, 'json');
 }
 
@@ -614,7 +630,7 @@ function insertOrUpdateMenu(node, index, row, changes) {
  * @param {}
  *            changes 被修改的数据
  */
-function insertOrUpdateResource(node, index, row, changes) {
+function insertOrUpdateResource(gridId, node, index, row, changes) {
 	var oldRecord;
 	var url = '${contextPath!}/resource/';
 	var menuId = node.id;
@@ -627,14 +643,15 @@ function insertOrUpdateResource(node, index, row, changes) {
 		$.extend(true, oldRecord, row);
 	}
 	$.post(url, row, function(data) {
+				var grid = $('#' + gridId);
 				if (data.code != 200) {
 					if (oldRecord) {
-						menuGrid.datagrid('updateRow', {
+						grid.datagrid('updateRow', {
 									index : index,
 									row : oldRecord
 								});
 					} else {
-						menuGrid.datagrid('deleteRow', index);
+						grid.datagrid('deleteRow', index);
 					}
 					$.messager.alert('提示', data.result);
 					return;
@@ -642,11 +659,11 @@ function insertOrUpdateResource(node, index, row, changes) {
 				if (!row.id) {
 					row.id = data.data.id;
 				}
-				menuGrid.datagrid('updateRow', {
+				grid.datagrid('updateRow', {
 							index : index,
 							row : row
 						});
-				menuGrid.datagrid('refreshRow', index);
+				grid.datagrid('refreshRow', index);
 			}, 'json');
 }
 
@@ -746,12 +763,12 @@ function onEndEdit(index, row) {
 	var grid = $('#' + this.id);
 	hideOptButtons(this.id, index);
 	if (gridType == 1 && this.id == 'grid') {
-		menuGrid.datagrid('resizeColumn', [{
+		grid.datagrid('resizeColumn', [{
 							field : 'description',
 							width : '60%'
 						}]);
 	} else {
-		menuGrid.datagrid('resizeColumn', [{
+		grid.datagrid('resizeColumn', [{
 							field : 'menuUrl',
 							width : '35%'
 						}, {
@@ -759,13 +776,14 @@ function onEndEdit(index, row) {
 							width : '40%'
 						}]);
 	}
-	menuGrid.datagrid('hideColumn', 'opt');
+	grid.datagrid('hideColumn', 'opt');
 }
 
 function onGridLoadSuccess() {
 	$(this).datagrid('keyCtr');
 }
 
+var deleting = undefined;
 $.extend($.fn.datagrid.methods, {
 			keyCtr : function(jq) {
 				return jq.each(function() {
@@ -778,6 +796,9 @@ $.extend($.fn.datagrid.methods, {
 													return;
 												var selected = grid.datagrid("getSelected");
 												if (selected && selected != null) {
+													if (deleting) {
+														return;
+													}
 													del(gridId);
 												}
 												break;
@@ -795,7 +816,7 @@ $.extend($.fn.datagrid.methods, {
 												if (!selected) {
 													return;
 												}
-												var selectedIndex = menuGrid.datagrid('getRowIndex', selected);
+												var selectedIndex = grid.datagrid('getRowIndex', selected);
 												if (selectedIndex <= 0) {
 													return;
 												}

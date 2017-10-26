@@ -5,16 +5,14 @@
 	<!-- 中央布局 -->
 	<!-- ====================================================================================================================== -->
 	<!-- 表格 -->
-	<div region="center" style="width: 100%;" height="auto">
-		<div class="easyui-layout" fit="true">
-			<div id="center" region="center" style="width: 100%;" height="50%">
-				<!-- =========================================================表格========================================================= -->
-				<table id="grid"></table>
-			</div>
-			<div id="south" region="south" style="width: 100%;" height="50%">
-				<!-- =========================================================表格========================================================= -->
-				<table id="inlineGrid"></table>
-			</div>
+	<div region="center" style="width: 100%;" height="100%">
+		<div id="p1" class="easyui-panel" style="width:100%;height:50%;">
+			<!-- =========================================================表格========================================================= -->
+			<table id="grid"></table>
+		</div>
+		<div id="p2" class="easyui-panel" style="width:100%;height:50%;">
+			<!-- =========================================================表格========================================================= -->
+			<table id="inlineGrid"></table>
 		</div>
 	</div>
 	<div style="width: 20%;" height="auto" align="center" data-options="region:'west',title:'菜单管理',split:true">

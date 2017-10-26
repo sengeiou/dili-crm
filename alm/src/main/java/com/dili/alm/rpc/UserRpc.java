@@ -15,4 +15,7 @@ import java.util.List;
 public interface UserRpc {
 	@POST("/userApi/list")
 	BaseOutput<List<User>> list(@VOBody User user);
+
+	@POST("/userApi/listByExample")
+	BaseOutput<List<User>> listByExample(@VOBody User user);
 }

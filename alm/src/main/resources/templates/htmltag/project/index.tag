@@ -292,7 +292,7 @@ function selectMember(field) {
 				title : '用户选择',
 				width : 800,
 				height : 600,
-				href : '${contextPath!}/member/members',
+				href : '${contextPath!}/member/members.html',
 				modal : true,
 				buttons : [{
 							text : '确定',

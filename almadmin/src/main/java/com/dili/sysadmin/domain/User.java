@@ -79,6 +79,7 @@ public class User extends BaseDomain {
 	 * 真实姓名
 	 */
 	@Column(name = "`real_name`")
+	@Like(Like.BOTH)
 	private String realName;
 
 	/**

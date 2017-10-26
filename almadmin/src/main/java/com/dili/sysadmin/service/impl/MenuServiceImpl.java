@@ -64,13 +64,6 @@ public class MenuServiceImpl extends BaseServiceImpl<Menu, Long> implements Menu
 	@Override
 	public List<MenuListDto> listContainAndParseResource() {
 		List<Menu> menus = this.menuDao.selectAll();
-		Iterator<Menu> it = menus.iterator();
-		while (it.hasNext()) {
-			Menu item = it.next();
-			if (item.getType().equals(MenuType.INTERNAL_LINKS)) {
-				it.remove();
-			}
-		}
 		List<MenuListDto> targetList = new ArrayList<>(menus.size());
 		for (Menu menu : menus) {
 			MenuListDto vo = new MenuListDto();
