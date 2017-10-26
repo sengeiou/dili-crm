@@ -1,6 +1,7 @@
 
 <#body>
 <div class="easyui-layout" fit="true">
+	<div id="smDialog" style="display: none;"></div>
 	<!-- ====================================================================================================================== -->
 	<!-- 上方布局 -->
 	<!-- ====================================================================================================================== -->
@@ -40,16 +41,50 @@
 		<!-- =========================================================表格========================================================= -->
 		<table class="easyui-datagrid" title="Team列表" id="grid" fitColumns="true" pagination="true" pageSize="30" pageNumber="1" pagePosition="both" rownumbers="true" remoteSort="false" loadMsg="数据加载中..."
 			singleSelect="true" method="post" multiSort="false" sortName="projectId" align="center" fit="true" striped="true" toolbar="#toolbar" idField="id" url="${contextPath!}/team/list"
-			data-options="onDblClickRow:openUpdate">
+			data-options="onClickRow:onClickRow,onDblClickRow:onDblClickRow, onAfterEdit:onAfterEdit,onCancelEdit:onCancelEdit,onBeginEdit:onBeginEdit,onEndEdit:onEndEdit">
 			<thead>
 				<tr>
 					<th data-options="field:'id',hidden:true"></th>
-					<th data-options="width:'20%',field:'projectId',  _provider:'projectProvider', sortable:'true', order:'asc', align:'center', resizable:'true', fixed:'false'">所属项目id</th>
-					<th data-options="width:'20%',field:'memberId',  _provider:'memberProvider', sortable:'true', order:'asc', align:'center', resizable:'true', fixed:'false'">所属成员id</th>
+					<th
+						data-options="width:'20%',field:'projectId',  _provider:'projectProvider', sortable:'true', order:'asc', align:'center', resizable:'true', fixed:'false', editor : {
+								type : 'combobox',
+								options : {
+									required : true,
+									url:'${contextPath}/project/list.json',
+									valueField:'id',
+									textField:'name'
+								}
+							}">所属项目id</th>
+					<th
+						data-options="width:'20%',field:'memberId',  _provider:'memberProvider', sortable:'true', order:'asc', align:'center', resizable:'true', fixed:'false',editor : {
+								type : 'textbox',
+								options : {
+									required : true,
+									editable:false,
+									buttonText:'选择',
+									onClickButton:selectMember
+								}
+							}">所属成员id</th>
 					<th data-options="width:'10%',field:'type',  _provider:'teamTypeProvider', sortable:'true', order:'asc', align:'center', resizable:'true', fixed:'false'">团队类型</th>
-					<th data-options="width:'10%',field:'memberState',  _provider:'memberStateProvider', sortable:'true', order:'asc', align:'center', resizable:'true', fixed:'false'">状态</th>
+					<th
+						data-options="width:'10%',field:'memberState',  _provider:'memberStateProvider', sortable:'true', order:'asc', align:'center', resizable:'true', fixed:'false', editor : {
+								type : 'combobox',
+								options : {
+									required : true,
+									textField:'text',
+									valueField:'value',
+									data: [{
+										text: '离开',
+										value: '0'
+									},{
+										text: '加入',
+										value: '1'
+									}]
+								}
+							}">状态</th>
 					<th data-options="width:'20%',field:'joinTime',  _provider:'datetimeProvider', sortable:'true', order:'asc', align:'center', resizable:'true', fixed:'false'">加入时间</th>
 					<th data-options="width:'20%',field:'leaveTime',  _provider:'datetimeProvider', sortable:'true', order:'asc', align:'center', resizable:'true', fixed:'false'">离开时间</th>
+					<th data-options="field:'opt',width:'20%',hidden:true,formatter:columnFormatter">操作</th>
 				</tr>
 			</thead>
 		</table>

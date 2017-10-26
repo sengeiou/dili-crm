@@ -46,11 +46,11 @@ public class TeamController {
 		Map<Object, Object> metadata = new HashMap<>();
 		
 		JSONObject projectProvider = new JSONObject();
-		projectProvider.put("provider", "memberProvider");
+		projectProvider.put("provider", "projectProvider");
 		metadata.put("projectId", projectProvider);
 		
 		JSONObject memberProvider = new JSONObject();
-		memberProvider.put("provider", "projectProvider");
+		memberProvider.put("provider", "memberProvider");
 		metadata.put("memberId", memberProvider);
 		
 		JSONObject teamTypeProvider = new JSONObject();

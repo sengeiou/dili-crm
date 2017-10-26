@@ -75,6 +75,12 @@ public class ProjectController {
 		}
 	}
 
+	@ResponseBody
+	@RequestMapping(value = "/list.json", method = { RequestMethod.GET, RequestMethod.POST }, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+	public List<Project> listJson(Project project) {
+		return this.projectService.list(project);
+	}
+
 	@ApiOperation(value = "分页查询Project", notes = "分页查询Project，返回easyui分页信息")
 	@ApiImplicitParams({ @ApiImplicitParam(name = "Project", paramType = "form", value = "Project的form信息", required = false, dataType = "string") })
 	@RequestMapping(value = "/listPage", method = { RequestMethod.GET, RequestMethod.POST })

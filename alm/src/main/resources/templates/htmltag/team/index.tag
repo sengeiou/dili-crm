@@ -21,9 +21,6 @@ function endEditing() {
 
 // 新增一行空数据并开启编辑模式
 function openInsert() {
-	if (!dataAuth.addMenu) {
-		return;
-	}
 	if (!endEditing()) {
 		$.messager.alert('警告', '有数据正在编辑');
 		return;
@@ -38,9 +35,6 @@ function openInsert() {
 
 // 开启选中行的编辑模式
 function openUpdate() {
-	if (!dataAuth.editMenu) {
-		return;
-	}
 	var selected = teamGrid.datagrid("getSelected");
 	if (!selected) {
 		$.messager.alert('警告', '请选中一条数据');
@@ -55,9 +49,6 @@ function openUpdate() {
 
 // 根据主键删除
 function del() {
-	if (!dataAuth.deleteMenu) {
-		return;
-	}
 	var selected = teamGrid.datagrid("getSelected");
 	if (null == selected) {
 		$.messager.alert('警告', '请选中一条数据');
@@ -90,62 +81,11 @@ function del() {
 			});
 }
 
-/**
- * 查询表格数据，因为menu下面包含resource，所以menu和resource的列头是不一样的
- * 
- * @param {}
- *            node 页面布局左边树形菜单节点数据，根据这个参数来判断是显示menu还是resource
- */
-function queryGrid() {
-	cancelEdit();
-	teamGrid.datagrid({
-				url : '${contextPath!}/resource/list',
-				queryParams : {
-					menuId : node.id
-				},
-				columns : [[{
-							field : 'id',
-							title : 'id',
-							hidden : true
-						}, {
-							field : 'name',
-							title : '权限名称',
-							width : '20%',
-							editor : {
-								type : 'textbox',
-								options : {
-									required : true
-								}
-							}
-						}, {
-							field : 'code',
-							title : '权限代码',
-							width : '20%',
-							editor : {
-								type : 'textbox',
-								options : {
-									required : true
-								}
-							}
-						}, {
-							field : 'description',
-							title : '描述',
-							width : '60%',
-							editor : 'textbox'
-
-						}, {
-							field : 'opt',
-							title : '操作',
-							width : '10%',
-							hidden : true,
-							formatter : function(value, row, index) {
-								var content = '<input type="button" id="btnSave' + index + '" style="margin:0px 4px;display:none;" value="保存" onclick="javascript:endEditing();">';
-								content += '<input type="button" id="btnCancel' + index + '" style="margin:0px 4px;display:none;" value="取消" onclick="javascript:cancelEdit();">';
-								return content;
-							}
-						}]]
-			});
-}
+var columnFormatter = function(value, row) {
+	var content = '<input type="button" id="btnSave' + row.id + '" style="margin:0px 4px;display:none;" value="保存" onclick="javascript:endEditing();">';
+	content += '<input type="button" id="btnCancel' + row.id + '" style="margin:0px 4px;display:none;" value="取消" onclick="javascript:cancelEdit();">';
+	return content;
+};
 
 // 全局按键事件
 function getKey(e) {
@@ -245,25 +185,110 @@ function hideOptButtons(index) {
  *            row 行数据
  */
 function onBeginEdit(index, row) {
-	showOptButtons(index);
-	if (gridType == 1) {
-		teamGrid.datagrid('resizeColumn', {
-					field : 'description',
-					width : '40%'
-				});
-	} else {
-		teamGrid.datagrid('resizeColumn', [{
-							field : 'menuUrl',
-							width : '30%'
-						}, {
-							field : 'description',
-							width : '35%'
-						}]);
-	}
-
-	teamGrid.datagrid('showColumn', 'opt');
+	resizeColumn();
+	hideCMAndShowOpt(index);
 	var editors = teamGrid.datagrid('getEditors', index);
 	editors[0].target.trigger('focus');
+	editors[0].target.combobox('setValue', row.$_projectId);
+	editors[0].target.combobox('setText', row.projectId);
+	editors[1].target.textbox('setValue', row.$_memberId);
+	editors[1].target.textbox('setText', row.memberId);
+	editors[2].target.combobox('setValue', row.$_type);
+	editors[2].target.combobox('setText', row.type);
+	editors[3].target.combobox('setValue', row.$_memberState);
+	editors[3].target.combobox('setText', row.memberState);
+}
+
+function resizeColumn(original) {
+	if (original) {
+		teamGrid.datagrid('resizeColumn', [{
+							field : 'projectId',
+							width : '20%'
+						}, {
+							field : 'memberId',
+							width : '20%'
+						}, {
+							field : 'type',
+							width : '10%'
+						}, {
+							field : 'memberState',
+							width : '10%'
+						}]);
+	} else {
+		teamGrid.datagrid('resizeColumn', [{
+							field : 'projectId',
+							width : '25%'
+						}, {
+							field : 'memberId',
+							width : '25%'
+						}, {
+							field : 'type',
+							width : '15%'
+						}, {
+							field : 'memberState',
+							width : '15%'
+						}]);
+	}
+}
+
+function hideCMAndShowOpt(index) {
+	showOptButtons(++index);
+	teamGrid.datagrid('showColumn', 'opt');
+	teamGrid.treegrid('hideColumn', 'joinTime');
+	teamGrid.treegrid('hideColumn', 'leaveTime');
+}
+
+function showCMAndHideOpt(index) {
+	hideOptButtons(++index);
+	teamGrid.datagrid('hideColumn', 'opt');
+	teamGrid.treegrid('showColumn', 'joinTime');
+	teamGrid.treegrid('showColumn', 'leaveTime');
+}
+
+function showOptButtons(id) {
+	$('#btnSave' + id + ',#btnCancel' + id).show();
+}
+
+function selectMember() {
+	window.smDialog = $('#smDialog');
+	smDialog.dialog({
+				title : '用户选择',
+				width : 800,
+				height : 600,
+				href : '${contextPath!}/member/members.html',
+				modal : true,
+				buttons : [{
+							text : '确定',
+							handler : function() {
+								var selected = memberList.datagrid('getSelected');
+								var editor = teamGrid.datagrid('getEditor', {
+											index : editIndex,
+											field : 'memberId'
+										});
+								editor.target.textbox('setValue', selected.id);
+								editor.target.textbox('setText', selected.realName);
+								smDialog.dialog('close');
+							}
+						}, {
+							text : '取消',
+							handler : function() {
+								smDialog.dialog('close');
+							}
+						}],
+				onLoad : function() {
+					window.memberList = $('#smGridList');
+				}
+			});
+}
+
+/**
+ * 显示编辑行最后一列的操作按钮
+ * 
+ * @param {}
+ *            index 行索引
+ */
+function hideOptButtons(id) {
+	$('#btnSave' + id + ',#btnCancel' + id).hide();
 }
 
 /**
@@ -281,8 +306,7 @@ function onAfterEdit(index, row, changes) {
 	if (!isValid) {
 		return false;
 	}
-	hideOptButtons(index);
-	insertOrUpdateMenu(selectedTreeNode, index, row, changes);
+	insertOrUpdateMenu(index, row, changes);
 }
 
 /**
@@ -297,12 +321,11 @@ function onAfterEdit(index, row, changes) {
  * @param {}
  *            changes 被修改的数据
  */
-function insertOrUpdateMenu(node, index, row, changes) {
+function insertOrUpdateMenu(index, row, changes) {
+	debugger;
 	var oldRecord;
-	var url = '${contextPath!}/menu/';
-	var parentId = node.id;
+	var url = '${contextPath!}/team/';
 	if (!row.id) {
-		row.parentId = parentId;
 		url += 'insert';
 	} else {
 		oldRecord = new Object();
@@ -335,54 +358,6 @@ function insertOrUpdateMenu(node, index, row, changes) {
 								sortOrder : 'asc'
 							});
 				}
-				teamGrid.datagrid('refreshRow', index);
-			}, 'json');
-}
-
-/**
- * 插入或者修改资源信息
- * 
- * @param {}
- *            node 菜单树被选中的节点
- * @param {}
- *            index 行索引
- * @param {}
- *            row 行数据
- * @param {}
- *            changes 被修改的数据
- */
-function insertOrUpdateResource(node, index, row, changes) {
-	var oldRecord;
-	var url = '${contextPath!}/resource/';
-	var menuId = node.id;
-	if (!row.id) {
-		row.menuId = menuId;
-		url += 'insert';
-	} else {
-		url += 'update'
-		oldRecord = new Object();
-		$.extend(true, oldRecord, row);
-	}
-	$.post(url, row, function(data) {
-				if (data.code != 200) {
-					if (oldRecord) {
-						teamGrid.datagrid('updateRow', {
-									index : index,
-									row : oldRecord
-								});
-					} else {
-						teamGrid.datagrid('deleteRow', index);
-					}
-					$.messager.alert('提示', data.result);
-					return;
-				}
-				if (!row.id) {
-					row.id = data.data.id;
-				}
-				teamGrid.datagrid('updateRow', {
-							index : index,
-							row : row
-						});
 				teamGrid.datagrid('refreshRow', index);
 			}, 'json');
 }
@@ -432,22 +407,8 @@ function onCancelEdit(index, row) {
 	if (!row.id) {
 		teamGrid.datagrid('deleteRow', index);
 	}
-	hideOptButtons(index);
-	if (gridType == 1) {
-		teamGrid.datagrid('resizeColumn', [{
-							field : 'description',
-							width : '60%'
-						}]);
-	} else {
-		teamGrid.datagrid('resizeColumn', [{
-							field : 'menuUrl',
-							width : '35%'
-						}, {
-							field : 'description',
-							width : '40%'
-						}]);
-	}
-	teamGrid.datagrid('hideColumn', 'opt');
+	resizeColumn(true);
+	showCMAndHideOpt(index);
 }
 
 /**
@@ -459,22 +420,8 @@ function onCancelEdit(index, row) {
  *            row
  */
 function onEndEdit(index, row) {
-	hideOptButtons(index);
-	if (gridType == 1) {
-		teamGrid.datagrid('resizeColumn', [{
-							field : 'description',
-							width : '60%'
-						}]);
-	} else {
-		teamGrid.datagrid('resizeColumn', [{
-							field : 'menuUrl',
-							width : '35%'
-						}, {
-							field : 'description',
-							width : '40%'
-						}]);
-	}
-	teamGrid.datagrid('hideColumn', 'opt');
+	showCMAndHideOpt(index);
+	resizeColumn(true);
 }
 
 /**
