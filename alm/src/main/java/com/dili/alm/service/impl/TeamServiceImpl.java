@@ -36,7 +36,7 @@ public class TeamServiceImpl extends BaseServiceImpl<Team, Long> implements Team
 	@Override
 	public int delete(Long id) {
 		Team team = get(id);
-		dataAuthRpc.deleteUserDataAuth(id, team.getProjectId().toString(), AlmConstants.DATA_AUTH_TYPE_PROJECT);
+		dataAuthRpc.deleteUserDataAuth(team.getMemberId(), team.getProjectId().toString(), AlmConstants.DATA_AUTH_TYPE_PROJECT);
 		return super.delete(id);
 	}
 
@@ -55,6 +55,7 @@ public class TeamServiceImpl extends BaseServiceImpl<Team, Long> implements Team
 		if (t.getMemberState().equals(MemberState.LEAVE.getCode())) {
 			t.setLeaveTime(now);
 		}
+		dataAuthRpc.addUserDataAuth(t.getMemberId(), t.getProjectId().toString(), AlmConstants.DATA_AUTH_TYPE_PROJECT);
 		return super.insertSelective(t);
 	}
 

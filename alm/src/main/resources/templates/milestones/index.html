@@ -273,7 +273,7 @@
 
         function callback(returnmsg){
             $('#filesForm').form('clear');
-            $("#filesGrid").treegrid("reload");
+            $("#filesGrid").datagrid("reload");
             $("#filesDlg").dialog("close");
             $.messager.alert('提示',returnmsg);
         }

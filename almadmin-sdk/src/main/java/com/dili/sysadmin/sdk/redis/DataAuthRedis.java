@@ -27,7 +27,7 @@ public class DataAuthRedis {
      * @return  DataAuth List<Map>
      */
     public List<Map> dataAuth(String type, Long userId) {
-        BoundSetOperations<String, String> boundSetOperations = redisUtil.getRedisTemplate().boundSetOps (SessionConstants.USER_DATAAUTH_KEY + userId);
+        BoundSetOperations<String, String> boundSetOperations = redisUtil.getRedisTemplate().boundSetOps (SessionConstants.USER_CURRENT_KEY + userId);
         List<Map> dataAuthMap = new ArrayList<>();
         if(boundSetOperations.size()<=0) {
             return dataAuthMap;
@@ -46,12 +46,18 @@ public class DataAuthRedis {
     /**
      * 指定Key的当前数据权限DataAuth的Map
      * @param userId
-     * @param type
      * @return
      */
-    public Map currentdataAuth(Long userId, String type) {
-        String key = userId + ":" + type;
-        String json = redisUtil.get(SessionConstants.USER_CURRENT_KEY + key, String.class);
-        return JSONObject.parseObject(json);
+    public List<Map> dataAuth(Long userId) {
+        BoundSetOperations<String, String> boundSetOperations = redisUtil.getRedisTemplate().boundSetOps (SessionConstants.USER_CURRENT_KEY + userId);
+        List<Map> dataAuthMap = new ArrayList<>();
+        if(boundSetOperations.size()<=0) {
+            return dataAuthMap;
+        }
+        //根据类型过滤
+        for(String dataAuthJson : boundSetOperations.members()) {
+            dataAuthMap.add(JSONObject.parseObject(dataAuthJson));
+        }
+        return dataAuthMap;
     }
 }

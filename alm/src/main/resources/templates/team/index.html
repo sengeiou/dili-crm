@@ -11,9 +11,9 @@
 			<form id="form" class="easyui-form" method="post" fit="true">
 				<table style="padding: 10px;">
 					<tr>
-						<td style="padding: 5px;"><input name="projectId" id="projectId" style="width: 100%;" panelWidth="auto" panelHeight="auto" label="所属项目id:" /> <#comboProvider _id="projectId"
+						<td style="padding: 5px;"><input name="projectId" id="projectId" style="width: 100%;" panelWidth="auto" panelHeight="auto" label="所属项目:" /> <#comboProvider _id="projectId"
 								_provider='projectProvider' /></td>
-						<td style="padding: 5px;"><input name="memberId" id="memberId" style="width: 100%;" panelWidth="auto" panelHeight="auto" label="所属成员id:" data-options="onChange:_changeTextboxShowClear" />
+						<td style="padding: 5px;"><input name="memberId" id="memberId" style="width: 100%;" panelWidth="auto" panelHeight="auto" label="所属成员:" data-options="onChange:_changeTextboxShowClear" />
 							<#comboProvider _id="memberId" _provider='memberProvider' /></td>
 						<td style="padding: 5px;"><input name="type" id="type" style="width: 100%;" panelWidth="auto" panelHeight="auto" label="团队类型:" /> <#comboProvider _id="type" _provider='teamTypeProvider' />
 
@@ -55,7 +55,7 @@
 								}
 							},formatter:function(value,row){
 									return row.projectId;
-								}">所属项目id</th>
+								}">所属项目</th>
 					<th
 						data-options="width:'20%',field:'memberId',  _provider:'memberProvider', sortable:'true', order:'asc', align:'center', resizable:'true', fixed:'false',editor : {
 								type : 'textbox',
@@ -69,7 +69,7 @@
 								}
 							},formatter:function(value,row){
 									return row.memberId;
-								},onChange:_changeTextboxShowClear">所属成员id</th>
+								},onChange:_changeTextboxShowClear">所属成员</th>
 					<th
 						data-options="width:'10%',field:'type',  _provider:'teamTypeProvider', sortable:'true', order:'asc', align:'center', resizable:'true', fixed:'false', editor : {
 								type : 'combobox',
@@ -118,7 +118,7 @@
 		<!-- datagrid工具栏 -->
 		<div id="toolbar" style="padding: 2px 5px;">
 			<a href="#" class="easyui-linkbutton" iconCls="icon-add" onclick="openInsert()" plain="true">新增团队</a> <a href="#" class="easyui-linkbutton" iconCls="icon-edit" onclick="openUpdate()" plain="true">编辑团队</a>
-			<a href="#" class="easyui-linkbutton" iconCls="icon-remove" onclick="del()" plain="true">删除团队</a> <a href="#" class="easyui-linkbutton" iconCls="icon-export" onclick="doExport('grid')" plain="true">导出表格</a>
+			<a href="#" class="easyui-linkbutton" iconCls="icon-remove" onclick="del()" plain="true">删除团队</a> <a href="#" class="easyui-linkbutton" iconCls="icon-export" onclick="doExport('grid')" plain="true">导出</a>
 			<div style="float: right">
 				边框显示:<select onchange="changeBorder('grid',this.value)">
 					<option value="lines-both">全边框</option>

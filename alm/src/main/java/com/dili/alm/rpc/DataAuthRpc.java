@@ -18,7 +18,7 @@ public interface DataAuthRpc {
 	@POST("/updateDataAuth")
 	BaseOutput<DataDictionaryDto> updateDataAuth(@VOField("dataId") String dataId, @VOField("type") String type, @VOField("name") String name);
 
-	@POST("/addDataAuth")
+	@POST("/addUserDataAuth")
 	BaseOutput<DataDictionaryDto> addUserDataAuth(@VOField("userId") Long userId, @VOField("dataId") String dataId, @VOField("type") String type);
 
 	@POST("/deleteUserDataAuth")

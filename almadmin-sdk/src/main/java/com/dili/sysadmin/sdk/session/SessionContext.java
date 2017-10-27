@@ -56,11 +56,10 @@ public class SessionContext {
 
 	/**
 	 * 获取当前数据权限DataAuth 的Map
-	 * @param type
 	 * @return
 	 */
-	public Map currentDataAuth(String type) {
-		return pc.getDataAuthRedis().currentdataAuth(getUserTicket().getId(), type);
+	public List<Map> dataAuth() {
+		return pc.getDataAuthRedis().dataAuth(getUserTicket().getId());
 	}
 
 	/**
@@ -84,15 +83,15 @@ public class SessionContext {
 	/**
 	 * 获取指定的数据权限
 	 * 
-	 * @param key
+	 * @param type
 	 * @return
 	 */
-	public List<Map> dataAuth(String key) {
+	public List<Map> dataAuth(String type) {
 		List<Map> list = new ArrayList<>();
 		if (getUserTicket() == null || getUserTicket().getId() == null) {
 			return list;
 		}
-		return WebContent.getPC().getDataAuthRedis().dataAuth(key, getUserTicket().getId());
+		return WebContent.getPC().getDataAuthRedis().dataAuth(type, getUserTicket().getId());
 	}
 
 	/**

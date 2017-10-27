@@ -1,9 +1,13 @@
 package com.dili.alm.controller;
 
+import com.dili.alm.constant.AlmConstants;
 import com.dili.alm.domain.Files;
 import com.dili.alm.domain.Milestones;
+import com.dili.alm.domain.MilestonesDto;
 import com.dili.alm.service.MilestonesService;
 import com.dili.ss.domain.BaseOutput;
+import com.dili.ss.dto.DTOUtils;
+import com.dili.sysadmin.sdk.session.SessionContext;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
@@ -16,7 +20,9 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 /**
  * 由MyBatis Generator工具自动生成
@@ -57,7 +63,18 @@ public class MilestonesController {
 	})
     @RequestMapping(value="/listPage", method = {RequestMethod.GET, RequestMethod.POST})
     public @ResponseBody String listPage(Milestones milestones) throws Exception {
-        return milestonesService.listEasyuiPageByExample(milestones, true).toString();
+	    SessionContext sessionContext = SessionContext.getSessionContext();
+	    if(sessionContext == null) {
+	    	throw new RuntimeException("未登录");
+	    }
+	    List<Map> dataauth = sessionContext.dataAuth(AlmConstants.DATA_AUTH_TYPE_PROJECT);
+	    List<Long> projectIds = new ArrayList<>(dataauth.size());
+	    dataauth.forEach( t -> {
+	    	projectIds.add(Long.parseLong(t.get("dataId").toString()));
+	    });
+	    MilestonesDto milestonesDto = DTOUtils.as(milestones, MilestonesDto.class);
+	    milestonesDto.setProjectIds(projectIds);
+        return milestonesService.listEasyuiPageByExample(milestonesDto, true).toString();
     }
 
     @ApiOperation("新增Milestones")

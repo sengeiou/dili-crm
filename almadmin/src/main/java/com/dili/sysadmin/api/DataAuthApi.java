@@ -1,7 +1,8 @@
 package com.dili.sysadmin.api;
 
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
 import com.dili.ss.domain.BaseOutput;
-import com.dili.ss.dto.DTOUtils;
 import com.dili.sysadmin.domain.DataAuth;
 import com.dili.sysadmin.domain.UserDataAuth;
 import com.dili.sysadmin.service.DataAuthService;
@@ -62,13 +63,10 @@ public class DataAuthApi {
 			@ApiImplicitParam(name = "dataId", paramType = "form", value = "dataId", required = true, dataType = "long"),
 			@ApiImplicitParam(name = "type", paramType = "form", value = "type", required = true, dataType = "string")})
 	@RequestMapping(value = "/deleteDataAuth", method = { RequestMethod.GET, RequestMethod.POST })
-	public @ResponseBody BaseOutput deleteDataAuth(@RequestParam String dataId, @RequestParam String type) {
-		DataAuth dataAuth = DTOUtils.newDTO(DataAuth.class);
-		dataAuth.setDataId(dataId);
-		dataAuth.setType(type);
+	public @ResponseBody BaseOutput deleteDataAuth(@RequestBody DataAuth dataAuth) {
 		List<DataAuth> list = dataAuthService.list(dataAuth);
 		if(ListUtils.emptyIfNull(list).size() != 1){
-			return BaseOutput.failure("删除失败，dataId:"+dataId+"和type:"+type+",不能找到唯一的数据权限");
+			return BaseOutput.failure("删除失败，dataId:"+dataAuth.getDataId()+"和type:"+dataAuth.getType()+",不能找到唯一的数据权限");
 		}
 		dataAuthService.delete(list.get(0).getId());
 		return BaseOutput.success("删除成功");
@@ -79,16 +77,18 @@ public class DataAuthApi {
 			@ApiImplicitParam(name = "id", paramType = "form", value = "DataAuth的主键", required = true, dataType = "long") })
 	@ResponseBody
 	@RequestMapping(value = "/addUserDataAuth", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-	public BaseOutput<Object> addUserDataAuth(@RequestParam Long userId, @RequestParam String dataId, @RequestParam String type) {
+	public BaseOutput<Object> addUserDataAuth(@RequestBody String json) {
+//		@RequestParam Long userId, @RequestParam String dataId, @RequestParam String type
+		JSONObject jo = JSON.parseObject(json);
 		DataAuth dataAuth = new DataAuth();
-		dataAuth.setType(type);
-		dataAuth.setDataId(dataId);
+		dataAuth.setType(jo.getString("type"));
+		dataAuth.setDataId(jo.getString("dataId"));
 		List<DataAuth> dataAuths = dataAuthService.list(dataAuth);
 		if(ListUtils.emptyIfNull(dataAuths).size() != 1){
-			return BaseOutput.failure("新增失败，dataId:"+dataId+"和type:"+type+",不能找到唯一的数据权限");
+			return BaseOutput.failure("新增失败，dataId:"+jo.getString("dataId")+"和type:"+jo.getString("type")+",不能找到唯一的数据权限");
 		}
 		UserDataAuth userDataAuth = new UserDataAuth();
-		userDataAuth.setUserId(userId);
+		userDataAuth.setUserId(jo.getLong("userId"));
 		userDataAuth.setDataAuthId(dataAuths.get(0).getId());
 		userDataAuthService.insertSelective(userDataAuth);
 		return BaseOutput.success("添加用户数据权成功");
@@ -96,16 +96,17 @@ public class DataAuthApi {
 	
 	@ResponseBody
 	@RequestMapping(value = "/deleteUserDataAuth", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-	public BaseOutput<Object> deleteUserDataAuth(@RequestParam Long userId, @RequestParam String dataId, @RequestParam String type) {
+	public BaseOutput<Object> deleteUserDataAuth(@RequestBody String json) {
+		JSONObject jo = JSON.parseObject(json);
 		DataAuth dataAuth = new DataAuth();
-		dataAuth.setType(type);
-		dataAuth.setDataId(dataId);
+		dataAuth.setType(jo.getString("type"));
+		dataAuth.setDataId(jo.getString("dataId"));
 		List<DataAuth> dataAuths = dataAuthService.list(dataAuth);
 		if(ListUtils.emptyIfNull(dataAuths).size() != 1){
-			return BaseOutput.failure("删除失败，dataId:"+dataId+"和type:"+type+",不能找到唯一的数据权限");
+			return BaseOutput.failure("删除失败，dataId:"+jo.getString("dataId")+"和type:"+jo.getString("type")+",不能找到唯一的数据权限");
 		}
 		UserDataAuth userDataAuth = new UserDataAuth();
-		userDataAuth.setUserId(userId);
+		userDataAuth.setUserId(jo.getLong("userId"));
 		userDataAuth.setDataAuthId(dataAuths.get(0).getId());
 		userDataAuthService.delete(userDataAuth);
 		return BaseOutput.success("删除用户数据权成功");

@@ -1,27 +1,28 @@
 package com.dili.alm.controller;
 
 import com.alibaba.fastjson.JSONObject;
+import com.dili.alm.cache.AlmCache;
 import com.dili.alm.domain.Project;
 import com.dili.alm.domain.Team;
+import com.dili.alm.service.ProjectService;
 import com.dili.alm.service.TeamService;
 import com.dili.ss.domain.BaseOutput;
+import com.dili.ss.dto.DTOUtils;
 import com.dili.ss.metadata.ValueProviderUtils;
-
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
-
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * 由MyBatis Generator工具自动生成 This file was generated on 2017-10-24 14:31:10.
@@ -33,9 +34,23 @@ public class TeamController {
 	@Autowired
 	TeamService teamService;
 
+	@Autowired
+	ProjectService projectService;
+
+	/**
+	 * 刷新项目缓存
+	 */
+	private void refreshProject(){
+		List<Project> list = projectService.list(DTOUtils.newDTO(Project.class));
+		list.forEach(project -> {
+			AlmCache.projectMap.put(project.getId(), project);
+		});
+	}
+
 	@ApiOperation("跳转到Team页面")
 	@RequestMapping(value = "/index", method = RequestMethod.GET)
 	public String index(ModelMap modelMap) {
+//		refreshProject();
 		return "team/index";
 	}
 

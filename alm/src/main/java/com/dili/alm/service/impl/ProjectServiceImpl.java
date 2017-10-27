@@ -67,6 +67,16 @@ public class ProjectServiceImpl extends BaseServiceImpl<Project, Long> implement
 	}
 
 	@Override
+	public int insertSelective(Project project) {
+		int i = super.insertSelective(project);
+		// 同步更新缓存
+		AlmCache.projectMap.put(project.getId(), project);
+		//向权限系统中添加项目数据权限
+		dataAuthRpc.addDataAuth(project.getId().toString(), AlmConstants.DATA_AUTH_TYPE_PROJECT, project.getName());
+		return i;
+	}
+
+	@Override
 	public int delete(Long id) {
 		AlmCache.projectMap.remove(id);
 		dataAuthRpc.deleteDataAuth(id.toString(), AlmConstants.DATA_AUTH_TYPE_PROJECT);
