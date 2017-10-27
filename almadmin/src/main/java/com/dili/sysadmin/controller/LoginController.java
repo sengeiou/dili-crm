@@ -1,17 +1,18 @@
 package com.dili.sysadmin.controller;
 
-import java.io.UnsupportedEncodingException;
-import java.net.URLDecoder;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.UUID;
-
-import javax.annotation.Resource;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.validation.Valid;
-
+import com.alibaba.fastjson.JSON;
 import com.dili.ss.constant.ResultCode;
+import com.dili.ss.domain.BaseOutput;
+import com.dili.sysadmin.domain.User;
+import com.dili.sysadmin.domain.dto.UserLoginDto;
+import com.dili.sysadmin.domain.dto.UserLoginResultDto;
+import com.dili.sysadmin.exception.UserException;
+import com.dili.sysadmin.sdk.util.WebContent;
+import com.dili.sysadmin.service.UserService;
+import com.dili.sysadmin.service.ValidatePwdService;
+import com.dili.sysadmin.utils.SecurityUtil;
+import com.dili.sysadmin.utils.WebUtil;
+import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
@@ -23,22 +24,21 @@ import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
-import com.alibaba.fastjson.JSON;
-import com.dili.ss.domain.BaseOutput;
-import com.dili.sysadmin.domain.User;
-import com.dili.sysadmin.domain.dto.UserLoginDto;
-import com.dili.sysadmin.domain.dto.UserLoginResultDto;
-import com.dili.sysadmin.exception.UserException;
-import com.dili.sysadmin.sdk.util.WebContent;
-import com.dili.sysadmin.service.UserService;
-import com.dili.sysadmin.service.ValidatePwdService;
-import com.dili.sysadmin.utils.SecurityUtil;
-import com.dili.sysadmin.utils.WebUtil;
-
-import io.swagger.annotations.Api;
+import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.validation.Valid;
+import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.UUID;
 
 /**
  * <B>Description</B>地利后台管理系统登录 <B>Copyright</B> Copyright (c) 2014 www.dili7
@@ -86,8 +86,7 @@ public class LoginController {
             @ApiImplicitParam(name = "action", paramType = "form", value = "用户信息", required = false, dataType = "string") })
     @RequestMapping(value = "/loginAction", method = { RequestMethod.GET, RequestMethod.POST })
     public String loginAction(HttpServletRequest request, HttpServletResponse response, UserLoginDto dto, ModelMap modelMap) {
-        String requestPath = WebUtil.fetchReferer(request);
-
+//        String requestPath = WebUtil.fetchReferer(request);
         try {
             dto.setRemoteIP(WebUtil.getRemoteIP(request));
             UserLoginResultDto resultDto = userService.doLogin(dto);

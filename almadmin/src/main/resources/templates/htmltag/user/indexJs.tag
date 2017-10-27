@@ -660,7 +660,7 @@ openDataAuth = function(userId) {
 				maximizable : false,
 				width : 900,
 				height : 500,
-				href : contextPath + '/dataAuth/editUserDataAuth?userId=' + userId,
+				href : '${contextPath}/dataAuth/editUserDataAuth?userId=' + userId,
 				onLoad : function() {
 					window.userId = $('#userId').val();
 					window.dataAuthType = $('#dataAuthType').val();

@@ -4,6 +4,10 @@ package com.dili.alm.constant;
  * Created by asiamaster on 2017/10/24 0024.
  */
 public class AlmConstants {
+
+	//数据字典值表中的数据权限类型为项目
+	public static final String DATA_AUTH_TYPE_PROJECT = "Project";
+
 	//团队成员状态: 加入/离开
 	public static enum MemberState {
 		LEAVE(0),
