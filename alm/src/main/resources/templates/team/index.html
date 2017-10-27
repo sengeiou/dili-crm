@@ -48,6 +48,9 @@
 					<th
 						data-options="width:'20%',field:'projectId',  _provider:'projectProvider', sortable:'true', order:'asc', align:'center', resizable:'true', fixed:'false', editor : {
 								type : 'combobox',
+								formatter:function(value,row){
+									return row.projectId;
+								},
 								options : {
 									required : true,
 									url:'${contextPath}/project/list.json',
@@ -124,4 +127,19 @@
 <!-- ====================================================================================================================== --> <!-- style & script 分隔线 --> <!-- ====================================================================================================================== -->
 <script type="text/javascript">
 	<#team_index />
+
+    //表格查询
+    function queryGrid() {
+        var opts = $("#grid").datagrid("options");
+        if (null == opts.url || "" == opts.url) {
+            opts.url = "${contextPath}/team/listPage";
+        }
+        if(!$('#form').form("validate")){
+            return;
+        }
+        var param = bindMetadata("grid", true);
+        var formData = $("#form").serializeObject();
+        $.extend(param, formData);
+        $("#grid").datagrid("load", param);
+    }
 </script> </#body>
