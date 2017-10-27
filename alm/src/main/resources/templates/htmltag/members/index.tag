@@ -1,6 +1,10 @@
 //打开选择用户弹出框
-function selectMember() {
-showMembersDlg($(this)[0].id);
+function selectMember(callback, args) {
+	if(callback){
+		eval("("+callback+"(args))");
+	}else{
+		showMembersDlg($(this)[0].id);
+	}
 }
 //确认选择事件
 function confirmMembersBtn(id){

@@ -17,15 +17,15 @@
 						<td style="padding: 5px;"><input class="easyui-textbox" name="projectManager" id="projectManager" style="width: 100%;" panelWidth="auto" panelHeight="auto" label="开发负责人:"
 							data-options="editable:false,
 									buttonText:'选择',
-									onClickButton:selectFormProjectManager" /></td>
+									onClickButton:selectMember,onChange:_changeTextboxShowClear" /></td>
 						<td style="padding: 5px;"><input class="easyui-textbox" name="testManager" id="testManager" style="width: 100%;" panelWidth="auto" panelHeight="auto" label="测试负责人:"
 							data-options="editable:false,
 									buttonText:'选择',
-									onClickButton:selectFormTestManager" /></td>
+									onClickButton:selectMember,onChange:_changeTextboxShowClear" /></td>
 						<td style="padding: 5px;"><input class="easyui-textbox" name="productManager" id="productManager" style="width: 100%;" panelWidth="auto" panelHeight="auto" label="产品负责人:"
 							data-options="editable:false,
 									buttonText:'选择',
-									onClickButton:selectFormProductManager" /></td>
+									onClickButton:selectMember,onChange:_changeTextboxShowClear" /></td>
 					</tr>
 					<tr>
 						<td><a href="#" class="easyui-linkbutton" iconCls="icon-search" id="queryBtn" onclick="queryGrid();">查询</a> <a href="javascript:void(0)" class="easyui-linkbutton" onclick="clearForm()">清除</a>
@@ -42,8 +42,14 @@
 	<div region="center" style="width: 100%;" height="auto">
 		<!-- =========================================================表格========================================================= -->
 		<table class="easyui-treegrid" title="Project列表" id="grid" rownumbers="true" remoteSort="false" loadMsg="数据加载中..." singleSelect="true" method="post" sortName="created" align="center"
-			toolbar="#toolbar" fit="true" striped="true" idField="id" treeField="name" url="${contextPath!}/project/list"
-			data-options="onDblClickRow:openUpdate, onHeaderContextMenu:headerContextMenu, onAfterEdit:onAfterEdit,onCancelEdit:onCancelEdit,onBeforeEdit:onBeforeEdit,onEndEdit:onEndEdit,loadFilter:loadFilter,onBeginEdit:onBeginEdit">
+			toolbar="#toolbar" fit="true" striped="false" idField="id" treeField="name" url="${contextPath!}/project/listPage"
+			data-options="onDblClickRow:openUpdate, onHeaderContextMenu:headerContextMenu, onAfterEdit:onAfterEdit,onCancelEdit:onCancelEdit,
+			onBeforeEdit:onBeforeEdit,
+			onEndEdit:onEndEdit,
+			_parentIdField:'parentId',
+			idField:'id',
+			treeField:'name',
+			loadFilter:treegridLoadFilter,onBeginEdit:onBeginEdit">
 			<thead>
 				<tr>
 					<th data-options="field:'name',width:'15%', align:'center', editor : {
@@ -61,7 +67,9 @@
 									valueField:'id',
 									textField:'code'
 								}
-							}">
+							},formatter:function(value,row){
+									return row.type;
+								}">
 						项目类型</th>
 					<th
 						data-options="field:'projectManager',width:'10%',  _provider:'memberProvider', align:'center', editor : {
@@ -70,9 +78,13 @@
 									required : true,
 									editable:false,
 									buttonText:'选择',
-									onClickButton:selectProjectManager
+									onClickButton:function(){
+										selectMember('editorCallback', 'projectManager');
+									}
 								}
-							}">开发负责人</th>
+							},formatter:function(value,row){
+									return row.projectManager;
+								},onChange:_changeTextboxShowClear">开发负责人</th>
 					<th
 						data-options="field:'testManager',width:'10%',  _provider:'memberProvider', align:'center', editor : {
 								type : 'textbox',
@@ -80,9 +92,13 @@
 									required : true,
 									editable:false,
 									buttonText:'选择',
-									onClickButton:selectTestManager
+									onClickButton:function(){
+										selectMember('editorCallback', 'testManager');
+									}
 								}
-							}">测试负责人</th>
+							},formatter:function(value,row){
+									return row.testManager;
+								},onChange:_changeTextboxShowClear">测试负责人</th>
 					<th
 						data-options="field:'productManager',width:'10%',  _provider:'memberProvider', align:'center',editor : {
 								type : 'textbox',
@@ -90,9 +106,13 @@
 									required : true,
 									editable:false,
 									buttonText:'选择',
-									onClickButton:selectProductManager
+									onClickButton:function(){
+										selectMember('editorCallback', 'productManager');
+									}
 								}
-							}">产品负责人</th>
+							},formatter:function(value,row){
+									return row.productManager;
+								},onChange:_changeTextboxShowClear">产品负责人</th>
 					<th class="easyui-datetimebox" data-options="field:'created',width:'20%',  _provider:'datetimeProvider', align:'center'">创建时间</th>
 					<th class="easyui-datetimebox" data-options="field:'modified',width:'20%',  _provider:'datetimeProvider', align:'center'">修改时间</th>
 					<th data-options="field:'opt',width:'20%',hidden:true,formatter:columnFormatter">操作</th>
@@ -117,5 +137,6 @@
 </div>
 <!-- 隐藏编辑框 --> <!-- ====================================================================================================================== --> <!-- style & script 分隔线 --> <!-- ====================================================================================================================== -->
 <script type="text/javascript">
+	<#members_index/>
 	<#project_index />
 </script> </#body>

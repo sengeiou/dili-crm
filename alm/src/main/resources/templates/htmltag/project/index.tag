@@ -78,10 +78,10 @@ function openInsert(isRoot) {
 	}
 	editId = 'temp';
 	projectGrid.treegrid('append', {
-				parent : node ? node.id : undefined,
-				data : [{
+				parent : node ? node.id : null,
+				data : {rows:[{
 							id : 'temp'
-						}]
+						}]}
 			});
 
 	projectGrid.treegrid('select', 'temp');
@@ -270,52 +270,20 @@ function onBeginEdit(row) {
 				id : row.id,
 				field : 'projectManager'
 			});
-	editor.target.textbox('setValue',row.$_projectManager);
-	editor.target.textbox('setText',row.projectManager);
+	editor.target.textbox('setValue', row.$_projectManager);
+	editor.target.textbox('setText', row.projectManager);
 	editor = projectGrid.datagrid('getEditor', {
 				id : row.id,
 				field : 'testManager'
 			});
-	editor.target.textbox('setValue',row.$_testManager);
-	editor.target.textbox('setText',row.testManager);
+	editor.target.textbox('setValue', row.$_testManager);
+	editor.target.textbox('setText', row.testManager);
 	editor = projectGrid.datagrid('getEditor', {
 				id : row.id,
 				field : 'productManager'
 			});
-	editor.target.textbox('setValue',row.$_productManager);
-	editor.target.textbox('setText',row.productManager);
-}
-
-function selectMember(field) {
-	window.smDialog = $('#smDialog');
-	smDialog.dialog({
-				title : '用户选择',
-				width : 800,
-				height : 600,
-				href : '${contextPath!}/member/members.html',
-				modal : true,
-				buttons : [{
-							text : '确定',
-							handler : function() {
-								var selected = memberList.datagrid('getSelected');
-								var editor = projectGrid.datagrid('getEditor', {
-											index : editId,
-											field : field
-										});
-								editor.target.textbox('setValue', selected.id);
-								editor.target.textbox('setText', selected.realName);
-								smDialog.dialog('close');
-							}
-						}, {
-							text : '取消',
-							handler : function() {
-								smDialog.dialog('close');
-							}
-						}],
-				onLoad : function() {
-					window.memberList = $('#smGridList');
-				}
-			});
+	editor.target.textbox('setValue', row.$_productManager);
+	editor.target.textbox('setText', row.productManager);
 }
 
 function selectFormMember(id) {
@@ -344,30 +312,6 @@ function selectFormMember(id) {
 					window.memberList = $('#smGridList');
 				}
 			});
-}
-
-function selectProjectManager() {
-	selectMember('projectManager');
-}
-
-function selectTestManager() {
-	selectMember('testManager');
-}
-
-function selectProductManager() {
-	selectMember('productManager');
-}
-
-function selectFormProjectManager() {
-	selectFormMember('projectManager');
-}
-
-function selectFormTestManager() {
-	selectFormMember('testManager');
-}
-
-function selectFormProductManager() {
-	selectFormMember('productManager');
 }
 
 var columnFormatter = function(value, row) {
@@ -490,10 +434,12 @@ function onAfterEdit(row, changes) {
  *            changes 被修改的数据
  */
 function insertOrUpdateProject(row, changes) {
+	var postData;
 	var oldRecord = window.oldRecord;
 	var postData = new Object();
 	$.extend(true, postData, row);
 	var url = '${contextPath!}/project/';
+	postData = getOriginalData(row);
 	if (postData.id == 'temp') {
 		postData.id = undefined;
 		postData.parentId = row._parentId
@@ -516,19 +462,21 @@ function insertOrUpdateProject(row, changes) {
 				}
 				var date = new Date().Format("yyyy-MM-dd HH:mm:ss");
 				if (postData.id == undefined) {
-					data.data.created = date;
-					data.data.modified = date;
+					row.id = data.data.id;
+					row.created = date;
+					row.modified = date;
+					row.parentId="";
+					debugger;
 					projectGrid.treegrid('remove', 'temp');
 					projectGrid.treegrid('append', {
 								parent : data.data.parentId,
-								data : [data.data]
+								data : [row]
 							});
 				} else {
-					data.data.created = row.created;
-					data.data.modified = date;
+					row.modified = date;
 					projectGrid.treegrid('update', {
 								id : postData.id,
-								row : data.data
+								row : row
 							});
 				}
 			}, 'json');
@@ -543,10 +491,44 @@ function insertOrUpdateProject(row, changes) {
  *            row
  */
 function onEndEdit(row) {
+	var editor = $(this).datagrid('getEditor', {
+				id : row.id,
+				field : 'type'
+			});
+	row.type = editor.target.combobox('getText');
+	row.$_type = editor.target.combobox('getValue');
+	editor = $(this).datagrid('getEditor', {
+				id : row.id,
+				field : 'projectManager'
+			});
+	row.projectManager = editor.target.textbox('getText');
+	row.$_projectManager = editor.target.textbox('getValue');
+	editor = $(this).datagrid('getEditor', {
+				id : row.id,
+				field : 'testManager'
+			});
+	row.testManager = editor.target.textbox('getText');
+	row.$_testManager = editor.target.textbox('getValue');
+	editor = $(this).datagrid('getEditor', {
+				id : row.id,
+				field : 'productManager'
+			});
+	row.productManager = editor.target.textbox('getText');
+	row.$_productManager = editor.target.textbox('getValue');
 	resizeColumn(true);
 	hideOptButtons(row.id);
 	projectGrid.treegrid('hideColumn', 'opt');
 	showColumn();
+}
+
+function editorCallback(field) {
+	var selected = projectGrid.datagrid("getSelected");
+	var editor = projectGrid.datagrid('getEditor', {
+				id : selected.id,
+				field : field
+			});
+	$(editor.target).attr("id", field + "_" + selected.id);
+	showMembersDlg(field + "_" + selected.id);
 }
 
 /**
@@ -557,6 +539,9 @@ function onEndEdit(row) {
  * @submitFun 表单提交需执行的任务
  */
 $(function() {
+			$('#projectManager').textbox('addClearBtn', 'icon-clear');
+			$('#testManager').textbox('addClearBtn', 'icon-clear');
+			$('#productManager').textbox('addClearBtn', 'icon-clear');
 			bindFormEvent("form", "name", queryGrid);
 			if (document.addEventListener) {
 				document.addEventListener("keyup", getKey, false);

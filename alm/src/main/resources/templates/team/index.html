@@ -11,9 +11,9 @@
 			<form id="form" class="easyui-form" method="post" fit="true">
 				<table style="padding: 10px;">
 					<tr>
-						<td style="padding: 5px;"><input name="projectId" id="projectId" style="width: 100%;" panelWidth="auto" panelHeight="auto" label="所属项目id:" /> <#comboProvider _id="projectId"
-								_provider='projectProvider' /></td>
-						<td style="padding: 5px;"><input name="memberId" id="memberId" style="width: 100%;" panelWidth="auto" panelHeight="auto" label="所属成员id:" /> <#comboProvider _id="memberId"
+						<td style="padding: 5px;"><input name="projectId" id="projectId" style="width: 100%;" panelWidth="auto" panelHeight="auto" label="所属项目id:" />
+							<#comboProvider _id="projectId" _provider='projectProvider' /></td>
+						<td style="padding: 5px;"><input name="memberId" id="memberId" style="width: 100%;" panelWidth="auto" panelHeight="auto" label="所属成员id:" data-options="onChange:_changeTextboxShowClear" /> <#comboProvider _id="memberId"
 								_provider='memberProvider' /></td>
 						<td style="padding: 5px;"><input name="type" id="type" style="width: 100%;" panelWidth="auto" panelHeight="auto" label="团队类型:" /> <#comboProvider _id="type" _provider='teamTypeProvider' />
 
@@ -41,7 +41,7 @@
 		<!-- =========================================================表格========================================================= -->
 		<table class="easyui-datagrid" title="Team列表" id="grid" fitColumns="true" pagination="true" pageSize="30" pageNumber="1" pagePosition="both" rownumbers="true" remoteSort="false" loadMsg="数据加载中..."
 			singleSelect="true" method="post" multiSort="false" sortName="projectId" align="center" fit="true" striped="true" toolbar="#toolbar" idField="id" url="${contextPath!}/team/list"
-			data-options="onClickRow:onClickRow,onDblClickRow:onDblClickRow, onAfterEdit:onAfterEdit,onCancelEdit:onCancelEdit,onBeginEdit:onBeginEdit,onEndEdit:onEndEdit">
+			data-options="onClickRow:onClickRow,onDblClickRow:onDblClickRow,onCancelEdit:onCancelEdit,onBeginEdit:onBeginEdit,onEndEdit:onEndEdit">
 			<thead>
 				<tr>
 					<th data-options="field:'id',hidden:true"></th>
@@ -65,9 +65,11 @@
 									required : true,
 									editable:false,
 									buttonText:'选择',
-									onClickButton:selectMember
+									onClickButton:function(){
+										selectMember('editorCallback', 'memberId');
+									}
 								}
-							}">所属成员id</th>
+							},onChange:_changeTextboxShowClear">所属成员id</th>
 					<th
 						data-options="width:'10%',field:'type',  _provider:'teamTypeProvider', sortable:'true', order:'asc', align:'center', resizable:'true', fixed:'false', editor : {
 								type : 'combobox',
@@ -126,20 +128,6 @@
 </div>
 <!-- ====================================================================================================================== --> <!-- style & script 分隔线 --> <!-- ====================================================================================================================== -->
 <script type="text/javascript">
+	<#members_index/>
 	<#team_index />
-
-    //表格查询
-    function queryGrid() {
-        var opts = $("#grid").datagrid("options");
-        if (null == opts.url || "" == opts.url) {
-            opts.url = "${contextPath}/team/listPage";
-        }
-        if(!$('#form').form("validate")){
-            return;
-        }
-        var param = bindMetadata("grid", true);
-        var formData = $("#form").serializeObject();
-        $.extend(param, formData);
-        $("#grid").datagrid("load", param);
-    }
 </script> </#body>

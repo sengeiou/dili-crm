@@ -187,16 +187,6 @@ function hideOptButtons(index) {
 function onBeginEdit(index, row) {
 	resizeColumn();
 	hideCMAndShowOpt(index);
-	var editors = teamGrid.datagrid('getEditors', index);
-	editors[0].target.trigger('focus');
-	editors[0].target.combobox('setValue', row.$_projectId);
-	editors[0].target.combobox('setText', row.projectId);
-	editors[1].target.textbox('setValue', row.$_memberId);
-	editors[1].target.textbox('setText', row.memberId);
-	editors[2].target.combobox('setValue', row.$_type);
-	editors[2].target.combobox('setText', row.type);
-	editors[3].target.combobox('setValue', row.$_memberState);
-	editors[3].target.combobox('setText', row.memberState);
 }
 
 function resizeColumn(original) {
@@ -249,38 +239,6 @@ function showOptButtons(id) {
 	$('#btnSave' + id + ',#btnCancel' + id).show();
 }
 
-function selectMember() {
-	window.smDialog = $('#smDialog');
-	smDialog.dialog({
-				title : '用户选择',
-				width : 800,
-				height : 600,
-				href : '${contextPath!}/member/members.html',
-				modal : true,
-				buttons : [{
-							text : '确定',
-							handler : function() {
-								var selected = memberList.datagrid('getSelected');
-								var editor = teamGrid.datagrid('getEditor', {
-											index : editIndex,
-											field : 'memberId'
-										});
-								editor.target.textbox('setValue', selected.id);
-								editor.target.textbox('setText', selected.realName);
-								smDialog.dialog('close');
-							}
-						}, {
-							text : '取消',
-							handler : function() {
-								smDialog.dialog('close');
-							}
-						}],
-				onLoad : function() {
-					window.memberList = $('#smGridList');
-				}
-			});
-}
-
 /**
  * 显示编辑行最后一列的操作按钮
  * 
@@ -289,24 +247,6 @@ function selectMember() {
  */
 function hideOptButtons(id) {
 	$('#btnSave' + id + ',#btnCancel' + id).hide();
-}
-
-/**
- * 结束编辑回调函数
- * 
- * @param {}
- *            index 行索引
- * @param {}
- *            row 行数据
- * @param {}
- *            changes 当前行被修改的数据
- */
-function onAfterEdit(index, row, changes) {
-	var isValid = teamGrid.datagrid('validateRow', index);
-	if (!isValid) {
-		return false;
-	}
-	insertOrUpdateMenu(index, row, changes);
 }
 
 /**
@@ -322,16 +262,18 @@ function onAfterEdit(index, row, changes) {
  *            changes 被修改的数据
  */
 function insertOrUpdateMenu(index, row, changes) {
+	var postData;
 	var oldRecord;
 	var url = '${contextPath!}/team/';
 	if (!row.id) {
 		url += 'insert';
 	} else {
+		postData = getOriginalData(row);
 		oldRecord = new Object();
 		$.extend(true, oldRecord, row);
 		url += 'update'
 	}
-	$.post(url, row, function(data) {
+	$.post(url, postData, function(data) {
 				if (data.code != 200) {
 					if (oldRecord) {
 						teamGrid.datagrid('updateRow', {
@@ -347,10 +289,10 @@ function insertOrUpdateMenu(index, row, changes) {
 				if (!row.id) {
 					row.id = data.data.id;
 				}
-//				teamGrid.datagrid('updateRow', {
-//							index : index,
-//							row : row
-//						});
+				// teamGrid.datagrid('updateRow', {
+				// index : index,
+				// row : row
+				// });
 				if (changes.orderNumber) {
 					teamGrid.datagrid('orderNumber', {
 								sortName : 'orderNumber',
@@ -410,6 +352,33 @@ function onCancelEdit(index, row) {
 	showCMAndHideOpt(index);
 }
 
+function editorCallback(field) {
+	var selected = teamGrid.datagrid("getSelected");
+	var index = teamGrid.datagrid('getRowIndex', selected);
+	var editor = teamGrid.datagrid('getEditor', {
+				index : index,
+				field : field
+			});
+	$(editor.target).attr("id", field+"_"+index);
+//	$("#"+field+"_"+index).textbox("setValue","1234");
+//	$("#"+field+"_"+index).textbox("setText","213231");
+	showMembersDlg(field+"_"+index);
+}
+// 表格查询
+function queryGrid() {
+	var opts = $("#grid").datagrid("options");
+	if (null == opts.url || "" == opts.url) {
+		opts.url = "${contextPath}/team/listPage";
+	}
+	if (!$('#form').form("validate")) {
+		return;
+	}
+	var param = bindMetadata("grid", true);
+	var formData = $("#form").serializeObject();
+	$.extend(param, formData);
+	$("#grid").datagrid("load", param);
+}
+
 /**
  * 结束编辑回调方法
  * 
@@ -419,6 +388,35 @@ function onCancelEdit(index, row) {
  *            row
  */
 function onEndEdit(index, row) {
+	var editor = $(this).datagrid('getEditor', {
+				index : index,
+				field : 'projectId'
+			});
+	row.projectId = editor.target.combobox('getText');
+	row.$_projectId = editor.target.combobox('getValue');
+	editor = $(this).datagrid('getEditor', {
+				index : index,
+				field : 'memberId'
+			});
+	row.memberId = editor.target.textbox('getText');
+	row.$_memberId = editor.target.textbox('getValue');
+	editor = $(this).datagrid('getEditor', {
+				index : index,
+				field : 'type'
+			});
+	row.type = editor.target.combobox('getText');
+	row.$_type = editor.target.combobox('getValue');
+	editor = $(this).datagrid('getEditor', {
+				index : index,
+				field : 'memberState'
+			});
+	row.memberState = editor.target.textbox('getText');
+	row.$_memberState = editor.target.textbox('getValue');
+	var isValid = teamGrid.datagrid('validateRow', index);
+	if (!isValid) {
+		return false;
+	}
+	insertOrUpdateMenu(index, row, changes);
 	showCMAndHideOpt(index);
 	resizeColumn(true);
 }
@@ -431,6 +429,7 @@ function onEndEdit(index, row) {
  * @submitFun 表单提交需执行的任务
  */
 $(function() {
+			$('#memberId').textbox('addClearBtn', 'icon-clear');
 			window.teamGrid = $('#grid');
 			if (document.addEventListener) {
 				document.addEventListener("keyup", getKey, false);
