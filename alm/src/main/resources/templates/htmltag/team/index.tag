@@ -322,7 +322,6 @@ function onAfterEdit(index, row, changes) {
  *            changes 被修改的数据
  */
 function insertOrUpdateMenu(index, row, changes) {
-	debugger;
 	var oldRecord;
 	var url = '${contextPath!}/team/';
 	if (!row.id) {
@@ -348,10 +347,10 @@ function insertOrUpdateMenu(index, row, changes) {
 				if (!row.id) {
 					row.id = data.data.id;
 				}
-				teamGrid.datagrid('updateRow', {
-							index : index,
-							row : row
-						});
+//				teamGrid.datagrid('updateRow', {
+//							index : index,
+//							row : row
+//						});
 				if (changes.orderNumber) {
 					teamGrid.datagrid('orderNumber', {
 								sortName : 'orderNumber',

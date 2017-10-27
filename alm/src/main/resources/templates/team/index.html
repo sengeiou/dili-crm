@@ -65,7 +65,25 @@
 									onClickButton:selectMember
 								}
 							}">所属成员id</th>
-					<th data-options="width:'10%',field:'type',  _provider:'teamTypeProvider', sortable:'true', order:'asc', align:'center', resizable:'true', fixed:'false'">团队类型</th>
+					<th
+						data-options="width:'10%',field:'type',  _provider:'teamTypeProvider', sortable:'true', order:'asc', align:'center', resizable:'true', fixed:'false', editor : {
+								type : 'combobox',
+								options : {
+									required : true,
+									valueField:'value',
+									textField:'text',
+									data:[{
+										text:'产品',
+										value:1
+									},{
+										text:'开发',
+										value:2
+									},{
+										text:'测试',
+										value:3
+									}]
+								}
+							}">团队类型</th>
 					<th
 						data-options="width:'10%',field:'memberState',  _provider:'memberStateProvider', sortable:'true', order:'asc', align:'center', resizable:'true', fixed:'false', editor : {
 								type : 'combobox',
