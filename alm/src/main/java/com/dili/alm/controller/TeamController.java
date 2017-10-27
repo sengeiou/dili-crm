@@ -44,28 +44,27 @@ public class TeamController {
 	@RequestMapping(value = "/list", method = { RequestMethod.GET, RequestMethod.POST })
 	public @ResponseBody List<Team> list(Team team) {
 		Map<Object, Object> metadata = new HashMap<>();
-		
+
 		JSONObject projectProvider = new JSONObject();
 		projectProvider.put("provider", "projectProvider");
 		metadata.put("projectId", projectProvider);
-		
+
 		JSONObject memberProvider = new JSONObject();
 		memberProvider.put("provider", "memberProvider");
 		metadata.put("memberId", memberProvider);
-		
+
 		JSONObject teamTypeProvider = new JSONObject();
 		teamTypeProvider.put("provider", "teamTypeProvider");
 		metadata.put("type", teamTypeProvider);
-		
+
 		JSONObject memberStateProvider = new JSONObject();
 		memberStateProvider.put("provider", "memberStateProvider");
 		metadata.put("memberState", memberStateProvider);
-		
+
 		JSONObject datetimeProvider = new JSONObject();
 		datetimeProvider.put("provider", "datetimeProvider");
 		metadata.put("joinTime", datetimeProvider);
 		metadata.put("leaveTime", datetimeProvider);
-		
 
 		// 测试数据
 		List<Team> list = this.teamService.listByExample(team);
@@ -88,7 +87,7 @@ public class TeamController {
 	@RequestMapping(value = "/insert", method = { RequestMethod.GET, RequestMethod.POST })
 	public @ResponseBody BaseOutput insert(Team team) {
 		teamService.insertSelective(team);
-		return BaseOutput.success("新增成功");
+		return BaseOutput.success("新增成功").setData(team);
 	}
 
 	@ApiOperation("修改Team")
@@ -96,7 +95,7 @@ public class TeamController {
 	@RequestMapping(value = "/update", method = { RequestMethod.GET, RequestMethod.POST })
 	public @ResponseBody BaseOutput update(Team team) {
 		teamService.updateSelective(team);
-		return BaseOutput.success("修改成功");
+		return BaseOutput.success("修改成功").setData(team);
 	}
 
 	@ApiOperation("删除Team")

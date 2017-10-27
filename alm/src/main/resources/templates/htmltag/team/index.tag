@@ -1,3 +1,22 @@
+Date.prototype.Format = function(fmt) { // author: meizz
+	var o = {
+		"M+" : this.getMonth() + 1, // 月份
+		"d+" : this.getDate(), // 日
+		"H+" : this.getHours(), // 小时
+		"m+" : this.getMinutes(), // 分
+		"s+" : this.getSeconds(), // 秒
+		"q+" : Math.floor((this.getMonth() + 3) / 3), // 季度
+		"S" : this.getMilliseconds()
+		// 毫秒
+	};
+	if (/(y+)/.test(fmt))
+		fmt = fmt.replace(RegExp.$1, (this.getFullYear() + "").substr(4 - RegExp.$1.length));
+	for (var k in o)
+		if (new RegExp("(" + k + ")").test(fmt))
+			fmt = fmt.replace(RegExp.$1, (RegExp.$1.length == 1) ? (o[k]) : (("00" + o[k]).substr(("" + o[k]).length)));
+	return fmt;
+}
+
 // 编辑行索引
 var editIndex = undefined;
 
@@ -26,9 +45,7 @@ function openInsert() {
 		return;
 	}
 	editIndex = teamGrid.datagrid('getRows').length;
-	teamGrid.datagrid('appendRow', {
-				type : 0
-			});
+	teamGrid.datagrid('appendRow', {});
 	teamGrid.datagrid('selectRow', editIndex);
 	teamGrid.datagrid('beginEdit', editIndex);
 }
@@ -81,9 +98,9 @@ function del() {
 			});
 }
 
-var columnFormatter = function(value, row) {
-	var content = '<input type="button" id="btnSave' + row.id + '" style="margin:0px 4px;display:none;" value="保存" onclick="javascript:endEditing();">';
-	content += '<input type="button" id="btnCancel' + row.id + '" style="margin:0px 4px;display:none;" value="取消" onclick="javascript:cancelEdit();">';
+var columnFormatter = function(value, row, index) {
+	var content = '<input type="button" id="btnSave' + index + '" style="margin:0px 4px;display:none;" value="保存" onclick="javascript:endEditing();">';
+	content += '<input type="button" id="btnCancel' + index + '" style="margin:0px 4px;display:none;" value="取消" onclick="javascript:cancelEdit();">';
 	return content;
 };
 
@@ -185,10 +202,40 @@ function hideOptButtons(index) {
  *            row 行数据
  */
 function onBeginEdit(index, row) {
+	var editor = teamGrid.datagrid('getEditor', {
+				index : index,
+				field : 'projectId'
+			});
+	editor.target.textbox('setValue', row.$_projectId);
+	editor.target.textbox('setText', row.projectId);
+	editor = teamGrid.datagrid('getEditor', {
+				index : index,
+				field : 'memberId'
+			});
+	editor.target.textbox('setValue', row.$_memberId);
+	editor.target.textbox('setText', row.memberId);
+	editor = teamGrid.datagrid('getEditor', {
+				index : index,
+				field : 'type'
+			});
+	editor.target.textbox('setValue', row.$_type);
+	editor.target.textbox('setText', row.type);
+	editor = teamGrid.datagrid('getEditor', {
+				index : index,
+				field : 'memberState'
+			});
+	editor.target.textbox('setValue', row.$_memberState);
+	editor.target.textbox('setText', row.memberState);
 	resizeColumn();
 	hideCMAndShowOpt(index);
 }
 
+/**
+ * 设置列宽，编辑表格的时候要显示操作列并隐藏不可编辑列
+ * 
+ * @param {}
+ *            original
+ */
 function resizeColumn(original) {
 	if (original) {
 		teamGrid.datagrid('resizeColumn', [{
@@ -222,14 +269,14 @@ function resizeColumn(original) {
 }
 
 function hideCMAndShowOpt(index) {
-	showOptButtons(++index);
+	showOptButtons(index);
 	teamGrid.datagrid('showColumn', 'opt');
 	teamGrid.treegrid('hideColumn', 'joinTime');
 	teamGrid.treegrid('hideColumn', 'leaveTime');
 }
 
 function showCMAndHideOpt(index) {
-	hideOptButtons(++index);
+	hideOptButtons(index);
 	teamGrid.datagrid('hideColumn', 'opt');
 	teamGrid.treegrid('showColumn', 'joinTime');
 	teamGrid.treegrid('showColumn', 'leaveTime');
@@ -262,13 +309,12 @@ function hideOptButtons(id) {
  *            changes 被修改的数据
  */
 function insertOrUpdateMenu(index, row, changes) {
-	var postData;
+	var postData = getOriginalData(row);
 	var oldRecord;
 	var url = '${contextPath!}/team/';
 	if (!row.id) {
 		url += 'insert';
 	} else {
-		postData = getOriginalData(row);
 		oldRecord = new Object();
 		$.extend(true, oldRecord, row);
 		url += 'update'
@@ -289,16 +335,20 @@ function insertOrUpdateMenu(index, row, changes) {
 				if (!row.id) {
 					row.id = data.data.id;
 				}
-				// teamGrid.datagrid('updateRow', {
-				// index : index,
-				// row : row
-				// });
-				if (changes.orderNumber) {
-					teamGrid.datagrid('orderNumber', {
-								sortName : 'orderNumber',
-								sortOrder : 'asc'
-							});
+				if (data.data.joinTime) {
+					var date = new Date()
+					date.setTime(data.data.joinTime);
+					row.joinTime = date.Format('yyyy-MM-dd HH:mm:ss');
 				}
+				if (data.data.leaveTime) {
+					var date = new Date()
+					date.setTime(data.data.leaveTime);
+					row.leaveTime = date.Format('yyyy-MM-dd HH:mm:ss');
+				}
+				teamGrid.datagrid('updateRow', {
+							index : index,
+							row : row
+						});
 				teamGrid.datagrid('refreshRow', index);
 			}, 'json');
 }
@@ -359,10 +409,10 @@ function editorCallback(field) {
 				index : index,
 				field : field
 			});
-	$(editor.target).attr("id", field+"_"+index);
-//	$("#"+field+"_"+index).textbox("setValue","1234");
-//	$("#"+field+"_"+index).textbox("setText","213231");
-	showMembersDlg(field+"_"+index);
+	$(editor.target).attr("id", field + "_" + index);
+	// $("#"+field+"_"+index).textbox("setValue","1234");
+	// $("#"+field+"_"+index).textbox("setText","213231");
+	showMembersDlg(field + "_" + index);
 }
 // 表格查询
 function queryGrid() {
@@ -416,9 +466,12 @@ function onEndEdit(index, row) {
 	if (!isValid) {
 		return false;
 	}
-	insertOrUpdateMenu(index, row, changes);
-	showCMAndHideOpt(index);
+}
+
+function onAfterEdit(index, row, changes) {
 	resizeColumn(true);
+	showCMAndHideOpt(index);
+	insertOrUpdateMenu(index, row, changes);
 }
 
 /**
