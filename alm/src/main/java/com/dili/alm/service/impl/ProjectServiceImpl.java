@@ -1,14 +1,7 @@
 package com.dili.alm.service.impl;
 
-import java.util.List;
-
-import org.apache.commons.lang3.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
 import com.dili.alm.cache.AlmCache;
+import com.dili.alm.constant.AlmConstants;
 import com.dili.alm.dao.MilestonesMapper;
 import com.dili.alm.dao.ProjectMapper;
 import com.dili.alm.dao.TeamMapper;
@@ -17,11 +10,19 @@ import com.dili.alm.domain.Project;
 import com.dili.alm.domain.Team;
 import com.dili.alm.domain.dto.DataDictionaryDto;
 import com.dili.alm.domain.dto.DataDictionaryValueDto;
+import com.dili.alm.rpc.DataAuthRpc;
 import com.dili.alm.rpc.DataDictionaryRPC;
 import com.dili.alm.service.ProjectService;
 import com.dili.ss.base.BaseServiceImpl;
 import com.dili.ss.domain.BaseOutput;
 import com.dili.ss.dto.DTOUtils;
+import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 /**
  * 由MyBatis Generator工具自动生成 This file was generated on 2017-10-18 17:22:54.
@@ -38,6 +39,8 @@ public class ProjectServiceImpl extends BaseServiceImpl<Project, Long> implement
 	private MilestonesMapper milestonesMapper;
 	@Autowired
 	private TeamMapper teamMapper;
+	@Autowired
+	DataAuthRpc dataAuthRpc;
 
 	public ProjectMapper getActualDao() {
 		return (ProjectMapper) getDao();
@@ -49,6 +52,7 @@ public class ProjectServiceImpl extends BaseServiceImpl<Project, Long> implement
 		if (StringUtils.isNotBlank(condtion.getName())) {
 			AlmCache.projectMap.get(condtion.getId()).setName(condtion.getName());
 		}
+		dataAuthRpc.updateDataAuth(condtion.getId().toString(), AlmConstants.DATA_AUTH_TYPE_PROJECT, condtion.getName());
 		return super.update(condtion);
 	}
 
@@ -57,19 +61,23 @@ public class ProjectServiceImpl extends BaseServiceImpl<Project, Long> implement
 		int i = super.insert(project);
 		// 同步更新缓存
 		AlmCache.projectMap.put(project.getId(), project);
+		//向权限系统中添加项目数据权限
+		dataAuthRpc.addDataAuth(project.getId().toString(), AlmConstants.DATA_AUTH_TYPE_PROJECT, project.getName());
 		return i;
 	}
 
 	@Override
-	public int delete(Long aLong) {
-		AlmCache.projectMap.remove(aLong);
-		return super.delete(aLong);
+	public int delete(Long id) {
+		AlmCache.projectMap.remove(id);
+		dataAuthRpc.deleteDataAuth(id.toString(), AlmConstants.DATA_AUTH_TYPE_PROJECT);
+		return super.delete(id);
 	}
 
 	@Override
 	public int delete(List<Long> ids) {
 		ids.forEach(id -> {
 			AlmCache.projectMap.remove(id);
+			dataAuthRpc.deleteDataAuth(id.toString(), AlmConstants.DATA_AUTH_TYPE_PROJECT);
 		});
 		return super.delete(ids);
 	}

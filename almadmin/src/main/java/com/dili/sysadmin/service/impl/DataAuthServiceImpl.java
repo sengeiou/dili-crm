@@ -1,18 +1,5 @@
 package com.dili.sysadmin.service.impl;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import org.apache.commons.collections4.CollectionUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.cglib.beans.BeanCopier;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
 import com.alibaba.fastjson.JSON;
 import com.dili.ss.base.BaseServiceImpl;
 import com.dili.ss.constant.ResultCode;
@@ -23,18 +10,23 @@ import com.dili.sysadmin.dao.UserDataAuthMapper;
 import com.dili.sysadmin.domain.DataAuth;
 import com.dili.sysadmin.domain.RoleDataAuth;
 import com.dili.sysadmin.domain.UserDataAuth;
-import com.dili.sysadmin.domain.dto.DataAuthEditDto;
-import com.dili.sysadmin.domain.dto.DataAuthTypeDto;
-import com.dili.sysadmin.domain.dto.DataDictionaryDto;
-import com.dili.sysadmin.domain.dto.DataDictionaryValueDto;
-import com.dili.sysadmin.domain.dto.EditRoleDataAuthDto;
-import com.dili.sysadmin.domain.dto.EditUserDataAuthDto;
-import com.dili.sysadmin.domain.dto.UpdateRoleDataAuthDto;
-import com.dili.sysadmin.domain.dto.UpdateUserDataAuthDto;
+import com.dili.sysadmin.domain.dto.*;
 import com.dili.sysadmin.rpc.DataDictrionaryRPC;
 import com.dili.sysadmin.sdk.session.SessionConstants;
 import com.dili.sysadmin.sdk.util.ManageRedisUtil;
 import com.dili.sysadmin.service.DataAuthService;
+import org.apache.commons.collections4.CollectionUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cglib.beans.BeanCopier;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * 由MyBatis Generator工具自动生成 This file was generated on 2017-07-04 15:24:51.
@@ -192,7 +184,7 @@ public class DataAuthServiceImpl extends BaseServiceImpl<DataAuth, Long> impleme
 			return null;
 		}
 		DataDictionaryDto dataDictionary = output.getData();
-		if (CollectionUtils.isEmpty(dataDictionary.getValues())) {
+		if (dataDictionary == null || CollectionUtils.isEmpty(dataDictionary.getValues())) {
 			return null;
 		}
 		List<DataAuthTypeDto> target = new ArrayList<>(dataDictionary.getValues().size());

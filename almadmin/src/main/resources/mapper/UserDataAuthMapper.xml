@@ -39,4 +39,17 @@
     </set>
     where id = #{id,jdbcType=BIGINT}
   </update>
+
+  <!--<delete id="deleteByCondition" parameterType="com.dili.sysadmin.domain.UserDataAuth">-->
+    <!--delete from user_data_auth-->
+    <!--<where>-->
+      <!--<if test="dataAuthId != null">-->
+        <!--and data_auth_id = #{dataAuthId,jdbcType=BIGINT}-->
+      <!--</if>-->
+      <!--<if test="userId != null">-->
+        <!--and user_id = #{userId,jdbcType=BIGINT}-->
+      <!--</if>-->
+    <!--</where>-->
+  <!--</delete>-->
+
 </mapper>
