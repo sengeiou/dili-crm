@@ -122,7 +122,7 @@ function saveOrUpdate() {
 				async : true,
 				success : function(data) {
 					if (data.code == "200") {
-						$("#grid").datagrid("reload");
+						$("#grid").treegrid("reload");
 						$('#dlg').dialog('close');
 					} else {
 						$.messager.alert('错误', data.result);
@@ -170,9 +170,9 @@ function del() {
 
 // 表格查询
 function queryGrid() {
-	var opts = projectGrid.datagrid("options");
+	var opts = projectGrid.treegrid("options");
 	if (null == opts.url || "" == opts.url) {
-		opts.url = "${contextPath!}/project/list";
+		opts.url = "${contextPath!}/project/listPage";
 	}
 	if (!$('#form').form("validate")) {
 		return;
@@ -235,7 +235,7 @@ function getKey(e) {
 
 function resizeColumn(original) {
 	if (original) {
-		projectGrid.datagrid('resizeColumn', [{
+		projectGrid.treegrid('resizeColumn', [{
 							field : 'name',
 							width : '15%'
 						}, {
@@ -249,7 +249,7 @@ function resizeColumn(original) {
 							width : '10%'
 						}]);
 	} else {
-		projectGrid.datagrid('resizeColumn', [{
+		projectGrid.treegrid('resizeColumn', [{
 							field : 'name',
 							width : '20%'
 						}, {
@@ -266,19 +266,23 @@ function resizeColumn(original) {
 }
 
 function onBeginEdit(row) {
-	var editor = projectGrid.datagrid('getEditor', {
+	if(row.id == 'temp'){
+
+	return true;
+	}
+	var editor = projectGrid.treegrid('getEditor', {
 				id : row.id,
 				field : 'projectManager'
 			});
 	editor.target.textbox('setValue', row.$_projectManager);
 	editor.target.textbox('setText', row.projectManager);
-	editor = projectGrid.datagrid('getEditor', {
+	editor = projectGrid.treegrid('getEditor', {
 				id : row.id,
 				field : 'testManager'
 			});
 	editor.target.textbox('setValue', row.$_testManager);
 	editor.target.textbox('setText', row.testManager);
-	editor = projectGrid.datagrid('getEditor', {
+	editor = projectGrid.treegrid('getEditor', {
 				id : row.id,
 				field : 'productManager'
 			});
@@ -297,7 +301,7 @@ function selectFormMember(id) {
 				buttons : [{
 							text : '确定',
 							handler : function() {
-								var selected = memberList.datagrid('getSelected');
+								var selected = memberList.treegrid('getSelected');
 								$('#' + id).textbox('setValue', selected.id);
 								$('#' + id).textbox('setText', selected.realName);
 								smDialog.dialog('close');
@@ -441,13 +445,15 @@ function insertOrUpdateProject(row, changes) {
 	var url = '${contextPath!}/project/';
 	postData = getOriginalData(row);
 	if (postData.id == 'temp') {
-		postData.id = undefined;
-		postData.parentId = row._parentId
+		postData.id = null;
+		postData.parentId = row["_parentId"];
 		url += 'insert';
 	} else {
 		url += 'update'
 	}
+
 	$.post(url, postData, function(data) {
+
 				if (data.code != 200) {
 					if (oldRecord) {
 						projectGrid.treegrid('update', {
@@ -460,14 +466,16 @@ function insertOrUpdateProject(row, changes) {
 					$.messager.alert('提示', data.result);
 					return;
 				}
+
 				var date = new Date().Format("yyyy-MM-dd HH:mm:ss");
 				if (postData.id == undefined) {
+					projectGrid.treegrid('remove', 'temp');
 					row.id = data.data.id;
 					row.created = date;
 					row.modified = date;
 					row.parentId="";
-					debugger;
-					projectGrid.treegrid('remove', 'temp');
+					row._parentId="";
+
 					projectGrid.treegrid('append', {
 								parent : data.data.parentId,
 								data : [row]
@@ -491,25 +499,25 @@ function insertOrUpdateProject(row, changes) {
  *            row
  */
 function onEndEdit(row) {
-	var editor = $(this).datagrid('getEditor', {
+	var editor = $(this).treegrid('getEditor', {
 				id : row.id,
 				field : 'type'
 			});
 	row.type = editor.target.combobox('getText');
 	row.$_type = editor.target.combobox('getValue');
-	editor = $(this).datagrid('getEditor', {
+	editor = $(this).treegrid('getEditor', {
 				id : row.id,
 				field : 'projectManager'
 			});
 	row.projectManager = editor.target.textbox('getText');
 	row.$_projectManager = editor.target.textbox('getValue');
-	editor = $(this).datagrid('getEditor', {
+	editor = $(this).treegrid('getEditor', {
 				id : row.id,
 				field : 'testManager'
 			});
 	row.testManager = editor.target.textbox('getText');
 	row.$_testManager = editor.target.textbox('getValue');
-	editor = $(this).datagrid('getEditor', {
+	editor = $(this).treegrid('getEditor', {
 				id : row.id,
 				field : 'productManager'
 			});
@@ -522,8 +530,8 @@ function onEndEdit(row) {
 }
 
 function editorCallback(field) {
-	var selected = projectGrid.datagrid("getSelected");
-	var editor = projectGrid.datagrid('getEditor', {
+	var selected = projectGrid.treegrid("getSelected");
+	var editor = projectGrid.treegrid('getEditor', {
 				id : selected.id,
 				field : field
 			});

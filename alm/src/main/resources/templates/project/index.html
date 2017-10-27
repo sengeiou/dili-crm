@@ -42,7 +42,7 @@
 	<div region="center" style="width: 100%;" height="auto">
 		<!-- =========================================================表格========================================================= -->
 		<table class="easyui-treegrid" title="Project列表" id="grid" rownumbers="true" remoteSort="false" loadMsg="数据加载中..." singleSelect="true" method="post" sortName="created" align="center"
-			toolbar="#toolbar" fit="true" striped="false" idField="id" treeField="name" url="${contextPath!}/project/listPage"
+			toolbar="#toolbar" fit="true" striped="false" idField="id" treeField="name"
 			data-options="onDblClickRow:openUpdate, onHeaderContextMenu:headerContextMenu, onAfterEdit:onAfterEdit,onCancelEdit:onCancelEdit,
 			onBeforeEdit:onBeforeEdit,
 			onEndEdit:onEndEdit,
@@ -52,7 +52,7 @@
 			loadFilter:treegridLoadFilter,onBeginEdit:onBeginEdit">
 			<thead>
 				<tr>
-					<th data-options="field:'name',width:'15%', align:'center', editor : {
+					<th data-options="field:'name',width:'15%', align:'left', editor : {
 								type : 'textbox',
 								options : {
 									required : true
@@ -62,9 +62,8 @@
 						data-options="field:'type',width:'15%', _table:'data_dictionary_value',_valueField:'value',_textField:'code',_queryParams:{'yn':1,'dd_id':3}, align:'center', editor : {
 								type : 'combobox',
 								options : {
-									required : true,
 									url:'${contextPath}/project/type.json',
-									valueField:'id',
+									valueField:'value',
 									textField:'code'
 								}
 							},formatter:function(value,row){
@@ -75,7 +74,6 @@
 						data-options="field:'projectManager',width:'10%',  _provider:'memberProvider', align:'center', editor : {
 								type : 'textbox',
 								options : {
-									required : true,
 									editable:false,
 									buttonText:'选择',
 									onClickButton:function(){
@@ -89,7 +87,6 @@
 						data-options="field:'testManager',width:'10%',  _provider:'memberProvider', align:'center', editor : {
 								type : 'textbox',
 								options : {
-									required : true,
 									editable:false,
 									buttonText:'选择',
 									onClickButton:function(){
@@ -103,7 +100,6 @@
 						data-options="field:'productManager',width:'10%',  _provider:'memberProvider', align:'center',editor : {
 								type : 'textbox',
 								options : {
-									required : true,
 									editable:false,
 									buttonText:'选择',
 									onClickButton:function(){
@@ -121,9 +117,13 @@
 		</table>
 		<!-- datagrid工具栏 -->
 		<div id="toolbar" style="padding: 2px 5px;">
-			<a href="#" class="easyui-linkbutton" iconCls="icon-add" onclick="openInsert(true)" plain="true">添加根项目</a> <a href="#" class="easyui-linkbutton" iconCls="icon-add" onclick="openInsert()"
-				plain="true">添加子项目</a> <a href="#" class="easyui-linkbutton" iconCls="icon-edit" onclick="openUpdate()" plain="true"></a> <a href="#" class="easyui-linkbutton" iconCls="icon-remove"
-				onclick="del()" plain="true"></a> <a href="#" class="easyui-linkbutton" iconCls="icon-export" onclick="doExport('grid', true)" plain="true"></a>
+			<a href="#" class="easyui-linkbutton" iconCls="icon-add" onclick="openInsert(true)" plain="true">添加根项目</a>
+			<a href="#" class="easyui-linkbutton" iconCls="icon-add" onclick="openInsert()"
+				plain="true">添加子项目</a>
+			<a href="#" class="easyui-linkbutton" iconCls="icon-edit" onclick="openUpdate()" plain="true">修改</a>
+			<a href="#" class="easyui-linkbutton" iconCls="icon-remove"
+				onclick="del()" plain="true">删除</a>
+			<a href="#" class="easyui-linkbutton" iconCls="icon-export" onclick="doExport('grid', true)" plain="true">导出</a>
 			<div style="float: right">
 				边框显示:<select onchange="changeBorder('grid',this.value)">
 					<option value="lines-both">全边框</option>
