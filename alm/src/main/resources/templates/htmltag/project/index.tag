@@ -79,9 +79,9 @@ function openInsert(isRoot) {
 	editId = 'temp';
 	projectGrid.treegrid('append', {
 				parent : node ? node.id : null,
-				data : {rows:[{
+				data : [{
 							id : 'temp'
-						}]}
+						}]
 			});
 
 	projectGrid.treegrid('select', 'temp');
