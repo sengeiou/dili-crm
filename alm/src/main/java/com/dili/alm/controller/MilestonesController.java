@@ -3,9 +3,10 @@ package com.dili.alm.controller;
 import com.dili.alm.constant.AlmConstants;
 import com.dili.alm.domain.Files;
 import com.dili.alm.domain.Milestones;
-import com.dili.alm.domain.MilestonesDto;
+import com.dili.alm.domain.dto.MilestonesDto;
 import com.dili.alm.service.MilestonesService;
 import com.dili.ss.domain.BaseOutput;
+import com.dili.ss.domain.EasyuiPageOutput;
 import com.dili.ss.dto.DTOUtils;
 import com.dili.sysadmin.sdk.session.SessionContext;
 import io.swagger.annotations.Api;
@@ -73,6 +74,9 @@ public class MilestonesController {
 	    	projectIds.add(Long.parseLong(t.get("dataId").toString()));
 	    });
 	    MilestonesDto milestonesDto = DTOUtils.as(milestones, MilestonesDto.class);
+	    if(projectIds.isEmpty()){
+		    return new EasyuiPageOutput(0, null).toString();
+	    }
 	    milestonesDto.setProjectIds(projectIds);
         return milestonesService.listEasyuiPageByExample(milestonesDto, true).toString();
     }
