@@ -40,7 +40,7 @@ public class TeamController {
 	/**
 	 * 刷新项目缓存
 	 */
-	private void refreshProject(){
+	private void refreshProject() {
 		List<Project> list = projectService.list(DTOUtils.newDTO(Project.class));
 		list.forEach(project -> {
 			AlmCache.projectMap.put(project.getId(), project);
@@ -50,7 +50,7 @@ public class TeamController {
 	@ApiOperation("跳转到Team页面")
 	@RequestMapping(value = "/index", method = RequestMethod.GET)
 	public String index(ModelMap modelMap) {
-//		refreshProject();
+		refreshProject();
 		return "team/index";
 	}
 
@@ -100,17 +100,15 @@ public class TeamController {
 	@ApiOperation("新增Team")
 	@ApiImplicitParams({ @ApiImplicitParam(name = "Team", paramType = "form", value = "Team的form信息", required = true, dataType = "string") })
 	@RequestMapping(value = "/insert", method = { RequestMethod.GET, RequestMethod.POST })
-	public @ResponseBody BaseOutput insert(Team team) {
-		teamService.insertSelective(team);
-		return BaseOutput.success("新增成功").setData(team);
+	public @ResponseBody BaseOutput<Object> insert(Team team) {
+		return teamService.insertAfterCheck(team);
 	}
 
 	@ApiOperation("修改Team")
 	@ApiImplicitParams({ @ApiImplicitParam(name = "Team", paramType = "form", value = "Team的form信息", required = true, dataType = "string") })
 	@RequestMapping(value = "/update", method = { RequestMethod.GET, RequestMethod.POST })
-	public @ResponseBody BaseOutput update(Team team) {
-		teamService.updateSelective(team);
-		return BaseOutput.success("修改成功").setData(team);
+	public @ResponseBody BaseOutput<Object> update(Team team) {
+		return teamService.updateAftreCheck(team);
 	}
 
 	@ApiOperation("删除Team")
