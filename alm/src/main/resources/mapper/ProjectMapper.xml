@@ -64,4 +64,8 @@
     </set>
     where id = #{id,jdbcType=BIGINT}
   </update>
+
+  <select id="getChildProjects" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    {call getChildProjects(#{id})}
+  </select>
 </mapper>

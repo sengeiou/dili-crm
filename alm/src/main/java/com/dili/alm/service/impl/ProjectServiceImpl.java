@@ -10,19 +10,24 @@ import com.dili.alm.domain.Project;
 import com.dili.alm.domain.Team;
 import com.dili.alm.domain.dto.DataDictionaryDto;
 import com.dili.alm.domain.dto.DataDictionaryValueDto;
+import com.dili.alm.domain.dto.ProjectDto;
 import com.dili.alm.rpc.DataAuthRpc;
 import com.dili.alm.rpc.DataDictionaryRPC;
 import com.dili.alm.service.ProjectService;
 import com.dili.ss.base.BaseServiceImpl;
 import com.dili.ss.domain.BaseOutput;
+import com.dili.ss.domain.EasyuiPageOutput;
 import com.dili.ss.dto.DTOUtils;
+import com.dili.sysadmin.sdk.session.SessionContext;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 /**
  * 由MyBatis Generator工具自动生成 This file was generated on 2017-10-18 17:22:54.
@@ -131,5 +136,33 @@ public class ProjectServiceImpl extends BaseServiceImpl<Project, Long> implement
 			return BaseOutput.success("删除成功");
 		}
 		return BaseOutput.failure("删除失败");
+	}
+
+	@Override
+	public List<Project> getChildProjects(Long id) {
+		return getActualDao().getChildProjects(id);
+	}
+
+	@Override
+	public EasyuiPageOutput listEasyuiPageByExample(Project domain, boolean useProvider) throws Exception {
+		SessionContext sessionContext = SessionContext.getSessionContext();
+		if(sessionContext == null) {
+			throw new RuntimeException("未登录");
+		}
+		List<Map> dataauth = sessionContext.dataAuth(AlmConstants.DATA_AUTH_TYPE_PROJECT);
+		List<Long> projectIds = new ArrayList<>(dataauth.size());
+		dataauth.forEach( t -> {
+			List<Project> projects = getChildProjects(Long.parseLong(t.get("dataId").toString()));
+			projects.forEach( p -> {
+				projectIds.add(p.getId());
+			});
+//			projectIds.add(Long.parseLong(t.get("dataId").toString()));
+		});
+		ProjectDto projectDto = DTOUtils.as(domain, ProjectDto.class);
+		if(projectIds.isEmpty()){
+			return new EasyuiPageOutput(0, null);
+		}
+		projectDto.setIds(projectIds);
+		return super.listEasyuiPageByExample(projectDto, useProvider);
 	}
 }

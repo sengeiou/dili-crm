@@ -1,11 +1,11 @@
 package com.dili.alm.service;
 
-import java.util.List;
-
 import com.dili.alm.domain.Project;
 import com.dili.alm.domain.dto.DataDictionaryValueDto;
 import com.dili.ss.base.BaseService;
 import com.dili.ss.domain.BaseOutput;
+
+import java.util.List;
 
 /**
  * 由MyBatis Generator工具自动生成
@@ -16,4 +16,11 @@ public interface ProjectService extends BaseService<Project, Long> {
 	List<DataDictionaryValueDto> getPojectTypes();
 
 	BaseOutput<Object> deleteBeforeCheck(Long id);
+
+	/**
+	 * 获取子项目，包含当前参数id
+	 * @param id
+	 * @return
+	 */
+	List<Project> getChildProjects(Long id);
 }
