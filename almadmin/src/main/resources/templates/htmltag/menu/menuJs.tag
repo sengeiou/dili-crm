@@ -85,7 +85,6 @@ function del(gridId) {
 									if (data.code == "200") {
 										grid.datagrid('deleteRow', grid.datagrid('getRowIndex', selected));
 										$('#dlg').dialog('close');
-										debugger;
 										var removeNode = menuTree.tree('find', selected.id);
 										if (removeNode) {
 											menuTree.tree('remove', removeNode.target);

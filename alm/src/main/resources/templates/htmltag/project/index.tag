@@ -357,7 +357,6 @@ function onBeforeEdit(row) {
 		window.oldRecord = new Object();
 		$.extend(true, oldRecord, row);
 	}
-	debugger;
 	resizeColumn();
 	hideCMAndShowOpt(row.id);
 }
@@ -524,7 +523,6 @@ function onEndEdit(row) {
 			});
 	row.productManager = editor.target.textbox('getText');
 	row.$_productManager = editor.target.textbox('getValue');
-	debugger;
 	resizeColumn(true);
 	showCMAndHideOpt(row.id);
 }

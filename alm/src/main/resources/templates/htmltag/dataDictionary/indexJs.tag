@@ -454,7 +454,6 @@ $(function() {
 							return jq.each(function() {
 										var dg = $(this);
 										var fn = function(item) {
-											debugger;
 											var col = dg.datagrid('getColumnOption', item.field);
 											col.width = item.width;
 											if (typeof(col.width) == 'string') {

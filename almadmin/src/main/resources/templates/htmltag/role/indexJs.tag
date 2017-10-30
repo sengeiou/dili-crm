@@ -1,6 +1,25 @@
 // --------------------------------------------------------------------------------
 var editIndex = undefined;
 
+function dateFtt(fmt, date) {
+	var o = {
+		"M+" : date.getMonth() + 1, // 月份
+		"d+" : date.getDate(), // 日
+		"h+" : date.getHours(), // 小时
+		"m+" : date.getMinutes(), // 分
+		"s+" : date.getSeconds(), // 秒
+		"q+" : Math.floor((date.getMonth() + 3) / 3), // 季度
+		"S" : date.getMilliseconds()
+		// 毫秒
+	};
+	if (/(y+)/.test(fmt))
+		fmt = fmt.replace(RegExp.$1, (date.getFullYear() + "").substr(4 - RegExp.$1.length));
+	for (var k in o)
+		if (new RegExp("(" + k + ")").test(fmt))
+			fmt = fmt.replace(RegExp.$1, (RegExp.$1.length == 1) ? (o[k]) : (("00" + o[k]).substr(("" + o[k]).length)));
+	return fmt;
+}
+
 function getHyperlinkContext(text, handler, data) {
 	return '<span style="padding:5px;"><a href="javascript:void(0)" onclick="' + handler + '(' + data + ')">' + text + '</a></span>'
 }
@@ -52,7 +71,7 @@ function getRowById(id) {
 }
 
 function onAddClicked() {
-	if (!addRole) {
+	if (!dataAuth.addRole) {
 		return false;
 	}
 	if (!endEditing()) {
@@ -68,7 +87,7 @@ function onAddClicked() {
 }
 
 function onRemoveClicked(id) {
-	if (!removeRole) {
+	if (!dataAuth.removeRole) {
 		return false;
 	}
 	if (!endEditing()) {
@@ -138,7 +157,7 @@ function onPageDownClicked() {
 }
 
 function onEditClicked(id) {
-	if (!editRole) {
+	if (!dataAuth.editRole) {
 		return false;
 	}
 	if (!endEditing()) {
@@ -159,7 +178,7 @@ function onEditClicked(id) {
 }
 
 function onSaveClicked(id) {
-	if (!saveRole) {
+	if (!dataAuth.saveRole) {
 		return false;
 	}
 	if (!endEditing()) {
@@ -168,14 +187,14 @@ function onSaveClicked(id) {
 }
 
 function onCancelClicked(id) {
-	if (!cancelSaveRole) {
+	if (!dataAuth.cancelSaveRole) {
 		return false;
 	}
 	cancelEditing();
 }
 
 function onDblClickRow(index, row) {
-	if (!editRole) {
+	if (!dataAuth.editRole) {
 		return false;
 	}
 	onEditClicked();
@@ -390,7 +409,7 @@ function getKey(e) {
 	var keycode = e.which ? e.which : e.keyCode;
 	// alert(keycode);
 	if (46 == keycode) {
-		if (!removeRole) {
+		if (!dataAuth.removeRole) {
 			return;
 		}
 		// DELETE
@@ -408,19 +427,19 @@ function getKey(e) {
 			return;
 		onPageDownClicked();
 	} else if (13 == keycode) {
-		if (!saveRole) {
+		if (!dataAuth.saveRole) {
 			return;
 		}
 		// ENTER
 		onSaveClicked();
 	} else if (27 == keycode) {
-		if (!cancelSaveRole) {
+		if (!dataAuth.cancelSaveRole) {
 			return;
 		}
 		// ESC
 		onCancelClicked();
 	} else if (45 == keycode) {
-		if (!editRole) {
+		if (!dataAuth.editRole) {
 			return;
 		}
 		// INSERT

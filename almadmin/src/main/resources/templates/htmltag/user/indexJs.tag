@@ -361,7 +361,7 @@ function onUserDetailClicked(id) {
 	$(formData._departments).each(function(index, item) {
 				comboText += item.name + ',';
 			});
-			debugger;
+
 	comboText = comboText.substring(0, comboText.length - 1)
 	$('#_department').combotree('setText', comboText);
 	$('#_form').form('load', formData);
@@ -473,7 +473,6 @@ function onPageDownClicked() {
 }
 
 function onSaveClicked() {
-	debugger;
 	if (!dataAuth.saveUser) {
 		return false;
 	}
@@ -498,12 +497,12 @@ function onSaveClicked() {
 		// 有id就修改
 		_url = "${contextPath!}/user/update";
 	}
-
 	var roleList = [];
 	var rows = $("#withRoleDatalist").datalist("getRows");
-	for (roleIndex in rows) {
-		roleList.push(parseInt(rows[roleIndex].id));
-	}
+	debugger;
+	$(rows).each(function(index, item) {
+				roleList.push(item.id);
+			});
 	_formData.roleId = roleList;
 
 	var temp = JSON.stringify(_formData);
@@ -716,7 +715,7 @@ saveUserDataAuth = function() {
 			});
 	$.ajax({
 				type : "POST",
-				url :  '{contextPath!}/dataAuth/updateUserDataAuth.json',
+				url : '{contextPath!}/dataAuth/updateUserDataAuth.json',
 				contentType : "application/json; charset=utf-8",
 				data : JSON.stringify(submitData),
 				dataType : "json",

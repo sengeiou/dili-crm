@@ -10,6 +10,7 @@ import java.util.UUID;
 
 import javax.annotation.Resource;
 
+import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -246,12 +247,14 @@ public class UserServiceImpl extends BaseServiceImpl<User, Long> implements User
 			userDept.setDepartmentId(deptId);
 			this.userDepartmentMapper.insertSelective(userDept);
 		}
-		UserRole userRole = new UserRole();
-		userRole.setUserId(user.getId());
-		for (Long roleId : dto.getRoleId()) {
-			userRole.setId(null);
-			userRole.setRoleId(roleId);
-			this.userRoleMapper.insertSelective(userRole);
+		if (CollectionUtils.isNotEmpty(dto.getRoleId())) {
+			UserRole userRole = new UserRole();
+			userRole.setUserId(user.getId());
+			for (Long roleId : dto.getRoleId()) {
+				userRole.setId(null);
+				userRole.setRoleId(roleId);
+				this.userRoleMapper.insertSelective(userRole);
+			}
 		}
 
 		user = this.userMapper.selectByPrimaryKey(user.getId());
