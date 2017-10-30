@@ -670,7 +670,7 @@ openDataAuth = function(userId) {
 };
 
 loadTree = function(userId, type) {
-	$.get('/dataAuth/editUserDataAuth.json', {
+	$.get('${contextPath!}/dataAuth/editUserDataAuth.json', {
 				userId : userId,
 				type : type
 			}, function(data) {
@@ -716,7 +716,7 @@ saveUserDataAuth = function() {
 			});
 	$.ajax({
 				type : "POST",
-				url : contextPath + '/dataAuth/updateUserDataAuth.json',
+				url :  '{contextPath!}/dataAuth/updateUserDataAuth.json',
 				contentType : "application/json; charset=utf-8",
 				data : JSON.stringify(submitData),
 				dataType : "json",

@@ -41,7 +41,7 @@ public class DataDictionaryController {
 	}
 
 	@RequestMapping(value = "/insert", method = { RequestMethod.GET, RequestMethod.POST })
-	public @ResponseBody BaseOutput insert(@ModelAttribute DataDictionary dataDictionary) {
+	public @ResponseBody BaseOutput insert(DataDictionary dataDictionary) {
 		Map metadata = new HashMap();
 		JSONObject datetimeProvider = new JSONObject();
 		datetimeProvider.put("provider", "datetimeProvider");
@@ -62,7 +62,7 @@ public class DataDictionaryController {
 	}
 
 	@RequestMapping(value = "/update", method = { RequestMethod.GET, RequestMethod.POST })
-	public @ResponseBody BaseOutput update(@ModelAttribute DataDictionary dataDictionary) {
+	public @ResponseBody BaseOutput update(DataDictionary dataDictionary) {
 		Map metadata = new HashMap();
 		JSONObject datetimeProvider = new JSONObject();
 		datetimeProvider.put("provider", "datetimeProvider");
