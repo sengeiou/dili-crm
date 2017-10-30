@@ -266,9 +266,9 @@ function resizeColumn(original) {
 }
 
 function onBeginEdit(row) {
-	if(row.id == 'temp'){
+	if (row.id == 'temp') {
 
-	return true;
+		return true;
 	}
 	var editor = projectGrid.treegrid('getEditor', {
 				id : row.id,
@@ -357,20 +357,23 @@ function onBeforeEdit(row) {
 		window.oldRecord = new Object();
 		$.extend(true, oldRecord, row);
 	}
+	debugger;
 	resizeColumn();
-	hideColumn();
-	showOptButtons(row.id);
+	hideCMAndShowOpt(row.id);
+}
+
+function hideCMAndShowOpt(rowId) {
+	projectGrid.treegrid('hideColumn', 'created');
+	projectGrid.treegrid('hideColumn', 'modified');
+	showOptButtons(rowId);
 	projectGrid.treegrid('showColumn', 'opt');
 }
 
-function hideColumn() {
-	projectGrid.treegrid('hideColumn', 'created');
-	projectGrid.treegrid('hideColumn', 'modified');
-}
-
-function showColumn() {
+function showCMAndHideOpt(rowId) {
 	projectGrid.treegrid('showColumn', 'created');
 	projectGrid.treegrid('showColumn', 'modified');
+	hideOptButtons(rowId);
+	projectGrid.treegrid('hideColumn', 'opt');
 }
 
 /**
@@ -393,15 +396,14 @@ function cancelEdit() {
  *            row
  */
 function onCancelEdit(row) {
+	debugger;
+	resizeColumn(true);
+	showCMAndHideOpt(row.id);
 	editId = undefined;
 	if (row.id == 'temp') {
 		projectGrid.treegrid('remove', row.id);
 		return;
 	}
-	resizeColumn(true);
-	hideOptButtons(row.id);
-	projectGrid.treegrid('hideColumn', 'opt');
-	showColumn();
 }
 
 /**
@@ -473,8 +475,8 @@ function insertOrUpdateProject(row, changes) {
 					row.id = data.data.id;
 					row.created = date;
 					row.modified = date;
-					row.parentId="";
-					row._parentId="";
+					row.parentId = "";
+					row._parentId = "";
 
 					projectGrid.treegrid('append', {
 								parent : data.data.parentId,
@@ -523,10 +525,9 @@ function onEndEdit(row) {
 			});
 	row.productManager = editor.target.textbox('getText');
 	row.$_productManager = editor.target.textbox('getValue');
+	debugger;
 	resizeColumn(true);
-	hideOptButtons(row.id);
-	projectGrid.treegrid('hideColumn', 'opt');
-	showColumn();
+	showCMAndHideOpt(row.id);
 }
 
 function editorCallback(field) {

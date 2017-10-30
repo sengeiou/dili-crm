@@ -1,9 +1,10 @@
 package com.dili.alm.domain;
 
-import com.dili.ss.domain.annotation.Operator;
+import java.util.List;
 
 import javax.persistence.Column;
-import java.util.List;
+
+import com.dili.ss.domain.annotation.Operator;
 
 /**
  * 由MyBatis Generator工具自动生成
