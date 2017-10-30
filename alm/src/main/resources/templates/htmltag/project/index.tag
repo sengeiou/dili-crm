@@ -396,7 +396,6 @@ function cancelEdit() {
  *            row
  */
 function onCancelEdit(row) {
-	debugger;
 	resizeColumn(true);
 	showCMAndHideOpt(row.id);
 	editId = undefined;

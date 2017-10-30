@@ -7,6 +7,9 @@ import com.dili.alm.domain.Team;
 import com.dili.alm.rpc.DataAuthRpc;
 import com.dili.alm.service.TeamService;
 import com.dili.ss.base.BaseServiceImpl;
+import com.dili.ss.domain.BaseOutput;
+import com.dili.ss.dto.DTOUtils;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -72,6 +75,44 @@ public class TeamServiceImpl extends BaseServiceImpl<Team, Long> implements Team
 			team.setJoinTime(now);
 		}
 		return super.updateSelective(team);
+	}
+
+	@Override
+	public BaseOutput<Object> insertAfterCheck(Team team) {
+		Team record = DTOUtils.newDTO(Team.class);
+		record.setProjectId(team.getProjectId());
+		record.setMemberId(team.getMemberId());
+		int count = this.getActualDao().selectCount(record);
+		if (count > 0) {
+			return BaseOutput.failure("项目和团队已存在，不能重复添加");
+		}
+		int result = this.insertSelective(team);
+		if (result > 0) {
+			return BaseOutput.success().setData(team);
+		}
+		return BaseOutput.failure("新增失败");
+	}
+
+	@Override
+	public BaseOutput<Object> updateAftreCheck(Team team) {
+		int result;
+		Team oldRecord = this.getActualDao().selectByPrimaryKey(team.getId());
+		if (oldRecord.getProjectId().equals(team.getProjectId()) && oldRecord.getMemberId().equals(team.getMemberId())) {
+			result = this.updateSelective(team);
+		} else {
+			Team record = DTOUtils.newDTO(Team.class);
+			record.setProjectId(team.getProjectId());
+			record.setMemberId(team.getMemberId());
+			int count = this.getActualDao().selectCount(record);
+			if (count > 0) {
+				return BaseOutput.failure("项目和团队已存在，不能重复添加");
+			}
+			result = this.updateSelective(team);
+		}
+		if (result > 0) {
+			return BaseOutput.success().setData(team);
+		}
+		return BaseOutput.failure("修改失败");
 	}
 
 }

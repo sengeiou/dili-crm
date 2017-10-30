@@ -193,6 +193,8 @@ function hideOptButtons(index) {
 	$('#btnSave' + index + ',#btnCancel' + index).hide();
 }
 
+var oldRecord = undefined;
+
 /**
  * 开始编辑行的毁掉函数
  * 
@@ -202,6 +204,8 @@ function hideOptButtons(index) {
  *            row 行数据
  */
 function onBeginEdit(index, row) {
+	oldRecord = new Object();
+	$.extend(true, oldRecord, row);
 	var editor = teamGrid.datagrid('getEditor', {
 				index : index,
 				field : 'projectId'
@@ -310,13 +314,10 @@ function hideOptButtons(id) {
  */
 function insertOrUpdateMenu(index, row, changes) {
 	var postData = getOriginalData(row);
-	var oldRecord;
 	var url = '${contextPath!}/team/';
 	if (!row.id) {
 		url += 'insert';
 	} else {
-		oldRecord = new Object();
-		$.extend(true, oldRecord, row);
 		url += 'update'
 	}
 	$.post(url, postData, function(data) {
