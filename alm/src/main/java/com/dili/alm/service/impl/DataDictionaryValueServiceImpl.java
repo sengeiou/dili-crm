@@ -1,12 +1,5 @@
 package com.dili.alm.service.impl;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import org.apache.commons.collections4.CollectionUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
 import com.dili.alm.dao.DataDictionaryMapper;
 import com.dili.alm.dao.DataDictionaryValueMapper;
 import com.dili.alm.domain.DataDictionary;
@@ -16,6 +9,12 @@ import com.dili.alm.service.DataDictionaryValueService;
 import com.dili.ss.base.BaseServiceImpl;
 import com.dili.ss.domain.BaseOutput;
 import com.dili.ss.dto.DTOUtils;
+import org.apache.commons.collections4.CollectionUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * ��MyBatis Generator�����Զ����� This file was generated on 2017-07-12
@@ -49,7 +48,7 @@ public class DataDictionaryValueServiceImpl extends BaseServiceImpl<DataDictiona
 			return null;
 		}
 		DataDictionaryValueTreeView root = new DataDictionaryValueTreeView();
-		root.setId(0L);
+		root.setId(-1L);
 		root.addAttribute("ddId", dd.getId());
 		root.setName(dd.getName());
 		List<DataDictionaryValueTreeView> target = new ArrayList<>();
@@ -65,7 +64,11 @@ public class DataDictionaryValueServiceImpl extends BaseServiceImpl<DataDictiona
 			vo.setId(ddValue.getId());
 			vo.addAttribute("ddId", ddValue.getDdId());
 			vo.setName(ddValue.getCode());
-			vo.setParentId(ddValue.getParentId());
+			if(ddValue.getParentId() == null) {
+				vo.setParentId(-1L);
+			}else{
+				vo.setParentId(ddValue.getParentId());
+			}
 			target.add(vo);
 		}
 		return target;

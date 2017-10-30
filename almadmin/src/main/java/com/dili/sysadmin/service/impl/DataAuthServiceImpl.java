@@ -190,8 +190,8 @@ public class DataAuthServiceImpl extends BaseServiceImpl<DataAuth, Long> impleme
 		List<DataAuthTypeDto> target = new ArrayList<>(dataDictionary.getValues().size());
 		for (DataDictionaryValueDto value : dataDictionary.getValues()) {
 			DataAuthTypeDto dto = new DataAuthTypeDto();
-			dto.setName(value.getValue());
-			dto.setType(value.getCode());
+			dto.setName(value.getCode());
+			dto.setType(value.getValue());
 			target.add(dto);
 		}
 		return target;

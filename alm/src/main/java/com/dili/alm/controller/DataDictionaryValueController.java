@@ -1,6 +1,5 @@
 package com.dili.alm.controller;
 
-import com.dili.alm.domain.DataDictionary;
 import com.dili.alm.domain.DataDictionaryValue;
 import com.dili.alm.domain.dto.DataDictionaryValueTreeView;
 import com.dili.alm.service.DataDictionaryService;
@@ -10,7 +9,6 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
-import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
@@ -19,6 +17,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+
+import java.util.List;
 
 /**
  * 由MyBatis Generator工具自动生成 This file was generated on 2017-08-28 16:44:23.
@@ -60,6 +60,9 @@ public class DataDictionaryValueController {
 			@ApiImplicitParam(name = "DataDictionaryValue", paramType = "form", value = "DataDictionaryValue的form信息", required = false, dataType = "string") })
 	@RequestMapping(value = "/listPage", method = { RequestMethod.GET, RequestMethod.POST })
 	public @ResponseBody String listPage(DataDictionaryValue dataDictionaryValue) throws Exception {
+		if(null != dataDictionaryValue.getParentId() && dataDictionaryValue.getParentId().equals(-1L)){
+			dataDictionaryValue.setParentId(null);
+		}
 		return dataDictionaryValueService.listEasyuiPageByExample(dataDictionaryValue, true).toString();
 	}
 

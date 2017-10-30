@@ -133,7 +133,7 @@
 		FROM
 		data_auth d
 		INNER JOIN
-		user_data_auth ud ON d.data_id = ud.data_auth_id
+		user_data_auth ud ON d.id = ud.data_auth_id
 		WHERE 1=1
 		<if test="dataId != null">
 			AND d.data_id = #{dataId}
@@ -153,7 +153,7 @@
 		d.parent_data_id
 		FROM
 		data_auth d
-		RIGHT JOIN role_data_auth rd ON d.data_id = rd.data_auth_id
+		RIGHT JOIN role_data_auth rd ON d.id = rd.data_auth_id
 		RIGHT JOIN user_role ur ON ur.role_id = rd.role_id
 		WHERE 1=1
 		<if test="dataId != null">
