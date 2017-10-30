@@ -1,10 +1,21 @@
 package com.dili.alm.controller;
 
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
+import com.alibaba.fastjson.JSONObject;
+import com.dili.alm.constant.AlmConstants;
+import com.dili.alm.domain.Project;
+import com.dili.alm.domain.dto.DataDictionaryValueDto;
+import com.dili.alm.domain.dto.ProjectDto;
+import com.dili.alm.rpc.UserRpc;
+import com.dili.alm.service.ProjectService;
+import com.dili.ss.domain.BaseOutput;
+import com.dili.ss.domain.EasyuiPageOutput;
+import com.dili.ss.dto.DTOUtils;
+import com.dili.ss.metadata.ValueProviderUtils;
+import com.dili.sysadmin.sdk.session.SessionContext;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiImplicitParam;
+import io.swagger.annotations.ApiImplicitParams;
+import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
@@ -13,19 +24,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.alibaba.fastjson.JSONObject;
-import com.dili.alm.domain.Project;
-import com.dili.alm.domain.User;
-import com.dili.alm.domain.dto.DataDictionaryValueDto;
-import com.dili.alm.rpc.UserRpc;
-import com.dili.alm.service.ProjectService;
-import com.dili.ss.domain.BaseOutput;
-import com.dili.ss.metadata.ValueProviderUtils;
-
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiImplicitParam;
-import io.swagger.annotations.ApiImplicitParams;
-import io.swagger.annotations.ApiOperation;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * 由MyBatis Generator工具自动生成 This file was generated on 2017-10-18 17:22:54.
@@ -85,7 +87,21 @@ public class ProjectController {
 	@ApiImplicitParams({ @ApiImplicitParam(name = "Project", paramType = "form", value = "Project的form信息", required = false, dataType = "string") })
 	@RequestMapping(value = "/listPage", method = { RequestMethod.GET, RequestMethod.POST })
 	public @ResponseBody String listPage(Project project) throws Exception {
-		return projectService.listEasyuiPageByExample(project, true).toString();
+		SessionContext sessionContext = SessionContext.getSessionContext();
+		if(sessionContext == null) {
+			throw new RuntimeException("未登录");
+		}
+		List<Map> dataauth = sessionContext.dataAuth(AlmConstants.DATA_AUTH_TYPE_PROJECT);
+		List<Long> projectIds = new ArrayList<>(dataauth.size());
+		dataauth.forEach( t -> {
+			projectIds.add(Long.parseLong(t.get("dataId").toString()));
+		});
+		ProjectDto projectDto = DTOUtils.as(project, ProjectDto.class);
+		if(projectIds.isEmpty()){
+			return new EasyuiPageOutput(0, null).toString();
+		}
+		projectDto.setIds(projectIds);
+		return projectService.listEasyuiPageByExample(projectDto, true).toString();
 	}
 
 	@ApiOperation("新增Project")

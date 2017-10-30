@@ -1,5 +1,6 @@
-package com.dili.alm.domain;
+package com.dili.alm.domain.dto;
 
+import com.dili.alm.domain.Milestones;
 import com.dili.ss.domain.annotation.Operator;
 
 import javax.persistence.Column;

@@ -3,7 +3,7 @@ package com.dili.alm.controller;
 import com.dili.alm.constant.AlmConstants;
 import com.dili.alm.domain.Files;
 import com.dili.alm.domain.Milestones;
-import com.dili.alm.domain.MilestonesDto;
+import com.dili.alm.domain.dto.MilestonesDto;
 import com.dili.alm.service.MilestonesService;
 import com.dili.ss.domain.BaseOutput;
 import com.dili.ss.domain.EasyuiPageOutput;
