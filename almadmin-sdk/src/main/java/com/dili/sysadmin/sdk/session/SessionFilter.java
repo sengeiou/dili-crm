@@ -15,8 +15,10 @@ import org.springframework.stereotype.Component;
 
 import javax.servlet.*;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletRequestWrapper;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.*;
 
 /**
  * 权限统一拦截器
@@ -53,6 +55,12 @@ public class SessionFilter implements Filter {
         WebContent.put(resp);
         PermissionContext pc = new PermissionContext(req, resp, this, config);
         WebContent.put(SessionConstants.MANAGE_PERMISSION_CONTEXT, pc);
+        //如果是框架导出，需要手动设置SessionId到Header中
+        if(pc.getReq().getRequestURI().trim().endsWith("/export/serverExport")) {
+            MutableHttpServletRequest mreq = new MutableHttpServletRequest(req);
+            mreq.putHeader(SessionConstants.SESSION_ID, pc.getSessionId());
+            req = mreq;
+        }
         //判断是否要(include或exclude)权限检查, 不过滤就直接放过
         if (!config.hasChecked()) {
             filter.doFilter(req, resp);
@@ -137,6 +145,48 @@ public class SessionFilter implements Filter {
             throw new NotAccessPermission();
         }
         throw new NotAccessPermission();
+    }
+
+    final class MutableHttpServletRequest extends HttpServletRequestWrapper {
+        // holds custom header and value mapping
+        private final Map<String, String> customHeaders;
+
+        public MutableHttpServletRequest(HttpServletRequest request){
+            super(request);
+            this.customHeaders = new HashMap<String, String>();
+        }
+
+        public void putHeader(String name, String value){
+            this.customHeaders.put(name, value);
+        }
+
+        public String getHeader(String name) {
+            // check the custom headers first
+            String headerValue = customHeaders.get(name);
+
+            if (headerValue != null){
+                return headerValue;
+            }
+            // else return from into the original wrapped object
+            return ((HttpServletRequest) getRequest()).getHeader(name);
+        }
+
+        public Enumeration<String> getHeaderNames() {
+            // create a set of the custom header names
+            Set<String> set = new HashSet<String>(customHeaders.keySet());
+
+            // now add the headers from the wrapped request object
+            @SuppressWarnings("unchecked")
+            Enumeration<String> e = ((HttpServletRequest) getRequest()).getHeaderNames();
+            while (e.hasMoreElements()) {
+                // add the names of the request headers into the list
+                String n = e.nextElement();
+                set.add(n);
+            }
+
+            // create an enumeration from the set and return
+            return Collections.enumeration(set);
+        }
     }
 
 }
