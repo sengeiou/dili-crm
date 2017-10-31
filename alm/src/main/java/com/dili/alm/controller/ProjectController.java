@@ -81,7 +81,6 @@ public class ProjectController {
 	@ApiImplicitParams({ @ApiImplicitParam(name = "Project", paramType = "form", value = "Project的form信息", required = false, dataType = "string") })
 	@RequestMapping(value = "/listPage", method = { RequestMethod.GET, RequestMethod.POST })
 	public @ResponseBody String listPage(Project project) throws Exception {
-
 		return projectService.listEasyuiPageByExample(project, true).toString();
 	}
 

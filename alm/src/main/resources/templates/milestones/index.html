@@ -81,7 +81,7 @@
                         <th data-options="field:'parentCode', _provider:'milestonesProvider',  sortable:'true', order:'asc', align:'center', resizable:'true', fixed:'false'">
                             上级里程碑
                         </th>
-                        <th data-options="field:'projectId',  _provider:'projectProvider', sortable:'true', order:'asc', align:'center', resizable:'true', fixed:'false'">
+                        <th data-options="field:'projectId', _provider:'projectProvider', sortable:'true', order:'asc', align:'center', resizable:'true', fixed:'false'">
                             所属项目
                         </th>
                         <th data-options="field:'git',   sortable:'true', order:'asc', align:'center', resizable:'true', fixed:'false'">
@@ -180,7 +180,7 @@
         <table width="360px" >
             <tr>
                 <td style="padding:5px;">
-                    <input class="easyui-textbox" name="_code" id="_code" style="width:100%" data-options="label:'项目发布编号:', validType:'length[0,40]'" />
+                    <input class="easyui-textbox" name="_code" id="_code" style="width:100%" data-options="label:'项目发布编号:', validType:'length[0,40]', required:true" />
                 </td>
             </tr>
             <tr>
@@ -191,7 +191,7 @@
             </tr>
             <tr>
                 <td style="padding:5px;">
-                       <input name="_projectId" id="_projectId" style="width:100%;" panelWidth="auto" panelHeight="auto" label="所属项目:" required="true"/>
+                       <input name="_projectId" data-options="editable:false" id="_projectId" style="width:100%;" panelWidth="auto" panelHeight="auto" label="所属项目:" required="true"/>
                        <#comboProvider _id="_projectId" _provider='projectProvider'/>
 
                 </td>
@@ -213,14 +213,14 @@
             </tr>
             <tr>
                 <td style="padding:5px;">
-                       <input name="_market" id="_market" style="width:100%;" panelWidth="auto" panelHeight="auto" label="所属市场:" required="true"/>
+                       <input name="_market" id="_market" style="width:100%;" data-options="editable:false" panelWidth="auto" panelHeight="auto" label="所属市场:" required="true"/>
                     <#comboProvider _id="_market" _table="data_dictionary_value" _valueField="value" _textField="code" _orderByClause="order_number asc" _queryParams='{"yn":1,"dd_id":1}'/>
 
                 </td>
             </tr>
             <tr>
                 <td style="padding:5px;">
-                       <input name="_projectPhase" id="_projectPhase" style="width:100%;" panelWidth="auto" panelHeight="auto" label="项目阶段:" />
+                       <input name="_projectPhase" id="_projectPhase" style="width:100%;" data-options="editable:false" panelWidth="auto" panelHeight="auto" label="项目阶段:" />
                     <#comboProvider _id="_projectPhase" _table="data_dictionary_value" _valueField="value" _textField="code" _orderByClause="order_number asc" _queryParams='{"yn":1,"dd_id":2}'/>
 
                 </td>
@@ -232,12 +232,12 @@
             </tr>
             <tr>
                 <td style="padding:5px;">
-                    <input class="easyui-datetimebox" name="_releaseTime" id="_releaseTime" style="width:100%" data-options="label:'上线时间:'"  required="true"/>
+                    <input class="easyui-datetimebox" name="_releaseTime" id="_releaseTime" style="width:100%" data-options="label:'上线时间:',editable:false"  required="true"/>
                 </td>
             </tr>
             <tr>
                 <td style="padding:5px;">
-                       <input name="_emailNotice" id="_emailNotice" style="width:100%;" panelWidth="auto" panelHeight="auto" label="是否上线通知:" required="true"/>
+                       <input name="_emailNotice" id="_emailNotice" style="width:100%;" data-options="editable:false" panelWidth="auto" panelHeight="auto" label="是否上线通知:" required="true"/>
                        <#comboProvider _id="_emailNotice" _provider='emailNoticeProvider'/>
 
                 </td>

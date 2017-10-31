@@ -157,6 +157,11 @@ public class ProjectServiceImpl extends BaseServiceImpl<Project, Long> implement
 		if(projectIds.isEmpty()){
 			return new EasyuiPageOutput(0, null);
 		}
+		//刷新projectProvider缓存
+		List<Project> list = list(DTOUtils.newDTO(Project.class));
+		list.forEach(project -> {
+			AlmCache.projectMap.put(project.getId(), project);
+		});
 		projectDto.setIds(projectIds);
 		return super.listEasyuiPageByExample(projectDto, useProvider);
 	}
