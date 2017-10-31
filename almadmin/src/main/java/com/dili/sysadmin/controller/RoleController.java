@@ -115,7 +115,7 @@ public class RoleController {
 	@RequestMapping(value = "/roleMenuAndResource.html")
 	public String roleMenuAndResourceView(@RequestParam Long roleId, ModelMap map) {
 		map.addAttribute("roleId", roleId);
-		return "/role/roleMenuAndResource";
+		return "role/roleMenuAndResource";
 	}
 
 	@ResponseBody

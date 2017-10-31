@@ -83,15 +83,13 @@ public class DataAuthController {
 	}
 
 	@RequestMapping(value = "/editUserDataAuth.html")
-	public String editUserDataAuthView(@RequestParam Long userId, ModelMap modelMap) {
+	public String editUserDataAuthView(@RequestParam(required = false, defaultValue = "1L") Long userId, ModelMap modelMap) {
 		List<DataAuthTypeDto> types = this.dataAuthService.fetchDataAuthType();
-		log.info("editUserDataAuthView.types:"+types);
 		if (CollectionUtils.isNotEmpty(types)) {
 			modelMap.addAttribute("type", types.get(0).getType());
 		}
 		modelMap.addAttribute("userId", userId).addAttribute("allTypes", types);
-		log.info("return /dataAuth/editUserDataAuth, modelMap:"+modelMap);
-		return "/dataAuth/editUserDataAuth";
+		return "dataAuth/editUserDataAuth";
 	}
 
 	@SuppressWarnings("unchecked")
