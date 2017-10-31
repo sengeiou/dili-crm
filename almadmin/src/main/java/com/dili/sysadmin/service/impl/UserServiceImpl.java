@@ -470,6 +470,11 @@ public class UserServiceImpl extends BaseServiceImpl<User, Long> implements User
 		Page<User> page = (Page<User>) list;
 		@SuppressWarnings("unchecked")
 		Map<Object, Object> metadata = null == user.getMetadata() ? new HashMap<>() : user.getMetadata();
+
+		JSONObject userStatusProvider = new JSONObject();
+		userStatusProvider.put("provider", "userStatusProvider");
+		metadata.put("status", userStatusProvider);
+
 		JSONObject provider = new JSONObject();
 		provider.put("provider", "datetimeProvider");
 		metadata.put("validTimeBegin", provider);

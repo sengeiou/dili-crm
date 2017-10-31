@@ -499,7 +499,7 @@ function onSaveClicked() {
 	}
 	var roleList = [];
 	var rows = $("#withRoleDatalist").datalist("getRows");
-	debugger;
+
 	$(rows).each(function(index, item) {
 				roleList.push(item.id);
 			});
@@ -593,8 +593,8 @@ function queryGrid() {
 	if (!$('#userForm').form("validate")) {
 		return;
 	}
-
-	var param = bindMetadata("userGrid");
+	
+	var param = bindMetadata("userGrid", true);
 	var formData = $("#userForm").serializeObject();
 	$.extend(formData, param);
 	userGrid.datagrid("load", formData);
