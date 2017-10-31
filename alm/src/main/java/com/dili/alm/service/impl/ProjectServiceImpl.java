@@ -12,7 +12,7 @@ import com.dili.alm.domain.dto.DataDictionaryDto;
 import com.dili.alm.domain.dto.DataDictionaryValueDto;
 import com.dili.alm.domain.dto.ProjectDto;
 import com.dili.alm.rpc.DataAuthRpc;
-import com.dili.alm.rpc.DataDictionaryRPC;
+import com.dili.alm.service.DataDictionaryService;
 import com.dili.alm.service.ProjectService;
 import com.dili.ss.base.BaseServiceImpl;
 import com.dili.ss.domain.BaseOutput;
@@ -39,7 +39,7 @@ public class ProjectServiceImpl extends BaseServiceImpl<Project, Long> implement
 	private static final String PROJECT_TYPE_CODE = "project_type";
 
 	@Autowired
-	private DataDictionaryRPC dataDictionaryRPC;
+	DataDictionaryService dataDictionaryService;
 	@Autowired
 	private MilestonesMapper milestonesMapper;
 	@Autowired
@@ -99,12 +99,7 @@ public class ProjectServiceImpl extends BaseServiceImpl<Project, Long> implement
 
 	@Override
 	public List<DataDictionaryValueDto> getPojectTypes() {
-		BaseOutput<DataDictionaryDto> output = this.dataDictionaryRPC.findDataDictionaryByCode(PROJECT_TYPE_CODE);
-		if (!output.isSuccess()) {
-			LOGGER.error(output.getResult());
-			return null;
-		}
-		DataDictionaryDto dto = output.getData();
+		DataDictionaryDto dto = this.dataDictionaryService.findByCode(PROJECT_TYPE_CODE);
 		if (dto == null) {
 			return null;
 		}

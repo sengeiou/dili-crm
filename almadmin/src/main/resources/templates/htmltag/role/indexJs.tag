@@ -558,7 +558,7 @@ $(function() {
 							title : '角色权限',
 							width : 900,
 							height : 500,
-							href : '${contextPath!}/role/roleMenuAndResource?roleId=' + roleId,
+							href : '${contextPath!}/role/roleMenuAndResource.html?roleId=' + roleId,
 							onLoad : function() {
 								window.roleId = $('#roleId').val();
 								$.get('${contextPath!}/role/roleMenuAndResource.json', {
@@ -614,7 +614,7 @@ $(function() {
 							maximizable : false,
 							width : 900,
 							height : 500,
-							href : '${contextPath!}/dataAuth/editRoleDataAuth?roleId=' + roleId,
+							href : '${contextPath!}/dataAuth/editRoleDataAuth.html?roleId=' + roleId,
 							onLoad : function() {
 								window.roleId = $('#roleId').val();
 								window.dataAuthType = $('#dataAuthType').val();

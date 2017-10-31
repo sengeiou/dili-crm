@@ -2,7 +2,6 @@ package com.dili.alm.controller;
 
 import com.alibaba.fastjson.JSONObject;
 import com.dili.alm.domain.DataDictionary;
-import com.dili.alm.domain.dto.DataDictionaryDto;
 import com.dili.alm.service.DataDictionaryService;
 import com.dili.ss.domain.BaseOutput;
 import com.dili.ss.metadata.ValueProviderUtils;
@@ -11,7 +10,9 @@ import io.swagger.annotations.Api;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.util.Date;
 import java.util.HashMap;
@@ -84,9 +85,4 @@ public class DataDictionaryController {
 		return BaseOutput.success("删除成功");
 	}
 
-	@RequestMapping
-	public @ResponseBody BaseOutput<DataDictionaryDto> getByCode(@RequestBody String code) {
-		DataDictionaryDto dto = this.dataDictionaryService.findByCode(code);
-		return BaseOutput.success().setData(dto);
-	}
 }

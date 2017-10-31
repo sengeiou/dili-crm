@@ -1,34 +1,24 @@
 package com.dili.sysadmin.controller;
 
-import java.util.List;
-
-import javax.validation.Valid;
-
-import org.apache.commons.collections4.CollectionUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.MediaType;
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.ModelMap;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
-
 import com.dili.ss.domain.BaseOutput;
 import com.dili.sysadmin.domain.DataAuth;
-import com.dili.sysadmin.domain.dto.DataAuthTypeDto;
-import com.dili.sysadmin.domain.dto.EditRoleDataAuthDto;
-import com.dili.sysadmin.domain.dto.EditUserDataAuthDto;
-import com.dili.sysadmin.domain.dto.UpdateRoleDataAuthDto;
-import com.dili.sysadmin.domain.dto.UpdateUserDataAuthDto;
+import com.dili.sysadmin.domain.dto.*;
 import com.dili.sysadmin.service.DataAuthService;
-
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
+import org.apache.commons.collections4.CollectionUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.ModelMap;
+import org.springframework.web.bind.annotation.*;
+
+import javax.validation.Valid;
+import java.util.List;
 
 /**
  * 由MyBatis Generator工具自动生成 This file was generated on 2017-07-04 15:24:51.
@@ -37,6 +27,9 @@ import io.swagger.annotations.ApiOperation;
 @Controller
 @RequestMapping("/dataAuth")
 public class DataAuthController {
+
+	private final static Logger log = LoggerFactory.getLogger(DataAuthController.class);
+
 	@Autowired
 	DataAuthService dataAuthService;
 
@@ -89,13 +82,15 @@ public class DataAuthController {
 		return BaseOutput.success("删除成功");
 	}
 
-	@RequestMapping(value = "/editUserDataAuth")
+	@RequestMapping(value = "/editUserDataAuth.html")
 	public String editUserDataAuthView(@RequestParam Long userId, ModelMap modelMap) {
 		List<DataAuthTypeDto> types = this.dataAuthService.fetchDataAuthType();
+		log.info("editUserDataAuthView.types:"+types);
 		if (CollectionUtils.isNotEmpty(types)) {
 			modelMap.addAttribute("type", types.get(0).getType());
 		}
 		modelMap.addAttribute("userId", userId).addAttribute("allTypes", types);
+		log.info("return /dataAuth/editUserDataAuth, modelMap:"+modelMap);
 		return "/dataAuth/editUserDataAuth";
 	}
 
@@ -113,7 +108,7 @@ public class DataAuthController {
 		return this.dataAuthService.updateUserDataAuth(dto);
 	}
 
-	@RequestMapping(value = "/editRoleDataAuth")
+	@RequestMapping(value = "/editRoleDataAuth.html")
 	public String roleDataAuthView(@RequestParam Long roleId, ModelMap map) {
 		List<DataAuthTypeDto> types = this.dataAuthService.fetchDataAuthType();
 		if (CollectionUtils.isNotEmpty(types)) {

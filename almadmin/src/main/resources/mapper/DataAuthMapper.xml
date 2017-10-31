@@ -110,7 +110,7 @@
 		d.parent_data_id
 		FROM
 		data_auth d
-		INNER JOIN role_data_auth rd ON d.data_id = rd.data_auth_id
+		INNER JOIN role_data_auth rd ON d.id = rd.data_auth_id
 		WHERE rd.role_id = #{roleId} AND d.type=#{type}
 	</select>
 

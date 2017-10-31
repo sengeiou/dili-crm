@@ -34,7 +34,7 @@ import java.util.Map;
 @Service
 public class DataAuthServiceImpl extends BaseServiceImpl<DataAuth, Long> implements DataAuthService {
 
-	private final static Logger LOG = LoggerFactory.getLogger(DataAuthServiceImpl.class);
+	private final static Logger log = LoggerFactory.getLogger(DataAuthServiceImpl.class);
 
 	public static final String DATA_AUTH_CODE = "data_auth_type";
 
@@ -179,8 +179,9 @@ public class DataAuthServiceImpl extends BaseServiceImpl<DataAuth, Long> impleme
 	@Override
 	public List<DataAuthTypeDto> fetchDataAuthType() {
 		BaseOutput<DataDictionaryDto> output = this.dataDictrionaryRPC.findDataDictionaryByCode(DATA_AUTH_CODE);
+		log.info("收到返回:getit:"+output);
 		if (!output.getCode().equals(ResultCode.OK)) {
-			LOG.error(output.getResult());
+			log.error(output.getResult());
 			return null;
 		}
 		DataDictionaryDto dataDictionary = output.getData();
@@ -194,6 +195,7 @@ public class DataAuthServiceImpl extends BaseServiceImpl<DataAuth, Long> impleme
 			dto.setType(value.getValue());
 			target.add(dto);
 		}
+		log.info("获取到target:"+target);
 		return target;
 	}
 
