@@ -125,8 +125,8 @@ public class FilesController {
 				buffStream.write(bytes);
 				buffStream.close();
 			} catch (Exception e) {
-				System.out.println("You failed to upload " + fileName + ": " + e.getMessage());
-				response.getWriter().write("<script>parent.callback('You failed to upload " + fileName + ": " + e.getMessage() + "')</script>");
+				System.out.println("上传失败,文件名:" + fileName + ",消息:" + e.getMessage());
+				response.getWriter().write("<script>parent.callback('上传失败,文件名:" + fileName + ",消息:" + e.getMessage() + "')</script>");
 				break;
 			}
 			Files tmpFiles = DTOUtils.newDTO(Files.class);
@@ -156,7 +156,7 @@ public class FilesController {
 				filesService.updateSelective(tmpFiles);
 			}
 		}
-		response.getWriter().write("<script>parent.callback('upload file success')</script>");
+		response.getWriter().write("<script>parent.callback('上传成功')</script>");
 	}
 
 	@RequestMapping("download")

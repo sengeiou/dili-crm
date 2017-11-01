@@ -1,12 +1,15 @@
 package com.dili.alm.service.impl;
 
 import com.alibaba.fastjson.JSONObject;
+import com.dili.alm.constant.AlmConstants;
 import com.dili.alm.dao.MilestonesMapper;
 import com.dili.alm.domain.Files;
 import com.dili.alm.domain.Milestones;
+import com.dili.alm.domain.dto.MilestonesDto;
 import com.dili.alm.service.FilesService;
 import com.dili.alm.service.MilestonesService;
 import com.dili.ss.base.BaseServiceImpl;
+import com.dili.ss.domain.EasyuiPageOutput;
 import com.dili.ss.dto.DTOUtils;
 import com.dili.ss.quartz.domain.QuartzConstants;
 import com.dili.ss.quartz.domain.ScheduleJob;
@@ -17,8 +20,10 @@ import com.dili.sysadmin.sdk.session.SessionContext;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 /**
  * 由MyBatis Generator工具自动生成
@@ -86,5 +91,24 @@ public class MilestonesServiceImpl extends BaseServiceImpl<Milestones, Long> imp
         }else{
             return 0;
         }
+    }
+
+    @Override
+    public EasyuiPageOutput listEasyuiPageByExample(Milestones milestones, boolean useProvider) throws Exception {
+        SessionContext sessionContext = SessionContext.getSessionContext();
+        if(sessionContext == null) {
+            throw new RuntimeException("未登录");
+        }
+        List<Map> dataauth = sessionContext.dataAuth(AlmConstants.DATA_AUTH_TYPE_PROJECT);
+        List<Long> projectIds = new ArrayList<>(dataauth.size());
+        dataauth.forEach( t -> {
+            projectIds.add(Long.parseLong(t.get("dataId").toString()));
+        });
+        MilestonesDto milestonesDto = DTOUtils.as(milestones, MilestonesDto.class);
+        if(projectIds.isEmpty()){
+            return new EasyuiPageOutput(0, null);
+        }
+        milestonesDto.setProjectIds(projectIds);
+        return super.listEasyuiPageByExample(milestonesDto, useProvider);
     }
 }
