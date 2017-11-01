@@ -108,12 +108,12 @@ public class TeamController {
 	@ApiImplicitParams({ @ApiImplicitParam(name = "Team", paramType = "form", value = "Team的form信息", required = true, dataType = "string") })
 	@RequestMapping(value = "/update", method = { RequestMethod.GET, RequestMethod.POST })
 	public @ResponseBody BaseOutput<Object> update(Team team) {
-		return teamService.updateAftreCheck(team);
+		return teamService.updateAfterCheck(team);
 	}
 
 	@ApiOperation("删除Team")
 	@ApiImplicitParams({ @ApiImplicitParam(name = "id", paramType = "form", value = "Team的主键", required = true, dataType = "long") })
-	@RequestMapping(value = "/deleteWithOutput", method = { RequestMethod.GET, RequestMethod.POST })
+	@RequestMapping(value = "/delete", method = { RequestMethod.GET, RequestMethod.POST })
 	public @ResponseBody BaseOutput delete(Long id) {
 		teamService.delete(id);
 		return BaseOutput.success("删除成功");
