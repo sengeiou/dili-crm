@@ -156,6 +156,7 @@ public class FilesController {
 				filesService.updateSelective(tmpFiles);
 			}
 		}
+		response.setCharacterEncoding("utf-8");
 		response.getWriter().write("<script>parent.callback('上传成功')</script>");
 	}
 
