@@ -5,6 +5,11 @@ function isEditing() {
 	return undefined != editIndex;
 }
 
+// 清空表单
+function clearForm() {
+	$('#form').form('clear');
+}
+
 // 结束行编辑
 function endEditing() {
 	if (editIndex == undefined) {
