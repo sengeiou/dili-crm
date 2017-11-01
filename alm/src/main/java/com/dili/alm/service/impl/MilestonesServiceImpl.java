@@ -69,7 +69,7 @@ public class MilestonesServiceImpl extends BaseServiceImpl<Milestones, Long> imp
             scheduleJob.setMethodName("scan");
             scheduleJob.setCronExpression(CronDateUtils.getCron(new Date(System.currentTimeMillis()+10000)));
             scheduleJob.setJobData(JSONObject.toJSONStringWithDateFormat(milestones, "yyyy-MM-dd HH:mm:ss"));
-            scheduleJobService.insertSelective(scheduleJob);
+            scheduleJobService.insertSelective(scheduleJob, true);
         }
         return BaseOutput.success("新增成功");
     }
@@ -107,10 +107,10 @@ public class MilestonesServiceImpl extends BaseServiceImpl<Milestones, Long> imp
 		    List<ScheduleJob> scheduleJobs = scheduleJobService.list(scheduleJobCondition);
 		    //如果数据库没有调度信息，则新增调度器
 		    if(ListUtils.emptyIfNull(scheduleJobs).isEmpty()){
-			    scheduleJobService.insertSelective(scheduleJob);
+			    scheduleJobService.insertSelective(scheduleJob, true);
 		    }else {
 			    scheduleJob.setId(scheduleJobs.get(0).getId());
-			    scheduleJobService.updateSelective(scheduleJob);
+			    scheduleJobService.updateSelective(scheduleJob, true);
 		    }
 	    }
         super.updateSelective(milestones);
