@@ -87,17 +87,15 @@ public class ProjectController {
 	@ApiOperation("新增Project")
 	@ApiImplicitParams({ @ApiImplicitParam(name = "Project", paramType = "form", value = "Project的form信息", required = true, dataType = "string") })
 	@RequestMapping(value = "/insert", method = { RequestMethod.GET, RequestMethod.POST })
-	public @ResponseBody BaseOutput insert(Project project) {
-		projectService.insertSelective(project);
-		return BaseOutput.success("新增成功").setData(project);
+	public @ResponseBody BaseOutput<Object> insert(Project project) {
+		return projectService.insertAfterCheck(project);
 	}
 
 	@ApiOperation("修改Project")
 	@ApiImplicitParams({ @ApiImplicitParam(name = "Project", paramType = "form", value = "Project的form信息", required = true, dataType = "string") })
 	@RequestMapping(value = "/update", method = { RequestMethod.GET, RequestMethod.POST })
 	public @ResponseBody BaseOutput update(Project project) {
-		projectService.updateSelective(project);
-		return BaseOutput.success("修改成功").setData(project);
+		return projectService.updateAfterCheck(project);
 	}
 
 	@ApiOperation("删除Project")

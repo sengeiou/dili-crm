@@ -8,8 +8,7 @@ import com.dili.ss.domain.BaseOutput;
 import java.util.List;
 
 /**
- * 由MyBatis Generator工具自动生成
- * This file was generated on 2017-10-18 17:22:54.
+ * 由MyBatis Generator工具自动生成 This file was generated on 2017-10-18 17:22:54.
  */
 public interface ProjectService extends BaseService<Project, Long> {
 
@@ -19,8 +18,13 @@ public interface ProjectService extends BaseService<Project, Long> {
 
 	/**
 	 * 获取子项目，包含当前参数id
+	 * 
 	 * @param id
 	 * @return
 	 */
 	List<Project> getChildProjects(Long id);
+
+	BaseOutput<Object> insertAfterCheck(Project project);
+
+	BaseOutput<Object> updateAfterCheck(Project project);
 }

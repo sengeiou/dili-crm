@@ -24,8 +24,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -66,7 +68,7 @@ public class ProjectServiceImpl extends BaseServiceImpl<Project, Long> implement
 		int i = super.insert(project);
 		// 同步更新缓存
 		AlmCache.projectMap.put(project.getId(), project);
-		//向权限系统中添加项目数据权限
+		// 向权限系统中添加项目数据权限
 		dataAuthRpc.addDataAuth(project.getId().toString(), AlmConstants.DATA_AUTH_TYPE_PROJECT, project.getName());
 		return i;
 	}
@@ -76,7 +78,7 @@ public class ProjectServiceImpl extends BaseServiceImpl<Project, Long> implement
 		int i = super.insertSelective(project);
 		// 同步更新缓存
 		AlmCache.projectMap.put(project.getId(), project);
-		//向权限系统中添加项目数据权限
+		// 向权限系统中添加项目数据权限
 		dataAuthRpc.addDataAuth(project.getId().toString(), AlmConstants.DATA_AUTH_TYPE_PROJECT, project.getName());
 		return i;
 	}
@@ -141,28 +143,62 @@ public class ProjectServiceImpl extends BaseServiceImpl<Project, Long> implement
 	@Override
 	public EasyuiPageOutput listEasyuiPageByExample(Project domain, boolean useProvider) throws Exception {
 		SessionContext sessionContext = SessionContext.getSessionContext();
-		if(sessionContext == null) {
+		if (sessionContext == null) {
 			throw new RuntimeException("未登录");
 		}
 		List<Map> dataauth = sessionContext.dataAuth(AlmConstants.DATA_AUTH_TYPE_PROJECT);
 		List<Long> projectIds = new ArrayList<>(dataauth.size());
-		dataauth.forEach( t -> {
+		dataauth.forEach(t -> {
 			List<Project> projects = getChildProjects(Long.parseLong(t.get("dataId").toString()));
-			projects.forEach( p -> {
+			projects.forEach(p -> {
 				projectIds.add(p.getId());
 			});
-//			projectIds.add(Long.parseLong(t.get("dataId").toString()));
+			// projectIds.add(Long.parseLong(t.get("dataId").toString()));
 		});
 		ProjectDto projectDto = DTOUtils.as(domain, ProjectDto.class);
-		if(projectIds.isEmpty()){
+		if (projectIds.isEmpty()) {
 			return new EasyuiPageOutput(0, null);
 		}
-		//刷新projectProvider缓存
+		// 刷新projectProvider缓存
 		List<Project> list = list(DTOUtils.newDTO(Project.class));
 		list.forEach(project -> {
 			AlmCache.projectMap.put(project.getId(), project);
 		});
 		projectDto.setIds(projectIds);
 		return super.listEasyuiPageByExample(projectDto, useProvider);
+	}
+
+	@Transactional
+	@Override
+	public BaseOutput<Object> insertAfterCheck(Project project) {
+		Project record = DTOUtils.newDTO(Project.class);
+		record.setName(project.getName());
+		int count = this.getActualDao().selectCount(record);
+		if (count > 0) {
+			return BaseOutput.failure("已存在项目相同的项目");
+		}
+		int result = this.insertSelective(project);
+		if (result > 0) {
+			return BaseOutput.success().setData(project);
+		}
+		return BaseOutput.failure();
+	}
+
+	@Transactional
+	@Override
+	public BaseOutput<Object> updateAfterCheck(Project project) {
+		int result;
+		Project record = DTOUtils.newDTO(Project.class);
+		record.setName(project.getName());
+		Project oldProject = this.getActualDao().selectOne(record);
+		if (oldProject != null && !oldProject.getId().equals(project.getId())) {
+			return BaseOutput.failure("存在相同名称的项目");
+		}
+		project.setModified(new Date());
+		result = this.updateSelective(project);
+		if (result > 0) {
+			return BaseOutput.success().setData(project);
+		}
+		return BaseOutput.failure();
 	}
 }
