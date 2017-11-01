@@ -113,7 +113,7 @@ public class TeamController {
 
 	@ApiOperation("删除Team")
 	@ApiImplicitParams({ @ApiImplicitParam(name = "id", paramType = "form", value = "Team的主键", required = true, dataType = "long") })
-	@RequestMapping(value = "/delete", method = { RequestMethod.GET, RequestMethod.POST })
+	@RequestMapping(value = "/deleteWithOutput", method = { RequestMethod.GET, RequestMethod.POST })
 	public @ResponseBody BaseOutput delete(Long id) {
 		teamService.delete(id);
 		return BaseOutput.success("删除成功");

@@ -9,6 +9,7 @@ import com.dili.alm.domain.dto.MilestonesDto;
 import com.dili.alm.service.FilesService;
 import com.dili.alm.service.MilestonesService;
 import com.dili.ss.base.BaseServiceImpl;
+import com.dili.ss.domain.BaseOutput;
 import com.dili.ss.domain.EasyuiPageOutput;
 import com.dili.ss.dto.DTOUtils;
 import com.dili.ss.quartz.domain.QuartzConstants;
@@ -45,11 +46,11 @@ public class MilestonesServiceImpl extends BaseServiceImpl<Milestones, Long> imp
     }
 
     @Override
-    public String insertSelectiveWithMsg(Milestones milestones) {
+    public BaseOutput insertSelectiveWithOutput(Milestones milestones) {
 	    Milestones milestonesCondition = DTOUtils.newDTO(Milestones.class);
 	    milestonesCondition.setCode(milestones.getCode());
 	    if(list(milestonesCondition).size() > 0){
-	    	return "里程碑编码已存在!";
+	    	return BaseOutput.failure("里程碑编码已存在!");
 	    }
         UserTicket userTicket = SessionContext.getSessionContext().getUserTicket();
         milestones.setPublishMemberId(userTicket.getId());
@@ -70,17 +71,17 @@ public class MilestonesServiceImpl extends BaseServiceImpl<Milestones, Long> imp
             scheduleJob.setJobData(JSONObject.toJSONStringWithDateFormat(milestones, "yyyy-MM-dd HH:mm:ss"));
             scheduleJobService.insertSelective(scheduleJob);
         }
-        return null;
+        return BaseOutput.success("新增成功");
     }
 
     @Override
-    public String updateSelectiveWithMsg(Milestones milestones) {
+    public BaseOutput updateSelectiveWithOutput(Milestones milestones) {
 	    Milestones milestonesCondition = DTOUtils.newDTO(Milestones.class);
 	    milestonesCondition.setCode(milestones.getCode());
 	    List<Milestones> milestones1 = list(milestonesCondition);
 	    //如果和原有编码不同，并且还有其它的重复编码，则抛错
 	    if(milestones1.size() > 0 && !get(milestones.getId()).getCode().equals(milestones.getCode())){
-		    return "里程碑编码已存在!";
+		    return BaseOutput.failure("里程碑编码已存在!");
 	    }
         UserTicket userTicket = SessionContext.getSessionContext().getUserTicket();
         milestones.setModifyMemberId(userTicket.getId());
@@ -113,11 +114,11 @@ public class MilestonesServiceImpl extends BaseServiceImpl<Milestones, Long> imp
 		    }
 	    }
         super.updateSelective(milestones);
-	    return null;
+	    return BaseOutput.success("修改成功");
     }
 
     @Override
-    public int delete(Long id) {
+    public BaseOutput deleteWithOutput(Long id) {
         Milestones milestones = DTOUtils.newDTO(Milestones.class);
         milestones.setParentId(id);
         List<Milestones> list = list(milestones);
@@ -134,9 +135,10 @@ public class MilestonesServiceImpl extends BaseServiceImpl<Milestones, Long> imp
                 File dest = new File(filesList.get(0).getUrl());
                 dest.delete();
             }
-            return super.delete(id);
+            super.delete(id);
+	        return BaseOutput.success("删除成功");
         }else{
-            return 0;
+            return BaseOutput.failure("删除失败, 请先删除子里程碑");
         }
     }
 

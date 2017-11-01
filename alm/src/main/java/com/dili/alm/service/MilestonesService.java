@@ -2,6 +2,7 @@ package com.dili.alm.service;
 
 import com.dili.alm.domain.Milestones;
 import com.dili.ss.base.BaseService;
+import com.dili.ss.domain.BaseOutput;
 
 /**
  * 由MyBatis Generator工具自动生成
@@ -10,16 +11,21 @@ import com.dili.ss.base.BaseService;
 public interface MilestonesService extends BaseService<Milestones, Long> {
 
 	/**
-	 * 插入，返回异常信息，为空则成功
 	 * @param milestones
 	 * @return
 	 */
-	String insertSelectiveWithMsg(Milestones milestones);
+	BaseOutput insertSelectiveWithOutput(Milestones milestones);
 
 	/**
-	 * 修改，返回异常信息，为空则成功
 	 * @param milestones
 	 * @return
 	 */
-	String updateSelectiveWithMsg(Milestones milestones);
+	BaseOutput updateSelectiveWithOutput(Milestones milestones);
+
+	/**
+	 *
+	 * @param id
+	 * @return
+	 */
+	BaseOutput deleteWithOutput(Long id);
 }
