@@ -88,7 +88,7 @@ public class FilesController {
     @ApiImplicitParams({
 		@ApiImplicitParam(name="id", paramType="form", value = "Files的主键", required = true, dataType = "long")
 	})
-    @RequestMapping(value="/deleteWithOutput", method = {RequestMethod.GET, RequestMethod.POST})
+    @RequestMapping(value="/delete", method = {RequestMethod.GET, RequestMethod.POST})
     public @ResponseBody BaseOutput delete(Long id) {
         filesService.delete(id);
         return BaseOutput.success("删除成功");
