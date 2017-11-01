@@ -256,6 +256,7 @@ function onEditClicked(id) {
 	var formData = $.extend({}, selected);
 	$('#_department').combotree({
 				readonly : false,
+				validateOnCreate : false,
 				onLoadSuccess : function(node, data) {
 					$(selected.departments).each(function(index, item) {
 								var targetNode = $('#_department').combotree('tree').tree('find', item.id);;
@@ -593,7 +594,7 @@ function queryGrid() {
 	if (!$('#userForm').form("validate")) {
 		return;
 	}
-	
+
 	var param = bindMetadata("userGrid", true);
 	var formData = $("#userForm").serializeObject();
 	$.extend(formData, param);

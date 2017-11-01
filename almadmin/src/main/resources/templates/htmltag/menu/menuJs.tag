@@ -176,7 +176,8 @@ function queryGrid(node) {
 								editor : {
 									type : 'textbox',
 									options : {
-										required : true
+										required : true,
+										missingMessage : '请输入权限名称'
 									}
 								}
 							}, {
@@ -186,7 +187,8 @@ function queryGrid(node) {
 								editor : {
 									type : 'textbox',
 									options : {
-										required : true
+										required : true,
+										missingMessage : '请输入权限代码'
 									}
 								}
 							}, {
@@ -285,6 +287,8 @@ function queryGrid(node) {
 								editor : {
 									type : 'combobox',
 									options : {
+										required : true,
+										missingMessage : '请选择连接类型',
 										valueField : 'value',
 										textField : 'name',
 										editable : false,
@@ -411,6 +415,8 @@ function queryGrid(node) {
 								editor : {
 									type : 'combobox',
 									options : {
+										required : true,
+										missingMessage : '请选择连接类型',
 										valueField : 'value',
 										textField : 'name',
 										editable : false,
