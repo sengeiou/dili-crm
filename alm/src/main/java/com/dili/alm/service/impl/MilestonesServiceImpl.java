@@ -17,6 +17,7 @@ import com.dili.ss.quartz.service.ScheduleJobService;
 import com.dili.ss.util.CronDateUtils;
 import com.dili.sysadmin.sdk.domain.UserTicket;
 import com.dili.sysadmin.sdk.session.SessionContext;
+import org.apache.commons.collections4.ListUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -56,7 +57,7 @@ public class MilestonesServiceImpl extends BaseServiceImpl<Milestones, Long> imp
             scheduleJob.setIsConcurrent(QuartzConstants.Concurrent.Async.getCode());
             scheduleJob.setJobGroup("milestones");
             scheduleJob.setJobName(milestones.getCode());
-            scheduleJob.setDescription("里程碑通知, code:"+milestones.getCode()+", version:"+milestones.getVersion() + ", market:" + milestones.getMarket());
+            scheduleJob.setDescription("里程碑发布通知, code:"+milestones.getCode()+", version:"+milestones.getVersion() + ", market:" + milestones.getMarket());
             scheduleJob.setSpringId("emailNoticeJob");
             scheduleJob.setStartDelay(0);
             scheduleJob.setMethodName("scan");
@@ -72,6 +73,33 @@ public class MilestonesServiceImpl extends BaseServiceImpl<Milestones, Long> imp
         UserTicket userTicket = SessionContext.getSessionContext().getUserTicket();
         milestones.setModifyMemberId(userTicket.getId());
         milestones.setModified(new Date());
+	    //如果要通知，刷新调度信息
+	    if(milestones.getEmailNotice().equals(1)){
+		    Milestones oriMilestones = get(milestones.getId());
+		    milestones = DTOUtils.link(milestones, oriMilestones, Milestones.class);
+		    ScheduleJob scheduleJob = DTOUtils.newDTO(ScheduleJob.class);
+		    scheduleJob.setJobStatus(QuartzConstants.JobStatus.NORMAL.getCode());
+		    scheduleJob.setIsConcurrent(QuartzConstants.Concurrent.Async.getCode());
+		    scheduleJob.setJobGroup("milestones");
+		    scheduleJob.setJobName(milestones.getCode());
+		    scheduleJob.setDescription("里程碑修改通知, code:"+milestones.getCode()+", version:"+milestones.getVersion() + ", market:" + milestones.getMarket());
+		    scheduleJob.setSpringId("emailNoticeJob");
+		    scheduleJob.setStartDelay(0);
+		    scheduleJob.setMethodName("scan");
+		    scheduleJob.setCronExpression(CronDateUtils.getCron(new Date(System.currentTimeMillis()+10000)));
+		    scheduleJob.setJobData(JSONObject.toJSONStringWithDateFormat(milestones, "yyyy-MM-dd HH:mm:ss"));
+		    ScheduleJob scheduleJobCondition = DTOUtils.newDTO(ScheduleJob.class);
+		    scheduleJobCondition.setJobGroup("milestones");
+		    scheduleJobCondition.setJobName(milestones.getCode());
+		    List<ScheduleJob> scheduleJobs = scheduleJobService.list(scheduleJobCondition);
+		    //如果数据库没有调度信息，则新增调度器
+		    if(ListUtils.emptyIfNull(scheduleJobs).isEmpty()){
+			    scheduleJobService.insertSelective(scheduleJob);
+		    }else {
+			    scheduleJob.setId(scheduleJobs.get(0).getId());
+			    scheduleJobService.updateSelective(scheduleJob);
+		    }
+	    }
         return super.updateSelective(milestones);
     }
 
@@ -91,7 +119,7 @@ public class MilestonesServiceImpl extends BaseServiceImpl<Milestones, Long> imp
             //如果有一个文件，则删除文件目录
             if(!filesList.isEmpty()) {
                 File dest = new File(filesList.get(0).getUrl());
-                dest.deleteOnExit();
+                dest.delete();
             }
             return super.delete(id);
         }else{
