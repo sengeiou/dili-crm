@@ -135,7 +135,6 @@ public class FilesController {
 			tmpFiles.setMilestonesId(Long.parseLong(milestonesId));
 			tmpFiles.setSuffix(file.getOriginalFilename().substring(file.getOriginalFilename().lastIndexOf(".")+1));
 			tmpFiles.setUrl(path);
-			tmpFiles.setModified(new Date());
 			UserTicket userTicket = SessionContext.getSessionContext().getUserTicket();
 			//			先查找文件名是否存在，存在则覆盖
 			Files filesCondition = DTOUtils.newDTO(Files.class);
@@ -150,9 +149,6 @@ public class FilesController {
 				filesService.insertSelective(tmpFiles);
 			}else{
 				tmpFiles.setId(files1.get(0).getId());
-				if(userTicket != null) {
-					tmpFiles.setModifyMemberId(userTicket.getId());
-				}
 				filesService.updateSelective(tmpFiles);
 			}
 		}

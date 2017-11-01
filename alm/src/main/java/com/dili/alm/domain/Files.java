@@ -4,12 +4,9 @@ import com.dili.ss.dto.IBaseDomain;
 import com.dili.ss.metadata.FieldEditor;
 import com.dili.ss.metadata.annotation.EditMode;
 import com.dili.ss.metadata.annotation.FieldDef;
-import java.util.Date;
+
 import javax.persistence.*;
-import javax.persistence.Column;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import java.util.Date;
 
 /**
  * 由MyBatis Generator工具自动生成
@@ -69,13 +66,6 @@ public interface Files extends IBaseDomain {
 
     void setCreated(Date created);
 
-    @Column(name = "`modified`")
-    @FieldDef(label="修改时间")
-    @EditMode(editor = FieldEditor.Datetime, required = true)
-    Date getModified();
-
-    void setModified(Date modified);
-
     @Column(name = "`create_member_id`")
     @FieldDef(label="创建人id")
     @EditMode(editor = FieldEditor.Combo, required = false, params="{\"provider\":\"memberProvider\"}")
@@ -83,10 +73,4 @@ public interface Files extends IBaseDomain {
 
     void setCreateMemberId(Long createMemberId);
 
-    @Column(name = "`modify_member_id`")
-    @FieldDef(label="修改人id")
-    @EditMode(editor = FieldEditor.Combo, required = false, params="{\"provider\":\"memberProvider\"}")
-    Long getModifyMemberId();
-
-    void setModifyMemberId(Long modifyMemberId);
 }
