@@ -21,7 +21,6 @@
 
 <script type="text/javascript">
 	function changePwd() {
-		debugger;
 		if (!$('#changePwdForm').form("validate")) {
 			return false;
 		}
@@ -30,7 +29,7 @@
 
 		$.ajax({
 			type : "POST",
-			url : "/user/changePwd",
+			url : "${contextPath!}/user/changePwd",
 			data : formData,
 			processData : true,
 			dataType : "json",
