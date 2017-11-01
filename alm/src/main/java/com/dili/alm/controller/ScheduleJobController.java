@@ -71,7 +71,7 @@ public class ScheduleJobController {
 	})
     @RequestMapping(value="/insert", method = {RequestMethod.GET, RequestMethod.POST})
     public @ResponseBody BaseOutput insert(ScheduleJob scheduleJob) {
-        scheduleJobService.insertSelective(scheduleJob);
+        scheduleJobService.insertSelective(scheduleJob, true);
         return BaseOutput.success("新增成功");
     }
 
@@ -81,7 +81,7 @@ public class ScheduleJobController {
 	})
     @RequestMapping(value="/update", method = {RequestMethod.GET, RequestMethod.POST})
     public @ResponseBody BaseOutput update(ScheduleJob scheduleJob) {
-        scheduleJobService.updateSelective(scheduleJob);
+        scheduleJobService.updateSelective(scheduleJob, true);
         return BaseOutput.success("修改成功");
     }
 
@@ -89,9 +89,9 @@ public class ScheduleJobController {
     @ApiImplicitParams({
 		@ApiImplicitParam(name="id", paramType="form", value = "ScheduleJob的主键", required = true, dataType = "long")
 	})
-    @RequestMapping(value="/deleteWithOutput", method = {RequestMethod.GET, RequestMethod.POST})
+    @RequestMapping(value="/delete", method = {RequestMethod.GET, RequestMethod.POST})
     public @ResponseBody BaseOutput delete(Long id) {
-        scheduleJobService.delete(id);
+        scheduleJobService.delete(id, true);
         return BaseOutput.success("删除成功");
     }
 
