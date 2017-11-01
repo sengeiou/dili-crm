@@ -9,6 +9,7 @@ import com.dili.alm.domain.dto.MilestonesDto;
 import com.dili.alm.service.FilesService;
 import com.dili.alm.service.MilestonesService;
 import com.dili.ss.base.BaseServiceImpl;
+import com.dili.ss.domain.BaseOutput;
 import com.dili.ss.domain.EasyuiPageOutput;
 import com.dili.ss.dto.DTOUtils;
 import com.dili.ss.quartz.domain.QuartzConstants;
@@ -17,9 +18,11 @@ import com.dili.ss.quartz.service.ScheduleJobService;
 import com.dili.ss.util.CronDateUtils;
 import com.dili.sysadmin.sdk.domain.UserTicket;
 import com.dili.sysadmin.sdk.session.SessionContext;
+import org.apache.commons.collections4.ListUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -43,11 +46,16 @@ public class MilestonesServiceImpl extends BaseServiceImpl<Milestones, Long> imp
     }
 
     @Override
-    public int insertSelective(Milestones milestones) {
+    public BaseOutput insertSelectiveWithOutput(Milestones milestones) {
+	    Milestones milestonesCondition = DTOUtils.newDTO(Milestones.class);
+	    milestonesCondition.setCode(milestones.getCode());
+	    if(list(milestonesCondition).size() > 0){
+	    	return BaseOutput.failure("里程碑编码已存在!");
+	    }
         UserTicket userTicket = SessionContext.getSessionContext().getUserTicket();
         milestones.setPublishMemberId(userTicket.getId());
         milestones.setCreated(new Date());
-        int rowCnt = super.insertSelective(milestones);
+        super.insertSelective(milestones);
         //如果要通知，则生成调度信息
         if(milestones.getEmailNotice().equals(1)){
             ScheduleJob scheduleJob = DTOUtils.newDTO(ScheduleJob.class);
@@ -55,7 +63,7 @@ public class MilestonesServiceImpl extends BaseServiceImpl<Milestones, Long> imp
             scheduleJob.setIsConcurrent(QuartzConstants.Concurrent.Async.getCode());
             scheduleJob.setJobGroup("milestones");
             scheduleJob.setJobName(milestones.getCode());
-            scheduleJob.setDescription("里程碑通知, code:"+milestones.getCode()+", version:"+milestones.getVersion() + ", market:" + milestones.getMarket());
+            scheduleJob.setDescription("里程碑发布通知, code:"+milestones.getCode()+", version:"+milestones.getVersion() + ", market:" + milestones.getMarket());
             scheduleJob.setSpringId("emailNoticeJob");
             scheduleJob.setStartDelay(0);
             scheduleJob.setMethodName("scan");
@@ -63,19 +71,54 @@ public class MilestonesServiceImpl extends BaseServiceImpl<Milestones, Long> imp
             scheduleJob.setJobData(JSONObject.toJSONStringWithDateFormat(milestones, "yyyy-MM-dd HH:mm:ss"));
             scheduleJobService.insertSelective(scheduleJob);
         }
-        return rowCnt;
+        return BaseOutput.success("新增成功");
     }
 
     @Override
-    public int updateSelective(Milestones milestones) {
+    public BaseOutput updateSelectiveWithOutput(Milestones milestones) {
+	    Milestones milestonesCondition = DTOUtils.newDTO(Milestones.class);
+	    milestonesCondition.setCode(milestones.getCode());
+	    List<Milestones> milestones1 = list(milestonesCondition);
+	    //如果和原有编码不同，并且还有其它的重复编码，则抛错
+	    if(milestones1.size() > 0 && !get(milestones.getId()).getCode().equals(milestones.getCode())){
+		    return BaseOutput.failure("里程碑编码已存在!");
+	    }
         UserTicket userTicket = SessionContext.getSessionContext().getUserTicket();
         milestones.setModifyMemberId(userTicket.getId());
         milestones.setModified(new Date());
-        return super.updateSelective(milestones);
+	    //如果要通知，刷新调度信息
+	    if(milestones.getEmailNotice().equals(1)){
+		    Milestones oriMilestones = get(milestones.getId());
+		    milestones = DTOUtils.link(milestones, oriMilestones, Milestones.class);
+		    ScheduleJob scheduleJob = DTOUtils.newDTO(ScheduleJob.class);
+		    scheduleJob.setJobStatus(QuartzConstants.JobStatus.NORMAL.getCode());
+		    scheduleJob.setIsConcurrent(QuartzConstants.Concurrent.Async.getCode());
+		    scheduleJob.setJobGroup("milestones");
+		    scheduleJob.setJobName(milestones.getCode());
+		    scheduleJob.setDescription("里程碑修改通知, code:"+milestones.getCode()+", version:"+milestones.getVersion() + ", market:" + milestones.getMarket());
+		    scheduleJob.setSpringId("emailNoticeJob");
+		    scheduleJob.setStartDelay(0);
+		    scheduleJob.setMethodName("scan");
+		    scheduleJob.setCronExpression(CronDateUtils.getCron(new Date(System.currentTimeMillis()+10000)));
+		    scheduleJob.setJobData(JSONObject.toJSONStringWithDateFormat(milestones, "yyyy-MM-dd HH:mm:ss"));
+		    ScheduleJob scheduleJobCondition = DTOUtils.newDTO(ScheduleJob.class);
+		    scheduleJobCondition.setJobGroup("milestones");
+		    scheduleJobCondition.setJobName(milestones.getCode());
+		    List<ScheduleJob> scheduleJobs = scheduleJobService.list(scheduleJobCondition);
+		    //如果数据库没有调度信息，则新增调度器
+		    if(ListUtils.emptyIfNull(scheduleJobs).isEmpty()){
+			    scheduleJobService.insertSelective(scheduleJob);
+		    }else {
+			    scheduleJob.setId(scheduleJobs.get(0).getId());
+			    scheduleJobService.updateSelective(scheduleJob);
+		    }
+	    }
+        super.updateSelective(milestones);
+	    return BaseOutput.success("修改成功");
     }
 
     @Override
-    public int delete(Long id) {
+    public BaseOutput deleteWithOutput(Long id) {
         Milestones milestones = DTOUtils.newDTO(Milestones.class);
         milestones.setParentId(id);
         List<Milestones> list = list(milestones);
@@ -87,9 +130,15 @@ public class MilestonesServiceImpl extends BaseServiceImpl<Milestones, Long> imp
             for(Files file : filesList){
                 filesService.delete(file);
             }
-            return super.delete(id);
+            //如果有一个文件，则删除文件目录
+            if(!filesList.isEmpty()) {
+                File dest = new File(filesList.get(0).getUrl());
+                dest.delete();
+            }
+            super.delete(id);
+	        return BaseOutput.success("删除成功");
         }else{
-            return 0;
+            return BaseOutput.failure("删除失败, 请先删除子里程碑");
         }
     }
 

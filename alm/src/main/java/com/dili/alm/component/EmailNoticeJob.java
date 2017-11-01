@@ -122,6 +122,11 @@ public class EmailNoticeJob implements ApplicationListener<ContextRefreshedEvent
 				mailSender.send(mimeMessage);
 			} catch (MessagingException e) {
 				e.printStackTrace();
+				log.error(e.getMessage());
+				return;
+			} catch (Exception e){
+				e.printStackTrace();
+				log.error(e.getMessage());
 				return;
 			}
 		}

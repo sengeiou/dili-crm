@@ -89,7 +89,7 @@ public class ScheduleJobController {
     @ApiImplicitParams({
 		@ApiImplicitParam(name="id", paramType="form", value = "ScheduleJob的主键", required = true, dataType = "long")
 	})
-    @RequestMapping(value="/delete", method = {RequestMethod.GET, RequestMethod.POST})
+    @RequestMapping(value="/deleteWithOutput", method = {RequestMethod.GET, RequestMethod.POST})
     public @ResponseBody BaseOutput delete(Long id) {
         scheduleJobService.delete(id);
         return BaseOutput.success("删除成功");

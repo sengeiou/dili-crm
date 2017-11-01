@@ -87,7 +87,7 @@ public class DataDictionaryValueController {
 	@ApiOperation("删除DataDictionaryValue")
 	@ApiImplicitParams({
 			@ApiImplicitParam(name = "id", paramType = "form", value = "DataDictionaryValue的主键", required = true, dataType = "long") })
-	@RequestMapping(value = "/delete", method = { RequestMethod.GET, RequestMethod.POST })
+	@RequestMapping(value = "/deleteWithOutput", method = { RequestMethod.GET, RequestMethod.POST })
 	public @ResponseBody BaseOutput delete(Long id) {
 		dataDictionaryValueService.delete(id);
 		return BaseOutput.success("删除成功");

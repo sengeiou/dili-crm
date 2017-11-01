@@ -100,7 +100,7 @@ public class ProjectController {
 
 	@ApiOperation("删除Project")
 	@ApiImplicitParams({ @ApiImplicitParam(name = "id", paramType = "form", value = "Project的主键", required = true, dataType = "long") })
-	@RequestMapping(value = "/delete", method = { RequestMethod.GET, RequestMethod.POST })
+	@RequestMapping(value = "/deleteWithOutput", method = { RequestMethod.GET, RequestMethod.POST })
 	public @ResponseBody BaseOutput<Object> delete(Long id) {
 		return projectService.deleteBeforeCheck(id);
 	}

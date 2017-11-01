@@ -66,8 +66,7 @@ public class MilestonesController {
 	})
     @RequestMapping(value="/insert", method = {RequestMethod.GET, RequestMethod.POST})
     public @ResponseBody BaseOutput insert(Milestones milestones) {
-        milestonesService.insertSelective(milestones);
-        return BaseOutput.success("新增成功");
+        return milestonesService.insertSelectiveWithOutput(milestones);
     }
 
     @ApiOperation("修改Milestones")
@@ -76,8 +75,7 @@ public class MilestonesController {
 	})
     @RequestMapping(value="/update", method = {RequestMethod.GET, RequestMethod.POST})
     public @ResponseBody BaseOutput update(Milestones milestones) {
-        milestonesService.updateSelective(milestones);
-        return BaseOutput.success("修改成功");
+	    return milestonesService.updateSelectiveWithOutput(milestones);
     }
 
     @ApiOperation("删除Milestones")
@@ -86,11 +84,6 @@ public class MilestonesController {
 	})
     @RequestMapping(value="/delete", method = {RequestMethod.GET, RequestMethod.POST})
     public @ResponseBody BaseOutput delete(Long id) {
-        int rowCnt = milestonesService.delete(id);
-        if(rowCnt > 0) {
-	        return BaseOutput.success("删除成功");
-        }else{
-	        return BaseOutput.failure("删除失败, 请先删除子里程碑");
-        }
+        return milestonesService.deleteWithOutput(id);
     }
 }

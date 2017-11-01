@@ -88,7 +88,7 @@ public class FilesController {
     @ApiImplicitParams({
 		@ApiImplicitParam(name="id", paramType="form", value = "Files的主键", required = true, dataType = "long")
 	})
-    @RequestMapping(value="/delete", method = {RequestMethod.GET, RequestMethod.POST})
+    @RequestMapping(value="/deleteWithOutput", method = {RequestMethod.GET, RequestMethod.POST})
     public @ResponseBody BaseOutput delete(Long id) {
         filesService.delete(id);
         return BaseOutput.success("删除成功");
@@ -156,6 +156,7 @@ public class FilesController {
 				filesService.updateSelective(tmpFiles);
 			}
 		}
+		response.setCharacterEncoding("utf-8");
 		response.getWriter().write("<script>parent.callback('上传成功')</script>");
 	}
 
