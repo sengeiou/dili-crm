@@ -96,6 +96,7 @@ function onAddClicked() {
 	if (!dataAuth.addUser) {
 		return false;
 	}
+	debugger;
 	$('#_passwordTd').show();
 	$('#_lastLoginIpTd').hide();
 	$('#_lastLoginTimeTd').hide();
@@ -170,6 +171,7 @@ function onAddClicked() {
 	$('#dlg').dialog('open');
 	$('#dlg').dialog('center');
 	$('#_form').form('clear');
+	$('#_form').form('resetValidation');
 }
 
 function onEditClicked(id) {
