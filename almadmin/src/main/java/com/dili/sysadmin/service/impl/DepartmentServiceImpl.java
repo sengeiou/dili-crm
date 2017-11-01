@@ -66,15 +66,15 @@ public class DepartmentServiceImpl extends BaseServiceImpl<Department, Long> imp
 	public BaseOutput<Object> updateAfterCheck(Department department) {
 		Department record = new Department();
 		record.setName(department.getName());
-		record = this.getActualDao().selectOne(record);
-		if (record != null && !record.getId().equals(department.getId())) {
+		Department oldDept = this.getActualDao().selectOne(record);
+		if (oldDept != null && !oldDept.getId().equals(department.getId())) {
 			return BaseOutput.failure("存在相同名称的部门");
 		}
-		record.setNotes(department.getNotes());
-		record.setModified(new Date());
-		int result = this.getActualDao().updateByPrimaryKey(record);
+		department.setNotes(department.getNotes());
+		department.setModified(new Date());
+		int result = this.getActualDao().updateByPrimaryKey(department);
 		if (result > 0) {
-			return BaseOutput.success().setData(record);
+			return BaseOutput.success().setData(department);
 		}
 		return BaseOutput.failure("更新失败");
 	}
