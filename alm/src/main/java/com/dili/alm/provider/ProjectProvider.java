@@ -1,6 +1,7 @@
 package com.dili.alm.provider;
 
 import com.dili.alm.cache.AlmCache;
+import com.dili.alm.constant.AlmConstants;
 import com.dili.alm.domain.Project;
 import com.dili.alm.service.ProjectService;
 import com.dili.ss.dto.DTOUtils;
@@ -8,6 +9,7 @@ import com.dili.ss.metadata.FieldMeta;
 import com.dili.ss.metadata.ValuePair;
 import com.dili.ss.metadata.ValuePairImpl;
 import com.dili.ss.metadata.ValueProvider;
+import com.dili.sysadmin.sdk.session.SessionContext;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationListener;
 import org.springframework.context.event.ContextRefreshedEvent;
@@ -45,8 +47,12 @@ public class ProjectProvider implements ValueProvider, ApplicationListener<Conte
 	public List<ValuePair<?>> getLookupList(Object o, Map map, FieldMeta fieldMeta) {
 		init();
 		ArrayList buffer = new ArrayList<ValuePair<?>>();
-		AlmCache.projectMap.forEach((k, v)->{
-			buffer.add(new ValuePairImpl(v.getName(), k));
+		List<Map> dataauth = SessionContext.getSessionContext().dataAuth(AlmConstants.DATA_AUTH_TYPE_PROJECT);
+		dataauth.forEach(da -> {
+			Long key = Long.parseLong(da.get("dataId").toString());
+			if(AlmCache.projectMap.containsKey(key)) {
+				buffer.add(new ValuePairImpl(AlmCache.projectMap.get(key).getName(), key));
+			}
 		});
 		return buffer;
 	}
