@@ -54,4 +54,16 @@ public class DataDictionaryServiceImpl extends BaseServiceImpl<DataDictionary, L
 		return dto;
 	}
 
+	@Override
+	public int insert(DataDictionary t) {
+		t.setYn(1);
+		return super.insert(t);
+	}
+
+	@Override
+	public int insertSelective(DataDictionary t) {
+		t.setYn(1);
+		return super.insertSelective(t);
+	}
+
 }
