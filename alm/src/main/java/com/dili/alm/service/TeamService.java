@@ -11,5 +11,5 @@ public interface TeamService extends BaseService<Team, Long> {
 
 	BaseOutput<Object> insertAfterCheck(Team team);
 
-	BaseOutput<Object> updateAftreCheck(Team team);
+	BaseOutput<Object> updateAfterCheck(Team team);
 }

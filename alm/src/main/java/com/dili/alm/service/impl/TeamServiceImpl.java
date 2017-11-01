@@ -94,7 +94,7 @@ public class TeamServiceImpl extends BaseServiceImpl<Team, Long> implements Team
 	}
 
 	@Override
-	public BaseOutput<Object> updateAftreCheck(Team team) {
+	public BaseOutput<Object> updateAfterCheck(Team team) {
 		int result;
 		Team oldRecord = this.getActualDao().selectByPrimaryKey(team.getId());
 		if (oldRecord.getProjectId().equals(team.getProjectId()) && oldRecord.getMemberId().equals(team.getMemberId())) {

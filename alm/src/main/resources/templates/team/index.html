@@ -51,7 +51,8 @@
 									required : true,
 									url:'${contextPath}/project/list.json',
 									valueField:'id',
-									textField:'name'
+									textField:'name',
+									editable:false
 								}
 							},formatter:function(value,row){
 									return row.projectId;

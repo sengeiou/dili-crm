@@ -299,6 +299,7 @@ function hideOptButtons(id) {
  *            changes 被修改的数据
  */
 function insertOrUpdateMenu(index, row, changes) {
+	debugger;
 	var postData = getOriginalData(row);
 	var url = '${contextPath!}/team/';
 	if (!row.id) {
