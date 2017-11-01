@@ -70,7 +70,7 @@
 					}
 				}]
 			">
-        <form method="POST" id="filesForm" enctype="multipart/form-data" action="${contextPath}/files/filesUpload?milestonesId=${milestonesId}" target="hiddenFrame">
+        <form method="POST" id="filesForm" enctype="multipart/form-data" target="hiddenFrame">
             <p>
                 <input class="easyui-filebox" style="width: 240px;" name="file" buttonText="文件1" />
             </p>
@@ -88,7 +88,7 @@
             </p>
         </form>
         <form method="POST" id="downloadForm" action="${contextPath}/files/download" target="hiddenFrame" target="hiddenFrame">
-            <input type="hidden" name="name" id="name" /> <input type="hidden" name="milestonesId" id="milestonesId" value="${milestonesId}" />
+            <input type="hidden" name="name" id="name" /> <input type="hidden" name="milestonesId" id="milestonesId" />
         </form>
         <iframe name='hiddenFrame' id="hiddenFrame" style="display:none"></iframe>
     </div>
@@ -104,6 +104,7 @@
             $('#filesDlg').dialog('open');
             $('#filesDlg').dialog('center');
             $('#filesForm').form('clear');
+            $("#filesForm").attr('action',"${contextPath}/files/filesUpload?milestonesId=${milestonesId}");
             formFocus("filesForm", "_name");
         }
 
@@ -186,6 +187,8 @@
         }
 
         function downloadFiles(name){
+            //因为easyui缓存问题，这里再手动设置一下milestonesId
+            $("#milestonesId").val("${milestonesId}");
             //在行上点击时
             if(name){
                 $("#name").val(name);

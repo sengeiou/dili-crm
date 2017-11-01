@@ -20,6 +20,7 @@ import com.dili.sysadmin.sdk.session.SessionContext;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -86,6 +87,11 @@ public class MilestonesServiceImpl extends BaseServiceImpl<Milestones, Long> imp
             List<Files> filesList = filesService.list(files);
             for(Files file : filesList){
                 filesService.delete(file);
+            }
+            //如果有一个文件，则删除文件目录
+            if(!filesList.isEmpty()) {
+                File dest = new File(filesList.get(0).getUrl());
+                dest.deleteOnExit();
             }
             return super.delete(id);
         }else{
