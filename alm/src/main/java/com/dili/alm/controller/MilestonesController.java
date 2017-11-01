@@ -66,8 +66,8 @@ public class MilestonesController {
 	})
     @RequestMapping(value="/insert", method = {RequestMethod.GET, RequestMethod.POST})
     public @ResponseBody BaseOutput insert(Milestones milestones) {
-        milestonesService.insertSelective(milestones);
-        return BaseOutput.success("新增成功");
+        String msg = milestonesService.insertSelectiveWithMsg(milestones);
+        return msg == null ? BaseOutput.success("新增成功") : BaseOutput.failure(msg);
     }
 
     @ApiOperation("修改Milestones")
@@ -76,8 +76,8 @@ public class MilestonesController {
 	})
     @RequestMapping(value="/update", method = {RequestMethod.GET, RequestMethod.POST})
     public @ResponseBody BaseOutput update(Milestones milestones) {
-        milestonesService.updateSelective(milestones);
-        return BaseOutput.success("修改成功");
+	    String msg = milestonesService.updateSelectiveWithMsg(milestones);
+	    return msg == null ? BaseOutput.success("新增成功") : BaseOutput.failure(msg);
     }
 
     @ApiOperation("删除Milestones")

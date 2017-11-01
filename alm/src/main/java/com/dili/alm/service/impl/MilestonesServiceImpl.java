@@ -45,11 +45,16 @@ public class MilestonesServiceImpl extends BaseServiceImpl<Milestones, Long> imp
     }
 
     @Override
-    public int insertSelective(Milestones milestones) {
+    public String insertSelectiveWithMsg(Milestones milestones) {
+	    Milestones milestonesCondition = DTOUtils.newDTO(Milestones.class);
+	    milestonesCondition.setCode(milestones.getCode());
+	    if(list(milestonesCondition).size() > 0){
+	    	return "里程碑编码已存在!";
+	    }
         UserTicket userTicket = SessionContext.getSessionContext().getUserTicket();
         milestones.setPublishMemberId(userTicket.getId());
         milestones.setCreated(new Date());
-        int rowCnt = super.insertSelective(milestones);
+        super.insertSelective(milestones);
         //如果要通知，则生成调度信息
         if(milestones.getEmailNotice().equals(1)){
             ScheduleJob scheduleJob = DTOUtils.newDTO(ScheduleJob.class);
@@ -65,11 +70,18 @@ public class MilestonesServiceImpl extends BaseServiceImpl<Milestones, Long> imp
             scheduleJob.setJobData(JSONObject.toJSONStringWithDateFormat(milestones, "yyyy-MM-dd HH:mm:ss"));
             scheduleJobService.insertSelective(scheduleJob);
         }
-        return rowCnt;
+        return null;
     }
 
     @Override
-    public int updateSelective(Milestones milestones) {
+    public String updateSelectiveWithMsg(Milestones milestones) {
+	    Milestones milestonesCondition = DTOUtils.newDTO(Milestones.class);
+	    milestonesCondition.setCode(milestones.getCode());
+	    List<Milestones> milestones1 = list(milestonesCondition);
+	    //如果和原有编码不同，并且还有其它的重复编码，则抛错
+	    if(milestones1.size() > 0 && !get(milestones.getId()).getCode().equals(milestones.getCode())){
+		    return "里程碑编码已存在!";
+	    }
         UserTicket userTicket = SessionContext.getSessionContext().getUserTicket();
         milestones.setModifyMemberId(userTicket.getId());
         milestones.setModified(new Date());
@@ -100,7 +112,8 @@ public class MilestonesServiceImpl extends BaseServiceImpl<Milestones, Long> imp
 			    scheduleJobService.updateSelective(scheduleJob);
 		    }
 	    }
-        return super.updateSelective(milestones);
+        super.updateSelective(milestones);
+	    return null;
     }
 
     @Override
