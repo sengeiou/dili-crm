@@ -42,6 +42,7 @@ function onBeginEditDdValue(index, row) {
 }
 
 function onAfterEditDdValue(index, row, changes) {
+	debugger;
 	var isValid = ddValueGrid.datagrid('validateRow', index);
 	if (!isValid) {
 		return false;
@@ -72,6 +73,7 @@ function onCancelEditDdValue(index, row) {
 
 // 打开新增窗口
 function openInsertDdValue() {
+	debugger;
 	if (!endDdValueGridEditing()) {
 		return;
 	}
@@ -132,7 +134,7 @@ function insertOrUpdateDdValue(index, row, changes) {
 	var url = contextPath + '/dataDictionaryValue/';
 	if (!row.id) {
 		var selectedNode = getSelectedTreeNode();
-		row.parentId = selectedNode.id;
+		row.parentId = selectedNode.id > 0 ? selectedNode.id : undefined;
 		row.ddId = ddId;
 		url += 'insert';
 	} else {

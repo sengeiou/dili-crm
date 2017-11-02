@@ -1,6 +1,10 @@
 // 编辑行索引
 var editId = undefined;
 
+function isEditing() {
+	return undefined != editId;
+}
+
 var loadFilter = function(data, parentId) {
 	if (parentId != undefined) {
 		return data;

@@ -114,18 +114,16 @@ public class UserServiceImpl extends BaseServiceImpl<User, Long> implements User
 			clockUser(user);
 			return UserLoginResultDto.failure("用户名或密码错误");
 		}
-		if (user != null) {
-			// 加载用户url
-			this.menuManager.initUserMenuUrlsInRedis(user.getId());
-			// 加载用户resource
-			this.resourceManager.initUserResourceCodeInRedis(user.getId());
-			// 加载用户数据权限
-			this.dataAuthManager.initUserDataAuthsInRedis(user.getId());
-		}
-
-		if (user.getStatus().equals(UserStatus.DISABLE)) {
+		if (user.getStatus().equals(UserStatus.DISABLE.getValue())) {
 			return UserLoginResultDto.failure("用户已被禁用, 不能进行登录!");
 		}
+		// 加载用户url
+		this.menuManager.initUserMenuUrlsInRedis(user.getId());
+		// 加载用户resource
+		this.resourceManager.initUserResourceCodeInRedis(user.getId());
+		// 加载用户数据权限
+		this.dataAuthManager.initUserDataAuthsInRedis(user.getId());
+
 		user.setLastLoginTime(new Timestamp(System.currentTimeMillis()));
 		user.setLastLoginIp(dto.getRemoteIP());
 		if (this.userMapper.updateByPrimaryKey(user) <= 0) {
