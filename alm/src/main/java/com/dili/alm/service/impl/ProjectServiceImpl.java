@@ -196,6 +196,8 @@ public class ProjectServiceImpl extends BaseServiceImpl<Project, Long> implement
 		}
 		project.setModified(new Date());
 		result = this.updateSelective(project);
+		// 同步更新缓存
+		AlmCache.projectMap.put(project.getId(), project);
 		if (result > 0) {
 			return BaseOutput.success().setData(project);
 		}
