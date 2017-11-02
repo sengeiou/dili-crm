@@ -32,7 +32,9 @@ public class TeamServiceImpl extends BaseServiceImpl<Team, Long> implements Team
 	@Override
 	public int insert(Team team) {
 		int i = super.insert(team);
-		dataAuthRpc.addUserDataAuth(team.getMemberId(), team.getProjectId().toString(), AlmConstants.DATA_AUTH_TYPE_PROJECT);
+		if (team.getMemberState().equals(MemberState.JOIN.getCode())) {
+			dataAuthRpc.addUserDataAuth(team.getMemberId(), team.getProjectId().toString(), AlmConstants.DATA_AUTH_TYPE_PROJECT);
+		}
 		return i;
 	}
 
@@ -54,11 +56,14 @@ public class TeamServiceImpl extends BaseServiceImpl<Team, Long> implements Team
 	@Override
 	public int insertSelective(Team t) {
 		Date now = new Date();
-		t.setJoinTime(now);
-		if (t.getMemberState().equals(MemberState.LEAVE.getCode())) {
+
+		if (t.getMemberState().equals(MemberState.JOIN.getCode())) {
+			t.setJoinTime(now);
+			dataAuthRpc.addUserDataAuth(t.getMemberId(), t.getProjectId().toString(), AlmConstants.DATA_AUTH_TYPE_PROJECT);
+		}else{
 			t.setLeaveTime(now);
+			dataAuthRpc.deleteUserDataAuth(t.getMemberId(), t.getProjectId().toString(), AlmConstants.DATA_AUTH_TYPE_PROJECT);
 		}
-		dataAuthRpc.addUserDataAuth(t.getMemberId(), t.getProjectId().toString(), AlmConstants.DATA_AUTH_TYPE_PROJECT);
 		return super.insertSelective(t);
 	}
 
@@ -71,8 +76,10 @@ public class TeamServiceImpl extends BaseServiceImpl<Team, Long> implements Team
 		Date now = new Date();
 		if (team.getMemberState().equals(MemberState.LEAVE.getCode())) {
 			team.setLeaveTime(now);
+			dataAuthRpc.deleteUserDataAuth(team.getMemberId(), team.getProjectId().toString(), AlmConstants.DATA_AUTH_TYPE_PROJECT);
 		} else if (team.getMemberState().equals(MemberState.JOIN.getCode())) {
 			team.setJoinTime(now);
+			dataAuthRpc.addUserDataAuth(team.getMemberId(), team.getProjectId().toString(), AlmConstants.DATA_AUTH_TYPE_PROJECT);
 		}
 		return super.updateSelective(team);
 	}

@@ -90,7 +90,9 @@ public class DataAuthApi {
 		UserDataAuth userDataAuth = new UserDataAuth();
 		userDataAuth.setUserId(jo.getLong("userId"));
 		userDataAuth.setDataAuthId(dataAuths.get(0).getId());
-		userDataAuthService.insertSelective(userDataAuth);
+		if(userDataAuthService.list(userDataAuth).isEmpty()) {
+			userDataAuthService.insertSelective(userDataAuth);
+		}
 		return BaseOutput.success("添加用户数据权成功");
 	}
 	
