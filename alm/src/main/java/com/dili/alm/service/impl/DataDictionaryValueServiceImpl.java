@@ -21,8 +21,7 @@ import java.util.List;
  * 10:41:19.
  */
 @Service
-public class DataDictionaryValueServiceImpl extends BaseServiceImpl<DataDictionaryValue, Long>
-		implements DataDictionaryValueService {
+public class DataDictionaryValueServiceImpl extends BaseServiceImpl<DataDictionaryValue, Long> implements DataDictionaryValueService {
 
 	@Autowired
 	private DataDictionaryMapper dataDictionaryMapper;
@@ -33,7 +32,7 @@ public class DataDictionaryValueServiceImpl extends BaseServiceImpl<DataDictiona
 
 	@Override
 	public BaseOutput<Object> insertAndGet(DataDictionaryValue dataDictionaryValue) {
-		int result = this.getActualDao().insert(dataDictionaryValue);
+		int result = this.insert(dataDictionaryValue);
 		if (result <= 0) {
 			return BaseOutput.failure();
 		}
@@ -64,13 +63,26 @@ public class DataDictionaryValueServiceImpl extends BaseServiceImpl<DataDictiona
 			vo.setId(ddValue.getId());
 			vo.addAttribute("ddId", ddValue.getDdId());
 			vo.setName(ddValue.getCode());
-			if(ddValue.getParentId() == null) {
+			if (ddValue.getParentId() == null) {
 				vo.setParentId(-1L);
-			}else{
+			} else {
 				vo.setParentId(ddValue.getParentId());
 			}
 			target.add(vo);
 		}
 		return target;
 	}
+
+	@Override
+	public int insert(DataDictionaryValue t) {
+		t.setYn(1);
+		return super.insert(t);
+	}
+
+	@Override
+	public int insertSelective(DataDictionaryValue t) {
+		t.setYn(1);
+		return super.insertSelective(t);
+	}
+
 }
