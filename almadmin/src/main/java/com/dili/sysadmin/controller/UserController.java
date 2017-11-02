@@ -202,7 +202,7 @@ public class UserController {
 	@ApiOperation("修改User密码")
 	@ApiImplicitParams({ @ApiImplicitParam(name = "pwd", paramType = "form", value = "User的主键", required = false, dataType = "string") })
 	@RequestMapping(value = "/changePwd", method = { RequestMethod.GET, RequestMethod.POST })
-	public @ResponseBody BaseOutput changePwd(UpdateUserPasswordDto userPasswordDto) throws UserException {
+	public @ResponseBody BaseOutput<Object> changePwd(UpdateUserPasswordDto userPasswordDto) throws UserException {
 		return userService.updateUserPassword(userPasswordDto);
 	}
 

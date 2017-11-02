@@ -394,7 +394,7 @@ public class UserServiceImpl extends BaseServiceImpl<User, Long> implements User
 		String rawpwd = md5Utils.getMD5ofStr(dto.getOldPassword()).substring(6, 24);
 		if (user == null || !StringUtils.equalsIgnoreCase(user.getPassword(), rawpwd)) {
 			LOG.info(String.format("用户密码错误，用户名[%s]", user.getUserName()));
-			return BaseOutput.failure("");
+			return BaseOutput.failure("用户密码错误");
 		}
 		user.setPassword(md5Utils.getMD5ofStr(dto.getNewPassword()).substring(6, 24));
 		this.userMapper.updateByPrimaryKey(user);
