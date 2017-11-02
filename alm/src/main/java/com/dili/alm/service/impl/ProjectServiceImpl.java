@@ -250,11 +250,11 @@ public class ProjectServiceImpl extends BaseServiceImpl<Project, Long> implement
 			return BaseOutput.failure("存在相同名称的项目");
 		}
 		project.setModified(new Date());
-		
+
 		result = this.updateSelective(project);
 		// 刷新projectProvider缓存
 		AlmCache.projectMap.put(project.getId(), project);
-		
+
 		dataAuthRpc.updateDataAuth(project.getId().toString(), AlmConstants.DATA_AUTH_TYPE_PROJECT, project.getName());
 		if (result > 0) {
 			return BaseOutput.success().setData(project);
