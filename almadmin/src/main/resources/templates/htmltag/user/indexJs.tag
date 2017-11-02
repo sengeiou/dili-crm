@@ -96,7 +96,6 @@ function onAddClicked() {
 	if (!dataAuth.addUser) {
 		return false;
 	}
-	debugger;
 	$('#_passwordTd').show();
 	$('#_lastLoginIpTd').hide();
 	$('#_lastLoginTimeTd').hide();
@@ -476,6 +475,7 @@ function onPageDownClicked() {
 }
 
 function onSaveClicked() {
+	debugger;
 	if (!dataAuth.saveUser) {
 		return false;
 	}
@@ -509,7 +509,6 @@ function onSaveClicked() {
 	_formData.roleId = roleList;
 
 	var temp = JSON.stringify(_formData);
-	console.log(temp);
 	requestSave(_url, temp, function(retData) {
 				if (null != retData) {
 					if (isAdd) {
