@@ -303,6 +303,7 @@
             $('#dlg').dialog('center');
             $('#_form').form('clear');
             formFocus("_form", "_code");
+            $("#_projectId").combobox("readonly", false);
         </#resource>
         }
 
@@ -319,6 +320,7 @@
             $('#_form').form('clear');
             $("#_parentCode").textbox("setValue", selected["code"]);
             $("#_parentId").val(selected["id"]);
+            $("#_projectId").combobox("readonly", false);
             formFocus("_form", "_code");
             </#resource>
         }
@@ -338,6 +340,7 @@
             formData = addKeyStartWith(getOriginalData(formData),"_");
             $('#_form').form('clear');
             $('#_form').form('load', formData);
+            $("#_projectId").combobox("readonly", true);
             </#resource>
         }
 
