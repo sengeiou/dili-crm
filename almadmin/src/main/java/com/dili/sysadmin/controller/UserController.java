@@ -148,9 +148,8 @@ public class UserController {
 	@ApiOperation("逻辑删除User")
 	@ApiImplicitParams({ @ApiImplicitParam(name = "id", paramType = "form", value = "User的主键", required = true, dataType = "long") })
 	@RequestMapping(value = "/logicDelete", method = { RequestMethod.GET, RequestMethod.POST })
-	public @ResponseBody BaseOutput logicDelete(Long id) throws UserException {
-		userService.logicDelete(id);
-		return BaseOutput.success("删除成功");
+	public @ResponseBody BaseOutput<Object> logicDelete(Long id) throws UserException {
+		return userService.logicDelete(id);
 	}
 
 	@ApiOperation("禁用User")

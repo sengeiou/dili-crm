@@ -3,6 +3,7 @@ package com.dili.alm.controller;
 import com.alibaba.fastjson.JSONObject;
 import com.dili.alm.domain.Project;
 import com.dili.alm.domain.dto.DataDictionaryValueDto;
+import com.dili.alm.exceptions.ProjectException;
 import com.dili.alm.rpc.UserRpc;
 import com.dili.alm.service.ProjectService;
 import com.dili.ss.domain.BaseOutput;
@@ -88,7 +89,11 @@ public class ProjectController {
 	@ApiImplicitParams({ @ApiImplicitParam(name = "Project", paramType = "form", value = "Project的form信息", required = true, dataType = "string") })
 	@RequestMapping(value = "/insert", method = { RequestMethod.GET, RequestMethod.POST })
 	public @ResponseBody BaseOutput<Object> insert(Project project) {
-		return projectService.insertAfterCheck(project);
+		try {
+			return projectService.insertAfterCheck(project);
+		} catch (ProjectException e) {
+			return BaseOutput.failure(e.getMessage());
+		}
 	}
 
 	@ApiOperation("修改Project")

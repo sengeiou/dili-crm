@@ -2,6 +2,7 @@ package com.dili.alm.service;
 
 import com.dili.alm.domain.Project;
 import com.dili.alm.domain.dto.DataDictionaryValueDto;
+import com.dili.alm.exceptions.ProjectException;
 import com.dili.ss.base.BaseService;
 import com.dili.ss.domain.BaseOutput;
 
@@ -24,7 +25,7 @@ public interface ProjectService extends BaseService<Project, Long> {
 	 */
 	List<Project> getChildProjects(Long id);
 
-	BaseOutput<Object> insertAfterCheck(Project project);
+	BaseOutput<Object> insertAfterCheck(Project project) throws ProjectException;
 
 	BaseOutput<Object> updateAfterCheck(Project project);
 }

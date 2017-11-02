@@ -12,6 +12,7 @@ import com.dili.ss.dto.DTOUtils;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Date;
 import java.util.List;
@@ -60,7 +61,7 @@ public class TeamServiceImpl extends BaseServiceImpl<Team, Long> implements Team
 		if (t.getMemberState().equals(MemberState.JOIN.getCode())) {
 			t.setJoinTime(now);
 			dataAuthRpc.addUserDataAuth(t.getMemberId(), t.getProjectId().toString(), AlmConstants.DATA_AUTH_TYPE_PROJECT);
-		}else{
+		} else {
 			t.setLeaveTime(now);
 			dataAuthRpc.deleteUserDataAuth(t.getMemberId(), t.getProjectId().toString(), AlmConstants.DATA_AUTH_TYPE_PROJECT);
 		}
@@ -84,6 +85,7 @@ public class TeamServiceImpl extends BaseServiceImpl<Team, Long> implements Team
 		return super.updateSelective(team);
 	}
 
+	@Transactional
 	@Override
 	public BaseOutput<Object> insertAfterCheck(Team team) {
 		Team record = DTOUtils.newDTO(Team.class);

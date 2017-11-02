@@ -26,7 +26,7 @@ public interface UserService extends BaseService<User, Long> {
 
 	void enableUser(Long userId) throws UserException;
 
-	void logicDelete(Long userId) throws UserException;
+	BaseOutput<Object> logicDelete(Long userId);
 
 	BaseOutput<Object> add(AddUserDto dto);
 

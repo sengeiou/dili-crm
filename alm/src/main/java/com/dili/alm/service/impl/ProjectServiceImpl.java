@@ -2,23 +2,29 @@ package com.dili.alm.service.impl;
 
 import com.dili.alm.cache.AlmCache;
 import com.dili.alm.constant.AlmConstants;
+import com.dili.alm.constant.AlmConstants.MemberState;
 import com.dili.alm.dao.MilestonesMapper;
 import com.dili.alm.dao.ProjectMapper;
 import com.dili.alm.dao.TeamMapper;
 import com.dili.alm.domain.Milestones;
 import com.dili.alm.domain.Project;
 import com.dili.alm.domain.Team;
+import com.dili.alm.domain.TeamType;
 import com.dili.alm.domain.dto.DataDictionaryDto;
 import com.dili.alm.domain.dto.DataDictionaryValueDto;
 import com.dili.alm.domain.dto.ProjectDto;
+import com.dili.alm.exceptions.ProjectException;
 import com.dili.alm.rpc.DataAuthRpc;
 import com.dili.alm.service.DataDictionaryService;
 import com.dili.alm.service.ProjectService;
+import com.dili.alm.service.TeamService;
 import com.dili.ss.base.BaseServiceImpl;
 import com.dili.ss.domain.BaseOutput;
 import com.dili.ss.domain.EasyuiPageOutput;
 import com.dili.ss.dto.DTOUtils;
 import com.dili.sysadmin.sdk.session.SessionContext;
+import com.mysql.fabric.xmlrpc.base.Member;
+
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -48,6 +54,8 @@ public class ProjectServiceImpl extends BaseServiceImpl<Project, Long> implement
 	private TeamMapper teamMapper;
 	@Autowired
 	DataAuthRpc dataAuthRpc;
+	@Autowired
+	private TeamService teamService;
 
 	public ProjectMapper getActualDao() {
 		return (ProjectMapper) getDao();
@@ -128,7 +136,7 @@ public class ProjectServiceImpl extends BaseServiceImpl<Project, Long> implement
 		if (count > 0) {
 			return BaseOutput.failure("项目包含子项目，不能删除");
 		}
-		count = this.getActualDao().deleteByPrimaryKey(projectId);
+		count = this.delete(projectId);
 		if (count > 0) {
 			return BaseOutput.success("删除成功");
 		}
@@ -168,9 +176,9 @@ public class ProjectServiceImpl extends BaseServiceImpl<Project, Long> implement
 		return super.listEasyuiPageByExample(projectDto, useProvider);
 	}
 
-	@Transactional
+	@Transactional(rollbackFor = ProjectException.class)
 	@Override
-	public BaseOutput<Object> insertAfterCheck(Project project) {
+	public BaseOutput<Object> insertAfterCheck(Project project) throws ProjectException {
 		Project record = DTOUtils.newDTO(Project.class);
 		record.setName(project.getName());
 		int count = this.getActualDao().selectCount(record);
@@ -178,6 +186,53 @@ public class ProjectServiceImpl extends BaseServiceImpl<Project, Long> implement
 			return BaseOutput.failure("已存在项目相同的项目");
 		}
 		int result = this.insertSelective(project);
+		Team t = new DTOUtils().newDTO(Team.class);
+		t.setProjectId(project.getId());
+		t.setMemberId(project.getProjectManager());
+		count = this.teamMapper.selectCount(t);
+		if (project.getProjectManager() != null && count <= 0) {
+			Team tt = DTOUtils.newDTO(Team.class);
+			Date now = new Date();
+			tt.setJoinTime(now);
+			tt.setMemberId(project.getProjectManager());
+			tt.setMemberState(MemberState.JOIN.getCode());
+			tt.setProjectId(project.getId());
+			tt.setType(String.valueOf(TeamType.DEVELOP.getCode()));
+			BaseOutput<Object> output = this.teamService.insertAfterCheck(tt);
+			if (!output.isSuccess()) {
+				throw new ProjectException(output.getResult());
+			}
+		}
+		t.setMemberId(project.getProductManager());
+		count = this.teamMapper.selectCount(t);
+		if (project.getProductManager() != null && count <= 0) {
+			Team tt = DTOUtils.newDTO(Team.class);
+			Date now = new Date();
+			tt.setJoinTime(now);
+			tt.setMemberId(project.getProductManager());
+			tt.setMemberState(MemberState.JOIN.getCode());
+			tt.setProjectId(project.getId());
+			tt.setType(String.valueOf(TeamType.PRODUCT.getCode()));
+			BaseOutput<Object> output = this.teamService.insertAfterCheck(tt);
+			if (!output.isSuccess()) {
+				throw new ProjectException(output.getResult());
+			}
+		}
+		t.setMemberId(project.getTestManager());
+		count = this.teamMapper.selectCount(t);
+		if (project.getTestManager() != null && count <= 0) {
+			Team tt = DTOUtils.newDTO(Team.class);
+			Date now = new Date();
+			tt.setJoinTime(now);
+			tt.setMemberId(project.getTestManager());
+			tt.setMemberState(MemberState.JOIN.getCode());
+			tt.setProjectId(project.getId());
+			tt.setType(String.valueOf(TeamType.TEST.getCode()));
+			BaseOutput<Object> output = this.teamService.insertAfterCheck(tt);
+			if (!output.isSuccess()) {
+				throw new ProjectException(output.getResult());
+			}
+		}
 		if (result > 0) {
 			return BaseOutput.success().setData(project);
 		}
@@ -195,7 +250,12 @@ public class ProjectServiceImpl extends BaseServiceImpl<Project, Long> implement
 			return BaseOutput.failure("存在相同名称的项目");
 		}
 		project.setModified(new Date());
+		
 		result = this.updateSelective(project);
+		// 刷新projectProvider缓存
+		AlmCache.projectMap.put(project.getId(), project);
+		
+		dataAuthRpc.updateDataAuth(project.getId().toString(), AlmConstants.DATA_AUTH_TYPE_PROJECT, project.getName());
 		if (result > 0) {
 			return BaseOutput.success().setData(project);
 		}
