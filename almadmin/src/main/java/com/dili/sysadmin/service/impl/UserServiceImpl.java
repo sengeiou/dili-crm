@@ -156,6 +156,7 @@ public class UserServiceImpl extends BaseServiceImpl<User, Long> implements User
 		this.userManager.clearUserSession(userId);
 	}
 
+	@Transactional
 	@Override
 	public BaseOutput<Object> logicDelete(Long userId) {
 		UserDataAuth record = new UserDataAuth();
@@ -170,6 +171,9 @@ public class UserServiceImpl extends BaseServiceImpl<User, Long> implements User
 		}
 		user.setYn(0);
 		this.userMapper.updateByPrimaryKey(user);
+		UserRole userRole = new UserRole();
+		userRole.setUserId(userId);
+		this.userRoleMapper.delete(userRole);
 		this.userManager.clearUserSession(userId);
 		return BaseOutput.success();
 	}
