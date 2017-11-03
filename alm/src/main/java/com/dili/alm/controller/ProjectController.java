@@ -1,7 +1,9 @@
 package com.dili.alm.controller;
 
 import com.alibaba.fastjson.JSONObject;
+import com.dili.alm.cache.AlmCache;
 import com.dili.alm.domain.Project;
+import com.dili.alm.domain.User;
 import com.dili.alm.domain.dto.DataDictionaryValueDto;
 import com.dili.alm.exceptions.ProjectException;
 import com.dili.alm.rpc.UserRpc;
@@ -12,6 +14,8 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
+
+import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
@@ -36,6 +40,21 @@ public class ProjectController {
 	@Autowired
 	private UserRpc userRPC;
 
+	private void refreshMember() {
+		AlmCache.userMap.clear();
+		BaseOutput<List<User>> output = this.userRPC.list(new User());
+		if (!output.isSuccess()) {
+			return;
+		}
+		List<User> users = output.getData();
+		if (CollectionUtils.isEmpty(users)) {
+			return;
+		}
+		users.forEach(u -> {
+			AlmCache.userMap.put(u.getId(), u);
+		});
+	}
+	
 	@ApiOperation("跳转到Project页面")
 	@RequestMapping(value = "/index", method = RequestMethod.GET)
 	public String index(ModelMap modelMap) {
@@ -46,6 +65,7 @@ public class ProjectController {
 	@ApiImplicitParams({ @ApiImplicitParam(name = "Project", paramType = "form", value = "Project的form信息", required = false, dataType = "string") })
 	@RequestMapping(value = "/list", method = { RequestMethod.GET, RequestMethod.POST })
 	public @ResponseBody List<Project> list(Project project) {
+		refreshMember();
 		Map<Object, Object> metadata = new HashMap<>();
 
 		JSONObject projectTypeProvider = new JSONObject();
@@ -75,6 +95,7 @@ public class ProjectController {
 	@ResponseBody
 	@RequestMapping(value = "/list.json", method = { RequestMethod.GET, RequestMethod.POST }, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
 	public List<Project> listJson(Project project) {
+		refreshMember();
 		return this.projectService.list(project);
 	}
 
@@ -82,6 +103,7 @@ public class ProjectController {
 	@ApiImplicitParams({ @ApiImplicitParam(name = "Project", paramType = "form", value = "Project的form信息", required = false, dataType = "string") })
 	@RequestMapping(value = "/listPage", method = { RequestMethod.GET, RequestMethod.POST })
 	public @ResponseBody String listPage(Project project) throws Exception {
+		refreshMember();
 		return projectService.listEasyuiPageByExample(project, true).toString();
 	}
 
