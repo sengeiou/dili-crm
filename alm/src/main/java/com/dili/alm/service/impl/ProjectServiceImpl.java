@@ -25,6 +25,7 @@ import com.dili.ss.dto.DTOUtils;
 import com.dili.sysadmin.sdk.session.SessionContext;
 import com.mysql.fabric.xmlrpc.base.Member;
 
+import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -116,6 +117,7 @@ public class ProjectServiceImpl extends BaseServiceImpl<Project, Long> implement
 		return dto.getValues();
 	}
 
+	@Transactional
 	@Override
 	public BaseOutput<Object> deleteBeforeCheck(Long projectId) {
 		Milestones record = DTOUtils.newDTO(Milestones.class);
@@ -126,8 +128,13 @@ public class ProjectServiceImpl extends BaseServiceImpl<Project, Long> implement
 		}
 		Team teamQuery = DTOUtils.newDTO(Team.class);
 		teamQuery.setProjectId(projectId);
-		this.teamMapper.delete(teamQuery);
-		
+		List<Team> teams = this.teamMapper.select(teamQuery);
+		if (CollectionUtils.isNotEmpty(teams)) {
+			teams.forEach(t -> {
+				this.teamService.delete(t.getId());
+			});
+		}
+
 		Project projectQuery = DTOUtils.newDTO(Project.class);
 		projectQuery.setParentId(projectId);
 		count = this.getActualDao().selectCount(projectQuery);
