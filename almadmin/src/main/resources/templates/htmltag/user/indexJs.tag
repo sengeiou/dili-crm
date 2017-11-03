@@ -475,7 +475,6 @@ function onPageDownClicked() {
 }
 
 function onSaveClicked() {
-	debugger;
 	if (!dataAuth.saveUser) {
 		return false;
 	}

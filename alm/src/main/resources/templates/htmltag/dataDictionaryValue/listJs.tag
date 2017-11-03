@@ -42,7 +42,6 @@ function onBeginEditDdValue(index, row) {
 }
 
 function onAfterEditDdValue(index, row, changes) {
-	debugger;
 	var isValid = ddValueGrid.datagrid('validateRow', index);
 	if (!isValid) {
 		return false;
@@ -73,7 +72,6 @@ function onCancelEditDdValue(index, row) {
 
 // 打开新增窗口
 function openInsertDdValue() {
-	debugger;
 	if (!endDdValueGridEditing()) {
 		return;
 	}

@@ -58,31 +58,41 @@
 		$('#status').textbox({
 			value : 0 == userinfo.status ? "已停用" : "已启用"
 		});
-		var createdTime = new Date(userinfo.created)
-				.Format("yyyy-MM-dd HH:mm:ss");
-		$('#created').textbox({
-			value : createdTime
-		});
-		var lastLoginTime = new Date(userinfo.lastLoginTime)
-				.Format("yyyy-MM-dd HH:mm:ss");
-		$('#lastLoginTime').textbox({
-			value : lastLoginTime
-		});
-		var modified = new Date(userinfo.modified)
-				.Format("yyyy-MM-dd HH:mm:ss");
-		$('#modified').textbox({
-			value : modified
-		});
-		var validTimeBegin = new Date(userinfo.validTimeBegin)
-				.Format("yyyy-MM-dd HH:mm:ss");
-		$('#validTimeBegin').textbox({
-			value : validTimeBegin
-		});
-		var validTimeEnd = new Date(userinfo.validTimeEnd)
-				.Format("yyyy-MM-dd HH:mm:ss");
-		$('#validTimeEnd').textbox({
-			value : validTimeEnd
-		});
+		if (userinfo.created) {
+			var createdTime = new Date(userinfo.created)
+					.Format("yyyy-MM-dd HH:mm:ss");
+			$('#created').textbox({
+				value : createdTime
+			});
+		}
+		if (userinfo.lastLoginTime) {
+			var lastLoginTime = new Date(userinfo.lastLoginTime)
+					.Format("yyyy-MM-dd HH:mm:ss");
+			$('#lastLoginTime').textbox({
+				value : lastLoginTime
+			});
+		}
+		if (userinfo.modified) {
+			var modified = new Date(userinfo.modified)
+					.Format("yyyy-MM-dd HH:mm:ss");
+			$('#modified').textbox({
+				value : modified
+			});
+		}
+		if (userinfo.validTimeBegin) {
+			var validTimeBegin = new Date(userinfo.validTimeBegin)
+					.Format("yyyy-MM-dd HH:mm:ss");
+			$('#validTimeBegin').textbox({
+				value : validTimeBegin
+			});
+		}
+		if (userinfo.validTimeEnd) {
+			var validTimeEnd = new Date(userinfo.validTimeEnd)
+					.Format("yyyy-MM-dd HH:mm:ss");
+			$('#validTimeEnd').textbox({
+				value : validTimeEnd
+			});
+		}
 	}
 
 	$(function() {

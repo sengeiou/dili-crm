@@ -1,6 +1,5 @@
 <script type="text/javascript">
 	function moveRowByIndex(fromId, toId, index) {
-		debugger;
 		var data = $("#" + fromId).datalist("getData");
 		if (1 > data.total) {
 			$.messager.alert('警告', '沒有可选择的数据');

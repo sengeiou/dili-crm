@@ -505,7 +505,6 @@ function hideOptButtons(gridId, index) {
  *            row 行数据
  */
 function onBeginEdit(index, row) {
-	debugger;
 	var grid = $('#' + this.id);
 	showOptButtons(this.id, index);
 	if (gridType != 0 && this.id == 'grid') {
@@ -539,7 +538,6 @@ function onBeginEdit(index, row) {
  *            changes 当前行被修改的数据
  */
 function onAfterEdit(index, node, row, changes) {
-	debugger;
 	var grid = $('#' + this.id);
 	var isValid = grid.datagrid('validateRow', index);
 	if (!isValid) {

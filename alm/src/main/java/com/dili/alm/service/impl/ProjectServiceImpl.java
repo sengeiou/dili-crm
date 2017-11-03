@@ -126,10 +126,8 @@ public class ProjectServiceImpl extends BaseServiceImpl<Project, Long> implement
 		}
 		Team teamQuery = DTOUtils.newDTO(Team.class);
 		teamQuery.setProjectId(projectId);
-		count = this.teamMapper.selectCount(teamQuery);
-		if (count > 0) {
-			return BaseOutput.failure("项目关联了团队，不能删除");
-		}
+		this.teamMapper.delete(teamQuery);
+		
 		Project projectQuery = DTOUtils.newDTO(Project.class);
 		projectQuery.setParentId(projectId);
 		count = this.getActualDao().selectCount(projectQuery);

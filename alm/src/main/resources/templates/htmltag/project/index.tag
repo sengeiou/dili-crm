@@ -126,7 +126,7 @@ function del() {
 		$.messager.alert('警告', '请选中一条数据');
 		return;
 	}
-	$.messager.confirm('确认', '您确认想要删除记录吗？', function(r) {
+	$.messager.confirm('确认', '删除该项目会删除该项目关联的团队，您确定想要删除该项目吗？', function(r) {
 				if (r) {
 					$.ajax({
 								type : "POST",
