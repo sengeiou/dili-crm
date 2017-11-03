@@ -4,6 +4,8 @@ import com.alibaba.fastjson.JSONObject;
 import com.dili.alm.cache.AlmCache;
 import com.dili.alm.domain.Project;
 import com.dili.alm.domain.Team;
+import com.dili.alm.domain.User;
+import com.dili.alm.rpc.UserRpc;
 import com.dili.alm.service.ProjectService;
 import com.dili.alm.service.TeamService;
 import com.dili.ss.domain.BaseOutput;
@@ -13,6 +15,8 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
+
+import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
@@ -33,9 +37,10 @@ import java.util.Map;
 public class TeamController {
 	@Autowired
 	TeamService teamService;
-
 	@Autowired
 	ProjectService projectService;
+	@Autowired
+	private UserRpc userRPC;
 
 	/**
 	 * 刷新项目缓存
@@ -44,6 +49,21 @@ public class TeamController {
 		List<Project> list = projectService.list(DTOUtils.newDTO(Project.class));
 		list.forEach(project -> {
 			AlmCache.projectMap.put(project.getId(), project);
+		});
+	}
+
+	private void refreshMember() {
+		AlmCache.userMap.clear();
+		BaseOutput<List<User>> output = this.userRPC.list(new User());
+		if (!output.isSuccess()) {
+			return;
+		}
+		List<User> users = output.getData();
+		if (CollectionUtils.isEmpty(users)) {
+			return;
+		}
+		users.forEach(u -> {
+			AlmCache.userMap.put(u.getId(), u);
 		});
 	}
 
@@ -58,6 +78,7 @@ public class TeamController {
 	@ApiImplicitParams({ @ApiImplicitParam(name = "Team", paramType = "form", value = "Team的form信息", required = false, dataType = "string") })
 	@RequestMapping(value = "/list", method = { RequestMethod.GET, RequestMethod.POST })
 	public @ResponseBody List<Team> list(Team team) {
+		refreshMember();
 		Map<Object, Object> metadata = new HashMap<>();
 
 		JSONObject projectProvider = new JSONObject();
