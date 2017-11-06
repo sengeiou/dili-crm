@@ -49,6 +49,9 @@ function endEditing() {
 
 // 打开新增窗口
 function openInsert(isRoot) {
+	if (!dataAuth.addProject) {
+		return;
+	}
 	if (!endEditing()) {
 		$.messager.alert('警告', '有数据正在编辑');
 		return;
@@ -75,6 +78,9 @@ function openInsert(isRoot) {
 
 // 打开修改窗口
 function openUpdate() {
+	if (!dataAuth.updateProject) {
+		return;
+	}
 	var selected = projectGrid.treegrid("getSelected");
 	if (!selected) {
 		$.messager.alert('警告', '请选中一条数据');
@@ -86,41 +92,11 @@ function openUpdate() {
 	}
 }
 
-function saveOrUpdate() {
-	if (!$('#_form').form("validate")) {
-		return;
-	}
-	var _formData = removeKeyStartWith($("#_form").serializeObject(), "_");
-	var _url = null;
-	// 没有id就新增
-	if (_formData.id == null || _formData.id == "") {
-		_url = "${contextPath}/project/insert";
-	} else {// 有id就修改
-		_url = "${contextPath}/project/update";
-	}
-	$.ajax({
-				type : "POST",
-				url : _url,
-				data : _formData,
-				processData : true,
-				dataType : "json",
-				async : true,
-				success : function(data) {
-					if (data.code == "200") {
-						$("#grid").treegrid("reload");
-						$('#dlg').dialog('close');
-					} else {
-						$.messager.alert('错误', data.result);
-					}
-				},
-				error : function() {
-					$.messager.alert('错误', '远程访问失败');
-				}
-			});
-}
-
 // 根据主键删除
 function del() {
+	if (!dataAuth.deleteProject) {
+		return;
+	}
 	var selected = projectGrid.treegrid("getSelected");
 	if (null == selected) {
 		$.messager.alert('警告', '请选中一条数据');

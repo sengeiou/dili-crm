@@ -26,6 +26,9 @@ function endEditing() {
 
 // 新增一行空数据并开启编辑模式
 function openInsert() {
+	if (!dataAuth.addTeam) {
+		return;
+	}
 	if (!endEditing()) {
 		$.messager.alert('警告', '有数据正在编辑');
 		return;
@@ -38,6 +41,9 @@ function openInsert() {
 
 // 开启选中行的编辑模式
 function openUpdate() {
+	if (!dataAuth.updateTeam) {
+		return;
+	}
 	var selected = teamGrid.datagrid("getSelected");
 	if (!selected) {
 		$.messager.alert('警告', '请选中一条数据');
@@ -52,6 +58,9 @@ function openUpdate() {
 
 // 根据主键删除
 function del() {
+	if (!dataAuth.deleteTeam) {
+		return;
+	}
 	var selected = teamGrid.datagrid("getSelected");
 	if (null == selected) {
 		$.messager.alert('警告', '请选中一条数据');

@@ -120,8 +120,10 @@
 		</table>
 		<!-- datagrid工具栏 -->
 		<div id="toolbar" style="padding: 2px 5px;">
-			<a href="#" class="easyui-linkbutton" iconCls="icon-add" onclick="openInsert()" plain="true">新增</a> <a href="#" class="easyui-linkbutton" iconCls="icon-edit" onclick="openUpdate()" plain="true">编辑</a>
-			<a href="#" class="easyui-linkbutton" iconCls="icon-remove" onclick="del()" plain="true">删除</a> <a href="#" class="easyui-linkbutton" iconCls="icon-export" onclick="doExport('grid')" plain="true">导出</a>
+			<#resource code="addTeam"> <a href="#" class="easyui-linkbutton" iconCls="icon-add" onclick="openInsert()" plain="true">新增</a></#resource>
+			<#resource code="updateTeam"> <a href="#" class="easyui-linkbutton" iconCls="icon-edit" onclick="openUpdate()" plain="true">编辑</a> </#resource>
+			<#resource code="deleteTeam"> <a href="#" class="easyui-linkbutton" iconCls="icon-remove" onclick="del()" plain="true">删除</a></#resource>
+			<a href="#" class="easyui-linkbutton" iconCls="icon-export" onclick="doExport('grid')" plain="true">导出</a>
 			<div style="float: right">
 				边框显示:<select onchange="changeBorder('grid',this.value)">
 					<option value="lines-both">全边框</option>
@@ -134,7 +136,14 @@
 	</div>
 </div>
 <!-- ====================================================================================================================== --> <!-- style & script 分隔线 --> <!-- ====================================================================================================================== -->
-<script type="text/javascript" src="${contextPath!}/resources/js/dateFormat.js"></script> <script type="text/javascript">
+<script type="text/javascript" src="${contextPath!}/resources/js/dateFormat.js"></script> <script type="text/javascript" src="${contextPath!}/resources/js/dateFormat.js"></script> <script
+	type="text/javascript">
+	var dataAuth = {
+		addTeam : <%if(hasResource('addTeam')){%>true<%}else{%>false<%}%>,
+		updateTeam : <%if(hasResource('updateTeam')){%>true<%}else{%>false<%}%>,
+		deleteTeam : <%if(hasResource('deleteTeam')){%>true<%}else{%>false<%}%>
+	};
+</script> <script type="text/javascript">
 	<#members_index/>
 	<#team_index />
 </script> </#body>
