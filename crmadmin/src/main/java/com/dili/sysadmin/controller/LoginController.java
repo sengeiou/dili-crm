@@ -9,8 +9,6 @@ import com.dili.sysadmin.domain.dto.UserLoginResultDto;
 import com.dili.sysadmin.exception.UserException;
 import com.dili.sysadmin.sdk.util.WebContent;
 import com.dili.sysadmin.service.UserService;
-import com.dili.sysadmin.service.ValidatePwdService;
-import com.dili.sysadmin.utils.SecurityUtil;
 import com.dili.sysadmin.utils.WebUtil;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
@@ -19,7 +17,6 @@ import io.swagger.annotations.ApiOperation;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
@@ -65,15 +62,6 @@ public class LoginController {
 	public static final String COOKIE_SESSION_ID = "SessionId";
 
 	private Logger log = LoggerFactory.getLogger(LoginController.class);
-
-	// @Value("${verifyImg}")
-	private Boolean verifyImg = false;
-
-	@Autowired
-	private SecurityUtil securityUtils;
-
-	@Autowired
-	private ValidatePwdService validatePwdService;
 
 	@ApiOperation("跳转到Login页面")
 	@RequestMapping(value = "/index.html", method = RequestMethod.GET)
