@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.dili.crm.dao.CustomerMapper">
+  <resultMap id="BaseResultMap" type="com.dili.crm.domain.Customer">
+    <!--
+      WARNING - @mbg.generated
+    -->
+    <id column="id" jdbcType="BIGINT" property="id" />
+    <result column="parent_id" jdbcType="BIGINT" property="parentId" />
+    <result column="owner_id" jdbcType="BIGINT" property="ownerId" />
+    <result column="certificate_number" jdbcType="VARCHAR" property="certificateNumber" />
+    <result column="certificate_type" jdbcType="VARCHAR" property="certificateType" />
+    <result column="certificate_time" jdbcType="TIMESTAMP" property="certificateTime" />
+    <result column="certificate_addr" jdbcType="VARCHAR" property="certificateAddr" />
+    <result column="name" jdbcType="VARCHAR" property="name" />
+    <result column="sex" jdbcType="VARCHAR" property="sex" />
+    <result column="nation" jdbcType="VARCHAR" property="nation" />
+    <result column="phone" jdbcType="VARCHAR" property="phone" />
+    <result column="organization_type" jdbcType="VARCHAR" property="organizationType" />
+    <result column="source" jdbcType="VARCHAR" property="source" />
+    <result column="market" jdbcType="VARCHAR" property="market" />
+    <result column="type" jdbcType="VARCHAR" property="type" />
+    <result column="profession" jdbcType="VARCHAR" property="profession" />
+    <result column="operating_area" jdbcType="VARCHAR" property="operatingArea" />
+    <result column="other_title" jdbcType="VARCHAR" property="otherTitle" />
+    <result column="main_category" jdbcType="VARCHAR" property="mainCategory" />
+    <result column="notes" jdbcType="VARCHAR" property="notes" />
+    <result column="created_id" jdbcType="BIGINT" property="createdId" />
+    <result column="modified_id" jdbcType="BIGINT" property="modifiedId" />
+    <result column="created" jdbcType="TIMESTAMP" property="created" />
+    <result column="modified" jdbcType="TIMESTAMP" property="modified" />
+    <result column="yn" jdbcType="INTEGER" property="yn" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    <!--
+      WARNING - @mbg.generated
+    -->
+    id, parent_id, owner_id, certificate_number, certificate_type, certificate_time, 
+    certificate_addr, name, sex, nation, phone, organization_type, source, market, type, 
+    profession, operating_area, other_title, main_category, notes, created_id, modified_id, 
+    created, modified, yn
+  </sql>
+  <select id="selectBy" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    <!--
+      WARNING - @mbg.generated
+    -->
+    select 
+    <include refid="Base_Column_List" />
+    from customer
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <update id="updateBy" parameterType="com.dili.crm.domain.Customer">
+    <!--
+      WARNING - @mbg.generated
+    -->
+    update customer
+    <set>
+      <if test="parentId != null">
+        parent_id = #{parentId,jdbcType=BIGINT},
+      </if>
+      <if test="ownerId != null">
+        owner_id = #{ownerId,jdbcType=BIGINT},
+      </if>
+      <if test="certificateNumber != null">
+        certificate_number = #{certificateNumber,jdbcType=VARCHAR},
+      </if>
+      <if test="certificateType != null">
+        certificate_type = #{certificateType,jdbcType=VARCHAR},
+      </if>
+      <if test="certificateTime != null">
+        certificate_time = #{certificateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="certificateAddr != null">
+        certificate_addr = #{certificateAddr,jdbcType=VARCHAR},
+      </if>
+      <if test="name != null">
+        name = #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="sex != null">
+        sex = #{sex,jdbcType=VARCHAR},
+      </if>
+      <if test="nation != null">
+        nation = #{nation,jdbcType=VARCHAR},
+      </if>
+      <if test="phone != null">
+        phone = #{phone,jdbcType=VARCHAR},
+      </if>
+      <if test="organizationType != null">
+        organization_type = #{organizationType,jdbcType=VARCHAR},
+      </if>
+      <if test="source != null">
+        source = #{source,jdbcType=VARCHAR},
+      </if>
+      <if test="market != null">
+        market = #{market,jdbcType=VARCHAR},
+      </if>
+      <if test="type != null">
+        type = #{type,jdbcType=VARCHAR},
+      </if>
+      <if test="profession != null">
+        profession = #{profession,jdbcType=VARCHAR},
+      </if>
+      <if test="operatingArea != null">
+        operating_area = #{operatingArea,jdbcType=VARCHAR},
+      </if>
+      <if test="otherTitle != null">
+        other_title = #{otherTitle,jdbcType=VARCHAR},
+      </if>
+      <if test="mainCategory != null">
+        main_category = #{mainCategory,jdbcType=VARCHAR},
+      </if>
+      <if test="notes != null">
+        notes = #{notes,jdbcType=VARCHAR},
+      </if>
+      <if test="createdId != null">
+        created_id = #{createdId,jdbcType=BIGINT},
+      </if>
+      <if test="modifiedId != null">
+        modified_id = #{modifiedId,jdbcType=BIGINT},
+      </if>
+      <if test="created != null">
+        created = #{created,jdbcType=TIMESTAMP},
+      </if>
+      <if test="modified != null">
+        modified = #{modified,jdbcType=TIMESTAMP},
+      </if>
+      <if test="yn != null">
+        yn = #{yn,jdbcType=INTEGER},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+</mapper>
