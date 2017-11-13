@@ -8,7 +8,7 @@ import org.springframework.stereotype.Service;
 
 /**
  * 由MyBatis Generator工具自动生成
- * This file was generated on 2017-11-13 17:04:59.
+ * This file was generated on 2017-11-13 17:11:22.
  */
 @Service
 public class CustomerServiceImpl extends BaseServiceImpl<Customer, Long> implements CustomerService {

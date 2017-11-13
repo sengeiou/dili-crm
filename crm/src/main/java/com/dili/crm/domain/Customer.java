@@ -4,14 +4,17 @@ import com.dili.ss.dto.IBaseDomain;
 import com.dili.ss.metadata.FieldEditor;
 import com.dili.ss.metadata.annotation.EditMode;
 import com.dili.ss.metadata.annotation.FieldDef;
-
-import javax.persistence.*;
 import java.util.Date;
+import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
 
 /**
  * 由MyBatis Generator工具自动生成
  * 
- * This file was generated on 2017-11-13 17:04:59.
+ * This file was generated on 2017-11-13 17:11:21.
  */
 @Table(name = "`customer`")
 public interface Customer extends IBaseDomain {
@@ -47,7 +50,7 @@ public interface Customer extends IBaseDomain {
 
     @Column(name = "`certificate_type`")
     @FieldDef(label="证件类型", maxLength = 20)
-    @EditMode(editor = FieldEditor.Combo, required = false, params="{\"queryParams\":{\"yn\":1,\"dd_id\":2},\"valueField\":\"value\",\"orderByClause\":\"order_number asc\",\"table\":\"data_dictionary_value\",\"textField\":\"code\"}")
+    @EditMode(editor = FieldEditor.Combo, required = false, params="{\"provider\":\"certificateTypeProvider\"}")
     String getCertificateType();
 
     void setCertificateType(String certificateType);
@@ -66,19 +69,19 @@ public interface Customer extends IBaseDomain {
 
     void setCertificateAddr(String certificateAddr);
 
-    @Column(name = "`name`")
-    @FieldDef(label="客户名称", maxLength = 40)
-    @EditMode(editor = FieldEditor.Text, required = false)
-    String getName();
-
-    void setName(String name);
-
     @Column(name = "`code`")
     @FieldDef(label="客户编码", maxLength = 40)
     @EditMode(editor = FieldEditor.Text, required = false)
     String getCode();
 
     void setCode(String code);
+
+    @Column(name = "`name`")
+    @FieldDef(label="客户名称", maxLength = 40)
+    @EditMode(editor = FieldEditor.Text, required = false)
+    String getName();
+
+    void setName(String name);
 
     @Column(name = "`sex`")
     @FieldDef(label="性别", maxLength = 10)
@@ -103,7 +106,7 @@ public interface Customer extends IBaseDomain {
 
     @Column(name = "`organization_type`")
     @FieldDef(label="组织类型", maxLength = 20)
-    @EditMode(editor = FieldEditor.Combo, required = false, params="{\"data\":[{\"text\":\"个人\",\"value\":\"individuals\"},{\"text\":\"企业\",\"value\":\"enterprise\"}],\"provider\":\"organizationTypeProvider\"}")
+    @EditMode(editor = FieldEditor.Combo, required = false, params="{\"provider\":\"organizationTypeProvider\"}")
     String getOrganizationType();
 
     void setOrganizationType(String organizationType);
@@ -117,21 +120,21 @@ public interface Customer extends IBaseDomain {
 
     @Column(name = "`market`")
     @FieldDef(label="所属市场", maxLength = 20)
-    @EditMode(editor = FieldEditor.Combo, required = false, params="{\"queryParams\":{\"yn\":1,\"dd_id\":1},\"valueField\":\"value\",\"orderByClause\":\"order_number asc\",\"table\":\"data_dictionary_value\",\"textField\":\"code\"}")
+    @EditMode(editor = FieldEditor.Combo, required = false, params="{\"provider\":\"marketProvider\"}")
     String getMarket();
 
     void setMarket(String market);
 
     @Column(name = "`type`")
     @FieldDef(label="客户类型", maxLength = 20)
-    @EditMode(editor = FieldEditor.Combo, required = false, params="{\"data\":[{\"text\":\"采购\",\"value\":\"purchase\"},{\"text\":\"销售\",\"value\":\"sale\"},{\"text\":\"代买\",\"value\":\"helpBuy\"}],\"provider\":\"customerTypeProvider\"}")
+    @EditMode(editor = FieldEditor.Combo, required = false, params="{\"provider\":\"customerTypeProvider\"}")
     String getType();
 
     void setType(String type);
 
     @Column(name = "`profession`")
     @FieldDef(label="客户行业", maxLength = 20)
-    @EditMode(editor = FieldEditor.Combo, required = false, params="{\"data\":[{\"text\":\"水果批发\",\"value\":\"fruitsWholesale\"},{\"text\":\"蔬菜批发\",\"value\":\"vegetablesWholesale\"},{\"text\":\"超市\",\"value\":\"supermarket\"}],\"provider\":\"professionProvider\"}")
+    @EditMode(editor = FieldEditor.Combo, required = false, params="{\"provider\":\"professionProvider\"}")
     String getProfession();
 
     void setProfession(String profession);
