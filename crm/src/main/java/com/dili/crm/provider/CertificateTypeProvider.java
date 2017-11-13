@@ -7,10 +7,10 @@ import org.springframework.stereotype.Component;
  * This file was generated on 2017-11-13 11:11:59.
  */
 @Component
-public class OrganizationTypeProvider extends DataDictionaryValueProvider{
+public class CertificateTypeProvider extends DataDictionaryValueProvider{
 
     @Override
     public Long getDdid() {
-        return 5L;
+        return 3L;
     }
 }
