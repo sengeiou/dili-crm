@@ -13,6 +13,7 @@
     <result column="certificate_time" jdbcType="TIMESTAMP" property="certificateTime" />
     <result column="certificate_addr" jdbcType="VARCHAR" property="certificateAddr" />
     <result column="name" jdbcType="VARCHAR" property="name" />
+    <result column="code" jdbcType="VARCHAR" property="code" />
     <result column="sex" jdbcType="VARCHAR" property="sex" />
     <result column="nation" jdbcType="VARCHAR" property="nation" />
     <result column="phone" jdbcType="VARCHAR" property="phone" />
@@ -36,9 +37,9 @@
       WARNING - @mbg.generated
     -->
     id, parent_id, owner_id, certificate_number, certificate_type, certificate_time, 
-    certificate_addr, name, sex, nation, phone, organization_type, source, market, type, 
-    profession, operating_area, other_title, main_category, notes, created_id, modified_id, 
-    created, modified, yn
+    certificate_addr, name, code, sex, nation, phone, organization_type, source, market, 
+    type, profession, operating_area, other_title, main_category, notes, created_id, 
+    modified_id, created, modified, yn
   </sql>
   <select id="selectBy" parameterType="java.lang.Long" resultMap="BaseResultMap">
     <!--
@@ -75,6 +76,9 @@
       </if>
       <if test="name != null">
         name = #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="code != null">
+        code = #{code,jdbcType=VARCHAR},
       </if>
       <if test="sex != null">
         sex = #{sex,jdbcType=VARCHAR},

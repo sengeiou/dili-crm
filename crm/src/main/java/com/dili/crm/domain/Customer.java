@@ -11,7 +11,7 @@ import java.util.Date;
 /**
  * 由MyBatis Generator工具自动生成
  * 
- * This file was generated on 2017-11-13 16:18:47.
+ * This file was generated on 2017-11-13 17:04:59.
  */
 @Table(name = "`customer`")
 public interface Customer extends IBaseDomain {
@@ -72,6 +72,13 @@ public interface Customer extends IBaseDomain {
     String getName();
 
     void setName(String name);
+
+    @Column(name = "`code`")
+    @FieldDef(label="客户编码", maxLength = 40)
+    @EditMode(editor = FieldEditor.Text, required = false)
+    String getCode();
+
+    void setCode(String code);
 
     @Column(name = "`sex`")
     @FieldDef(label="性别", maxLength = 10)

@@ -18,7 +18,7 @@ import java.util.List;
 
 /**
  * 由MyBatis Generator工具自动生成
- * This file was generated on 2017-11-13 16:18:47.
+ * This file was generated on 2017-11-13 17:04:59.
  */
 @Api("/customer")
 @Controller
@@ -28,7 +28,7 @@ public class CustomerController {
     CustomerService customerService;
 
     @ApiOperation("跳转到Customer页面")
-    @RequestMapping(value="/index", method = RequestMethod.GET)
+    @RequestMapping(value="/index.html", method = RequestMethod.GET)
     public String index(ModelMap modelMap) {
         return "customer/index";
     }
