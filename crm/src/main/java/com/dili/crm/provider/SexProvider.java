@@ -11,7 +11,7 @@ import org.springframework.stereotype.Component;
 
 /**
  * 由MyBatis Generator工具自动生成
- * This file was generated on 2017-11-13 11:11:59.
+ * This file was generated on 2017-11-13 16:18:47.
  */
 @Component
 public class SexProvider implements ValueProvider {
