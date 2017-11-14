@@ -1,4 +1,7 @@
  <#body>
+     <style type="text/css">
+
+     </style>
      <script type="text/javascript">
          //-----------------------------  城市控件js st  -----------------------------
          //标识键盘选择的时候不进行后台联想
@@ -81,7 +84,7 @@
         <!-- 表格 -->
         <div region="center" style="width:100%;" height="auto">
             <!-- =========================================================表格========================================================= -->
-            <table class="easyui-treegrid" id="grid" fitColumns="true" noheader="true" title="客户信息"
+            <table class="easyui-treegrid" id="grid" fitColumns="true"  title="客户信息" noheader="true"
                    pagination="true" pageSize="30" pageNumber="1" pagePosition="top" rownumbers="true" remoteSort="false"
                    loadMsg="数据加载中..." singleSelect="true" method="post" multiSort="false" sortName="name"
                    align="center" fit="true" striped="true"
@@ -475,6 +478,8 @@
             }
             var pager = $('#grid').treegrid('getPager');    // get the pager of treegrid
             pager.pagination({
+                layout:['list','sep','first','prev','links','next','last','sep','refresh'],
+                links:3,
                 buttons:[{
                     iconCls:'icon-add',
                     handler:function(){

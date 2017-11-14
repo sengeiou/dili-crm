@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.dili.crm.dao.CityMapper">
+  <resultMap id="BaseResultMap" type="com.dili.crm.domain.City">
+    <!--
+      WARNING - @mbg.generated
+    -->
+    <id column="id" jdbcType="BIGINT" property="id" />
+    <result column="CREATED" jdbcType="TIMESTAMP" property="created" />
+    <result column="MODIFIED" jdbcType="TIMESTAMP" property="modified" />
+    <result column="name" jdbcType="VARCHAR" property="name" />
+    <result column="parent_id" jdbcType="BIGINT" property="parentId" />
+    <result column="short_name" jdbcType="VARCHAR" property="shortName" />
+    <result column="level_type" jdbcType="TINYINT" property="levelType" />
+    <result column="city_code" jdbcType="VARCHAR" property="cityCode" />
+    <result column="merger_name" jdbcType="VARCHAR" property="mergerName" />
+    <result column="lng" jdbcType="VARCHAR" property="lng" />
+    <result column="lat" jdbcType="VARCHAR" property="lat" />
+    <result column="pinyin" jdbcType="VARCHAR" property="pinyin" />
+    <result column="short_py" jdbcType="VARCHAR" property="shortPy" />
+    <result column="yn" jdbcType="BIT" property="yn" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    <!--
+      WARNING - @mbg.generated
+    -->
+    id, CREATED, MODIFIED, name, parent_id, short_name, level_type, city_code, merger_name, 
+    lng, lat, pinyin, short_py, yn
+  </sql>
+  <select id="selectBy" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    <!--
+      WARNING - @mbg.generated
+    -->
+    select 
+    <include refid="Base_Column_List" />
+    from city
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <update id="updateBy" parameterType="com.dili.crm.domain.City">
+    <!--
+      WARNING - @mbg.generated
+    -->
+    update city
+    <set>
+      <if test="created != null">
+        CREATED = #{created,jdbcType=TIMESTAMP},
+      </if>
+      <if test="modified != null">
+        MODIFIED = #{modified,jdbcType=TIMESTAMP},
+      </if>
+      <if test="name != null">
+        name = #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="parentId != null">
+        parent_id = #{parentId,jdbcType=BIGINT},
+      </if>
+      <if test="shortName != null">
+        short_name = #{shortName,jdbcType=VARCHAR},
+      </if>
+      <if test="levelType != null">
+        level_type = #{levelType,jdbcType=TINYINT},
+      </if>
+      <if test="cityCode != null">
+        city_code = #{cityCode,jdbcType=VARCHAR},
+      </if>
+      <if test="mergerName != null">
+        merger_name = #{mergerName,jdbcType=VARCHAR},
+      </if>
+      <if test="lng != null">
+        lng = #{lng,jdbcType=VARCHAR},
+      </if>
+      <if test="lat != null">
+        lat = #{lat,jdbcType=VARCHAR},
+      </if>
+      <if test="pinyin != null">
+        pinyin = #{pinyin,jdbcType=VARCHAR},
+      </if>
+      <if test="shortPy != null">
+        short_py = #{shortPy,jdbcType=VARCHAR},
+      </if>
+      <if test="yn != null">
+        yn = #{yn,jdbcType=BIT},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+</mapper>
