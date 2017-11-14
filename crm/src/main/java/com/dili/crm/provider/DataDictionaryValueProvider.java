@@ -1,15 +1,22 @@
 package com.dili.crm.provider;
 
 import com.dili.ss.metadata.provider.SimpleValueProvider;
-import org.apache.commons.collections.map.HashedMap;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
 
+import java.util.HashMap;
 import java.util.Map;
 
 /**
  * 由MyBatis Generator工具自动生成
  * This file was generated on 2017-11-13 11:11:59.
  */
-public abstract class DataDictionaryValueProvider extends SimpleValueProvider {
+@Component
+@Scope("prototype")
+public class DataDictionaryValueProvider extends SimpleValueProvider {
+
+    //前台需要传入的参数
+    private static final String DD_ID_KEY = "dd_id";
 
     @Override
     public String getTable() {
@@ -32,16 +39,24 @@ public abstract class DataDictionaryValueProvider extends SimpleValueProvider {
     }
 
     @Override
-    public Map<String, Object> getQueryParams() {
-        Map<String, Object> params = new HashedMap();
+    protected void buildParam(Map paramMap){
+        super.buildParam(paramMap);
+        Map<String, Object> params = new HashMap<>();
         params.put("yn", 1);
-        params.put("dd_id", getDdid());
-        return params;
+        params.put("dd_id", getDdId());
+        setQueryParams(params);
     }
 
     /**
-     * 由子类实现数据字典id
+     * 获取数据字典id
      * @return
      */
-    public abstract Long getDdid();
+    public String getDdId(){
+        //清空缓存
+        Object ddId = getQueryParams().get(DD_ID_KEY);
+        if(ddId == null){
+            throw new RuntimeException("dd_id属性为空");
+        }
+        return ddId.toString();
+    }
 }
