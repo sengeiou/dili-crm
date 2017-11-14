@@ -7,6 +7,7 @@ import com.dili.ss.metadata.FieldMeta;
 import com.dili.ss.metadata.ValuePair;
 import com.dili.ss.metadata.ValuePairImpl;
 import com.dili.ss.metadata.ValueProvider;
+import com.dili.ss.util.CharUtil;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -34,7 +35,11 @@ public class CityProvider implements ValueProvider {
         }
         List<ValuePair<?>> buffer = new ArrayList<ValuePair<?>>();
         City city = DTOUtils.newDTO(City.class);
-        city.setMergerName(val.toString());
+        if(CharUtil.isChinese(val.toString())) {
+            city.setMergerName(val.toString());
+        }else {
+            city.setShortPy(val.toString().toUpperCase());
+        }
         List<City> cities = cityService.listByExample(city);
         //最多取COUNT条联想数据
         int count = cities.size() > COUNT ? COUNT : cities.size();
