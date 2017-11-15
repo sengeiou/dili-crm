@@ -63,9 +63,9 @@ public interface City extends IBaseDomain {
     @Column(name = "`level_type`")
     @FieldDef(label="级别")
     @EditMode(editor = FieldEditor.Text, required = false)
-    Byte getLevelType();
+    Integer getLevelType();
 
-    void setLevelType(Byte levelType);
+    void setLevelType(Integer levelType);
 
     @Column(name = "`city_code`")
     @FieldDef(label="区号", maxLength = 10)
