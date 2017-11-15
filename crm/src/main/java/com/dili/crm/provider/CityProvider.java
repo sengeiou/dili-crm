@@ -17,8 +17,7 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * 由MyBatis Generator工具自动生成
- * This file was generated on 2017-11-13 16:18:47.
+ * 城市提供者
  */
 @Component
 public class CityProvider implements ValueProvider {
@@ -52,7 +51,8 @@ public class CityProvider implements ValueProvider {
     @Override
     public String getDisplayText(Object obj, Map metaMap, FieldMeta fieldMeta) {
         if(obj == null || obj.equals("")) return null;
-
-        return null;
+        City city= cityService.get(Long.parseLong(obj.toString()));
+        if(city == null) return null;
+        return city.getMergerName();
     }
 }
