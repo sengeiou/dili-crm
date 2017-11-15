@@ -48,7 +48,7 @@
                                 <#comboProvider _id="type" _provider='dataDictionaryValueProvider' _queryParams='{dd_id:"4"}'/>
                             </td>
                             <td style="padding:5px;">
-                            <input name="city" id="city" style="width:100%;" panelWidth="auto" panelHeight="auto" label="城市:" labelWidth="100" data-options="editable:true, hasDownArrow:false, onChange:changeName, onSelect:selectName"/>
+                            <input name="city" id="city" style="width:100%;" panelWidth="auto" panelHeight="auto" label="城市:"  data-options="editable:true, hasDownArrow:false, onChange:changeName, onSelect:selectName"/>
                             <#comboProvider _id="city" _provider="cityProvider" _valueField="value" _textField="label" />
                             </td>
                         </tr>
@@ -482,6 +482,11 @@
                 links:3,
                 buttons:[{
                     iconCls:'icon-add',
+                    handler:function(){
+                        openInsert();
+                    }
+                },{
+                    iconCls:'icon-add-child',
                     handler:function(){
                         openInsert();
                     }

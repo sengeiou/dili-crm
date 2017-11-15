@@ -97,3 +97,6 @@
 .icon-export{
 	background:url('icons/excel.gif') no-repeat;
 }
+.icon-add-child{
+	background:url('icons/edit_add_child.png') no-repeat center center;
+}
