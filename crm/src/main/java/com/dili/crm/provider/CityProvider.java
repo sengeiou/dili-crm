@@ -52,7 +52,8 @@ public class CityProvider implements ValueProvider {
     @Override
     public String getDisplayText(Object obj, Map metaMap, FieldMeta fieldMeta) {
         if(obj == null || obj.equals("")) return null;
-
-        return null;
+        City city= cityService.get(Long.parseLong(obj.toString()));
+        if(city == null) return null;
+        return city.getMergerName();
     }
 }
