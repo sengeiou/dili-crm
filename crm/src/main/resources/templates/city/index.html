@@ -172,18 +172,7 @@
     <form id="_form" class="easyui-form" method="post" fit="true">
         <input name="_id" id="_id" type="hidden">
         <table width="360px">
-            <tr>
-                <td style="padding:5px;">
-                    <input class="easyui-datetimebox" name="_created" id="_created" style="width:100%" data-options="label:'创建时间:'" 
-                        required="true" />
-                </td>
-            </tr>
-            <tr>
-                <td style="padding:5px;">
-                    <input class="easyui-datetimebox" name="_modified" id="_modified" style="width:100%" data-options="label:'修改时间:'" 
-                        required="true" />
-                </td>
-            </tr>
+           
             <tr>
                 <td style="padding:5px;">
                     <input class="easyui-textbox" name="_name" id="_name" style="width:100%" data-options="label:'名称:', validType:'length[0,20]'" />
@@ -191,7 +180,7 @@
             </tr>
             <tr>
                 <td style="padding:5px;">
-                    <input class="easyui-numberbox" name="_parentId" id="_parentId" style="width:100%" data-options="label:'父ID:'" />
+                    <input class="easyui-numberbox" name="_parentId" id="_parentId"  readonly="true"  style="width:100%" data-options="label:'父ID:'" />
                 </td>
             </tr>
             <tr>
@@ -201,7 +190,7 @@
             </tr>
             <tr>
                 <td style="padding:5px;">
-                    <input class="easyui-textbox" name="_levelType" id="_levelType" style="width:100%" data-options="label:'级别:', validType:'length[0,3]'" />
+                    <input class="easyui-textbox" name="_levelType" id="_levelType" readonly="true"  style="width:100%" data-options="label:'级别:', validType:'length[0,3]'" />
                 </td>
             </tr>
             <tr>
@@ -249,12 +238,27 @@
     <!-- ====================================================================================================================== -->
     <script type="text/javascript">
         //打开新增窗口
-        /*function openInsert(){
+        function openInsert(isRoot){
+
+            var selected={"id":null,"levelType":-1,"mergerName":""};
+            if (!isRoot) {
+            	selected = $("#grid").treegrid('getSelected');
+        		if (!selected) {
+        			$.messager.alert('警告', '请选择一条记录');
+        			return false;
+        		}
+        		//selected["mergerName"]=selected["mergerName"]+","
+        	}
             $('#dlg').dialog('open');
             $('#dlg').dialog('center');
             $('#_form').form('clear');
-            formFocus("_form", "_created");
-        }*/
+            //formFocus("_form", "_created");
+            console.info(JSON.stringify(selected))
+            var parentNode={"parentId":selected["id"],"levelType":selected["levelType"]+1,"mergerName":selected["mergerName"]}
+            var formData = $.extend({},parentNode);
+            formData = addKeyStartWith(getOriginalData(formData),"_");
+            $('#_form').form('load', formData);
+        }
         function editor(grid){
         	this.grid=grid;
         	this.currentEditId=null;
@@ -275,12 +279,9 @@
         	};
         	
         }
-        function openInsert(isRoot) {
+        /*function openInsert(isRoot) {
         	 //$("#grid").treegrid("reload");
-        	/*if (!endEditing()) {
-        		$.messager.alert('警告', '有数据正在编辑');
-        		return;
-        	}*/
+
         	var grid=$("#grid");
         	var node = undefined;
         	if (!isRoot) {
@@ -300,7 +301,7 @@
 
         	grid.treegrid('select', 'temp');
         	grid.treegrid('beginEdit', 'temp');
-        }
+        }*/
         //打开修改窗口
         function openUpdate(){
             var selected = $("#grid").treegrid("getSelected");
@@ -310,7 +311,7 @@
             }
             $('#dlg').dialog('open');
             $('#dlg').dialog('center');
-            formFocus("_form", "_created");
+           // formFocus("_form", "_created");
             var formData = $.extend({},selected);
             formData = addKeyStartWith(getOriginalData(formData),"_");
             $('#_form').form('load', formData);
@@ -384,9 +385,10 @@
         //表格查询
         function queryGrid() {
             var opts = $("#grid").treegrid("options");
-            if (null == opts.url || "" == opts.url) {
-                opts.url ="${contextPath}/city/listPage?parentId=-1";
-            }
+            //opts.url = "${contextPath}/city/listPage?parentId=0";
+            //if (null == opts.url || "" == opts.url) {
+                opts.url ="${contextPath}/city/listPage?parentId=0";
+            //}
             if(!$('#form').form("validate")){
                 return;
             }
@@ -456,17 +458,38 @@
                 document.onkeyup = getKey;
             }
             $("#grid").treegrid({
-            	"onBeforeExpand":function(row){
-                	$("#grid").treegrid("options").url = "${contextPath}/city/listPage?parentId="+row.id;
-                }/*,
+            	"onBeforeExpand":function(row,param){
+            		console.info(JSON.stringify(row))
+                	$("#grid").treegrid("options").url ="${contextPath}/city/listPage?parentId="+row.id;
+                },
+                "onBeforeLoad":function(row,param){
+            		if(param['id']){
+            			delete param['id'];
+            		}
+                	//$("#grid").treegrid("options").url = "${contextPath}/city/listPage?parentId="+row.id;
+                },
                 "onLoadSuccess":function(){
                 	$("#grid").treegrid("options").url="${contextPath}/city/listPage?parentId=0";
-                }*/
+                }
             	
             	
             	
             });
             
+/*             $("#grid").treegrid({
+            	"loadFilter":function(data,parentId){
+                	var array=treegridLoadFilter(data,parentId);
+                	//console.info(JSON.stringify(array));
+                	return array;
+                }
+            	
+            }); */
+            
         })
+        function cityTreegridLoadFilter(data,parentId){
+        	var array=treegridLoadFilter(data,parentId);
+        	//console.info(JSON.stringify(array));
+        	return array;
+        }
     </script>
 </#body>

@@ -1,19 +1,27 @@
 package com.dili.crm.controller;
 
-import com.dili.crm.domain.City;
-import com.dili.crm.service.CityService;
-import com.dili.ss.domain.BaseOutput;
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiImplicitParam;
-import io.swagger.annotations.ApiImplicitParams;
-import io.swagger.annotations.ApiOperation;
 import java.util.List;
+import java.util.Map;
+
+import org.apache.poi.ss.formula.functions.T;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
+
+import com.alibaba.fastjson.JSONArray;
+import com.dili.crm.domain.City;
+import com.dili.crm.service.CityService;
+import com.dili.ss.domain.BaseOutput;
+import com.dili.ss.metadata.ValueProviderUtils;
+import com.github.pagehelper.Page;
+
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiImplicitParam;
+import io.swagger.annotations.ApiImplicitParams;
+import io.swagger.annotations.ApiOperation;
 
 /**
  * 由MyBatis Generator工具自动生成
@@ -47,7 +55,13 @@ public class CityController {
 	})
     @RequestMapping(value="/listPage", method = {RequestMethod.GET, RequestMethod.POST})
     public @ResponseBody String listPage(City city) throws Exception {
-        return cityService.listEasyuiPageByExample(city, true).toString();
+    	List<City> list = cityService.listByExample(city);
+		Page<T> page = (Page)list;
+		List<Map> results = ValueProviderUtils.buildDataByProvider(city, list);
+		for(Map c : results) {
+			c.put("state", "closed");
+		}
+		return JSONArray.toJSONString(results);
     }
 
     @ApiOperation("新增City")
