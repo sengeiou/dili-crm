@@ -285,6 +285,9 @@
                     <th data-options="field:'address',   sortable:'true', order:'asc', align:'center', resizable:'true', fixed:'false', width:500">
                         地址
                     </th>
+                    <th data-options="field:'addressOpt', formatter:addressOptFmt, sortable:'true', order:'asc', align:'center', resizable:'true', fixed:'false', width:52">
+                        操作
+                    </th>
                 </tr>
                 </thead>
             </table>
@@ -341,6 +344,9 @@
 
         // ============================   地址相关js st  =============================
 
+        function addressOptFmt(value,row,index) {
+            return "<img src='${contextPath}/resources/easyui/css/themes/icons/edit_remove.png' onclick='delAddress(\""+row["id"]+"\")'/>"
+        }
         //修改客户时,打开插入地址框
         function openInsertAddress() {
             $('#addressDlg').dialog('open');
@@ -412,25 +418,32 @@
         }
 
         //根据主键删除地址
-        function delAddress() {
-            var selected = $("#addressGrid").treegrid("getSelected");
-            if (null == selected) {
-                $.messager.alert('警告','请选中一条数据');
-                return;
+        function delAddress(id) {
+            var selectedId;
+            if(id){
+                selectedId = id;
+            }else{
+                var selected = $("#addressGrid").treegrid("getSelected");
+                if (null == selected) {
+                    $.messager.alert('警告','请选中一条数据');
+                    return;
+                }
+                selectedId = selected.id;
             }
+            alert(selectedId);
             $.messager.confirm('确认','您确认想要删除记录吗？',function(r){
                 if (r){
                     $.ajax({
                         type: "POST",
-                        url: "${contextPath}/customer/delete",
-                        data: {id:selected.id},
+                        url: "${contextPath}/address/delete",
+                        data: {id:selectedId},
                         processData:true,
                         dataType: "json",
                         async : true,
                         success: function (data) {
                             if(data.code=="200"){
-                                $("#grid").treegrid("reload");
-                                $('#dlg').dialog('close');
+                                $("#addressGrid").datagrid("reload");
+                                $('#addressDlg').dialog('close');
                             }else{
                                 $.messager.alert('错误',data.result);
                             }
