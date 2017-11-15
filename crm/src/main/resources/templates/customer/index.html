@@ -46,10 +46,7 @@
                                 <input name="type" id="type" style="width:100%;" panelWidth="auto" panelHeight="auto" label="客户类型:"/>
                                 <#comboProvider _id="type" _provider='dataDictionaryValueProvider' _queryParams='{dd_id:"4"}'/>
                             </td>
-                            <td style="padding:5px;">
-                            <input name="city" id="city" style="width:100%;" panelWidth="auto" panelHeight="auto" label="城市:"  data-options="editable:true, hasDownArrow:false, onChange:changeName, onSelect:selectName"/>
-                            <#comboProvider _id="city" _provider="cityProvider" _valueField="value" _textField="label" />
-                            </td>
+
                         </tr>
                         <tr>
 
@@ -154,9 +151,9 @@
          data-options="
 				iconCls: 'icon-save',
 				height: dlgHeight,
-				width:640,
+				width:840,
 				buttons: [{
-					text:'Ok',
+					text:'确定',
 					iconCls:'icon-ok',
 					handler:saveOrUpdate
 				},{
@@ -168,150 +165,297 @@
 			">
     <form id="_form" class="easyui-form" method="post" fit="true">
         <input name="_id" id="_id" type="hidden">
-        <table width="600px">
+        <table width="800px">
             <tr>
                 <td style="padding:5px;" width="49%">
-                    <input class="easyui-numberbox" name="_ownerId" id="_ownerId" style="width:100%" data-options="label:'客户所有者:'" />
+                    <input class="easyui-numberbox" name="_ownerId" id="_ownerId" style="width:80%" data-options="label:'客户所有者:'" />
                 </td>
                 <td style="padding:5px;" width="49%">
-                    <input name="_type" id="_type" data-options="editable:false" style="width:100%;" panelWidth="auto" panelHeight="auto" label="客户类型:" />
+                    <input name="_type" id="_type" data-options="editable:false" style="width:80%;" panelWidth="auto" panelHeight="auto" label="客户类型:" />
                     <#comboProvider _id="_type" _provider='dataDictionaryValueProvider' _queryParams='{dd_id:"4"}'/>
                 </td>
             </tr>
 
             <tr>
                 <td style="padding:5px;">
-                    <input class="easyui-textbox" name="_parentName" id="_parentName" readonly="true" style="width:100%" label="父客户:" />
+                    <input class="easyui-textbox" name="_parentName" id="_parentName" readonly="true" style="width:80%" label="父客户:" />
                     <input name="_parentId" type="hidden" id="_parentId" />
                 </td>
                 <td style="padding:5px;">
-                    <input name="_profession" id="_profession" data-options="editable:false" style="width:100%;" panelWidth="auto" panelHeight="auto" label="客户行业:" />
+                    <input name="_profession" id="_profession" data-options="editable:false" style="width:80%;" panelWidth="auto" panelHeight="auto" label="客户行业:" />
                     <#comboProvider _id="_profession" _provider='dataDictionaryValueProvider' _queryParams='{dd_id:"6"}'/>
                 </td>
             </tr>
 
             <tr>
                 <td style="padding:5px;">
-                    <input class="easyui-textbox" name="_name" id="_name" style="width:100%" data-options="label:'客户名称:', validType:'length[0,40]'" />
+                    <input class="easyui-textbox" name="_name" id="_name" style="width:80%" data-options="label:'客户名称:', validType:'length[0,40]'" />
                 </td>
                 <td style="padding:5px;">
-                    <input class="easyui-textbox" name="_code" id="_code" style="width:100%" data-options="label:'客户编码:', validType:'length[0,40]'" />
+                    <input class="easyui-textbox" name="_code" id="_code" style="width:80%" data-options="label:'客户编码:', validType:'length[0,40]'" />
                 </td>
             </tr>
 
             <tr>
                 <td style="padding:5px;">
-                    <input name="_organizationType" id="_organizationType" data-options="editable:false" style="width:100%;" panelWidth="auto" panelHeight="auto" label="组织类型:" />
+                    <input name="_organizationType" id="_organizationType" data-options="editable:false" style="width:80%;" panelWidth="auto" panelHeight="auto" label="组织类型:" />
                     <#comboProvider _id="_organizationType" _provider='dataDictionaryValueProvider' _queryParams='{dd_id:"5"}'/>
                 </td>
                 <td style="padding:5px;">
-                    <input name="_market" id="_market" data-options="editable:false" style="width:100%;" panelWidth="auto" panelHeight="auto" label="所属市场:" />
+                    <input name="_market" id="_market" data-options="editable:false" style="width:80%;" panelWidth="auto" panelHeight="auto" label="所属市场:" />
                     <#comboProvider _id="_market" _provider='dataDictionaryValueProvider' _queryParams='{dd_id:"2"}'/>
                 </td>
             </tr>
 
             <tr>
                 <td style="padding:5px;">
-                    <input name="_certificateType" id="_certificateType" data-options="editable:false" style="width:100%;" panelWidth="auto" panelHeight="auto" label="证件类型:" />
+                    <input name="_certificateType" id="_certificateType" data-options="editable:false" style="width:80%;" panelWidth="auto" panelHeight="auto" label="证件类型:" />
                     <#comboProvider _id="_certificateType" _provider='dataDictionaryValueProvider' _queryParams='{dd_id:"3"}'/>
                 </td>
                 <td style="padding:5px;">
-                    <input class="easyui-textbox" name="_mainCategory" id="_mainCategory" style="width:100%" data-options="label:'主营品类:', validType:'length[0,40]'" />
+                    <input class="easyui-textbox" name="_mainCategory" id="_mainCategory" style="width:80%" data-options="label:'主营品类:', validType:'length[0,40]'" />
                 </td>
             </tr>
 
             <tr>
                 <td style="padding:5px;">
-                    <input class="easyui-textbox" name="_certificateNumber" id="_certificateNumber" style="width:100%" data-options="label:'证件号:', validType:'length[0,40]'" />
+                    <input class="easyui-textbox" name="_certificateNumber" id="_certificateNumber" style="width:80%" data-options="label:'证件号:', validType:'length[0,40]'" />
                 </td>
                 <td style="padding:5px;">
-                    <input class="easyui-textbox" name="_operatingArea" id="_operatingArea" style="width:100%" data-options="label:'经营地区:', validType:'length[0,100]'" />
+                    <input class="easyui-textbox" name="_operatingArea" id="_operatingArea" style="width:80%" data-options="label:'经营地区:', validType:'length[0,100]'" />
                 </td>
             </tr>
 
 
             <tr>
                 <td style="padding:5px;">
-                    <input class="easyui-datetimebox" name="_certificateTime" id="_certificateTime" style="width:100%" data-options="label:'证件日期:'"
+                    <input class="easyui-datetimebox" name="_certificateTime" id="_certificateTime" style="width:80%" data-options="label:'证件日期:'"
                         required="true" />
                 </td>
                 <td style="padding:5px;">
-                    <input class="easyui-textbox" name="_otherTitle" id="_otherTitle" style="width:100%" data-options="label:'其它头衔:', validType:'length[0,40]'" />
+                    <input class="easyui-textbox" name="_otherTitle" id="_otherTitle" style="width:80%" data-options="label:'其它头衔:', validType:'length[0,40]'" />
                 </td>
             </tr>
             <tr>
                 <td style="padding:5px;">
-                    <input class="easyui-textbox" name="_certificateAddr" id="_certificateAddr" style="width:100%" data-options="label:'证件地址:', validType:'length[0,100]'" />
+                    <input class="easyui-textbox" name="_certificateAddr" id="_certificateAddr" style="width:80%" data-options="label:'证件地址:', validType:'length[0,100]'" />
                 </td>
                 <td style="padding:5px;">
-                    <input class="easyui-textbox" name="_phone" id="_phone" style="width:100%" data-options="label:'电话:', validType:'length[0,40]'" />
+                    <input class="easyui-textbox" name="_phone" id="_phone" style="width:80%" data-options="label:'电话:', validType:'length[0,40]'" />
                 </td>
             </tr>
 
             <tr>
                 <td style="padding:5px;">
-                       <input name="_sex" id="_sex" style="width:100%;" data-options="editable:false" panelWidth="auto" panelHeight="auto" label="性别:" />
+                       <input name="_sex" id="_sex" style="width:80%;" data-options="editable:false" panelWidth="auto" panelHeight="auto" label="性别:" />
                        <#comboProvider _id="_sex" _provider='sexProvider'/>
                 </td>
                 <td style="padding:5px;">
-                    <input class="easyui-textbox" name="_nation" id="_nation" style="width:100%" data-options="label:'民族:', validType:'length[0,20]'" />
+                    <input class="easyui-textbox" name="_nation" id="_nation" style="width:80%" data-options="label:'民族:', validType:'length[0,20]'" />
                 </td>
             </tr>
             <tr>
                 <td style="padding:5px;">
-                    <input class="easyui-textbox" name="_source" id="_source" style="width:100%" data-options="label:'归属/来源:', validType:'length[0,20]'" />
+                    <input class="easyui-textbox" name="_source" id="_source" style="width:80%" data-options="label:'归属/来源:', validType:'length[0,20]'" />
                 </td>
                 <td></td>
             </tr>
             <tr>
                 <td style="padding:5px;" colspan="2">
-                    <input class="easyui-textbox" name="_notes" id="_notes" style="width:100%;height:80px" data-options="label:'备注信息:', validType:'length[0,250]', multiline:true" />
+                    <input class="easyui-textbox" name="_notes" id="_notes" style="width:90%;height:80px" data-options="label:'备注信息:', validType:'length[0,250]', multiline:true" />
                 </td>
             </tr>
         </table>
-
-        <!-- =========================================================地址表格========================================================= -->
-        <table class="easyui-datagrid" id="addressGrid" style="height:120px;padding:5px; width:590px;"
-               pagination="false" rownumbers="true" remoteSort="false"
-               loadMsg="数据加载中..." singleSelect="true" method="post" multiSort="false"
-               align="center"  striped="true" idField="id" >
-            <thead>
-            <tr>
-                <th data-options="field:'name',   sortable:'true', order:'asc', align:'center', resizable:'true', fixed:'false', width:150">
-                    名称
-                </th>
-                <th data-options="field:'address',   sortable:'true', order:'asc', align:'center', resizable:'true', fixed:'false', width:400">
-                    地址
-                </th>
-            </tr>
-            </thead>
-        </table>
     </form>
+        <!--  =========================================================地址div=========================================================  -->
+        <div id="addressDiv">
+            <B>地址信息</B><a class="easyui-linkbutton" iconCls="icon-add" onclick="openInsertAddress()"></a>
 
-    </div>
+            <!-- =========================================================地址表格========================================================= -->
+
+            <table class="easyui-datagrid" id="addressGrid" style="height:120px;padding:5px; width:760px;"
+                   pagination="false" rownumbers="true" remoteSort="false" data-options="onDblClickRow:openUpdateAddress"
+                   loadMsg="数据加载中..." singleSelect="true" method="post" multiSort="false"
+                   align="center"  striped="true" idField="id" >
+                <thead>
+                <tr>
+                    <th data-options="field:'name',   sortable:'true', order:'asc', align:'center', resizable:'true', fixed:'false', width:160">
+                        名称
+                    </th>
+                    <th data-options="field:'address',   sortable:'true', order:'asc', align:'center', resizable:'true', fixed:'false', width:500">
+                        地址
+                    </th>
+                </tr>
+                </thead>
+            </table>
+        </div> <!-- end of addressDiv -->
+
+    </div> <!-- end of dlg -->
+
+     <!-- 地址隐藏框 -->
+     <!-- 隐藏编辑框 -->
+     <div id="addressDlg" class="easyui-dialog" resizable="false" constrain="true" shadow="true" draggable="false" title="Address信息" style="padding:20px" modal="true" border="thin" closed="true"
+          data-options="
+				iconCls: 'icon-save',
+				height: 280,
+				buttons: [{
+					text:'确定',
+					iconCls:'icon-ok',
+					handler:saveOrUpdateAddress
+				},{
+					text:'取消',
+					handler:function(){
+						$('#addressDlg').dialog('close');
+					}
+				}]
+			">
+         <form id="_addressForm" class="easyui-form" method="post" fit="true">
+             <input name="_address_id" id="_address_id" type="hidden">
+             <table width="360px">
+                 <tr>
+                     <td style="padding:5px;">
+                         <input class="easyui-textbox" name="_address_name" id="_address_name" required="true" style="width:100%" data-options="label:'名称:', validType:'length[1,40]'" />
+                     </td>
+                 </tr>
+                 <tr>
+                     <td style="padding:5px;">
+                         <input class="easyui-textbox" name="_address_address" id="_address_address" required="true" style="width:100%" data-options="label:'地址:', validType:'length[1,250]'" />
+                     </td>
+                 </tr>
+                 <tr>
+                     <td style="padding:5px;">
+                         <input name="_address_cityId" id="_address_cityId" style="width:100%;" panelWidth="auto" required="true" panelHeight="auto" label="所在城市:"  data-options="validType:'length[1,20]', editable:true, hasDownArrow:false, onChange:changeName, onSelect:selectName"/>
+                         <#comboProvider _id="_address_cityId" _provider="cityProvider" _valueField="value" _textField="label" />
+                     </td>
+                 </tr>
+             </table>
+         </form>
+
+     </div>
+
+
     <!-- ====================================================================================================================== -->
     <!-- style & script 分隔线 -->
     <!-- ====================================================================================================================== -->
     <script type="text/javascript">
 
-        //查询地址
+        // ============================   地址相关js st  =============================
+
+        //修改客户时,打开插入地址框
+        function openInsertAddress() {
+            $('#addressDlg').dialog('open');
+            $('#addressDlg').dialog('center');
+            $('#_addressForm').form('clear');
+            formFocus("_addressForm", "_address_name");
+        }
+
+        //修改客户时,打开修改客户窗口
+        function openUpdateAddress(){
+            var selected = $("#addressGrid").datagrid("getSelected");
+            if (null == selected) {
+                $.messager.alert('警告','请选中一条数据');
+                return;
+            }
+            $('#addressDlg').dialog('open');
+            $('#addressDlg').dialog('center');
+            formFocus("_addressForm", "_address_name");
+            var formData = $.extend({},selected);
+            formData = addKeyStartWith(getOriginalData(formData),"_address_");
+            $('#_addressForm').form('load', formData);
+        }
+
+        //保存地址
+        function saveOrUpdateAddress() {
+            if(!$('#_addressForm').form("validate")){
+                return;
+            }
+            var _formData = removeKeyStartWith($("#_addressForm").serializeObject(),"_address_");
+            var _url = null;
+            //没有id就新增
+            if(_formData.id == null || _formData.id==""){
+                _url = "${contextPath}/address/insert";
+            }else{//有id就修改
+                _url = "${contextPath}/address/update";
+            }
+            //设置当前选择的客户id
+            var selected = $("#grid").treegrid("getSelected");
+            _formData["customerId"] = selected["id"];
+            $('#addressDlg').dialog('close');
+            $.ajax({
+                type: "POST",
+                url: _url,
+                data: _formData,
+                processData:true,
+                dataType: "json",
+                async : true,
+                success: function (data) {
+                    if(data.code=="200"){
+                        $("#addressGrid").datagrid("reload");
+                    }else{
+                        $.messager.alert('错误',data.result);
+                    }
+                },
+                error: function(){
+                    $.messager.alert('错误','远程访问失败');
+                }
+            });
+        }
+
+        //修改客户窗口打开时查询地址
         function listAddress(){
             var opts = $("#addressGrid").datagrid("options");
             if (null == opts.url || "" == opts.url) {
                 opts.url = "${contextPath}/address/list";
             }
             var selected = $("#grid").treegrid("getSelected");
-            $("#addressGrid").datagrid("load", {"id":selected["id"]});
+            $("#addressGrid").datagrid("load", {"customerId":selected["id"]});
         }
-        //打开新增窗口
+
+        //根据主键删除地址
+        function delAddress() {
+            var selected = $("#addressGrid").treegrid("getSelected");
+            if (null == selected) {
+                $.messager.alert('警告','请选中一条数据');
+                return;
+            }
+            $.messager.confirm('确认','您确认想要删除记录吗？',function(r){
+                if (r){
+                    $.ajax({
+                        type: "POST",
+                        url: "${contextPath}/customer/delete",
+                        data: {id:selected.id},
+                        processData:true,
+                        dataType: "json",
+                        async : true,
+                        success: function (data) {
+                            if(data.code=="200"){
+                                $("#grid").treegrid("reload");
+                                $('#dlg').dialog('close');
+                            }else{
+                                $.messager.alert('错误',data.result);
+                            }
+                        },
+                        error: function(){
+                            $.messager.alert('错误','远程访问失败');
+                        }
+                    });
+                }
+            });
+        }
+
+        // ============================   地址相关js end  =============================
+
+        // ============================   客户相关js st  ==============================
+        //打开新增客户窗口
         function openInsert(){
             $('#dlg').dialog('open');
             $('#dlg').dialog('center');
             $('#_form').form('clear');
             formFocus("_form", "_name");
+            $("#addressDiv").hide();
         }
 
-        //打开新增子级窗口
+        //打开新增子级客户窗口
         function openChildInsert(){
             var selected = $("#grid").treegrid("getSelected");
             if (null == selected) {
@@ -327,7 +471,7 @@
             formFocus("_form", "_name");
         }
 
-        //打开修改窗口
+        //打开修改客户窗口
         function openUpdate(){
             var selected = $("#grid").treegrid("getSelected");
             if (null == selected) {
@@ -340,9 +484,11 @@
             var formData = $.extend({},selected);
             formData = addKeyStartWith(getOriginalData(formData),"_");
             $('#_form').form('load', formData);
+            $("#addressDiv").show();
             listAddress();
         }
 
+        //保存客户
         function saveOrUpdate(){
             if(!$('#_form').form("validate")){
                 return;
@@ -376,7 +522,7 @@
             });
         }
 
-        //根据主键删除
+        //根据主键删除客户
         function del() {
             var selected = $("#grid").treegrid("getSelected");
             if (null == selected) {
@@ -406,9 +552,8 @@
                     });
                 }
             });
-
         }
-        //表格查询
+        //客户表格查询
         function queryGrid() {
             var opts = $("#grid").treegrid("options");
             if (null == opts.url || "" == opts.url) {
@@ -424,7 +569,7 @@
         }
 
 
-        //清空表单
+        //清空客户表单
         function clearForm() {
             $('#form').form('clear');
         }
@@ -440,6 +585,8 @@
                 top:e.pageY
             });
         }
+
+        // ============================   客户相关js end  ==============================
 
         $.messager.progress({
             title:"提示",
