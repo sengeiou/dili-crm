@@ -6,7 +6,7 @@ import com.dili.ss.retrofitful.annotation.POST;
 import com.dili.ss.retrofitful.annotation.Restful;
 import com.dili.ss.retrofitful.annotation.VOField;
 
-@Restful("http://crm.dili.com:8084/crmadmin/dataAuth")
+@Restful("${sysadmin.contextPath}")
 public interface DataAuthRpc {
 
 	@POST("/addDataAuth")
