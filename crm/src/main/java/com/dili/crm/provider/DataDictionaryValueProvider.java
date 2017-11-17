@@ -15,7 +15,7 @@ import java.util.Map;
 public class DataDictionaryValueProvider extends SimpleValueProvider {
 
     //前台需要传入的参数
-    private static final String DD_ID_KEY = "dd_id";
+    protected static final String DD_ID_KEY = "dd_id";
 
     @Override
     public String getTable() {

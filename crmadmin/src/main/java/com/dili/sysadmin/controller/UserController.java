@@ -10,12 +10,10 @@ import com.dili.sysadmin.domain.User;
 import com.dili.sysadmin.domain.dto.AddUserDto;
 import com.dili.sysadmin.domain.dto.UpdateUserDto;
 import com.dili.sysadmin.domain.dto.UpdateUserPasswordDto;
-import com.dili.sysadmin.domain.dto.UserDepartmentDto;
 import com.dili.sysadmin.exception.UserException;
 import com.dili.sysadmin.sdk.domain.UserTicket;
 import com.dili.sysadmin.sdk.util.WebContent;
 import com.dili.sysadmin.service.UserService;
-import com.github.pagehelper.Page;
 import com.google.common.collect.Lists;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
@@ -208,7 +206,7 @@ public class UserController {
 	@ApiOperation(value = "查询在线User", notes = "查询在线User，返回列表信息")
 	@ApiImplicitParams({ @ApiImplicitParam(name = "User", paramType = "form", value = "User的form信息", required = false, dataType = "Long") })
 	@RequestMapping(value = "/listOnlineUsers", method = { RequestMethod.GET, RequestMethod.POST })
-	public @ResponseBody List<User> listOnlineUsers(User user) throws Exception {
+	public @ResponseBody List<Map> listOnlineUsers(User user) throws Exception {
 		return userService.listOnlineUsers(user);
 	}
 

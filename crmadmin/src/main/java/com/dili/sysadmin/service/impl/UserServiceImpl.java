@@ -1,15 +1,26 @@
 package com.dili.sysadmin.service.impl;
 
-import java.sql.Timestamp;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.UUID;
-
-import javax.annotation.Resource;
-
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
+import com.alibaba.fastjson.TypeReference;
+import com.dili.ss.base.BaseServiceImpl;
+import com.dili.ss.domain.BaseOutput;
+import com.dili.ss.domain.EasyuiPageOutput;
+import com.dili.ss.metadata.ValueProviderUtils;
+import com.dili.sysadmin.dao.*;
+import com.dili.sysadmin.domain.*;
+import com.dili.sysadmin.domain.dto.*;
+import com.dili.sysadmin.exception.UserException;
+import com.dili.sysadmin.manager.*;
+import com.dili.sysadmin.sdk.domain.UserTicket;
+import com.dili.sysadmin.sdk.session.ManageConfig;
+import com.dili.sysadmin.sdk.session.SessionConstants;
+import com.dili.sysadmin.sdk.session.SessionContext;
+import com.dili.sysadmin.sdk.util.ManageRedisUtil;
+import com.dili.sysadmin.service.UserService;
+import com.dili.sysadmin.service.ValidatePwdService;
+import com.dili.sysadmin.utils.MD5Util;
+import com.github.pagehelper.Page;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -22,48 +33,9 @@ import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.JSONObject;
-import com.alibaba.fastjson.TypeReference;
-import com.dili.ss.base.BaseServiceImpl;
-import com.dili.ss.domain.BaseOutput;
-import com.dili.ss.domain.EasyuiPageOutput;
-import com.dili.ss.dto.DTOUtils;
-import com.dili.ss.metadata.ValueProviderUtils;
-import com.dili.sysadmin.dao.DepartmentMapper;
-import com.dili.sysadmin.dao.UserDataAuthMapper;
-import com.dili.sysadmin.dao.UserDepartmentMapper;
-import com.dili.sysadmin.dao.UserMapper;
-import com.dili.sysadmin.dao.UserRoleMapper;
-import com.dili.sysadmin.domain.DataAuth;
-import com.dili.sysadmin.domain.Department;
-import com.dili.sysadmin.domain.User;
-import com.dili.sysadmin.domain.UserDataAuth;
-import com.dili.sysadmin.domain.UserDepartment;
-import com.dili.sysadmin.domain.UserRole;
-import com.dili.sysadmin.domain.UserStatus;
-import com.dili.sysadmin.domain.dto.AddUserDto;
-import com.dili.sysadmin.domain.dto.UpdateUserDto;
-import com.dili.sysadmin.domain.dto.UpdateUserPasswordDto;
-import com.dili.sysadmin.domain.dto.UserDepartmentDto;
-import com.dili.sysadmin.domain.dto.UserLoginDto;
-import com.dili.sysadmin.domain.dto.UserLoginResultDto;
-import com.dili.sysadmin.exception.UserException;
-import com.dili.sysadmin.manager.DataAuthManager;
-import com.dili.sysadmin.manager.MenuManager;
-import com.dili.sysadmin.manager.ResourceManager;
-import com.dili.sysadmin.manager.SessionRedisManager;
-import com.dili.sysadmin.manager.UserManager;
-import com.dili.sysadmin.sdk.domain.UserTicket;
-import com.dili.sysadmin.sdk.session.ManageConfig;
-import com.dili.sysadmin.sdk.session.SessionConstants;
-import com.dili.sysadmin.sdk.session.SessionContext;
-import com.dili.sysadmin.sdk.util.ManageRedisUtil;
-import com.dili.sysadmin.service.UserService;
-import com.dili.sysadmin.service.ValidatePwdService;
-import com.dili.sysadmin.utils.MD5Util;
-import com.github.pagehelper.Page;
-import com.netflix.discovery.converters.Auto;
+import javax.annotation.Resource;
+import java.sql.Timestamp;
+import java.util.*;
 
 /**
  * 由MyBatis Generator工具自动生成 This file was generated on 2017-07-04 15:24:50.
@@ -443,7 +415,7 @@ public class UserServiceImpl extends BaseServiceImpl<User, Long> implements User
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public List<User> listOnlineUsers(User user) throws Exception {
+	public List<Map> listOnlineUsers(User user) throws Exception {
 		List<User> userList = new ArrayList<>();
 		Long userId = user.getId();
 		if (userId != null) {

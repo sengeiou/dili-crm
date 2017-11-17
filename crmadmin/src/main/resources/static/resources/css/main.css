@@ -46,13 +46,13 @@ body {
 .textbox-label{
     font-size: 14px;
 }
-/*按钮字体*/
+/*按钮和菜单按钮字体*/
 .l-btn-text{
-    font-size: 14px;
+    font-size: 17px;
 }
 /*菜单字体*/
 .menu-text{
-    font-size: 14px;
+    font-size: 17px;
 }
 /*tab字体*/
 .tabs-title{
@@ -61,4 +61,8 @@ body {
 /*表格分页条字体*/
 .pagination-info{
     font-size: 14px;
+}
+/*表格行高*/
+.datagrid-row {
+    height: 38px;
 }

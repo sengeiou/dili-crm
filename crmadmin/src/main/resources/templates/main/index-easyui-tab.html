@@ -47,8 +47,9 @@
         <!-- 中央布局 -->
         <!-- ====================================================================================================================== -->
         <div region="center" style="width:100%;" height="auto">
-            <div id="mainPanel" class="easyui-panel" style="width: 100%; height: 100%" data-options="">
-
+            <div id="tabs" class="easyui-tabs" style="width: 100%; height: 100%" data-options="tabWidth:130, pill:true,onAdd:disableHover">
+                <!--<div title="主页" style="background-color:#24A6B1">-->
+                <!--</div>-->
             </div>
         </div>
     </div>
@@ -65,10 +66,35 @@
                 logout();
                 return;
             }
-            renderPage(title,url);
+
+            if ($('#tabs').tabs('exists', title)){
+                $('#tabs').tabs('select', title);
+            } else {
+                var tabs = $('#tabs').tabs("tabs");
+                if ( 4 > tabs.length) {
+                    addOneTab(title,url);
+                } else {
+                    $.messager.alert('提示','已打开的功能面板过多，请先关闭无用面板');
+                }
+            }
         }
 
-        function renderPage(title, url) {
+        function panelLoaded(){
+            window.setTimeout(function() {
+                setHoverTabs();
+            }, 100);
+
+        }
+
+        function disableHover(){
+            var tabs = $('#tabs').tabs('tabs');
+
+            for(var i=0; i<tabs.length; i++){
+                tabs[i].panel('options').tab.unbind();
+            }
+        }
+        
+        function addOneTab(title, url) {
             if ("用户信息" == title) {
                 url = "${contextPath}/main/userDetail.html";
 
@@ -76,14 +102,26 @@
                 url = "${contextPath}/main/changePwd.html"
             }
 
-            var content = '<iframe scrolling="auto" frameborder="0"  src="'+url+'" onLoad="" style="width:100%; height: 99.3%;"></iframe>';
+            var content = '<iframe scrolling="auto" frameborder="0"  src="'+url+'" onLoad="panelLoaded()" style="width:100%; height: 99.3%;"></iframe>';
 
-            $('#mainPanel').panel({
+            $('#tabs').tabs('add',{
+                title:title,
                 content:content,
-                cache:false
+                cache:false,
+                closable:true
 
             });
 
+        }
+
+        function closeTab(title) {
+            if ($('#tabs').tabs('exists', title)) {
+                $('#tabs').tabs('close', title);
+            }
+        }
+        
+        function backToLogin() {
+            window.location.href = "${contextPath}/login/index.html";
         }
         
         function logout() {
@@ -96,7 +134,14 @@
             });
         }
 
-
+        function setHoverTabs() {
+            var tabs = $('#tabs').tabs('tabs');
+            for(var i=0; i<tabs.length; i++){
+                tabs[i].panel('options').tab.unbind().bind('mouseenter',{index:i},function(e){
+                    $('#tabs').tabs('select', e.data.index);
+                });
+            }
+        }
         
         $(function () {
 

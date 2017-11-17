@@ -1,19 +1,15 @@
 package com.dili.sysadmin.service;
 
-import java.util.List;
-
 import com.dili.ss.base.BaseService;
 import com.dili.ss.domain.BaseOutput;
 import com.dili.ss.domain.EasyuiPageOutput;
 import com.dili.sysadmin.domain.User;
-import com.dili.sysadmin.domain.dto.AddUserDto;
-import com.dili.sysadmin.domain.dto.UpdateUserDto;
-import com.dili.sysadmin.domain.dto.UpdateUserPasswordDto;
-import com.dili.sysadmin.domain.dto.UserDepartmentDto;
-import com.dili.sysadmin.domain.dto.UserLoginDto;
-import com.dili.sysadmin.domain.dto.UserLoginResultDto;
+import com.dili.sysadmin.domain.dto.*;
 import com.dili.sysadmin.exception.UserException;
 import com.dili.sysadmin.sdk.domain.UserTicket;
+
+import java.util.List;
+import java.util.Map;
 
 /**
  * 由MyBatis Generator工具自动生成 This file was generated on 2017-07-04 15:24:50.
@@ -42,7 +38,7 @@ public interface UserService extends BaseService<User, Long> {
 
 	void refreshUserPermission(Long userId);
 
-	List<User> listOnlineUsers(User user) throws Exception;
+	List<Map> listOnlineUsers(User user) throws Exception;
 
 	void kickUserOffline(Long userId);
 

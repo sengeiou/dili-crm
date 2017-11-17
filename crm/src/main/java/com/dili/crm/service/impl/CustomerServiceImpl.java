@@ -4,6 +4,10 @@ import com.dili.crm.dao.CustomerMapper;
 import com.dili.crm.domain.Customer;
 import com.dili.crm.service.CustomerService;
 import com.dili.ss.base.BaseServiceImpl;
+import com.dili.ss.domain.BaseOutput;
+import com.dili.ss.dto.DTOUtils;
+import com.dili.sysadmin.sdk.domain.UserTicket;
+import com.dili.sysadmin.sdk.session.SessionContext;
 import org.springframework.stereotype.Service;
 
 /**
@@ -15,5 +19,41 @@ public class CustomerServiceImpl extends BaseServiceImpl<Customer, Long> impleme
 
     public CustomerMapper getActualDao() {
         return (CustomerMapper)getDao();
+    }
+
+    public BaseOutput insertSelectiveWithOutput(Customer customer) {
+        UserTicket userTicket = SessionContext.getSessionContext().getUserTicket();
+        if(userTicket == null){
+            return BaseOutput.failure("新增失败，登录超时");
+        }
+        customer.setCreatedId(userTicket.getId());
+        customer.setOwnerId(userTicket.getId());
+        super.insertSelective(customer);
+        return BaseOutput.success("新增成功");
+    }
+
+    @Override
+    public BaseOutput updateSelectiveWithOutput(Customer condtion) {
+        UserTicket userTicket = SessionContext.getSessionContext().getUserTicket();
+        if(userTicket == null){
+            return BaseOutput.failure("修改失败，登录超时");
+        }
+        condtion.setModifiedId(userTicket.getId());
+        super.updateSelective(condtion);
+        return BaseOutput.success("修改成功");
+    }
+
+    @Override
+    public BaseOutput deleteWithOutput(Long id) {
+        UserTicket userTicket = SessionContext.getSessionContext().getUserTicket();
+        if(userTicket == null){
+            return BaseOutput.failure("删除失败，登录超时");
+        }
+        Customer condtion = DTOUtils.newDTO(Customer.class);
+        condtion.setModifiedId(userTicket.getId());
+        condtion.setYn(0);
+        condtion.setId(id);
+        super.updateSelective(condtion);
+        return BaseOutput.success("删除成功");
     }
 }
