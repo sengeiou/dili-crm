@@ -60,6 +60,12 @@ public interface Customer extends IBaseDomain {
 
     void setCertificateTime(Date certificateTime);
 
+    @Column(name = "`certificate_range`")
+    @FieldDef(label="证件日期")
+    @EditMode(editor = FieldEditor.Text, required = false)
+    String getCertificateRange();
+    void setCertificateRange(String certificateRange);
+
     @Column(name = "`certificate_addr`")
     @FieldDef(label="证件地址", maxLength = 100)
     @EditMode(editor = FieldEditor.Text, required = false)
@@ -201,4 +207,16 @@ public interface Customer extends IBaseDomain {
     Integer getYn();
 
     void setYn(Integer yn);
+
+    @Column(name = "`registered_capital`")
+    @FieldDef(label="注册资金(元)")
+    @EditMode(editor = FieldEditor.Number, required = false)
+    Long getRegisteredCapital();
+    void setRegisteredCapital(Long registeredCapital);
+
+    @Column(name = "`employee_number`")
+    @FieldDef(label="企业员工数")
+    @EditMode(editor = FieldEditor.Text, required = false)
+    String getEmployeeNumber();
+    void setEmployeeNumber(String employeeNumber);
 }
