@@ -28,6 +28,9 @@ public class CertificateTypeProvider extends DataDictionaryValueProvider {
     public List<ValuePair<?>> getLookupList(Object value, Map paramMap, FieldMeta fieldMeta){
         List<ValuePair<?>> valuePairs = super.getLookupList(value, paramMap, fieldMeta);
         Object organizationType = paramMap.get("organizationType");
+        if(organizationType == null || organizationType.equals("")){
+            return null;
+        }
         Iterator<ValuePair<?>> iterator = valuePairs.iterator();
         while(iterator.hasNext()){
             ValuePair<?> valuePair = iterator.next();

@@ -42,9 +42,9 @@
                  day = birthStr.substr(6,2);
                  year = birthStr.substr(0,4);
              }
-            //组织类型必须为个人,并且证件类型为身份证
+            //组织类型为个人,并且证件类型为身份证时才校验
              if($("#_organizationType").combobox("getValue") != "individuals" || $("#_certificateType").combobox("getValue") != "id"){
-                 return false;
+                 return true;
              }
              if(newValue.length < 18 || newValue.length > 19){
                  $.messager.alert('警告','证件号不合法');
@@ -449,14 +449,13 @@
         function openUpdate(){
             var selected = ${customer};
             if (null == selected) {
-                $.messager.alert('警告','请选中一条数据');
+                $.messager.alert('警告','请指定一条数据');
                 return;
             }
             $('#_form').form('clear');
             var formData = $.extend({},selected);
             //设置客户所有者(这里表格中的提供者已经作了转义,只需要对应上字段即可)
             formData["ownerName"] = selected["ownerId"];
-
             //设置父id
             formData["parentId"] = selected["parentId"];
             //设置上级客户名称
