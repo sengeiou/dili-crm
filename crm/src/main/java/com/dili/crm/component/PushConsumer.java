@@ -13,7 +13,7 @@ import java.util.List;
 
 public class PushConsumer {
 
-	public static void main(String[] args) throws InterruptedException, MQClientException {
+	public static void main1(String[] args) throws InterruptedException, MQClientException {
 
 		DefaultMQPushConsumer consumer = new DefaultMQPushConsumer("CID_JODIE_1");
 		consumer.setNamesrvAddr("localhost:9876");

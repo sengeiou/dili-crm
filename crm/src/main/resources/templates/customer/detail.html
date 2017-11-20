@@ -37,9 +37,13 @@
         <!-- ====================================================================================================================== -->
         <!-- 上方布局 -->
         <!-- ====================================================================================================================== -->
-        <!--<div region="north" border="false" height="auto" align="center">-->
-
-        <!--</div>-->
+        <div region="north" border="false" style="border-bottom: 1px solid;" height="auto" align="center">
+            <div style="display: inline;float:left;width: 500px;padding: 5px;font-size:20px;" align="left">客户查看</div>
+            <div style="display: inline;float:left;width: 500px;padding: 5px;" align="left">
+                <a id="saveBtn" href="#" class="easyui-linkbutton" data-options="width:80" onclick="saveOrUpdate()">保存</a>
+                <a id="cancelBtn" href="#" class="easyui-linkbutton" data-options="width:80" onclick="Javascript:history.back();">取消</a>
+            </div>
+        </div>
         <!-- ====================================================================================================================== -->
         <!-- 中央布局 -->
         <!-- ====================================================================================================================== -->
@@ -121,24 +125,24 @@
                     </tr>
 
                     <tr>
-                            <td style="padding-top:10px;padding-left:15px;">
-                                <div class="individuals">
-                                <input name="_sex" id="_sex" style="width:90%;" data-options="editable:false" panelWidth="auto" panelHeight="auto" label="性别:" />
-                                <#comboProvider _id="_sex" _provider='sexProvider'/>
-                                </div>
-                                <div class="enterprise">
-                                <input class="easyui-numberbox" name="_registeredCapital" id="_registeredCapital" style="width:90%;" data-options="label:'注册资金:', validType:'length[0,16]'" />
-                                </div>
-                            </td>
-                            <td style="padding-top:10px;padding-left:15px;">
-                                <div class="individuals">
-                                <input class="easyui-textbox" name="_nation" id="_nation" style="width:90%;" data-options="label:'民族:', validType:'length[0,20]'" />
-                                </div>
-                                <div class="enterprise">
-                                <input name="_employeeNumber" id="_employeeNumber" data-options="editable:false" style="width:90%;" panelWidth="auto" panelHeight="auto" label="企业员工数:" />
-                                <#comboProvider _id="_employeeNumber" _provider='dataDictionaryValueProvider' _queryParams='{dd_id:"9"}'/>
-                                </div>
-                            </td>
+                        <td style="padding-top:10px;padding-left:15px;">
+                            <div class="individuals">
+                            <input name="_sex" id="_sex" style="width:90%;" data-options="editable:false" panelWidth="auto" panelHeight="auto" label="性别:" />
+                            <#comboProvider _id="_sex" _provider='sexProvider'/>
+                            </div>
+                            <div class="enterprise">
+                            <input class="easyui-numberbox" name="_registeredCapital" id="_registeredCapital" style="width:90%;" data-options="label:'注册资金:', validType:'length[0,16]'" />
+                            </div>
+                        </td>
+                        <td style="padding-top:10px;padding-left:15px;">
+                            <div class="individuals">
+                            <input class="easyui-textbox" name="_nation" id="_nation" style="width:90%;" data-options="label:'民族:', validType:'length[0,20]'" />
+                            </div>
+                            <div class="enterprise">
+                            <input name="_employeeNumber" id="_employeeNumber" data-options="editable:false" style="width:90%;" panelWidth="auto" panelHeight="auto" label="企业员工数:" />
+                            <#comboProvider _id="_employeeNumber" _provider='dataDictionaryValueProvider' _queryParams='{dd_id:"9"}'/>
+                            </div>
+                        </td>
                         <td style="padding-top:10px;padding-left:15px;">
                             <input class="easyui-textbox" name="_phone" id="_phone" style="width:90%;" data-options="label:'电话:', validType:'length[0,40]'" />
                         </td>

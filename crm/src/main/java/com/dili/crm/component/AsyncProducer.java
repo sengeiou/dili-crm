@@ -11,7 +11,7 @@ import java.io.UnsupportedEncodingException;
 
 
 public class AsyncProducer {
-	public static void main(String[] args) throws MQClientException, InterruptedException, UnsupportedEncodingException {
+	public static void main1(String[] args) throws MQClientException, InterruptedException, UnsupportedEncodingException {
 
 		DefaultMQProducer producer = new DefaultMQProducer("CID_JODIE_1");
 		producer.setNamesrvAddr("localhost:9876");
