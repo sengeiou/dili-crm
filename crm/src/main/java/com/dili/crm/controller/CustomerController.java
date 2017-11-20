@@ -110,7 +110,6 @@ public class CustomerController {
 	})
     @RequestMapping(value="/list", method = {RequestMethod.GET, RequestMethod.POST})
     public @ResponseBody List<Customer> list(Customer customer) {
-	    customer.setYn(1);
         return customerService.list(customer);
     }
 
@@ -120,7 +119,6 @@ public class CustomerController {
 	})
     @RequestMapping(value="/listPage", method = {RequestMethod.GET, RequestMethod.POST})
     public @ResponseBody String listPage(Customer customer) throws Exception {
-	    customer.setYn(1);
         return customerService.listEasyuiPageByExample(customer, true).toString();
     }
 

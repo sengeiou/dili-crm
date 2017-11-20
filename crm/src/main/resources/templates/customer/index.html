@@ -125,8 +125,11 @@
                         <th data-options="field:'organizationType', _provider:'dataDictionaryValueProvider', _queryParams:{'dd_id':'5'},  sortable:'true', order:'asc', align:'center', resizable:'true', fixed:'false'">
                             组织类型
                         </th>
-                        <th data-options="field:'source',   sortable:'true', order:'asc', align:'center', resizable:'true', fixed:'false'">
-                            归属/来源
+                        <th data-options="field:'sourceSystem', _provider:'dataDictionaryValueProvider', _queryParams:{'dd_id':'8'},  sortable:'true', order:'asc', align:'center', resizable:'true', fixed:'false'">
+                            来源系统
+                        </th>
+                        <th data-options="field:'department', _provider:'departmentProvider', sortable:'true', order:'asc', align:'center', resizable:'true', fixed:'false'">
+                            所属部门
                         </th>
                         <th data-options="field:'market', _provider:'dataDictionaryValueProvider', _queryParams:{'dd_id':'2'},  sortable:'true', order:'asc', align:'center', resizable:'true', fixed:'false'">
                             所属市场
@@ -263,7 +266,7 @@
             </tr>
             <tr>
                 <td style="padding:5px;">
-                    <input class="easyui-textbox" name="_source" id="_source" style="width:80%" data-options="label:'归属/来源:', validType:'length[0,20]'" />
+                    <input class="easyui-textbox" name="_sourceSystem" id="_sourceSystem" style="width:80%" data-options="label:'来源系统:', validType:'length[0,20]'" />
                 </td>
                 <td></td>
             </tr>

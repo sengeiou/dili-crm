@@ -109,7 +109,7 @@ public class UserController {
 
 		try {
 			User user = userService.update(dto);
-			List<Object> list = ValueProviderUtils.buildDataByProvider(metadata, Lists.newArrayList(user));
+			List<Map> list = ValueProviderUtils.buildDataByProvider(metadata, Lists.newArrayList(user));
 			return BaseOutput.success("修改用户信息成功").setData(list.get(0));
 		} catch (Exception e) {
 			return BaseOutput.failure(e.getMessage());

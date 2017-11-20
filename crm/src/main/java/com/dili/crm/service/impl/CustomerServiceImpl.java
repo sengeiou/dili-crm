@@ -2,13 +2,18 @@ package com.dili.crm.service.impl;
 
 import com.dili.crm.dao.CustomerMapper;
 import com.dili.crm.domain.Customer;
+import com.dili.crm.service.CacheService;
 import com.dili.crm.service.CustomerService;
 import com.dili.ss.base.BaseServiceImpl;
 import com.dili.ss.domain.BaseOutput;
+import com.dili.ss.domain.EasyuiPageOutput;
 import com.dili.ss.dto.DTOUtils;
 import com.dili.sysadmin.sdk.domain.UserTicket;
 import com.dili.sysadmin.sdk.session.SessionContext;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 /**
  * 由MyBatis Generator工具自动生成
@@ -19,6 +24,22 @@ public class CustomerServiceImpl extends BaseServiceImpl<Customer, Long> impleme
 
     public CustomerMapper getActualDao() {
         return (CustomerMapper)getDao();
+    }
+
+    @Autowired
+    private CacheService cacheService;
+
+    @Override
+    public List<Customer> list(Customer condtion) {
+        condtion.setYn(1);
+        return super.list(condtion);
+    }
+
+    @Override
+    public EasyuiPageOutput listEasyuiPageByExample(Customer domain, boolean useProvider) throws Exception {
+        cacheService.refreshDepartment();
+        domain.setYn(1);
+        return super.listEasyuiPageByExample(domain, useProvider);
     }
 
     public BaseOutput insertSelectiveWithOutput(Customer customer) {
@@ -56,4 +77,6 @@ public class CustomerServiceImpl extends BaseServiceImpl<Customer, Long> impleme
         super.updateSelective(condtion);
         return BaseOutput.success("删除成功");
     }
+
+
 }

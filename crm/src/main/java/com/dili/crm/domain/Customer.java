@@ -117,12 +117,17 @@ public interface Customer extends IBaseDomain {
 
     void setOrganizationType(String organizationType);
 
-    @Column(name = "`source`")
-    @FieldDef(label="归属/来源", maxLength = 20)
+    @Column(name = "`source_system`")
+    @FieldDef(label="来源系统", maxLength = 20)
     @EditMode(editor = FieldEditor.Text, required = false)
-    String getSource();
+    String getSourceSystem();
+    void setSourceSystem(String sourceSystem);
 
-    void setSource(String source);
+    @Column(name = "`department`")
+    @FieldDef(label="归属部门", maxLength = 20)
+    @EditMode(editor = FieldEditor.Text, required = false)
+    String getDepartment();
+    void setDepartment(String department);
 
     @Column(name = "`market`")
     @FieldDef(label="所属市场", maxLength = 20)
