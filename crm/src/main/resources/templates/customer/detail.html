@@ -32,18 +32,68 @@
          function changeOrganizationType(newValue, oldValue) {
              swithByOrganizationType(newValue);
          }
+
+         //验证证件号码
+         function validateCertificateNumber(newValue, year, month, day){
+             //初始化
+             if(year == null || month == null || day == null){
+                 var birthStr = newValue.substr(6,8);
+                 month = birthStr.substr(4,2);
+                 day = birthStr.substr(6,2);
+                 year = birthStr.substr(0,4);
+             }
+            //组织类型必须为个人,并且证件类型为身份证
+             if($("#_organizationType").combobox("getValue") != "individuals" || $("#_certificateType").combobox("getValue") != "id"){
+                 return false;
+             }
+             if(newValue.length < 18 || newValue.length > 19){
+                 $.messager.alert('警告','证件号不合法');
+                 return false;
+             }
+
+             if (isNaN(year) || isNaN(month) || isNaN(day)){
+                 $.messager.alert('警告','证件号不合法');
+                 return false;
+             }
+             if(parseInt(month)<1 || parseInt(month)>12){
+                 $.messager.alert('警告','证件号不合法');
+                 return false;
+             }
+             if(parseInt(day)<1 || parseInt(day)>31){
+                 $.messager.alert('警告','证件号不合法');
+                 return false;
+             }
+             if(parseInt(year)<1900 || parseInt(year)>2100){
+                 $.messager.alert('警告','证件号不合法');
+                 return false;
+             }
+             return true;
+         }
+         //修改证件号，如果证件类型为身份证，在输入18位-19位时，自动完成证件日期
+         function changeCertificateNumber(newValue, oldValue) {
+             var birthStr = newValue.substr(6,8);
+             var month = birthStr.substr(4,2);
+             var day = birthStr.substr(6,2);
+             var year = birthStr.substr(0,4);
+             if(!validateCertificateNumber(newValue, year, month, day)){
+                return;
+             }
+             $('#_certificateTime').datebox('setValue', year+"-"+month+"-"+day);
+         }
+
+
          </script>
     <div class="easyui-layout" fit="true">
         <!-- ====================================================================================================================== -->
         <!-- 上方布局 -->
         <!-- ====================================================================================================================== -->
-        <div region="north" border="false" style="border-bottom: 1px solid;" height="auto" align="center">
-            <div style="display: inline;float:left;width: 500px;padding: 5px;font-size:20px;" align="left">客户查看</div>
-            <div style="display: inline;float:left;width: 500px;padding: 5px;" align="left">
-                <a id="saveBtn" href="#" class="easyui-linkbutton" data-options="width:80" onclick="saveOrUpdate()">保存</a>
-                <a id="cancelBtn" href="#" class="easyui-linkbutton" data-options="width:80" onclick="Javascript:history.back();">取消</a>
-            </div>
-        </div>
+        <!--<div region="north" border="false" style="border-bottom: 1px solid;" height="auto" align="center">-->
+            <!--<div style="display: inline;float:left;width: 500px;padding: 5px;font-size:20px;" align="left">客户查看</div>-->
+            <!--<div style="display: inline;float:left;width: 500px;padding: 5px;" align="left">-->
+                <!--<a id="saveBtn" href="#" class="easyui-linkbutton" data-options="width:80" onclick="saveOrUpdate()">保存</a>-->
+                <!--<a id="cancelBtn" href="#" class="easyui-linkbutton" data-options="width:80" onclick="Javascript:history.back();">取消</a>-->
+            <!--</div>-->
+        <!--</div>-->
         <!-- ====================================================================================================================== -->
         <!-- 中央布局 -->
         <!-- ====================================================================================================================== -->
@@ -67,7 +117,7 @@
 
                     <tr>
                         <td style="padding-top:10px;padding-left:15px;">
-                            <input class="easyui-textbox" name="_name" id="_name" style="width:90%;" data-options="label:'客户名称:', validType:'length[1,40]'" />
+                            <input class="easyui-textbox" name="_name" id="_name" style="width:90%;" data-options="label:'客户名称:', validType:'length[1,40]', required:true" />
                         </td>
                         <td style="padding-top:10px;padding-left:15px;">
                             <input class="easyui-textbox" name="_code" id="_code" style="width:90%;" data-options="label:'客户编码:', validType:'length[0,40]'" />
@@ -80,7 +130,7 @@
 
                     <tr>
                         <td style="padding-top:10px;padding-left:15px;">
-                            <input name="_organizationType" id="_organizationType" style="width:90%;" panelWidth="auto" panelHeight="auto" label="组织类型:" data-options="validType:'length[1,20]', editable:false,  onChange:changeOrganizationType"/>
+                            <input name="_organizationType" id="_organizationType" style="width:90%;" panelWidth="auto" panelHeight="auto" label="组织类型:" data-options="validType:'length[1,20]', required:true, editable:false,  onChange:changeOrganizationType"/>
                             <#comboProvider _id="_organizationType" _provider='dataDictionaryValueProvider' _queryParams='{dd_id:"5"}'/>
                         </td>
                         <td style="padding-top:10px;padding-left:15px;">
@@ -94,11 +144,11 @@
 
                     <tr>
                         <td style="padding-top:10px;padding-left:15px;">
-                            <input name="_certificateType" id="_certificateType" data-options="editable:false" style="width:90%;" panelWidth="auto" panelHeight="auto" label="证件类型:" />
+                            <input name="_certificateType" id="_certificateType" data-options="editable:false, required:true" style="width:90%;" panelWidth="auto" panelHeight="auto" label="证件类型:" />
 
                         </td>
                         <td style="padding-top:10px;padding-left:15px;">
-                            <input class="easyui-textbox" name="_certificateNumber" id="_certificateNumber" style="width:90%;" data-options="label:'证件号:', validType:'length[0,40]'" />
+                            <input class="easyui-textbox" name="_certificateNumber" id="_certificateNumber" style="width:90%;" data-options="label:'证件号:', validType:'length[1,40]', required:true, onChange:changeCertificateNumber" />
                         </td>
                         <td style="padding-top:10px;padding-left:15px;">
                             <input class="easyui-textbox" name="_certificateAddr" id="_certificateAddr" style="width:90%;" data-options="label:'证件地址:', validType:'length[0,100]'" />
@@ -108,12 +158,10 @@
                     <tr>
                         <td style="padding-top:10px;padding-left:15px;">
                             <div class="individuals">
-                            <input class="easyui-datetimebox" name="_certificateTime" id="_certificateTime" style="width:90%;" data-options="label:'证件日期:'"
-                                   required="false" />
+                            <input class="easyui-datebox" name="_certificateTime" id="_certificateTime" style="width:90%;" data-options="label:'证件日期:', required:false, editable:false"/>
                             </div>
                             <div class="enterprise">
-                            <input class="easyui-textbox" name="_certificateRange" id="_certificateRange" style="width:90%;" data-options="label:'证件日期:'"
-                                   required="false" />
+                            <input class="easyui-textbox" name="_certificateRange" id="_certificateRange" style="width:90%;" data-options="label:'证件日期:', required:false"/>
                             </div>
                         </td>
                         <td style="padding-top:10px;padding-left:15px;">
@@ -153,24 +201,22 @@
                             <#comboProvider _id="_sourceSystem" _provider='dataDictionaryValueProvider' _queryParams='{dd_id:"8"}'/>
                         </td>
                         <td style="padding-top:10px;padding-left:15px;">
-                            <input name="_department" id="_department" style="width:90%;" data-options="label:'归属部门:', validType:'length[0,20]'" />
+                            <input name="_department" id="_department" style="width:90%;" data-options="label:'归属部门:', validType:'length[0,20]',editable:false" />
                             <#comboProvider _id="_department" _provider='departmentProvider'/>
                         </td>
                     </tr>
                     <tr>
-                        <td style="padding-top:10px;padding-left:15px;" colspan="3">
-                            <input class="easyui-textbox" name="_notes" id="_notes" style="width:90%;height:80px" data-options="label:'备注信息:', validType:'length[0,250]', multiline:true" />
+                        <td style="padding-top:10px;padding-left:15px;" colspan="2">
+                            <input class="easyui-textbox" name="_notes" id="_notes" style="width:95%;height:80px" data-options="label:'备注信息:', validType:'length[0,250]', multiline:true" />
+                        </td>
+                        <td valign="bottom">
+                            <a id="saveBtn" href="#" class="easyui-linkbutton" data-options="width:80" onclick="saveOrUpdate()">保存</a>&nbsp;&nbsp;
+                            <a id="cancelBtn" href="#" class="easyui-linkbutton" data-options="width:80" onclick="Javascript:history.back();">取消</a>
                         </td>
                     </tr>
                 </table>
             </form>
-        </div>
 
-
-        <!-- ====================================================================================================================== -->
-        <!-- 下方布局 -->
-        <!-- ====================================================================================================================== -->
-        <div region="south" height="auto" border="false" align="left">
             <!--  =========================================================地址div=========================================================  -->
             <div id="addressDiv">
                 <B>地址信息</B><a class="easyui-linkbutton" iconCls="icon-add" onclick="openInsertAddress()"></a>
@@ -197,6 +243,13 @@
                 </table>
             </div> <!-- end of addressDiv -->
         </div>
+
+
+        <!-- ====================================================================================================================== -->
+        <!-- 下方布局 -->
+        <!-- ====================================================================================================================== -->
+        <!--<div region="south" height="auto" border="false" align="left">-->
+        <!--</div>-->
 
 
 
@@ -474,33 +527,42 @@
             if(!$('#_form').form("validate")){
                 return;
             }
-            var _formData = removeKeyStartWith($("#_form").serializeObject(),"_");
-            var _url = null;
-            //没有id就新增
-            if(_formData.id == null || _formData.id==""){
-                _url = "${contextPath}/customer/insert";
-            }else{//有id就修改
-                _url = "${contextPath}/customer/update";
+            if(!validateCertificateNumber($("#_certificateNumber").textbox("getValue"))){
+                return;
             }
-            $.ajax({
-                type: "POST",
-                url: _url,
-                data: _formData,
-                processData:true,
-                dataType: "json",
-                async : true,
-                success: function (data) {
-                    if(data.code=="200"){
-                        $("#grid").treegrid("reload");
-                        $('#dlg').dialog('close');
-                    }else{
-                        $.messager.alert('错误',data.result);
+
+            $.messager.confirm('确认','您确认想要保存吗？',function(r) {
+                if (r) {
+                    $("#saveBtn").linkbutton("disable");
+                    var _formData = removeKeyStartWith($("#_form").serializeObject(),"_");
+                    var _url = null;
+                    //没有id就新增
+                    if(_formData.id == null || _formData.id==""){
+                        _url = "${contextPath}/customer/insert";
+                    }else{//有id就修改
+                        _url = "${contextPath}/customer/update";
                     }
-                },
-                error: function(){
-                    $.messager.alert('错误','远程访问失败');
+                    $.ajax({
+                        type: "POST",
+                        url: _url,
+                        data: _formData,
+                        processData:true,
+                        dataType: "json",
+                        async : true,
+                        success: function (data) {
+                            if(data.code=="200"){
+                                window.location.href="${contextPath}/customer/index.html";
+                            }else{
+                                $.messager.alert('错误',data.result);
+                            }
+                        },
+                        error: function(){
+                            $.messager.alert('错误','远程访问失败');
+                        }
+                    });
                 }
             });
+
         }
 
         //根据主键删除客户
