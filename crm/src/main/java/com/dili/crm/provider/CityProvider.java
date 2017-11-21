@@ -11,6 +11,7 @@ import com.dili.ss.metadata.ValuePairImpl;
 import com.dili.ss.metadata.ValueProvider;
 import com.dili.ss.util.CharUtil;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.math.NumberUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -57,6 +58,9 @@ public class CityProvider implements ValueProvider {
     public String getDisplayText(Object obj, Map metaMap, FieldMeta fieldMeta) {
         if(obj == null || obj.equals("")) return null;
         cacheService.refreshCity();
+        if(!NumberUtils.isDigits(obj.toString())){
+            return null;
+        }
         City city = CrmCache.cityMap.get(Long.parseLong(obj.toString()));
         if(city == null){
             return null;

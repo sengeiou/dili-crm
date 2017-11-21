@@ -81,12 +81,16 @@ public class CustomerController {
 		JSONObject ownerProvider = new JSONObject();
 		ownerProvider.put("provider", "ownerProvider");
 		metadata.put("ownerId", ownerProvider);
+		JSONObject cityProvider = new JSONObject();
+		cityProvider.put("provider", "cityProvider");
+		metadata.put("operatingArea", cityProvider);
 		metadata.put("certificateType", getDDProvider(3L));
 		metadata.put("organizationType", getDDProvider(5L));
 		metadata.put("market", getDDProvider(2L));
 		metadata.put("type", getDDProvider(4L));
 		metadata.put("profession", getDDProvider(6L));
 		metadata.put("certificateTime", getDatetimeProvider());
+
 		metadata.put("created", getDatetimeProvider());
 		return metadata;
 	}

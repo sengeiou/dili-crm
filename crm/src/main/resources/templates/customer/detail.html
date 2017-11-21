@@ -5,7 +5,24 @@
          //标识键盘选择的时候不进行后台联想
          var isSelect = false;
          //标识城市控件是否为手工输入状态(手工输入不合法)
-         var manualInput = true;
+         var manualInput = false;
+
+         //加载成功后默认选中第一项
+        function onComboLoadSuccess() {
+            var data = $(this).combobox("getData");
+            if(data == null || data.length<=0) return;
+            $("#_operatingArea").combobox("select", data[0]["value"]);
+        }
+         //根据newValue加载combobx(easyui的jquery对象)
+         function reloadCombobox(jq, newValue) {
+             if(newValue && newValue.length >= 1){
+                 var opts = jq.combobox("options");
+                 opts.queryParams.value = jq.combobox("getValue");
+                 jq.combobox("reload");
+//                 alert("newValue:"+newValue+", value:"+jq.combobox("getValue"));
+//                 alert(jq.combobox("getData"));
+             }
+         }
          //联想输入框演示
          function changeName(newValue, oldValue){
              //值改变时，判断如果是选择输入，不联想
@@ -15,11 +32,7 @@
              }else{//不是选择输入，则标识当前为人工输入(不合法)
                  manualInput = true;
              }
-             if(newValue && newValue.length >= 1){
-                 var opts = $(this).combobox("options");
-                 opts.queryParams.value = $(this).combobox("getValue");
-                 $(this).combobox("reload");
-             }
+             reloadCombobox($(this), newValue);
          }
          //键盘下键选择的时候设置isSelect标识为true,在onchange事件时判断isSelect标识为true不联想
          function selectName(record){
@@ -165,7 +178,7 @@
                             </div>
                         </td>
                         <td style="padding-top:10px;padding-left:15px;">
-                            <input name="_operatingArea" id="_operatingArea" style="width:90%;" panelWidth="auto" panelHeight="auto" label="经营地区:"  data-options="validType:'length[0,100]', editable:true, hasDownArrow:false, onChange:changeName, onSelect:selectName"/>
+                            <input name="_operatingArea" id="_operatingArea" style="width:90%;" panelWidth="auto" panelHeight="auto" label="经营地区:"  data-options="validType:'length[0,100]', editable:true, hasDownArrow:false, onChange:changeName, onSelect:selectName, onLoadSuccess:onComboLoadSuccess"/>
                             <#comboProvider _id="_operatingArea" _provider="cityProvider" _valueField="value" _textField="label" />
                         </td>
                         <td style="padding-top:10px;padding-left:15px;">
@@ -455,10 +468,11 @@
             }
             $('#_form').form('clear');
             var formData = $.extend({},selected);
+
             //设置客户所有者(这里表格中的提供者已经作了转义,只需要对应上字段即可)
             formData["ownerName"] = selected["ownerId"];
             //设置父id
-            formData["parentId"] = selected["parentId"];
+//            formData["parentId"] = selected["parentId"];
             //设置上级客户名称
             <%
             if(has(parentCustomer) && parentCustomer!=null){
@@ -469,57 +483,13 @@
             %>
 
             //根据组织类型加载证件类型、性别、民族、证件日期控件、注册资金和企业员工数
-            loadByOrganizationType(formData)
+            loadByOrganizationType(formData);
             formData = addKeyStartWith(getOriginalData(formData),"_");
-            formFocus("_form", "_name");
+            formData["_operatingArea"] = selected["operatingArea"];
             $('#_form').form('load', formData);
+
+            formFocus("_form", "_name");
            // listAddress();
-        }
-
-        //根据组织类型加载和显示相关字段(证件类型、性别、民族、证件日期控件、注册资金和企业员工数)
-        function loadByOrganizationType(formData) {
-            swithByOrganizationType(formData[orginal_key_prefix + "organizationType"]);
-        }
-
-        //根据组织类型切换控件
-        function swithByOrganizationType(organizationType){
-//            根据组织类型加载证件类型下拉框
-            loadCertificateTypeByOrganizationType(organizationType);
-            if(organizationType == "individuals"){
-                $(".individuals").show();
-                $(".enterprise").hide();
-            }else if(organizationType == "enterprise"){
-                $(".individuals").hide();
-                $(".enterprise").show();
-            }
-        }
-
-        //修改客户时，根据组织类型加载证件类型
-        function loadCertificateTypeByOrganizationType(organizationType) {
-            $.ajax({
-                type: "POST",
-                url: "${contextPath}/customer/getCertificateTypeComboboxData",
-                data: {"organizationType":organizationType},
-                processData:true,
-                dataType: "json",
-                async : false,
-                success: function (result) {
-                    if(result.code=="200"){
-                        //加载证件类型
-                        $("#_certificateType").combobox({
-                            data:eval("("+result.data+")")
-                            ,valueField:"value"
-                            ,textField:"text"
-                        });
-                    }else{
-                        $.messager.alert('错误',result.result);
-                    }
-                },
-                error: function(){
-                    $.messager.alert('错误','远程访问失败');
-                }
-            });
-
         }
 
         //保存客户
@@ -595,6 +565,52 @@
                     });
                 }
             });
+        }
+
+        //根据组织类型加载和显示相关字段(证件类型、性别、民族、证件日期控件、注册资金和企业员工数)
+        function loadByOrganizationType(formData) {
+            swithByOrganizationType(formData[orginal_key_prefix + "organizationType"]);
+        }
+
+        //根据组织类型切换控件
+        function swithByOrganizationType(organizationType){
+//            根据组织类型加载证件类型下拉框
+            loadCertificateTypeByOrganizationType(organizationType);
+            if(organizationType == "individuals"){
+                $(".individuals").show();
+                $(".enterprise").hide();
+            }else if(organizationType == "enterprise"){
+                $(".individuals").hide();
+                $(".enterprise").show();
+            }
+        }
+
+        //修改客户时，根据组织类型加载证件类型
+        function loadCertificateTypeByOrganizationType(organizationType) {
+            $.ajax({
+                type: "POST",
+                url: "${contextPath}/customer/getCertificateTypeComboboxData",
+                data: {"organizationType":organizationType},
+                processData:true,
+                dataType: "json",
+                async : false,
+                success: function (result) {
+                    if(result.code=="200"){
+                        //加载证件类型
+                        $("#_certificateType").combobox({
+                            data:eval("("+result.data+")")
+                            ,valueField:"value"
+                            ,textField:"text"
+                        });
+                    }else{
+                        $.messager.alert('错误',result.result);
+                    }
+                },
+                error: function(){
+                    $.messager.alert('错误','远程访问失败');
+                }
+            });
+
         }
 
         //清空客户表单
