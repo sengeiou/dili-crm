@@ -1,5 +1,6 @@
  <#body>
      <script type="text/javascript">
+         <#controls_user dlgId="userSelectDialog"/>
          //弹出框的高度(减去的230是菜单和tab的高度)
         var dlgHeight = window.screen.height-230;
          //-----------------------------  城市控件js st  -----------------------------
@@ -35,6 +36,7 @@
          }
          </script>
     <div class="easyui-layout" fit="true">
+        <div id="userSelectDialog" style="display: none;"></div>
         <!-- ====================================================================================================================== -->
         <!-- 上方布局 -->
         <!-- ====================================================================================================================== -->
@@ -79,6 +81,10 @@
                                 <a href="#" class="easyui-linkbutton" id="queryBtn" data-options="width:80"
                                    onclick="queryGrid()">查询</a>
                                 <a href="javascript:void(0)" class="easyui-linkbutton" data-options="width:80" onclick="clearForm()">清除</a>
+                                <input class="easyui-textbox" name="user" id="user" panelWidth="auto" panelHeight="auto" label="用户选择:"
+                                       data-options="editable:false,
+									buttonText:'选择',
+									onClickButton:selectUser,onChange:_changeTextboxShowClear" />
                             </td>
                         </tr>
                     </table>
