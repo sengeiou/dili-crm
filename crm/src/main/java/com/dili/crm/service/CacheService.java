@@ -10,4 +10,10 @@ public interface CacheService {
 	 * 刷新部门缓存
 	 */
 	void refreshDepartment();
+
+	/**
+	 * 刷新城市缓存
+	 */
+	void refreshCity();
+
 }

@@ -1,6 +1,8 @@
 package com.dili.crm.provider;
 
+import com.dili.crm.cache.CrmCache;
 import com.dili.crm.domain.City;
+import com.dili.crm.service.CacheService;
 import com.dili.crm.service.CityService;
 import com.dili.ss.dto.DTOUtils;
 import com.dili.ss.metadata.FieldMeta;
@@ -21,6 +23,9 @@ import java.util.Map;
  */
 @Component
 public class CityProvider implements ValueProvider {
+
+    @Autowired
+    private CacheService cacheService;
 
     @Autowired
     private CityService cityService;
@@ -51,8 +56,11 @@ public class CityProvider implements ValueProvider {
     @Override
     public String getDisplayText(Object obj, Map metaMap, FieldMeta fieldMeta) {
         if(obj == null || obj.equals("")) return null;
-        City city= cityService.get(Long.parseLong(obj.toString()));
-        if(city == null) return null;
+        cacheService.refreshCity();
+        City city = CrmCache.cityMap.get(Long.parseLong(obj.toString()));
+        if(city == null){
+            return null;
+        }
         return city.getMergerName();
     }
 }

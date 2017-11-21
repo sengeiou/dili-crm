@@ -4,12 +4,11 @@ import com.alibaba.rocketmq.common.message.MessageExt;
 import com.dili.ss.rocketmq.RocketMQListener;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.stereotype.Component;
 
 /**
  * Created by asiamaster on 2017/11/7 0007.
  */
-@Component
+//@Component
 public class MsgListener implements RocketMQListener {
 
 	protected static final Logger log = LoggerFactory.getLogger(MsgListener.class);

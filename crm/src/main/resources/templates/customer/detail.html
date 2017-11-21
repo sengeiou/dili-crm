@@ -165,7 +165,8 @@
                             </div>
                         </td>
                         <td style="padding-top:10px;padding-left:15px;">
-                            <input class="easyui-textbox" name="_operatingArea" id="_operatingArea" style="width:90%;" data-options="label:'经营地区:', validType:'length[0,100]'" />
+                            <input name="_operatingArea" id="_operatingArea" style="width:90%;" panelWidth="auto" panelHeight="auto" label="经营地区:"  data-options="validType:'length[0,100]', editable:true, hasDownArrow:false, onChange:changeName, onSelect:selectName"/>
+                            <#comboProvider _id="_operatingArea" _provider="cityProvider" _valueField="value" _textField="label" />
                         </td>
                         <td style="padding-top:10px;padding-left:15px;">
                             <input class="easyui-textbox" name="_otherTitle" id="_otherTitle" style="width:90%;" data-options="label:'其它头衔:', validType:'length[0,40]'" />
