@@ -1,6 +1,6 @@
 <div style="margin: 5px 5px;">
 	<form class="easyui-form" id="searchCustomerForm">
-	客户名: <input id="searchCustomerTextbox" name="searchCustomerTextbox" class="easyui-textbox" data-options="buttonIcon:'icon-search',onClickButton:search" style="width: 300px">
+	客户名: <input id="searchCustomerTextbox" name="searchCustomerTextbox" class="easyui-textbox" data-options="buttonIcon:'icon-search',onClickButton:search,onChange:_changeTextboxShowClear" style="width: 300px">
 	</form>
 </div>
 <table class="easyui-datagrid" id="selectCustomerGrid" sortName="name" sortOrder="asc" fitColumns="true" remoteSort="false" loadMsg="数据加载中..." singleSelect="true" method="post" multiSort="true"
