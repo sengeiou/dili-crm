@@ -57,7 +57,7 @@ public class SelectDialogController {
 
 	@ResponseBody
 	@RequestMapping(value = "/listCustomer", method = { RequestMethod.GET, RequestMethod.POST }, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-	public List<Customer> listCustomer(ModelMap modelMap, Customer customer) {
-		return this.customerService.listByExample(customer);
+	public String listCustomer(ModelMap modelMap, Customer customer) throws Exception {
+		return this.customerService.listEasyuiPageByExample(customer, true).toString();
 	}
 }

@@ -1,6 +1,7 @@
  <#body>
      <script type="text/javascript">
-         <#controls_user dlgId="userSelectDialog"/>
+         <#controls_user dlgId="userSelectDialog" controlId="user"/>
+         <#controls_customer dlgId="customerSelectDialog" controlId="customer"/>
          //弹出框的高度(减去的230是菜单和tab的高度)
         var dlgHeight = window.screen.height-230;
          //-----------------------------  城市控件js st  -----------------------------
@@ -37,6 +38,7 @@
          </script>
     <div class="easyui-layout" fit="true">
         <div id="userSelectDialog" style="display: none;"></div>
+        <div id="customerSelectDialog" style="display: none;"></div>
         <!-- ====================================================================================================================== -->
         <!-- 上方布局 -->
         <!-- ====================================================================================================================== -->
@@ -59,7 +61,12 @@
                                 <input name="type" id="type" style="width:100%;" panelWidth="auto" panelHeight="auto" label="客户类型:"/>
                                 <#comboProvider _id="type" _provider='dataDictionaryValueProvider' _queryParams='{dd_id:"4"}'/>
                             </td>
-
+                            <td>
+                                <input class="easyui-textbox" name="customer" id="customer" panelWidth="auto" panelHeight="auto" label="客户选择:" style="width: 255px;"
+                                       data-options="editable:false,
+									buttonText:'选择',
+									onClickButton:selectCustomer,onChange:_changeTextboxShowClear" />
+                            </td>
                         </tr>
                         <tr>
 
@@ -78,13 +85,16 @@
 
                             </td>
                             <td>
-                                <a href="#" class="easyui-linkbutton" id="queryBtn" data-options="width:80"
-                                   onclick="queryGrid()">查询</a>
-                                <a href="javascript:void(0)" class="easyui-linkbutton" data-options="width:80" onclick="clearForm()">清除</a>
-                                <input class="easyui-textbox" name="user" id="user" panelWidth="auto" panelHeight="auto" label="用户选择:"
+                                <input class="easyui-textbox" name="user" id="user" panelWidth="auto" panelHeight="auto" label="用户选择:" style="width: 255px;"
                                        data-options="editable:false,
 									buttonText:'选择',
 									onClickButton:selectUser,onChange:_changeTextboxShowClear" />
+                            </td>
+                            <td>
+                                <a href="#" class="easyui-linkbutton" id="queryBtn" data-options="width:80"
+                                   onclick="queryGrid()">查询</a>
+                                <a href="javascript:void(0)" class="easyui-linkbutton" data-options="width:80" onclick="clearForm()">清除</a>
+
                             </td>
                         </tr>
                     </table>
@@ -100,7 +110,7 @@
             <table class="easyui-treegrid" id="grid" fitColumns="true"  title="客户信息" noheader="true"
                    pagination="true" pageSize="30" pageNumber="1" pagePosition="top" rownumbers="true" remoteSort="false"
                    loadMsg="数据加载中..." singleSelect="true" method="post" multiSort="false" sortName="name"
-                   align="center" fit="true" striped="true"
+                   align="center" fit="true" striped="true" url="${contextPath}/customer/listPage"
                    data-options="onDblClickRow:openUpdate,
                    onHeaderContextMenu:headerContextMenu,
                    autoRowHeight:false,
@@ -221,10 +231,7 @@
             if(!$('#form').form("validate")){
                 return;
             }
-            var param = bindMetadata("grid", true);
-            var formData = $("#form").serializeObject();
-            $.extend(param, formData);
-            $("#grid").treegrid("load", param);
+            $("#grid").treegrid("load", bindGridMeta2Form("grid", "form"));
         }
 
 
@@ -320,6 +327,9 @@
             });
             //表格仅显示下边框
             $('#grid').datagrid('getPanel').removeClass('lines-both lines-no lines-right lines-bottom').addClass("lines-bottom");
+
+
+
         })
     </script>
 </#body>
