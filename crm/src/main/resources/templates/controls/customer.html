@@ -4,15 +4,15 @@
 	</form>
 </div>
 <table class="easyui-datagrid" id="selectCustomerGrid" sortName="name" sortOrder="asc" fitColumns="true" remoteSort="false" loadMsg="数据加载中..." singleSelect="true" method="post" multiSort="true"
-	align="center" fit="true" striped="true" idField="id" url="${contextPath!}/selectDialog/listCustomer" data-options="onDblClickRow:dbClickCustomer">
+	align="center" fit="true" striped="true" idField="id" pagination="true" pageSize="30" pageNumber="1" pagePosition="top" rownumbers="true"
+	   data-options="onDblClickRow:dbClickCustomer">
 	<thead>
 		<tr>
-			<th data-options="field:'name',width:'16%'">客户名</th>
-			<th data-options="field:'code',width:'16%'">编码</th>
-			<th data-options="field:'certificateNumber',width:'16%'">证件号</th>
-			<th data-options="field:'phone',width:'16%'">电话</th>
-			<th data-options="field:'sourceSystem', _provider:'dataDictionaryValueProvider', _queryParams:{'dd_id':'8'}, width:'16%'">来源系统</th>
-			<th data-options="field:'department', _provider:'departmentProvider', width:'16%'">归属部门</th>
+			<th data-options="field:'name',width:50">客户名</th>
+			<th data-options="field:'code',width:50">编码</th>
+			<th data-options="field:'phone',width:50">电话</th>
+			<th data-options="field:'sourceSystem', _provider:'dataDictionaryValueProvider', _queryParams:{'dd_id':'8'}, width:50">来源系统</th>
+			<th data-options="field:'department', _provider:'departmentProvider', width:'50'">归属部门</th>
 		</tr>
 	</thead>
 </table>
@@ -23,16 +23,17 @@
 	}
 	function search() {
 		var opts = $("#selectCustomerGrid").datagrid("options");
-//		opts.url = '${contextPath!}/selectDialog/listCustomer';
+        if (null == opts.url || "" == opts.url) {
+            opts.url = '${contextPath!}/selectDialog/listCustomer';
+        }
 		var text = $('#searchCustomerTextbox').textbox('getText');
-		$('#selectCustomerGrid').datagrid('load', bindGridMeta2Data("selectCustomerGrid",{
-            name : text
-        }));
+		$('#selectCustomerGrid').datagrid('load', bindGridMeta2Data("selectCustomerGrid",{name : text}));
 	}
 
 	$(function() {
 		$('#searchCustomerTextbox').textbox('addClearBtn', 'icon-clear');
 		$('#searchCustomerTextbox').textbox('textbox').focus();
         bindFormEvent("searchCustomerForm", "searchCustomerTextbox", search, closeCustomerSelectDlg);
+        search();
 	})
 </script>
