@@ -33,6 +33,6 @@
 	$(function() {
 		$('#searchCustomerTextbox').textbox('addClearBtn', 'icon-clear');
 		$('#searchCustomerTextbox').textbox('textbox').focus();
-        bindFormEvent("searchCustomerForm", "searchCustomerTextbox", search);
+        bindFormEvent("searchCustomerForm", "searchCustomerTextbox", search, closeCustomerSelectDlg);
 	})
 </script>

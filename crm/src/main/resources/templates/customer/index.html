@@ -65,7 +65,7 @@
                                 <input class="easyui-textbox" name="customer" id="customer" panelWidth="auto" panelHeight="auto" label="客户选择:" style="width: 255px;"
                                        data-options="editable:false,
 									buttonText:'选择',
-									onClickButton:selectCustomer,onChange:_changeTextboxShowClear" />
+									onClickButton:_selectCustomer,onChange:_changeTextboxShowClear" />
                             </td>
                         </tr>
                         <tr>
@@ -88,7 +88,7 @@
                                 <input class="easyui-textbox" name="user" id="user" panelWidth="auto" panelHeight="auto" label="用户选择:" style="width: 255px;"
                                        data-options="editable:false,
 									buttonText:'选择',
-									onClickButton:selectUser,onChange:_changeTextboxShowClear" />
+									onClickButton:_selectUser,onChange:_changeTextboxShowClear" />
                             </td>
                             <td>
                                 <a href="#" class="easyui-linkbutton" id="queryBtn" data-options="width:80"
@@ -296,7 +296,7 @@
             }
             var pager = $('#grid').treegrid('getPager');    // get the pager of treegrid
             pager.pagination({
-                layout:['list','sep','first','prev','links','next','last','sep','refresh'],
+                layout:['list','sep','first','prev','links','next','last','sep','refresh','info'],
                 links:3,
                 buttons:[{
                     iconCls:'icon-add',

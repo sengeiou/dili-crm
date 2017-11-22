@@ -1,5 +1,5 @@
 // 打开选择用户弹出框
-function selectCustomer(callback, args) {
+function _selectCustomer(callback, args) {
 	if (callback) {
 		eval("(" + callback + "(args))");
 	} else {
@@ -11,6 +11,10 @@ function confirmCustomerBtn(id) {
 	var selected = $('#selectCustomerGrid').datagrid('getSelected');
 	$('#' + id).textbox('setValue', selected.id);
 	$('#' + id).textbox('setText', selected.name);
+	$('#${dlgId}').dialog('close');
+}
+//关闭用户选择窗口
+function closeCustomerSelectDlg(){
 	$('#${dlgId}').dialog('close');
 }
 // 根据id打开用户选择
@@ -32,7 +36,7 @@ function showCustomerDlg(id) {
 						}, {
 							text : '取消',
 							handler : function() {
-								$('#${dlgId}').dialog('close');
+								closeCustomerSelectDlg();
 							}
 						}]
 			});
