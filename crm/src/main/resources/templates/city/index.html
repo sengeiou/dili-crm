@@ -91,7 +91,7 @@
 					   loadFilter:treegridLoadFilter">
                 <thead>
                     <tr>
-                        <th data-options="field:'name',   sortable:'true', order:'asc', align:'center', resizable:'true', fixed:'false'">
+                        <th data-options="field:'name',   sortable:'true', order:'asc', align:'left', resizable:'true', fixed:'false'">
                             名称
                         </th>
                         <th data-options="field:'created',  _provider:'datetimeProvider', sortable:'true', order:'asc', align:'center', resizable:'true', fixed:'false'">
@@ -396,6 +396,7 @@
             var formData = $("#form").serializeObject();
             $.extend(param, formData);
             $("#grid").treegrid("load", param);
+          
         }
 
 
@@ -449,7 +450,7 @@
          */
         $(function () {
             bindFormEvent("form", "created", queryGrid);
-            bindFormEvent("_form", "_created", saveOrUpdate, function (){$('#dlg').dialog('close');});
+            //bindFormEvent("_form", "_created", saveOrUpdate, function (){$('#dlg').dialog('close');});
             if (document.addEventListener) {
                 document.addEventListener("keyup",getKey,false);
             } else if (document.attachEvent) {
@@ -459,31 +460,26 @@
             }
             $("#grid").treegrid({
             	"onBeforeExpand":function(row,param){
-            		console.info(JSON.stringify(row))
                 	$("#grid").treegrid("options").url ="${contextPath}/city/listPage?parentId="+row.id;
                 },
                 "onBeforeLoad":function(row,param){
             		if(param['id']){
             			delete param['id'];
             		}
-                	//$("#grid").treegrid("options").url = "${contextPath}/city/listPage?parentId="+row.id;
                 },
                 "onLoadSuccess":function(){
+                	  var root=$("#grid").treegrid("getRoot");
+                	  var children=$("#grid").treegrid("getChildren",root.id);
+                	  if(root&&children&&children.length==0){//展开第一级,加载第二级节点数据
+                      	$("#grid").treegrid("expand",root.id);
+                	  }
                 	$("#grid").treegrid("options").url="${contextPath}/city/listPage?parentId=0";
                 }
             	
             	
             	
             });
-            
-/*             $("#grid").treegrid({
-            	"loadFilter":function(data,parentId){
-                	var array=treegridLoadFilter(data,parentId);
-                	//console.info(JSON.stringify(array));
-                	return array;
-                }
-            	
-            }); */
+
             
         })
         function cityTreegridLoadFilter(data,parentId){
@@ -491,5 +487,8 @@
         	//console.info(JSON.stringify(array));
         	return array;
         }
+        $(document).ready(function(){
+        	//queryGrid();
+        });
     </script>
 </#body>
