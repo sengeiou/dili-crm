@@ -39,6 +39,7 @@
     <div class="easyui-layout" fit="true">
         <div id="userSelectDialog" style="display: none;"></div>
         <div id="customerSelectDialog" style="display: none;"></div>
+        <div style="height:100px">hello</div>
         <!-- ====================================================================================================================== -->
         <!-- 上方布局 -->
         <!-- ====================================================================================================================== -->
@@ -108,9 +109,9 @@
         <div region="center" style="width:100%;" height="auto">
             <!-- =========================================================表格========================================================= -->
             <table class="easyui-treegrid" id="grid" fitColumns="true"  title="客户信息" noheader="true"
-                   pagination="true" pageSize="30" pageNumber="1" pagePosition="top" rownumbers="true" remoteSort="false"
+                   pagination="true" pageSize="30" pageNumber="1" pagePosition="top" rownumbers="true" remoteSort="true"
                    loadMsg="数据加载中..." singleSelect="true" method="post" multiSort="false" sortName="name"
-                   align="center" fit="true" striped="true" url="${contextPath}/customer/listPage"
+                   align="center" fit="true" striped="true"
                    data-options="onDblClickRow:openUpdate,
                    onHeaderContextMenu:headerContextMenu,
                    autoRowHeight:false,
@@ -328,7 +329,8 @@
             //表格仅显示下边框
             $('#grid').datagrid('getPanel').removeClass('lines-both lines-no lines-right lines-bottom').addClass("lines-bottom");
 
-
+            //打开页面时查询
+            queryGrid();
 
         })
     </script>
