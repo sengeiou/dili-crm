@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.dili.crm.dao.CustomerVisitMapper">
+  <resultMap id="BaseResultMap" type="com.dili.crm.domain.CustomerVisit">
+    <!--
+      WARNING - @mbg.generated
+    -->
+    <id column="id" jdbcType="BIGINT" property="id" />
+    <result column="user_id" jdbcType="BIGINT" property="userId" />
+    <result column="customer_id" jdbcType="BIGINT" property="customerId" />
+    <result column="subject" jdbcType="VARCHAR" property="subject" />
+    <result column="mode" jdbcType="VARCHAR" property="mode" />
+    <result column="priority" jdbcType="VARCHAR" property="priority" />
+    <result column="finish_time" jdbcType="TIMESTAMP" property="finishTime" />
+    <result column="state" jdbcType="INTEGER" property="state" />
+    <result column="notes" jdbcType="VARCHAR" property="notes" />
+    <result column="created" jdbcType="TIMESTAMP" property="created" />
+    <result column="modified" jdbcType="TIMESTAMP" property="modified" />
+    <result column="modified_id" jdbcType="BIGINT" property="modifiedId" />
+    <result column="created_id" jdbcType="BIGINT" property="createdId" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    <!--
+      WARNING - @mbg.generated
+    -->
+    id, user_id, customer_id, subject, mode, priority, finish_time, state, notes, created, 
+    modified, modified_id, created_id
+  </sql>
+  <select id="selectBy" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    <!--
+      WARNING - @mbg.generated
+    -->
+    select 
+    <include refid="Base_Column_List" />
+    from customer_visit
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <update id="updateBy" parameterType="com.dili.crm.domain.CustomerVisit">
+    <!--
+      WARNING - @mbg.generated
+    -->
+    update customer_visit
+    <set>
+      <if test="userId != null">
+        user_id = #{userId,jdbcType=BIGINT},
+      </if>
+      <if test="customerId != null">
+        customer_id = #{customerId,jdbcType=BIGINT},
+      </if>
+      <if test="subject != null">
+        subject = #{subject,jdbcType=VARCHAR},
+      </if>
+      <if test="mode != null">
+        mode = #{mode,jdbcType=VARCHAR},
+      </if>
+      <if test="priority != null">
+        priority = #{priority,jdbcType=VARCHAR},
+      </if>
+      <if test="finishTime != null">
+        finish_time = #{finishTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="state != null">
+        state = #{state,jdbcType=INTEGER},
+      </if>
+      <if test="notes != null">
+        notes = #{notes,jdbcType=VARCHAR},
+      </if>
+      <if test="created != null">
+        created = #{created,jdbcType=TIMESTAMP},
+      </if>
+      <if test="modified != null">
+        modified = #{modified,jdbcType=TIMESTAMP},
+      </if>
+      <if test="modifiedId != null">
+        modified_id = #{modifiedId,jdbcType=BIGINT},
+      </if>
+      <if test="createdId != null">
+        created_id = #{createdId,jdbcType=BIGINT},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+</mapper>

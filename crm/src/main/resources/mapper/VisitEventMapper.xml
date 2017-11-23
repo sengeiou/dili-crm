@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.dili.crm.dao.VisitEventMapper">
+  <resultMap id="BaseResultMap" type="com.dili.crm.domain.VisitEvent">
+    <!--
+      WARNING - @mbg.generated
+    -->
+    <id column="id" jdbcType="BIGINT" property="id" />
+    <result column="customer_visit_id" jdbcType="BIGINT" property="customerVisitId" />
+    <result column="time" jdbcType="TIMESTAMP" property="time" />
+    <result column="mode" jdbcType="VARCHAR" property="mode" />
+    <result column="user_id" jdbcType="BIGINT" property="userId" />
+    <result column="notes" jdbcType="VARCHAR" property="notes" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    <!--
+      WARNING - @mbg.generated
+    -->
+    id, customer_visit_id, time, mode, user_id, notes
+  </sql>
+  <select id="selectBy" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    <!--
+      WARNING - @mbg.generated
+    -->
+    select 
+    <include refid="Base_Column_List" />
+    from visit_event
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <update id="updateBy" parameterType="com.dili.crm.domain.VisitEvent">
+    <!--
+      WARNING - @mbg.generated
+    -->
+    update visit_event
+    <set>
+      <if test="customerVisitId != null">
+        customer_visit_id = #{customerVisitId,jdbcType=BIGINT},
+      </if>
+      <if test="time != null">
+        time = #{time,jdbcType=TIMESTAMP},
+      </if>
+      <if test="mode != null">
+        mode = #{mode,jdbcType=VARCHAR},
+      </if>
+      <if test="userId != null">
+        user_id = #{userId,jdbcType=BIGINT},
+      </if>
+      <if test="notes != null">
+        notes = #{notes,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+</mapper>
