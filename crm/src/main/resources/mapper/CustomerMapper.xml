@@ -32,6 +32,13 @@
     <result column="modified" jdbcType="TIMESTAMP" property="modified" />
     <result column="yn" jdbcType="INTEGER" property="yn" />
   </resultMap>
+  <resultMap id="CustomerChartResultMap" type="com.dili.crm.domain.dto.CustomerChartDTO">
+   
+    <result column="count" jdbcType="INTEGER" property="count" />
+    <result column="market" jdbcType="VARCHAR" property="market" />
+    <result column="type" jdbcType="VARCHAR" property="type" />
+    <result column="profession" jdbcType="VARCHAR" property="profession" />
+  </resultMap>
   <sql id="Base_Column_List">
     <!--
       WARNING - @mbg.generated
@@ -134,4 +141,21 @@
     </set>
     where id = #{id,jdbcType=BIGINT}
   </update>
+  
+  <select id="selectCustomersGroupByType" parameterType="java.lang.Long" resultMap="CustomerChartResultMap">
+    select type,count(1) AS `count`
+    from customer
+    group by type
+ </select>
+  
+   <select id="selectCustomersGroupByMarket" parameterType="java.lang.Long" resultMap="CustomerChartResultMap">
+    select market,count(1) AS `count`
+    from customer
+    group by market
+ </select>
+  <select id="selectCustomersGroupByProfession" parameterType="java.lang.Long" resultMap="CustomerChartResultMap">
+    select profession,count(1) AS `count`
+    from customer
+    group by profession
+ </select>
 </mapper>
