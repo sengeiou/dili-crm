@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8" />
+    <title>地利客户关系管理系统</title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="keywords" content="" />
+    <meta name="description" content="" />
+    <meta name="author" content="Teaism">
+    <link rel="stylesheet" href="" />
+    <!-- jquery -->
+    <script type="text/javascript" src="${contextPath}/resources/easyui/js/jquery-3.2.1.min.js"></script>
+    <style>
+        /*reset*/
+        body,ul,ol,li,p,h1,h2,h3,h4,h5,h6,form,fieldset,table,td,img,div,dl,dt,dd,input { margin:0; padding:0; }
+        body {font:14px/1.5  "Microsoft YaHei","Helvetica", "Tahoma", "Arial", "STXihei", "SimSun",  "sans-serif";}
+        /*input.background:none;IE6*/
+        input, select, textarea { outline:none; border:none; background:none; }
+        textarea { resize:none; }
+        img { border:none; }
+        li { list-style:none;}
+        a { text-decoration:none; }
+        .clearfix:before,
+        .clearfix:after {content:""; display:block; clear:both;}
+        .clearfix { *zoom:1; }
+        .fl { float: left; }
+        .fr { float: right; }
+        i,span,em,strong,img,a,h1,h2,h3,h4,h5,h6{font-style: normal; font-weight: normal;}
+
+        body {
+            background-color: #ddd;
+        }
+        .login {
+            width: 400px;
+            background-color: #fff;
+            margin: 200px auto 0;
+            border-spacing: 0;
+        }
+        .login h2 {
+            width: 100%;
+            height: 46px;
+            background-color: #118bde;
+            color: #fff;
+            line-height: 46px;
+            text-align: center;
+        }
+        .userinfo {
+            width: 300px;
+            margin: 30px auto 20px;
+        }
+        .userinfo td {
+            display: inline-block;
+            height: 46px;
+            line-height: 46px;
+            margin-top: 10px;
+            margin-bottom: 10px;
+            color: #666;
+        }
+        .userinfo input {
+            width: 200px;
+            height: 46px;
+            box-sizing: border-box;
+            border: 2px solid #ddd;
+            line-height: 46px;
+            font-size: 13px;
+            color: #999;
+            text-indent: 20px;
+        }
+        .userinfo tr:last-child td {
+            margin-top: 40px;
+        }
+        .userinfo .submit {
+            margin-left: 56px;
+            background-color: #118bde;
+            border-radius: 5px;
+            border-color: #118bde;
+            color: #fff;
+            font-size: 18px;
+            text-indent: 0;
+            cursor: pointer;
+        }
+        .userinfo .submit:hover {
+            background-color: #169cf7;
+
+        }
+
+        .error-message{
+            margin: 4px 0 0 0;
+            padding: 0;
+            color: red;
+        }
+
+    </style>
+</head>
+<body>
+<div class="login">
+    <div><h2>地利客户关系管理系统</h2></div>
+    <div id="errMsg">
+    </div>
+    <form id="loginForm" method="post" action="${contextPath}/login/loginAction">
+        <table class="userinfo">
+            <tbody>
+            <tr>
+                <td>帐号:&nbsp;</td>
+                <td><input id="username" name="username" value="admin" type="text"></td>
+            </tr>
+            <tr>
+                <td>密码:&nbsp;</td>
+                <td><input id="password" name="password" value="asdf1234" type="password"></td>
+            </tr>
+            <tr>
+                <td colspan="2"><input type="button" class="submit" value="登录" onclick="doLogin()"></td>
+            </tr>
+            </tbody>
+        </table>
+    </form>
+</div>
+<script type="text/javascript">
+    function doLogin() {
+        var username = document.getElementById("username").value;
+        if (null == username || "" == username) {
+            alert("账号不能为空");
+            return false;
+        }
+
+        var password = document.getElementById("password").value;
+        if (null == password || "" == password) {
+            alert("密码不能为空");
+            return false;
+        }
+
+        document.getElementById("loginForm").submit();
+    }
+
+    /*******************************************************************************
+     * 绑定指定表单元素类型的回车事件
+     *
+     * @param formId
+     *            表单
+     * @param element
+     *            元素类型 (input/select/radio/...)
+     * @param subFunction
+     *            回车后要执行的js函数
+     * @param eventName
+     *            键盘事件 (keyup/keydown/keypress...)
+     */
+    function bindEnter(formId, element, subFunction, eventName) {
+        $("#" + formId + " " + element).bind(eventName, function(event) {
+            //回车
+            if (event.keyCode == '13') {
+                subFunction();
+            }
+        });
+    }
+
+
+    /*******************************************************************************
+     * 表单回车事件绑定 表单光标定位
+     * @param formId
+     * @param subFunction 回车要执行的函数
+     */
+    function bindFormEvent(formId, subFunction) {
+        if(subFunction && subFunction != null) {
+            bindEnter(formId, 'input', subFunction, 'keyup');
+        }
+    }
+
+    $(function () {
+        <% if(has(msg)){%>
+            alert('${msg}');
+        <%}%>
+        window.setTimeout(function() {
+            $("#username").focus();
+        }, 0);
+        bindFormEvent("loginForm", doLogin);
+    });
+
+</script>
+</body>
+</html>
