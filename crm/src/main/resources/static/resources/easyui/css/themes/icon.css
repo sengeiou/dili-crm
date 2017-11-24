@@ -4,23 +4,47 @@
 .icon-add{
 	background:url('icons/edit_add.png') no-repeat center center;
 }
+.l-btn:hover .icon-add{
+	background-image:url('icons/edit_add-on.png'); 
+}
 .icon-edit{
 	background:url('icons/pencil.png') no-repeat center center;
+}
+.l-btn:hover .icon-edit{
+	background-image:url('icons/pencil-on.png'); 
 }
 .icon-clear{
 	background:url('icons/clear.png') no-repeat center center;
 }
+/* .l-btn:hover .icon-clear{
+	background-image:url('icons/clear-on.png'); 
+} */
 .icon-remove{
 	background:url('icons/edit_remove.png') no-repeat center center;
+}
+.l-btn:hover .icon-remove{
+	background-image:url('icons/edit_remove-on.png'); 
 }
 .icon-save{
 	background:url('icons/filesave.png') no-repeat center center;
 }
+.l-btn:hover .icon-save{
+	background-image:url('icons/filesave-on.png'); 
+} 
 .icon-cut{
 	background:url('icons/cut.png') no-repeat center center;
 }
+.l-btn:hover .icon-cut{
+	background-image:url('icons/cut-on.png'); 
+}
 .icon-ok{
 	background:url('icons/ok.png') no-repeat center center;
+}
+/*新增*/
+.l-btn:hover .icon-ok,
+.accordion-header-selected .icon-ok,
+.searchbox .l-btn-icon-left:hover .icon-ok{
+    background-image:url('icons/ok-on.png'); 
 }
 .icon-no{
 	background:url('icons/no.png') no-repeat center center;
@@ -28,14 +52,26 @@
 .icon-cancel{
 	background:url('icons/cancel.png') no-repeat center center;
 }
+
 .icon-reload{
 	background:url('icons/reload.png') no-repeat center center;
+}
+.l-btn:hover .icon-reload{
+	background-image:url('icons/reload-on.png'); 
 }
 .icon-search{
 	background:url('icons/search.png') no-repeat center center;
 }
+/*新增*/
+.l-btn:hover .icon-search,
+.accordion-header-selected .icon-search{
+	background-image:url('icons/search-on.png'); 
+}
 .icon-print{
 	background:url('icons/print.png') no-repeat center center;
+}
+.l-btn:hover .icon-print{
+	background-image:url('icons/print-on.png'); 
 }
 .icon-help{
 	background:url('icons/help.png') no-repeat center center;
@@ -43,11 +79,20 @@
 .icon-undo{
 	background:url('icons/undo.png') no-repeat center center;
 }
+.l-btn:hover .icon-undo{
+	background-image:url('icons/undo-on.png'); 
+}
 .icon-redo{
 	background:url('icons/redo.png') no-repeat center center;
 }
+.l-btn:hover .icon-redo{
+	background-image:url('icons/redo-on.png'); 
+}
 .icon-back{
 	background:url('icons/back.png') no-repeat center center;
+}
+.l-btn:hover .icon-back{
+	background-image:url('icons/back-on.png'); 
 }
 .icon-sum{
 	background:url('icons/sum.png') no-repeat center center;
@@ -55,8 +100,14 @@
 .icon-tip{
 	background:url('icons/tip.png') no-repeat center center;
 }
+.l-btn:hover .icon-tip{
+	background-image:url('icons/tip-on.png'); 
+}
 .icon-filter{
 	background:url('icons/filter.png') no-repeat center center;
+}
+.l-btn:hover .icon-filter{
+	background-image:url('icons/filter-on.png'); 
 }
 .icon-man{
 	background:url('icons/man.png') no-repeat center center;
@@ -94,6 +145,7 @@
 .icon-large-chart{
 	background:url('icons/large_chart.png') no-repeat center center;
 }
+/* 自定义样式 */
 .icon-export{
 	background:url('icons/excel.gif') no-repeat;
 }
