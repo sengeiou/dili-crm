@@ -50,7 +50,7 @@
 		  			<table class="easyui-datagrid" id="grid"   title="近期新增客户" noheader="false" 
                    pagination="false" pageSize="10" pageNumber="1" pagePosition="top" rownumbers="true" remoteSort="false"
                    loadMsg="数据加载中..." singleSelect="true" method="post" multiSort="false" sortName="created" sortOrder="desc" 
-                   align="center"  striped="true" url="${contextPath}/customer/listPage"
+                   align="center"  striped="true" 
                    data-options="onDblClickRow:openUpdate,
                    onHeaderContextMenu:headerContextMenu,
                    autoRowHeight:false,
@@ -167,14 +167,11 @@
         }
         //客户表格查询
         function queryGrid() {
-            var opts = $("#grid").treegrid("options");
+            var opts = $("#grid").datagrid("options");
             if (null == opts.url || "" == opts.url) {
                 opts.url = "${contextPath}/customer/listPage";
             }
-            if(!$('#form').form("validate")){
-                return;
-            }
-            $("#grid").treegrid("load", bindGridMeta2Form("grid", "form"));
+            $("#grid").datagrid("load", bindGridMeta2Data("grid", {}));
         }
 
 
@@ -229,7 +226,7 @@
          *          表单提交需执行的任务
          */
         $(function () {
-            bindFormEvent("form", "name", queryGrid);
+/*             bindFormEvent("form", "name", queryGrid);
             if (document.addEventListener) {
                 document.addEventListener("keyup",getKey,false);
             } else if (document.attachEvent) {
@@ -267,12 +264,15 @@
                         doExport('grid', true);
                     }
                 }]
-            });
+            }); */
             //表格仅显示下边框
             $('#grid').datagrid('getPanel').removeClass('lines-both lines-no lines-right lines-bottom').addClass("lines-bottom");
 
 
 
         })
+        $(document).ready(function(){
+        	queryGrid();
+        });
     </script>
 </#body>
