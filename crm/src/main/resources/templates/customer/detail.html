@@ -235,10 +235,6 @@
                             <#comboProvider _id="_department" _provider='departmentProvider'/>
                         </td>
                         <td>
-                            <input class="easyui-textbox" name="user" id="user" panelWidth="auto" panelHeight="auto" label="用户选择:" style="width: 255px;"
-                                   data-options="editable:false,
-									buttonText:'选择',events:{blur: blur},
-									onClickButton:_selectUser,onChange:change" />
                         </td>
                     </tr>
                     <tr>
@@ -515,16 +511,15 @@
 
         //保存客户
         function saveOrUpdate(){
-            alert($("#user").textbox("getValue"));return;
             if(!$('#_form').form("validate")){
                 return;
             }
             if(!validateCertificateNumber($("#_certificateNumber").textbox("getValue"))){
                 return;
             }
-
             $.messager.confirm('确认','您确认想要保存吗？',function(r) {
                 if (r) {
+                    //禁用保存
                     $("#saveBtn").linkbutton("disable");
                     var _formData = removeKeyStartWith($("#_form").serializeObject(),"_");
                     var _url = null;
