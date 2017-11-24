@@ -9,8 +9,10 @@ function _selectUser(callback, args) {
 // 确认选择事件
 function confirmUserBtn(id) {
 	var selected = $('#selectUserGrid').datagrid('getSelected');
-	$('#' + id).textbox('setValue', selected.id);
+	$('#' + id).textbox('initValue', selected.id);
 	$('#' + id).textbox('setText', selected.realName);
+	var icon = $('#' + id).textbox('getIcon',0);
+	icon.css('visibility','visible');
 	$('#${dlgId}').dialog('close');
 }
 //关闭用户选择窗口

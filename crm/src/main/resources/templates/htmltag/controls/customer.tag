@@ -9,8 +9,10 @@ function _selectCustomer(callback, args) {
 // 确认选择事件
 function confirmCustomerBtn(id) {
 	var selected = $('#selectCustomerGrid').datagrid('getSelected');
-	$('#' + id).textbox('setValue', selected.id);
+	$('#' + id).textbox('initValue', selected.id);
 	$('#' + id).textbox('setText', selected.name);
+	var icon = $('#' + id).textbox('getIcon',0);
+	icon.css('visibility','visible');
 	$('#${dlgId}').dialog('close');
 }
 //关闭用户选择窗口
