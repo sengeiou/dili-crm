@@ -78,5 +78,18 @@ public class CustomerServiceImpl extends BaseServiceImpl<Customer, Long> impleme
         return BaseOutput.success("删除成功");
     }
 
+	@Override
+	public BaseOutput selectCustomersGroupByType() {
+		return BaseOutput.success().setData(this.getActualDao().selectCustomersGroupByType());
+	}
 
+	@Override
+	public BaseOutput selectCustomersGroupByMarket() {
+		return BaseOutput.success().setData(this.getActualDao().selectCustomersGroupByMarket());
+	}
+
+	@Override
+	public BaseOutput selectCustomersGroupByProfession() {
+		return BaseOutput.success().setData(this.getActualDao().selectCustomersGroupByProfession());
+	}
 }

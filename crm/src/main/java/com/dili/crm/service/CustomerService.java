@@ -1,6 +1,9 @@
 package com.dili.crm.service;
 
+import java.util.List;
+
 import com.dili.crm.domain.Customer;
+import com.dili.crm.domain.dto.CustomerChartDTO;
 import com.dili.ss.base.BaseService;
 import com.dili.ss.domain.BaseOutput;
 
@@ -15,4 +18,10 @@ public interface CustomerService extends BaseService<Customer, Long> {
 	BaseOutput updateSelectiveWithOutput(Customer condtion);
 
 	BaseOutput deleteWithOutput(Long aLong);
+	
+	BaseOutput<List<CustomerChartDTO>> selectCustomersGroupByType();
+	
+	BaseOutput<List<CustomerChartDTO>> selectCustomersGroupByMarket();
+	
+	BaseOutput<List<CustomerChartDTO>> selectCustomersGroupByProfession();
 }
