@@ -1,4 +1,4 @@
-首页:
+<a href="http://crm.diligrp.com:8085/crm/index.html">首页</a>&nbsp;&nbsp;当前位置:
 <%
 for(parentMenu in parentMenus){
 var url = @parentMenu.getMenuUrl();
@@ -8,6 +8,6 @@ if(parentMenuLP.last){
 %>
 <a >${@parentMenu.getName()}</a>
 <%} else {%>
-<a ${href}>${@parentMenu.getName()}</a> ->
+<a ${href}>${@parentMenu.getName()}</a> >
 <%}
 }%>

@@ -23,7 +23,7 @@
 	background:url('icons/edit_remove.png') no-repeat center center;
 }
 .l-btn:hover .icon-remove{
-	background-image:url('icons/edit_remove-on.png'); 
+	background-image:url('icons/edit_remove-on.png');
 }
 .icon-save{
 	background:url('icons/filesave.png') no-repeat center center;

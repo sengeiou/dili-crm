@@ -6,7 +6,6 @@ import com.dili.ss.retrofitful.annotation.Restful;
 import com.dili.ss.retrofitful.annotation.VOBody;
 import com.dili.ss.retrofitful.annotation.VOSingleParameter;
 import com.dili.sysadmin.sdk.domain.Menu;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnExpression;
 
 import java.util.List;
 
@@ -14,7 +13,6 @@ import java.util.List;
  * Created by asiamaster on 2017/10/19 0019.
  */
 @Restful("${sysadmin.contextPath}")
-@ConditionalOnExpression("'${sysadmin.nav}'=='true'")
 public interface MenuRpc {
 
 	@POST("/menuApi/get")
