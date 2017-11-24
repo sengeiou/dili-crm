@@ -224,4 +224,8 @@
 		WHERE
 		rm.role_id = #{roleId}
 	</select>
+
+	<select id="getParentMenus" parameterType="java.lang.String" resultType="string">
+		select getParentMenus(#{id})
+	</select>
 </mapper>

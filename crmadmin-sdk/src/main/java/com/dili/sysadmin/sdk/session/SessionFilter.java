@@ -1,12 +1,16 @@
 package com.dili.sysadmin.sdk.session;
 
 
+import com.dili.ss.domain.BaseOutput;
+import com.dili.sysadmin.sdk.domain.Menu;
 import com.dili.sysadmin.sdk.domain.UserTicket;
 import com.dili.sysadmin.sdk.exception.NotAccessPermission;
 import com.dili.sysadmin.sdk.exception.NotLoginException;
 import com.dili.sysadmin.sdk.exception.RedirectException;
 import com.dili.sysadmin.sdk.redis.UserUrlRedis;
+import com.dili.sysadmin.sdk.rpc.MenuRpc;
 import com.dili.sysadmin.sdk.util.WebContent;
+import com.google.common.collect.Lists;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -34,6 +38,9 @@ public class SessionFilter implements Filter {
     private FilterConfig filterConfig;
 
     @Autowired
+    private MenuRpc menuRpc;
+
+    @Autowired
     private UserUrlRedis userResRedis;
 
     public void destroy() {}
@@ -55,7 +62,7 @@ public class SessionFilter implements Filter {
         WebContent.put(resp);
         PermissionContext pc = new PermissionContext(req, resp, this, config);
         WebContent.put(SessionConstants.MANAGE_PERMISSION_CONTEXT, pc);
-        //如果是框架导出，需要手动设置SessionId到Header中
+        //如果是框架导出，需要手动设置SessionId到Header中，因为restful取不到cookies
         if(pc.getReq().getRequestURI().trim().endsWith("/export/serverExport")) {
             MutableHttpServletRequest mreq = new MutableHttpServletRequest(req);
             mreq.putHeader(SessionConstants.SESSION_ID, pc.getSessionId());
@@ -69,6 +76,13 @@ public class SessionFilter implements Filter {
         proxyHandle(req, resp, filter);
     }
 
+    /**
+     * 权限判断
+     * @param request
+     * @param response
+     * @param filter
+     * @throws IOException
+     */
     private void proxyHandle(HttpServletRequest request, HttpServletResponse response, FilterChain filter) throws IOException {
         WebContent.put(request);
         WebContent.put(response);
@@ -81,6 +95,7 @@ public class SessionFilter implements Filter {
             checkIframe(pc);
             //登录
             checkUser(pc);
+            setNavAttr(pc);
             filter.doFilter(request, response);
         } catch (RedirectException e) {
             pc.sendRedirect(e.getPath());
@@ -145,6 +160,19 @@ public class SessionFilter implements Filter {
             throw new NotAccessPermission();
         }
         throw new NotAccessPermission();
+    }
+
+    /**
+     * 设置导航栏需要的数据到request
+     * @param pc
+     */
+    private void setNavAttr(PermissionContext pc){
+        BaseOutput<List<Menu>> list = menuRpc.getParentMenusByUrl(pc.getUrl());
+        if(list == null || list.getData() == null || list.getData().isEmpty()){
+            WebContent.getRequest().setAttribute("parentMenus", Lists.newArrayList());
+        }else {
+            WebContent.getRequest().setAttribute("parentMenus", list.getData());
+        }
     }
 
     final class MutableHttpServletRequest extends HttpServletRequestWrapper {

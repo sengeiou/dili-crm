@@ -1,6 +1,6 @@
  <#body>
      <script type="text/javascript">
-
+         <#controls_user dlgId="userSelectDialog" controlId="user"/>
          //-----------------------------  城市控件js st  -----------------------------
          //标识键盘选择的时候不进行后台联想
          var isSelect = false;
@@ -94,9 +94,22 @@
              $('#_certificateTime').datebox('setValue', year+"-"+month+"-"+day);
          }
 
+         var isBlur = false;
+         function blur(n) {
+             return isBlur = true;
+         }
 
+         function change(n, o){
+//             _changeTextboxShowClear(n, o);
+             var flag =  !isBlur;
+            // alert("flag:"+flag+",isBlur:"+isBlur);
+             isBlur = false;
+             alert(n+":"+o);
+             return false;
+         }
          </script>
     <div class="easyui-layout" fit="true">
+        <div id="userSelectDialog" style="display: none;"></div>
         <!-- ====================================================================================================================== -->
         <!-- 上方布局 -->
         <!-- ====================================================================================================================== -->
@@ -111,6 +124,9 @@
         <!-- 中央布局 -->
         <!-- ====================================================================================================================== -->
         <div region="center" style="width:100%;" minHeight="360" border="false">
+            <div id="nav" style="padding-left:15px;padding-top:10px;" align="left">
+            <#nav/>
+            </div>
             <form id="_form" class="easyui-form" method="post" fit="true">
                 <input name="_id" id="_id" type="hidden">
                 <table width="99%">
@@ -217,6 +233,12 @@
                         <td style="padding-top:10px;padding-left:15px;">
                             <input name="_department" id="_department" style="width:90%;" data-options="label:'归属部门:', validType:'length[0,20]',editable:false" />
                             <#comboProvider _id="_department" _provider='departmentProvider'/>
+                        </td>
+                        <td>
+                            <input class="easyui-textbox" name="user" id="user" panelWidth="auto" panelHeight="auto" label="用户选择:" style="width: 255px;"
+                                   data-options="editable:false,
+									buttonText:'选择',events:{blur: blur},
+									onClickButton:_selectUser,onChange:change" />
                         </td>
                     </tr>
                     <tr>
@@ -487,13 +509,13 @@
             formData = addKeyStartWith(getOriginalData(formData),"_");
             formData["_operatingArea"] = selected["operatingArea"];
             $('#_form').form('load', formData);
-
             formFocus("_form", "_name");
            // listAddress();
         }
 
         //保存客户
         function saveOrUpdate(){
+            alert($("#user").textbox("getValue"));return;
             if(!$('#_form').form("validate")){
                 return;
             }

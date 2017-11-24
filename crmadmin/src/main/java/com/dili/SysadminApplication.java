@@ -34,7 +34,7 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 // @ServletComponentScan
 
 // =====================  Other  =====================
-@RestfulScan("com.dili.sysadmin.rpc")
+@RestfulScan({"com.dili.sysadmin.rpc", "com.dili.sysadmin.sdk.rpc"})
 @MapperScan(basePackages = {"com.dili.sysadmin.dao", "com.dili.ss.dao"})
 // @EnableScheduling
 /**

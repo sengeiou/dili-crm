@@ -39,13 +39,16 @@
     <div class="easyui-layout" fit="true">
         <div id="userSelectDialog" style="display: none;"></div>
         <div id="customerSelectDialog" style="display: none;"></div>
-        <div style="height:100px">hello</div>
+
         <!-- ====================================================================================================================== -->
         <!-- 上方布局 -->
         <!-- ====================================================================================================================== -->
         <div region="north" height="auto" align="center">
+            <div id="nav" style="padding-left:15px;padding-top:10px;" align="left">
+            <#nav/>
+            </div>
             <!-- =========================================================表单========================================================= -->
-            <div class="easyui-panel" style="width:100%;" align="left">
+            <div class="easyui-panel" style="width:100%;border: 0px;" align="left">
                 <form id="form" class="easyui-form" method="post" fit="true">
                     <table style="padding:10px;">
                         <tr>
@@ -122,14 +125,14 @@
                 <thead>
                     <tr>
                         <th data-options="field:'name',   sortable:'true', order:'asc', align:'left', resizable:'true', fixed:'false'">
-                            客户名称
+                        <th data-options="field:'ownerId', _provider:'ownerProvider', sortable:'true', order:'asc', align:'center', resizable:'true', fixed:'false'">
+                            所有者
+                        </th>
                         </th>
                         <th data-options="field:'code',   sortable:'true', order:'asc', align:'center', resizable:'true', fixed:'false'">
                             客户编码
                         </th>
-                        <th data-options="field:'ownerId', _provider:'ownerProvider', sortable:'true', order:'asc', align:'center', resizable:'true', fixed:'false'">
-                            所有者
-                        </th>
+
                         <th data-options="field:'certificateNumber',   sortable:'true', order:'asc', align:'center', resizable:'true', fixed:'false'">
                             证件号
                         </th>
@@ -232,6 +235,7 @@
             if(!$('#form').form("validate")){
                 return;
             }
+            var formData = $("#form").serializeObject();
             $("#grid").treegrid("load", bindGridMeta2Form("grid", "form"));
         }
 

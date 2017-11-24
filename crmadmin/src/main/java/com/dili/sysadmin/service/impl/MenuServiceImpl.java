@@ -1,28 +1,24 @@
 package com.dili.sysadmin.service.impl;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.Iterator;
-import java.util.List;
-
-import org.apache.commons.lang3.StringUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
 import com.dili.ss.base.BaseServiceImpl;
 import com.dili.ss.domain.BaseOutput;
 import com.dili.sysadmin.dao.MenuMapper;
 import com.dili.sysadmin.dao.ResourceMapper;
 import com.dili.sysadmin.dao.RoleMenuMapper;
 import com.dili.sysadmin.domain.Menu;
-import com.dili.sysadmin.domain.MenuType;
 import com.dili.sysadmin.domain.Resource;
 import com.dili.sysadmin.domain.RoleMenu;
+import com.dili.sysadmin.domain.dto.MenuCondition;
 import com.dili.sysadmin.domain.dto.MenuListDto;
 import com.dili.sysadmin.domain.dto.UpdateMenuDto;
 import com.dili.sysadmin.exception.MenuException;
 import com.dili.sysadmin.manager.UserManager;
 import com.dili.sysadmin.service.MenuService;
+import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import java.util.*;
 
 /**
  * 由MyBatis Generator工具自动生成 This file was generated on 2017-07-04 15:24:51.
@@ -129,6 +125,27 @@ public class MenuServiceImpl extends BaseServiceImpl<Menu, Long> implements Menu
 		}
 		this.userManager.reloadUserUrlsByMenu(menuId);
 		return BaseOutput.success("删除成功");
+	}
+
+	@Override
+	public List<Menu> getParentMenus(String id) {
+		String parentIds = getActualDao().getParentMenus(id);
+		if(StringUtils.isBlank(parentIds)) return null;
+		String[] parentIdArr = parentIds.split(",");
+		MenuCondition menuCondition = new MenuCondition();
+		menuCondition.setIds((List)Arrays.asList(parentIdArr));
+		return listByExample(menuCondition);
+	}
+
+	@Override
+	public List<Menu> getParentMenusByUrl(String url){
+		Menu menu = new Menu();
+		menu.setMenuUrl(url);
+		List<Menu> menus = getActualDao().select(menu);
+		if(menus == null || menus.isEmpty()){
+			return null;
+		}
+		return getParentMenus(menus.get(0).getId().toString());
 	}
 
 }

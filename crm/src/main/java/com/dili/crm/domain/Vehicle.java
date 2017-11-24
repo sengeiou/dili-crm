@@ -4,17 +4,14 @@ import com.dili.ss.dto.IBaseDomain;
 import com.dili.ss.metadata.FieldEditor;
 import com.dili.ss.metadata.annotation.EditMode;
 import com.dili.ss.metadata.annotation.FieldDef;
-import java.util.Date;
+
 import javax.persistence.*;
-import javax.persistence.Column;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import java.util.Date;
 
 /**
  * 由MyBatis Generator工具自动生成
  * 
- * This file was generated on 2017-11-15 11:16:50.
+ * This file was generated on 2017-11-23 17:43:22.
  */
 @Table(name = "`vehicle`")
 public interface Vehicle extends IBaseDomain {

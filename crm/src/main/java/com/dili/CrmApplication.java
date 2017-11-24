@@ -26,7 +26,7 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 @MapperScan(basePackages = {"com.dili.crm.dao", "com.dili.ss.dao", "com.dili.ss.quartz.dao"})
 //@ImportResource(locations = "classpath:applicationContext.xml")
 @ComponentScan(basePackages={"com.dili.ss","com.dili.crm","com.dili.sysadmin"})
-@RestfulScan("com.dili.crm.rpc")
+@RestfulScan({"com.dili.crm.rpc", "com.dili.sysadmin.sdk.rpc"})
 //@EnableEncryptableProperties
 //@PropertySource(name="EncryptedProperties", value = "classpath:security.properties")
 //@EncryptablePropertySource(name = "EncryptedProperties", value = "classpath:security.properties")
