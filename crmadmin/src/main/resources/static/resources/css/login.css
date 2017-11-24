@@ -114,9 +114,14 @@ input {
 }
 
 .login {
+    position: absolute;
+    left: 50%;
+    top:50%;
     width: 387px;
+    margin-left: -196px;
+    margin-top:-230px;
     background-color: #fff;
-    margin: 200px auto 0;
+    /*margin: 150px auto 0;*/
     border-spacing: 0;
     border-radius: 5px;
     overflow: hidden;
