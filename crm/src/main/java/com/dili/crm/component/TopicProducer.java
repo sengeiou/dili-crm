@@ -5,14 +5,13 @@ import com.alibaba.rocketmq.remoting.common.RemotingHelper;
 import com.dili.ss.rocketmq.RocketMQProducer;
 import com.dili.ss.rocketmq.exception.RocketMqException;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
 
 import java.io.UnsupportedEncodingException;
 
 /**
  * Created by asiamaster on 2017/11/7 0007.
  */
-@Component
+//@Component
 public class TopicProducer {
 
 	@Autowired
