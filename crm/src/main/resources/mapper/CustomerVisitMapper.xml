@@ -19,6 +19,15 @@
     <result column="modified_id" jdbcType="BIGINT" property="modifiedId" />
     <result column="created_id" jdbcType="BIGINT" property="createdId" />
   </resultMap>
+  
+   <resultMap id="CustomerVisitChartResultMap" type="com.dili.crm.domain.dto.CustomerVisitChartDTO">
+   
+    <result column="count" jdbcType="INTEGER" property="count" />
+    <result column="market" jdbcType="VARCHAR" property="market" />
+    <result column="type" jdbcType="VARCHAR" property="type" />
+    <result column="profession" jdbcType="VARCHAR" property="profession" />
+  </resultMap>
+  
   <sql id="Base_Column_List">
     <!--
       WARNING - @mbg.generated
@@ -80,4 +89,16 @@
     </set>
     where id = #{id,jdbcType=BIGINT}
   </update>
+  
+ <select id="selectCustomerVisitGroupByMode" resultMap="CustomerVisitChartResultMap">
+    select mode,count(1) AS `count`
+    from customer_visit
+    group by mode
+ </select>
+  <select id="selectCustomerVisitGroupByState" resultMap="CustomerVisitChartResultMap">
+    select state,count(1) AS `count`
+    from customer_visit
+    group by state
+ </select>
+ 
 </mapper>
