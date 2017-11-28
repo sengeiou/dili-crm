@@ -2,7 +2,7 @@
 
     <!-- =========================================================车辆表格========================================================= -->
     <table class="easyui-datagrid" id="vehicleGrid" style="height:185px;padding:0px;width:100%;"
-           pageNumber="1" rownumbers="true" remoteSort="false" title="车辆信息" collapsible="true"
+           pageNumber="1" rownumbers="true" remoteSort="false" title="车辆" collapsible="true"
            singleSelect="true" method="post" multiSort="false" sortName="name"
            align="center" striped="false" idField="id" data-options="onDblClickRow:openUpdateVehicle,
            loadMsg:0, onBeforeSelect:onBeforeSelectVehicle,tools:[{iconCls:'icon-add',handler:openInsertVehicle}]">

@@ -80,7 +80,8 @@
             <#nav/>
                 <div style="display: inline;float:right;padding-right: 300px;">
                     <a id="saveBtn" href="#" class="easyui-linkbutton" data-options="width:80" onclick="saveOrUpdate()">保存</a>&nbsp;&nbsp;
-                    <a id="cancelBtn" href="#" class="easyui-linkbutton" data-options="width:80" onclick="Javascript:history.back();">取消</a>
+                    <a id="saveAndExitBtn" href="#" class="easyui-linkbutton" data-options="width:100" onclick="saveAndExit()">保存并退出</a>&nbsp;&nbsp;
+                    <a id="cancelBtn" href="#" class="easyui-linkbutton" data-options="width:80" onclick="Javascript:window.location.href='${contextPath}/customer/index.html';">取消</a>
                 </div>
             </div>
             <!-- 基本信息表单 -->
@@ -212,7 +213,8 @@
             <#customer_vehicleGridHtml/>
             <!--  =========================================================联系人表格div=========================================================  -->
             <#customer_contactsGridHtml/>
-
+            <!--  =========================================================成员客户表格div=========================================================  -->
+            <#customer_membersGridHtml/>
         </div> <!-- end of center layout -->
 
 
@@ -241,6 +243,9 @@
      <#customer_vehicleJs/>
      <!-- 联系人js -->
      <#customer_contactsJs/>
+     <!-- 成员客户js -->
+     <#customer_membersJs/>
+     <#customer_membersSelJs dlgId="membersSelectDialog" />
     <script type="text/javascript">
         // ============================   客户相关js st  ==============================
         //打开新增客户窗口
@@ -252,7 +257,7 @@
             <%
             if(has(parentCustomer) && parentCustomer!=null){
             %>
-                //设置父id
+                //新增下级客户需要设置父id
                 formData["parentId"] = "${parentCustomer.id}";
                 formData["parentName"] = "${parentCustomer.name}";
                 formData[orginal_key_prefix + "organizationType"] = "individuals";
@@ -266,6 +271,7 @@
             $("#vehicleDiv").hide();
             $("#addressDiv").hide();
             $("#contactsDiv").hide();
+            $("#membersDiv").hide();
         }
 
         //打开修改客户窗口
@@ -297,18 +303,25 @@
             listAddress();
             listVehicle();
             listContacts();
+            listMembers();
             <%}%>
         }
 
         //保存客户
         function saveOrUpdate(){
+            saveAndExit("${contextPath}/customer/detail.html?id=");
+        }
+
+        //保存客户
+        function saveAndExit(url){
             if(!$('#_form').form("validate")){
                 return;
             }
             if(!validateCertificateNumber($("#_certificateNumber").textbox("getValue"))){
                 return;
             }
-            $.messager.confirm('确认','您确认想要保存吗？',function(r) {
+            var msg = (!url || url == null || url === "") ? "您确认要保存并退出吗？" : "您确认想要保存吗？";
+            $.messager.confirm('确认',msg,function(r) {
                 if (r) {
                     //禁用保存
                     $("#saveBtn").linkbutton("disable");
@@ -329,15 +342,20 @@
                         async : true,
                         success: function (data) {
                             if(data.code=="200"){
-                                window.location.href="${contextPath}/customer/index.html";
-                            }else{
-                                $.messager.alert('错误',data.result);
+                                    if(url){
+                                        url += data.data.id;
+                                    }else{
+                                        url = "${contextPath}/customer/index.html";
+                                    }
+                                    window.location.href = url;
+                                }else{
+                                    $.messager.alert('错误',data.result);
+                                }
+                            },
+                            error: function(){
+                                $.messager.alert('错误','远程访问失败');
                             }
-                        },
-                        error: function(){
-                            $.messager.alert('错误','远程访问失败');
-                        }
-                    });
+                       });
                 }
             });
 

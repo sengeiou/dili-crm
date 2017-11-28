@@ -1,6 +1,6 @@
 <div id="contactsDiv" style="display: inline;float: left;padding-left: 15px;width: 92%">
     <!-- =========================================================联系人表格========================================================= -->
-    <table class="easyui-datagrid" id="contactsGrid" style="height:185px;padding:0px;width:100%;" title="联系人表格" collapsible="true"
+    <table class="easyui-datagrid" id="contactsGrid" style="height:185px;padding:0px;width:100%;" title="联系人" collapsible="true"
            pagination="false" rownumbers="true" remoteSort="false" data-options="onDblClickRow:openUpdateContacts,
            loadMsg:0, onBeforeSelect:onBeforeSelectContacts,tools:[{iconCls:'icon-add',handler:openInsertContacts}]"
            loadMsg="数据加载中..." singleSelect="true" method="post" multiSort="false"

@@ -1,6 +1,6 @@
 <div id="addressDiv" style="display: inline;float: left;padding-left: 15px;width: 46%">
     <!-- =========================================================地址表格========================================================= -->
-    <table class="easyui-datagrid" id="addressGrid" style="height:185px;padding:0px;width:100%;" title="地址表格" collapsible="true"
+    <table class="easyui-datagrid" id="addressGrid" style="height:185px;padding:0px;width:100%;" title="地址" collapsible="true"
            pagination="false" rownumbers="true" remoteSort="false" data-options="onDblClickRow:openUpdateAddress,
            loadMsg:0, onBeforeSelect:onBeforeSelectAddress,tools:[{iconCls:'icon-add',handler:openInsertAddress}]"
            loadMsg="数据加载中..." singleSelect="true" method="post" multiSort="false"

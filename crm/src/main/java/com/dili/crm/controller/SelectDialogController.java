@@ -50,7 +50,7 @@ public class SelectDialogController {
 	// ================================  客户  ====================================
 
 	@RequestMapping(value = "/customer.html", method = RequestMethod.GET)
-	public String customer(ModelMap modelMap, @RequestParam("textboxId") String textboxId) {
+	public String customer(ModelMap modelMap, @RequestParam(name="textboxId", required = false) String textboxId) {
 		modelMap.put("textboxId", textboxId);
 		return "controls/customer";
 	}

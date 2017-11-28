@@ -24,7 +24,7 @@
             </tr>
             <tr>
                 <td style="padding:5px;">
-                    <input name="_contacts_sex" id="_contacts_sex" style="width:100%;" panelWidth="auto" required="true" panelHeight="auto" label="性别:" />
+                    <input name="_contacts_sex" id="_contacts_sex" style="width:100%;" panelWidth="auto" data-options="editable:false" required="true" panelHeight="auto" label="性别:" />
                     <#comboProvider _id="_contacts_sex" _provider='sexProvider'/>
                 </td>
             </tr>
@@ -45,7 +45,7 @@
             </tr>
             <tr>
                 <td style="padding:5px;">
-                    <input class="easyui-datebox" name="_contacts_birthday" id="_contacts_birthday" style="width:100%" data-options="label:'出生日期:'" />
+                    <input class="easyui-datebox" name="_contacts_birthday" id="_contacts_birthday" style="width:100%" data-options="label:'出生日期:',editable:false" />
                 </td>
             </tr>
             <tr>

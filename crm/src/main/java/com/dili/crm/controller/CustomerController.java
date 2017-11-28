@@ -177,4 +177,9 @@ public class CustomerController {
 		String json = JSONArray.toJSONString(valueProviderUtils.getLookupList("certificateTypeProvider", null, params));
 		return BaseOutput.success("加载成功").setData(json);
 	}
+
+	@RequestMapping(value = "/members.html", method = RequestMethod.GET)
+	public String customer() {
+		return "customer/members";
+	}
 }

@@ -51,18 +51,18 @@ public class CustomerServiceImpl extends BaseServiceImpl<Customer, Long> impleme
         customer.setCreatedId(userTicket.getId());
         customer.setOwnerId(userTicket.getId());
         super.insertSelective(customer);
-        return BaseOutput.success("新增成功");
+        return BaseOutput.success("新增成功").setData(customer);
     }
 
     @Override
-    public BaseOutput updateSelectiveWithOutput(Customer condtion) {
+    public BaseOutput updateSelectiveWithOutput(Customer customer) {
         UserTicket userTicket = SessionContext.getSessionContext().getUserTicket();
         if(userTicket == null){
             return BaseOutput.failure("修改失败，登录超时");
         }
-        condtion.setModifiedId(userTicket.getId());
-        super.updateSelective(condtion);
-        return BaseOutput.success("修改成功");
+        customer.setModifiedId(userTicket.getId());
+        super.updateSelective(customer);
+        return BaseOutput.success("修改成功").setData(customer);
     }
 
     @Override
