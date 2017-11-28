@@ -17,7 +17,7 @@
 
   <objectFactory type="com.dili.ss.dao.DtoObjectFactory">
   </objectFactory>
-  <plugins>
-    <plugin interceptor="com.dili.ss.dao.ResultTypeInterceptor"/>
-  </plugins>
+  <!--<plugins>-->
+    <!--<plugin interceptor="com.dili.ss.dao.ResultTypeInterceptor"/>-->
+  <!--</plugins>-->
 </configuration>
