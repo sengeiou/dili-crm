@@ -7,7 +7,7 @@
 
          //修改组织类型
          function changeOrganizationType(newValue, oldValue) {
-             swithByOrganizationType(newValue);
+             switchByOrganizationType(newValue);
          }
 
          //验证证件号码
@@ -75,11 +75,16 @@
         <!-- 中央布局 -->
         <!-- ====================================================================================================================== -->
         <div region="center" style="width:100%;" minHeight="360" border="false">
-            <!-- 上方导航栏 -->
-            <div id="nav" style="padding-left:15px;padding-top:10px;" align="left">
+            <!-- 上方导航栏 (锁定不滚动) -->
+            <div id="nav" style="padding-left:15px;padding-top:10px;position:fixed;z-index:2008;width:100%;height:30px;background-color:white" align="left">
             <#nav/>
+                <div style="display: inline;float:right;padding-right: 300px;">
+                    <a id="saveBtn" href="#" class="easyui-linkbutton" data-options="width:80" onclick="saveOrUpdate()">保存</a>&nbsp;&nbsp;
+                    <a id="cancelBtn" href="#" class="easyui-linkbutton" data-options="width:80" onclick="Javascript:history.back();">取消</a>
+                </div>
             </div>
             <!-- 基本信息表单 -->
+            <div style="padding-top:40px">
             <form id="_form" class="easyui-form" method="post" fit="true">
                 <input name="_id" id="_id" type="hidden">
                 <table width="99%">
@@ -195,16 +200,15 @@
                             <input class="easyui-textbox" name="_notes" id="_notes" style="width:95%;height:80px" data-options="label:'备注信息:', validType:'length[0,250]', multiline:true" />
                         </td>
                         <td valign="bottom">
-                            <a id="saveBtn" href="#" class="easyui-linkbutton" data-options="width:80" onclick="saveOrUpdate()">保存</a>&nbsp;&nbsp;
-                            <a id="cancelBtn" href="#" class="easyui-linkbutton" data-options="width:80" onclick="Javascript:history.back();">取消</a>
+
                         </td>
                     </tr>
                 </table>
             </form>
-
-            <!--  =========================================================地址div=========================================================  -->
+            </div>
+            <!--  =========================================================地址表格div=========================================================  -->
             <#customer_addressGridHtml/>
-            <!--  =========================================================车辆div=========================================================  -->
+            <!--  =========================================================车辆表格div=========================================================  -->
             <#customer_vehicleGridHtml/>
         </div> <!-- end of center layout -->
 
@@ -237,27 +241,29 @@
         function openInsert(){
             $('#_form').form('clear');
             $("#_ownerName").textbox("setValue", "${user.realName}");
-            formFocus("_form", "_name");
-            $("#addressDiv").hide();
-        }
+            var formData = {};
+            //设置上级客户名称
+            <%
+            if(has(parentCustomer) && parentCustomer!=null){
+            %>
+                //设置父id
+                formData["parentId"] = "${parentCustomer.id}";
+                formData["parentName"] = "${parentCustomer.name}";
+                formData[orginal_key_prefix + "organizationType"] = "individuals";
+                //根据组织类型加载证件类型、性别、民族、证件日期控件、注册资金和企业员工数
+                loadByOrganizationType(formData);
+                formData = addKeyStartWith(getOriginalData(formData),"_");
+                $('#_form').form('load', formData);
+            <%}%>
 
-        //打开新增子级客户窗口
-        function openChildInsert(){
-            var selected = $("#grid").treegrid("getSelected");
-            if (null == selected) {
-                $.messager.alert('警告','请选中一条数据');
-                return;
-            }
-            $('#_form').form('clear');
-            $("#_ownerName").textbox("setValue", "${user.realName}");
-            $("#_parentName").textbox("setValue", selected["name"]);
-            $("#_parentId").val(selected["id"]);
-            $("#_projectId").combobox("readonly", false);
             formFocus("_form", "_name");
+            $("#vehicleDiv").hide();
+            $("#addressDiv").hide();
         }
 
         //打开修改客户窗口
         function openUpdate(){
+            <%if (has(customer)){%>
             var selected = ${customer};
             $('#_form').form('clear');
             var formData = $.extend({},selected);
@@ -283,6 +289,7 @@
             formFocus("_form", "_name");
             listAddress();
             listVehicle();
+            <%}%>
         }
 
         //保存客户
@@ -362,11 +369,11 @@
 
         //根据组织类型加载和显示相关字段(证件类型、性别、民族、证件日期控件、注册资金和企业员工数)
         function loadByOrganizationType(formData) {
-            swithByOrganizationType(formData[orginal_key_prefix + "organizationType"]);
+            switchByOrganizationType(formData[orginal_key_prefix + "organizationType"]);
         }
 
         //根据组织类型切换控件
-        function swithByOrganizationType(organizationType){
+        function switchByOrganizationType(organizationType){
 //            根据组织类型加载证件类型下拉框
             loadCertificateTypeByOrganizationType(organizationType);
             if(organizationType == "individuals"){
@@ -465,7 +472,11 @@
             } else {
                 document.onkeyup = getKey;
             }
-            openUpdate();
+            <% if(has(customer)){%>
+                openUpdate();
+            <%}else{%>
+                openInsert();
+            <%}%>
 
         })
     </script>

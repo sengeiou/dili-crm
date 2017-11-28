@@ -43,6 +43,7 @@
 
     //保存地址
     function saveOrUpdateAddress() {
+        <%if (has(customer)){%>
         if(!$('#_addressForm').form("validate")){
             return;
         }
@@ -80,16 +81,19 @@
                 $.messager.alert('错误','远程访问失败');
             }
         });
+        <%}%>
     }
 
     //修改客户窗口打开时查询地址
     function listAddress(){
+        <%if (has(customer)){%>
         var opts = $("#addressGrid").datagrid("options");
         if (null == opts.url || "" == opts.url) {
             opts.url = "${contextPath}/address/listPage";
         }
         var selected = ${customer};
         $("#addressGrid").datagrid("load", bindGridMeta2Data("addressGrid", {"customerId":selected["id"]}));
+        <%}%>
     }
 
     //根据主键删除地址

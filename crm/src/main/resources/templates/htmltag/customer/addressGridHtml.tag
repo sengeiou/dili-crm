@@ -1,9 +1,8 @@
 <div id="addressDiv" style="display: inline;float: left;padding-left: 15px;width: 46%">
-    <B>地址信息</B><a class="easyui-linkbutton" iconCls="icon-add" onclick="openInsertAddress()"></a>
-
     <!-- =========================================================地址表格========================================================= -->
-    <table class="easyui-datagrid" id="addressGrid" style="height:150px;padding:5px;"
-           pagination="false" rownumbers="true" remoteSort="false" data-options="onDblClickRow:openUpdateAddress,loadMsg:0, onBeforeSelect:onBeforeSelectAddress"
+    <table class="easyui-datagrid" id="addressGrid" style="height:185px;padding:5px;" title="地址表格"
+           pagination="false" rownumbers="true" remoteSort="false" data-options="onDblClickRow:openUpdateAddress,
+           loadMsg:0, onBeforeSelect:onBeforeSelectAddress,tools:[{iconCls:'icon-add',handler:openInsertAddress}]"
            loadMsg="数据加载中..." singleSelect="true" method="post" multiSort="false"
            align="center"  striped="false" idField="id" >
         <thead>

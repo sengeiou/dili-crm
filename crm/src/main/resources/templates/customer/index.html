@@ -184,6 +184,21 @@
 
         // ============================   客户相关js st  ==============================
 
+        //打开新增子级客户窗口
+        function openChildInsert(){
+            var selected = $("#grid").treegrid("getSelected");
+            if (null == selected) {
+                $.messager.alert('警告','请选中一条数据');
+                return;
+            }
+            window.location.href="${contextPath}/customer/add.html?id="+selected["id"];
+        }
+
+        //打开新增客户窗口
+        function openInsert(){
+            window.location.href="${contextPath}/customer/add.html";
+        }
+
         //打开修改客户窗口
         function openUpdate(){
             var selected = $("#grid").treegrid("getSelected");
@@ -192,7 +207,6 @@
                 return;
             }
             window.location.href="${contextPath}/customer/detail.html?id="+selected["id"];
-            return;
         }
 
         //根据主键删除客户
@@ -305,6 +319,7 @@
                 links:3,
                 buttons:[{
                     iconCls:'icon-add',
+                    title:"新增",
                     handler:function(){
                         openInsert();
                     }

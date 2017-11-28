@@ -42,6 +42,7 @@
 
     //保存车辆
     function saveOrUpdateVehicle() {
+        <%if (has(customer)){%>
         if(!$('#_vehicleForm').form("validate")){
             return;
         }
@@ -75,16 +76,19 @@
                 $.messager.alert('错误','远程访问失败');
             }
         });
+        <%}%>
     }
 
     //修改客户窗口打开时查询车辆
     function listVehicle(){
+        <%if (has(customer)){%>
         var opts = $("#vehicleGrid").datagrid("options");
         if (null == opts.url || "" == opts.url) {
             opts.url = "${contextPath}/vehicle/listPage";
         }
         var selected = ${customer};
         $("#vehicleGrid").datagrid("load",  {"customerId":selected["id"]});
+        <%}%>
     }
 
     //根据主键删除车辆

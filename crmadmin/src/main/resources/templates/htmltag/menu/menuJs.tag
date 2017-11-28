@@ -272,34 +272,6 @@ function queryGrid(node) {
 									}
 								}
 							}, {
-								field : 'type',
-								title : '类型',
-								width : '10%',
-								formatter : function(value, row, index) {
-									if (value == 0) {
-										return '目录';
-									} else if (value == 1) {
-										return '链接';
-									} else if (value == 2) {
-										return '内联';
-									}
-								},
-								editor : {
-									type : 'combobox',
-									options : {
-										required : true,
-										missingMessage : '请选择连接类型',
-										valueField : 'value',
-										textField : 'name',
-										editable : false,
-										data : [{
-													name : '内联',
-													value : 2
-												}]
-									}
-								}
-
-							}, {
 								field : 'menuUrl',
 								title : '菜单链接地址',
 								width : '35%',
@@ -538,7 +510,6 @@ function onBeginEdit(index, row) {
  *            changes 当前行被修改的数据
  */
 function onAfterEdit(index, row, changes) {
-	debugger;
 	var grid = $('#' + this.id);
 	var isValid = grid.datagrid('validateRow', index);
 	if (!isValid) {

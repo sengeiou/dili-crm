@@ -72,6 +72,22 @@ public class CustomerController {
 		return "customer/detail";
 	}
 
+	@ApiOperation("跳转到Customer新增页面")
+	@RequestMapping(value="/add.html", method = {RequestMethod.GET, RequestMethod.POST})
+	public String add(ModelMap modelMap, @RequestParam(name="id", required = false) Long id) throws Exception {
+		UserTicket userTicket = SessionContext.getSessionContext().getUserTicket();
+		if (userTicket == null) {
+			throw new RuntimeException("未登录");
+		}
+		//页面上用于展示拥有者和新增时获取拥有者id
+		modelMap.put("user", userTicket);
+		if(id != null){
+			Customer parent = customerService.get(id);
+			modelMap.put("parentCustomer", parent);
+		}
+		return "customer/detail";
+	}
+
 	/**
 	 * 由于无法获取到表头上的meta信息，展示客户详情只有id参数，所以需要在后台构建
 	 * @return
