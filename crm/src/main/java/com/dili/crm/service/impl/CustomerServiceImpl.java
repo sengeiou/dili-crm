@@ -2,6 +2,7 @@ package com.dili.crm.service.impl;
 
 import com.dili.crm.dao.CustomerMapper;
 import com.dili.crm.domain.Customer;
+import com.dili.crm.domain.dto.CustomerChartDTO;
 import com.dili.crm.service.CacheService;
 import com.dili.crm.service.CustomerService;
 import com.dili.ss.base.BaseServiceImpl;
@@ -79,17 +80,17 @@ public class CustomerServiceImpl extends BaseServiceImpl<Customer, Long> impleme
     }
 
 	@Override
-	public BaseOutput selectCustomersGroupByType() {
+	public BaseOutput<List<CustomerChartDTO>> selectCustomersGroupByType() {
 		return BaseOutput.success().setData(this.getActualDao().selectCustomersGroupByType());
 	}
 
 	@Override
-	public BaseOutput selectCustomersGroupByMarket() {
-		return BaseOutput.success().setData(this.getActualDao().selectCustomersGroupByMarket());
+	public BaseOutput<List<CustomerChartDTO>> selectCustomersGroupByMarket() {
+		return BaseOutput.<List<CustomerChartDTO>>success().<List<CustomerChartDTO>>setData(this.getActualDao().selectCustomersGroupByMarket());
 	}
 
 	@Override
-	public BaseOutput selectCustomersGroupByProfession() {
+	public BaseOutput<List<CustomerChartDTO>> selectCustomersGroupByProfession() {
 		return BaseOutput.success().setData(this.getActualDao().selectCustomersGroupByProfession());
 	}
 }

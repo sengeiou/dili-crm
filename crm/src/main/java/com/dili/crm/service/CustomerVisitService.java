@@ -1,6 +1,9 @@
 package com.dili.crm.service;
 
+import java.util.List;
+
 import com.dili.crm.domain.CustomerVisit;
+import com.dili.crm.domain.dto.CustomerVisitChartDTO;
 import com.dili.ss.base.BaseService;
 import com.dili.ss.domain.BaseOutput;
 
@@ -16,4 +19,8 @@ public interface CustomerVisitService extends BaseService<CustomerVisit, Long> {
      * @return
      */
     BaseOutput insertSelectiveWithOutput(CustomerVisit customerVisit);
+    
+    BaseOutput<List<CustomerVisitChartDTO>> selectCustomerVisitGroupByMode();
+    
+    BaseOutput<List<CustomerVisitChartDTO>> selectCustomerVisitGroupByState();
 }

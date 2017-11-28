@@ -1,0 +1,69 @@
+ <#body>
+ <#impEcharts/>
+   
+    <div class="easyui-layout" fit="true" style="width:100%;height:100%;padding:0px;">
+        <div id="userSelectDialog" style="display: none;"></div>
+        <div id="customerSelectDialog" style="display: none;"></div>
+        
+
+        <!-- ====================================================================================================================== -->
+        <!-- 中央布局 -->
+        <!-- ====================================================================================================================== -->
+        <!-- 表格 -->
+        <div region="center" style="width:100%;" style="height:50%;"  title="客户回访报表" >
+		    <div class="easyui-layout" fit="true"  style="height:50%;">
+		        <div region="west" height="auto" align="center" style="width:50%">
+			        <div  class="easyui-panel"   style="height:100%;">
+			   		        <div id="customerTypeChart" style="width:98%;height:100%;" ></div>
+							<#echarts _id="customerTypeChart" _title="回访状态分布" _type="Pie"  _url="${contextPath}/chart/customerVisitModeChart" _nameField="type" _valueField="count"></#echarts>
+					</div>
+		        </div>
+		        <div region="center" height="auto">
+			        <div  class="easyui-panel"   style="height:100%;">
+			   		        <div id="customerProfessionChart" style="width:98%;height:100%;" ></div>
+							<#echarts _id="customerProfessionChart" _title="客户行业分布" _type="Pie"  _url="${contextPath}/chart/customerVisitStateChart" _nameField="profession" _valueField="count" ></#echarts>
+					</div>
+		        </div>
+		    </div>
+		    
+            <!-- =========================================================表格========================================================= -->
+            
+
+        </div>
+    </div>
+
+
+    <!-- ====================================================================================================================== -->
+    <!-- style & script 分隔线 -->
+    <!-- ====================================================================================================================== -->
+    <script type="text/javascript">
+
+     
+        $.messager.progress({
+            title:"提示",
+            msg:"加载中,请稍候...",
+            value : '10',
+            text: '{value}%',
+            interval:200
+        });
+        $.parser.onComplete = function(){
+            $.messager.progress("close");
+        }
+        //全局按键事件
+        function getKey(e){
+            e = e || window.event;
+            var keycode = e.which ? e.which : e.keyCode;
+            if(keycode == 46){ //如果按下删除键
+                var selected = $("#grid").treegrid("getSelected");
+                if(selected && selected!= null){
+                    del();
+                }
+            }
+        }
+
+        
+        $(function () {
+        	
+        })
+    </script>
+</#body>

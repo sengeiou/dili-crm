@@ -2,11 +2,15 @@ package com.dili.crm.service.impl;
 
 import com.dili.crm.dao.CustomerVisitMapper;
 import com.dili.crm.domain.CustomerVisit;
+import com.dili.crm.domain.dto.CustomerVisitChartDTO;
 import com.dili.crm.service.CustomerVisitService;
 import com.dili.ss.base.BaseServiceImpl;
 import com.dili.ss.domain.BaseOutput;
 import com.dili.sysadmin.sdk.domain.UserTicket;
 import com.dili.sysadmin.sdk.session.SessionContext;
+
+import java.util.List;
+
 import org.springframework.stereotype.Service;
 
 /**
@@ -30,4 +34,14 @@ public class CustomerVisitServiceImpl extends BaseServiceImpl<CustomerVisit, Lon
         super.insertSelective(customerVisit);
         return BaseOutput.success("新增成功");
     }
+
+	@Override
+	public BaseOutput<List<CustomerVisitChartDTO>> selectCustomerVisitGroupByMode() {
+		return BaseOutput.success().setData(this.getActualDao().selectCustomerVisitGroupByMode());
+	}
+
+	@Override
+	public BaseOutput<List<CustomerVisitChartDTO>> selectCustomerVisitGroupByState() {
+		return BaseOutput.success().setData(this.getActualDao().selectCustomerVisitGroupByState());
+	}
 }
