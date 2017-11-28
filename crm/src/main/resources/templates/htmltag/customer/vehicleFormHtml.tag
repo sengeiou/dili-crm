@@ -19,12 +19,12 @@
         <table width="360px">
             <tr>
                 <td style="padding:5px;">
-                    <input class="easyui-textbox" name="_vehicle_name" id="_vehicle_name" style="width:100%" data-options="label:'名称:', validType:'length[0,40]'" />
+                    <input class="easyui-textbox" name="_vehicle_name" id="_vehicle_name" style="width:100%" required="true" data-options="label:'名称:', validType:'length[1,40]'" />
                 </td>
             </tr>
             <tr>
                 <td style="padding:5px;">
-                    <input class="easyui-textbox" name="_vehicle_registrationNumber" id="_vehicle_registrationNumber" style="width:100%" data-options="label:'车牌号:', validType:'length[0,20]'" />
+                    <input class="easyui-textbox" name="_vehicle_registrationNumber" id="_vehicle_registrationNumber" style="width:100%" data-options="label:'车牌号:', validType:'length[5,20]'" />
                 </td>
             </tr>
             <tr>

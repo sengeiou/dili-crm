@@ -210,6 +210,9 @@
             <#customer_addressGridHtml/>
             <!--  =========================================================车辆表格div=========================================================  -->
             <#customer_vehicleGridHtml/>
+            <!--  =========================================================联系人表格div=========================================================  -->
+            <#customer_contactsGridHtml/>
+
         </div> <!-- end of center layout -->
 
 
@@ -227,14 +230,17 @@
      <#customer_addressFormHtml/>
      <!-- 车辆隐藏框 -->
      <#customer_vehicleFormHtml/>
-
+     <!-- 联系人隐藏框 -->
+     <#customer_contactsFormHtml/>
     <!-- ====================================================================================================================== -->
     <!-- style & script 分隔线 -->
     <!-- ====================================================================================================================== -->
-     <!-- 地址相关js -->
+     <!-- 地址js -->
      <#customer_addressJs/>
-     <!-- 车辆相关js -->
+     <!-- 车辆js -->
      <#customer_vehicleJs/>
+     <!-- 联系人js -->
+     <#customer_contactsJs/>
     <script type="text/javascript">
         // ============================   客户相关js st  ==============================
         //打开新增客户窗口
@@ -259,6 +265,7 @@
             formFocus("_form", "_name");
             $("#vehicleDiv").hide();
             $("#addressDiv").hide();
+            $("#contactsDiv").hide();
         }
 
         //打开修改客户窗口
@@ -289,6 +296,7 @@
             formFocus("_form", "_name");
             listAddress();
             listVehicle();
+            listContacts();
             <%}%>
         }
 
