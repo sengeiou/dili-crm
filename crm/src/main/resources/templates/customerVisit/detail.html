@@ -1,14 +1,17 @@
 <#body>
     <script>
         <#controls_user dlgId="userSelectDialog" controlId="userId"/>
-            <#controls_customer dlgId="customerSelectDialog" controlId="customerId"/>
+        <#controls_customer dlgId="customerSelectDialog" controlId="customerId"/>
     </script>
+    <style>
+        input{height: 18px;}
+    </style>
     <div class="easyui-layout" style="margin-left: 20px;" fit="true">
         <div id="userSelectDialog" style="display: none;"></div>
         <div id="customerSelectDialog" style="display: none;"></div>
         <div region="center" style="width:100%;" minHeight="360" border="false">
             <!-- 上方导航栏 (锁定不滚动) -->
-            <div id="nav" style="padding-left:15px;padding-top:10px;position:fixed;z-index:2008;width:100%;height:30px;background-color:white" align="left">
+            <div id="nav" style="padding-left:10px;padding-top:10px;position:fixed;z-index:2008;width:100%;height:30px;background-color:white" align="left">
                 <#nav/>
                 <div style="display: inline;float:right;padding-right: 300px;">
                     <span id="newPage" style="display: none;">
@@ -20,10 +23,13 @@
                             <a id="modifyBtn" href="#" class="easyui-linkbutton" data-options="width:80" onclick="saveOrUpdate(1)">更新</a>&nbsp;&nbsp;
                             <a id="modifyAndFilishedBtn" href="#" class="easyui-linkbutton" data-options="width:100" onclick="saveOrUpdate(3)">完成回访</a>&nbsp;&nbsp;
                         </span>
-                    <a id="cancelBtn" href="#" class="easyui-linkbutton" data-options="width:80" onclick="Javascript:history.back();">取消</a>
+                    <a id="cancelBtn" href="#" class="easyui-linkbutton" data-options="width:80" onclick="doBack()">取消</a>
                 </div>
             </div>
-            <div style="padding-top:40px">
+            <div id="stateDiv" style="padding-left:10px;padding-top:40px;width:30%;display: none;" align="center">
+                <input id="stateValue"  style="width: 100%;height: 30px; background-color: lightgrey;border: hidden;text-align: center;font-size: large" value="" disabled="disabled">
+            </div>
+            <div style="padding-top:10px">
                 <form id="_form" class="easyui-form" method="post" fit="true">
                     <input name="_id" id="_id" type="hidden">
                     <table width="99%">
@@ -113,7 +119,7 @@
     </div>
 
     <!-- 事件隐藏框 -->
-    <div id="eventDlg" class="easyui-dialog" resizable="false" constrain="true" shadow="true" draggable="false" title="事件信息" style="padding:20px;width: 550px;height: 300px;" modal="true" border="thin" closed="true"
+    <div id="eventDlg" class="easyui-dialog" resizable="false" constrain="true" shadow="true" draggable="false" title="事件信息" style="padding:20px;width: 550px;height: 310px;" modal="true" border="thin" closed="true"
          data-options="
 				iconCls: 'icon-save',
 				height: 230,
@@ -179,10 +185,13 @@
             $("#userId").textbox("initValue", selected["$_createdId"]);
             $("#userId").textbox("setText", selected["createdId"]);
             $("#eventDiv").show();
+            $("#stateDiv").show();  //状态div
+            $("#stateValue").val(selected["state"]);  //状态显示值
             listEvents();
             <%if (has(view)){%>
                 //查看
                 ableEasyUiForm('_form','disable',true);
+                $('.icon-clear').removeClass('icon-clear');
             <%}else{%>
                 $("#customerId").textbox("disable", true);
                 $("#_createdName").textbox("disable", true);
@@ -428,6 +437,13 @@
             var param = bindMetadata("eventGrid", true);
             $.extend(param, {"customerVisitId":visitId});
             $("#eventGrid").datagrid("load", param);
+        }
+
+        /**
+         * 返回按钮事件
+         */
+        function doBack() {
+            window.location.href="${contextPath}/customerVisit/index.html";
         }
     </script>
 </#body>
