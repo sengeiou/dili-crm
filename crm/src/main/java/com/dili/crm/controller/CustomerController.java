@@ -3,6 +3,7 @@ package com.dili.crm.controller;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.dili.crm.domain.Customer;
+import com.dili.crm.domain.dto.MembersDto;
 import com.dili.crm.service.CustomerService;
 import com.dili.ss.domain.BaseOutput;
 import com.dili.ss.metadata.ValueProviderUtils;
@@ -189,8 +190,17 @@ public class CustomerController {
 			@ApiImplicitParam(name="MembersDto", paramType="form", value = "MembersDto的form信息", required = false, dataType = "string")
 	})
 	@RequestMapping(value="/listMembersPage", method = {RequestMethod.GET, RequestMethod.POST})
-	public @ResponseBody String listMembersPage(@RequestParam(name="name", required = false) String name, @RequestParam("customerId") Long customerId) throws Exception {
-		return customerService.listMembersPage(name, customerId).toString();
+	public @ResponseBody String listMembersPage(MembersDto membersDto) throws Exception {
+		return customerService.listMembersPage(membersDto).toString();
+	}
+
+	@ApiOperation("删除成员客户")
+	@ApiImplicitParams({
+			@ApiImplicitParam(name="id", paramType="form", value = "Customer的主键", required = true, dataType = "long")
+	})
+	@RequestMapping(value="/deleteMembers", method = {RequestMethod.GET, RequestMethod.POST})
+	public @ResponseBody BaseOutput deleteMembers(Long id) {
+		return customerService.deleteMembers(id);
 	}
 
 }

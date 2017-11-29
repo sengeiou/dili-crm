@@ -2,6 +2,7 @@ package com.dili.crm.service;
 
 import com.dili.crm.domain.Customer;
 import com.dili.crm.domain.dto.CustomerChartDTO;
+import com.dili.crm.domain.dto.MembersDto;
 import com.dili.ss.base.BaseService;
 import com.dili.ss.domain.BaseOutput;
 
@@ -22,10 +23,17 @@ public interface CustomerService extends BaseService<Customer, Long> {
 
 	/**
 	 * 按需修改客户，返回BaseOutput
-	 * @param condtion
+	 * @param customer
 	 * @return
 	 */
-	BaseOutput updateSelectiveWithOutput(Customer condtion);
+	BaseOutput updateSelectiveWithOutput(Customer customer);
+
+	/**
+	 * 修改客户，返回BaseOutput
+	 * @param customer
+	 * @return
+	 */
+	BaseOutput updateWithOutput(Customer customer);
 
 	/**
 	 * 逻辑删除客户，返回BaseOutput
@@ -43,8 +51,15 @@ public interface CustomerService extends BaseService<Customer, Long> {
 	/**
 	 * 根据客户名称(模糊)和客户id查询可以添加的成员客户，
 	 * 过滤掉自己、所有的子id和所有父id
-	 * @param customerId
+	 * @param membersDto
 	 * @return
 	 */
-	String listMembersPage(String name, Long customerId) throws Exception;
+	String listMembersPage(MembersDto membersDto) throws Exception;
+
+	/**
+	 * 删除成员客户关系
+	 * @param id
+	 * @return
+	 */
+	BaseOutput deleteMembers(Long id);
 }

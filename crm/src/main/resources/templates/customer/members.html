@@ -27,7 +27,7 @@
             opts.url = '${contextPath!}/customer/listMembersPage';
         }
 		var text = $('#searchMembersTextbox').textbox('getText');
-		$('#selectMembersGrid').datagrid('load', bindGridMeta2Data("selectMembersGrid",{name : text,customerId: "${customerId}"}));
+		$('#selectMembersGrid').datagrid('load', bindGridMeta2Data("selectMembersGrid",{name : text,id: "${customerId}"}));
 	}
 
 	$(function() {

@@ -68,11 +68,11 @@
             }
             selectedId = selected.id;
         }
-        $.messager.confirm('确认','您确认想要删除记录吗？',function(r){
+        $.messager.confirm('确认','您确认想要删除成员客户吗？',function(r){
             if (r){
                 $.ajax({
                     type: "POST",
-                    url: "${contextPath}/customer/delete",
+                    url: "${contextPath}/customer/deleteMembers",
                     data: {id:selectedId},
                     processData:true,
                     dataType: "json",

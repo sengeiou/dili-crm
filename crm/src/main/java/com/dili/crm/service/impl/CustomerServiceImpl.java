@@ -10,11 +10,15 @@ import com.dili.ss.base.BaseServiceImpl;
 import com.dili.ss.domain.BaseOutput;
 import com.dili.ss.domain.EasyuiPageOutput;
 import com.dili.ss.dto.DTOUtils;
+import com.dili.ss.metadata.ValueProviderUtils;
 import com.dili.sysadmin.sdk.domain.UserTicket;
 import com.dili.sysadmin.sdk.session.SessionContext;
+import com.github.pagehelper.Page;
+import com.github.pagehelper.PageHelper;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import tk.mybatis.mapper.entity.Example;
 
 import java.util.Arrays;
 import java.util.List;
@@ -68,6 +72,17 @@ public class CustomerServiceImpl extends BaseServiceImpl<Customer, Long> impleme
         return BaseOutput.success("修改成功").setData(customer);
     }
 
+	@Override
+	public BaseOutput updateWithOutput(Customer customer) {
+		UserTicket userTicket = SessionContext.getSessionContext().getUserTicket();
+		if(userTicket == null){
+			return BaseOutput.failure("修改失败，登录超时");
+		}
+		customer.setModifiedId(userTicket.getId());
+		super.update(customer);
+		return BaseOutput.success("修改成功").setData(customer);
+	}
+
     @Override
     public BaseOutput deleteWithOutput(Long id) {
         UserTicket userTicket = SessionContext.getSessionContext().getUserTicket();
@@ -98,16 +113,35 @@ public class CustomerServiceImpl extends BaseServiceImpl<Customer, Long> impleme
 	}
 
     @Override
-    public String listMembersPage(String name, Long customerId) throws Exception {
-        String parentIdsStr = getActualDao().getParentCustomers(customerId);
+    public String listMembersPage(MembersDto membersDto) throws Exception {
+        String parentIdsStr = getActualDao().getParentCustomers(membersDto.getId());
         if(StringUtils.isBlank(parentIdsStr)) return null;
         List<String> parentIds = Arrays.asList(parentIdsStr.split(","));
-        MembersDto membersDto = DTOUtils.newDTO(MembersDto.class);
-        membersDto.setParentIdNotEqual(customerId);
-        membersDto.setIdNotIn(parentIds);
-        membersDto.setName(name);
-        return listEasyuiPageByExample(membersDto, true).toString();
+	    membersDto.setIdNotIn(parentIds);
+        membersDto.setId(null);
+        //由于查询条件中有or parent_id is null，所以这里只能自己构建Example了，以后利刃框架会支持or查询
+	    Example example = new Example(Customer.class);
+	    //这里构建name和id not in的等条件部分
+	    buildExampleByGetterMethods(membersDto, example);
+	    Example.Criteria criteria = example.getOredCriteria().get(0);
+	    criteria.andCondition("(`parent_id` != '1' or `parent_id` is null)");
+	    //设置分页信息
+	    Integer page = membersDto.getPage();
+	    page = (page == null) ? Integer.valueOf(1) : page;
+	    if(membersDto.getRows() != null && membersDto.getRows() >= 1) {
+		    //为了线程安全,请勿改动下面两行代码的顺序
+		    PageHelper.startPage(page, membersDto.getRows());
+	    }
+	    List<Customer> list = getActualDao().selectByExample(example);
+	    long total = list instanceof Page ? ((Page) list).getTotal() : list.size();
+	    return new EasyuiPageOutput(Integer.parseInt(String.valueOf(total)), ValueProviderUtils.buildDataByProvider(membersDto, list)).toString();
     }
 
+	@Override
+	public BaseOutput deleteMembers(Long id){
+		Customer customer = get(id);
+		customer.setParentId(null);
+		return updateWithOutput(customer);
+	}
 
 }
