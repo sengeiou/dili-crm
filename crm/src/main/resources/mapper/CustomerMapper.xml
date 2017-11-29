@@ -158,4 +158,9 @@
     from customer
     group by profession
  </select>
+
+  <select id="getParentCustomers" parameterType="long" resultType="string">
+    select getParentCustomers(#{id})
+  </select>
+
 </mapper>

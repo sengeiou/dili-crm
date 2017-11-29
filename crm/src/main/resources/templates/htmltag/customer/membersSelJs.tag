@@ -1,5 +1,5 @@
 <script type="text/javascript">
-    //============================   选择成员客户,必填参数:dlgId  =============================
+    //============================   选择成员客户,必填参数:dlgId, 后台必须传入当前customer对象  =============================
     // 打开选择成员客户弹出框
     function _selectMembers() {
         <%if (has(customer)){%>
@@ -20,12 +20,15 @@
     }
 
     // 根据id打开成员客户选择
-    function showMembersDlg() {
+    function showMembersDlg(id) {
         $('#${dlgId}').dialog({
             title : '客户选择',
             width : 800,
             height : 400,
             href : '${contextPath!}/customer/members.html',
+            queryParams : {
+                id : id
+            },
             modal : true,
             buttons : [{
                 text : '确定',

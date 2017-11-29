@@ -3,6 +3,7 @@ package com.dili.crm.service.impl;
 import com.dili.crm.dao.CustomerMapper;
 import com.dili.crm.domain.Customer;
 import com.dili.crm.domain.dto.CustomerChartDTO;
+import com.dili.crm.domain.dto.MembersDto;
 import com.dili.crm.service.CacheService;
 import com.dili.crm.service.CustomerService;
 import com.dili.ss.base.BaseServiceImpl;
@@ -11,9 +12,11 @@ import com.dili.ss.domain.EasyuiPageOutput;
 import com.dili.ss.dto.DTOUtils;
 import com.dili.sysadmin.sdk.domain.UserTicket;
 import com.dili.sysadmin.sdk.session.SessionContext;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -93,4 +96,18 @@ public class CustomerServiceImpl extends BaseServiceImpl<Customer, Long> impleme
 	public BaseOutput<List<CustomerChartDTO>> selectCustomersGroupByProfession() {
 		return BaseOutput.success().setData(this.getActualDao().selectCustomersGroupByProfession());
 	}
+
+    @Override
+    public String listMembersPage(String name, Long customerId) throws Exception {
+        String parentIdsStr = getActualDao().getParentCustomers(customerId);
+        if(StringUtils.isBlank(parentIdsStr)) return null;
+        List<String> parentIds = Arrays.asList(parentIdsStr.split(","));
+        MembersDto membersDto = DTOUtils.newDTO(MembersDto.class);
+        membersDto.setParentIdNotEqual(customerId);
+        membersDto.setIdNotIn(parentIds);
+        membersDto.setName(name);
+        return listEasyuiPageByExample(membersDto, true).toString();
+    }
+
+
 }

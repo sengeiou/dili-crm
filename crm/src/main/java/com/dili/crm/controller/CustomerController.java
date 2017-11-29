@@ -179,7 +179,18 @@ public class CustomerController {
 	}
 
 	@RequestMapping(value = "/members.html", method = RequestMethod.GET)
-	public String customer() {
+	public String customer(@RequestParam(name="id") Long id, ModelMap modelMap) {
+		modelMap.put("customerId", id);
 		return "customer/members";
 	}
+
+	@ApiOperation(value="分页查询成员客户", notes = "分页查询成员客户，返回easyui分页信息")
+	@ApiImplicitParams({
+			@ApiImplicitParam(name="MembersDto", paramType="form", value = "MembersDto的form信息", required = false, dataType = "string")
+	})
+	@RequestMapping(value="/listMembersPage", method = {RequestMethod.GET, RequestMethod.POST})
+	public @ResponseBody String listMembersPage(@RequestParam(name="name", required = false) String name, @RequestParam("customerId") Long customerId) throws Exception {
+		return customerService.listMembersPage(name, customerId).toString();
+	}
+
 }

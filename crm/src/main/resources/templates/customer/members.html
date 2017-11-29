@@ -24,10 +24,10 @@
 	function search() {
 		var opts = $("#selectMembersGrid").datagrid("options");
         if (null == opts.url || "" == opts.url) {
-            opts.url = '${contextPath!}/customer/listPage';
+            opts.url = '${contextPath!}/customer/listMembersPage';
         }
 		var text = $('#searchMembersTextbox').textbox('getText');
-		$('#selectMembersGrid').datagrid('load', bindGridMeta2Data("selectMembersGrid",{name : text}));
+		$('#selectMembersGrid').datagrid('load', bindGridMeta2Data("selectMembersGrid",{name : text,customerId: "${customerId}"}));
 	}
 
 	$(function() {
