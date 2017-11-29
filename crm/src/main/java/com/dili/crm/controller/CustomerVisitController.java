@@ -69,13 +69,45 @@ public class CustomerVisitController {
     @RequestMapping(value="/insert", method = {RequestMethod.GET, RequestMethod.POST})
     public @ResponseBody BaseOutput insert(CustomerVisit customerVisit) {
         try {
+            customerVisit.setState(1);
             customerVisitService.insertSelectiveWithOutput(customerVisit);
             return BaseOutput.success("新增成功");
         }catch (Exception e){
             logger.error(String.format("回访信息[%s] 新增失败[%s]",customerVisit,e.getMessage()),e);
             return BaseOutput.failure("新增失败，系统异常");
         }
+    }
 
+    @ApiOperation("新增并完成CustomerVisit")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name="CustomerVisit", paramType="form", value = "CustomerVisit的form信息", required = true, dataType = "string")
+    })
+    @RequestMapping(value="/insertAndFinished", method = {RequestMethod.GET, RequestMethod.POST})
+    public @ResponseBody BaseOutput insertAndFinished(CustomerVisit customerVisit) {
+        try {
+            customerVisit.setState(3);
+            customerVisitService.insertSelectiveWithOutput(customerVisit);
+            return BaseOutput.success("新增成功");
+        }catch (Exception e){
+            logger.error(String.format("回访信息[%s] 新增失败[%s]",customerVisit,e.getMessage()),e);
+            return BaseOutput.failure("新增失败，系统异常");
+        }
+    }
+
+    @ApiOperation("更新并完成CustomerVisit")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name="CustomerVisit", paramType="form", value = "CustomerVisit的form信息", required = true, dataType = "string")
+    })
+    @RequestMapping(value="/updateAndFinished", method = {RequestMethod.GET, RequestMethod.POST})
+    public @ResponseBody BaseOutput updateAndFinished(CustomerVisit customerVisit) {
+        try {
+            customerVisit.setState(3);
+            customerVisitService.updateSelective(customerVisit);
+            return BaseOutput.success("更新成功");
+        }catch (Exception e){
+            logger.error(String.format("回访信息[%s] 更新失败[%s]",customerVisit,e.getMessage()),e);
+            return BaseOutput.failure("更新失败，系统异常");
+        }
     }
 
     @ApiOperation("修改CustomerVisit")
@@ -84,8 +116,13 @@ public class CustomerVisitController {
 	})
     @RequestMapping(value="/update", method = {RequestMethod.GET, RequestMethod.POST})
     public @ResponseBody BaseOutput update(CustomerVisit customerVisit) {
-//        customerVisitService.updateSelective(customerVisit);
-        return BaseOutput.success("修改成功");
+        try {
+            return customerVisitService.updateSelectiveWithOutput(customerVisit);
+        }catch (Exception e){
+            logger.error(String.format("回访信息[%s] 更新失败[%s]",customerVisit,e.getMessage()),e);
+            return BaseOutput.failure("更新失败，系统异常");
+        }
+        
     }
 
     @ApiOperation("删除CustomerVisit")
@@ -94,17 +131,22 @@ public class CustomerVisitController {
 	})
     @RequestMapping(value="/delete", method = {RequestMethod.GET, RequestMethod.POST})
     public @ResponseBody BaseOutput delete(Long id) {
-        customerVisitService.delete(id);
-        return BaseOutput.success("删除成功");
+        try {
+            return customerVisitService.deleteAndEvent(id);
+        }catch (Exception e){
+            logger.error(String.format("回访ID[%s] 删除失败[%s]",id,e.getMessage()),e);
+            return BaseOutput.failure("删除失败，系统异常");
+        }
     }
 
-    @ApiOperation("跳转到CustomerVisit编辑页面")
-    @RequestMapping(value="/edit.html", method = {RequestMethod.GET, RequestMethod.POST})
-    public String edit(ModelMap modelMap, @RequestParam(name="id", required = false) Long id) throws Exception {
+    @ApiOperation("跳转到CustomerVisit详情页面")
+    @RequestMapping(value="/detail.html", method = {RequestMethod.GET, RequestMethod.POST})
+    public String detail(ModelMap modelMap, @RequestParam(name="id", required = false) Long id) throws Exception {
         UserTicket userTicket = SessionContext.getSessionContext().getUserTicket();
         if(userTicket == null){
             throw new RuntimeException("未登录");
         }
+        String view = "customerVisit/detail";
         //页面上用于展示拥有者和新增时获取拥有者id
         modelMap.put("user", userTicket);
         if (null != id) {
@@ -112,10 +154,13 @@ public class CustomerVisitController {
             if (customerVisit == null) {
                 throw new RuntimeException("根据id[" + id + "]找不到对应客户");
             }
+            if(3==customerVisit.getState()){
+                modelMap.put("view","view");
+            }
             List<Map> list = ValueProviderUtils.buildDataByProvider(getCustomerVisitMetadata(), Lists.newArrayList(customerVisit));
             modelMap.put("customerVisit", JSONObject.toJSONString(list.get(0)));
         }
-        return "customerVisit/edit";
+        return view;
     }
 
     /**
@@ -134,11 +179,11 @@ public class CustomerVisitController {
         metadata.put("userId", userProvider);
         //回访对象
         JSONObject customerProvider = new JSONObject();
-        userProvider.put("provider", "customerProvider");
+        customerProvider.put("provider", "customerProvider");
         metadata.put("customerId", customerProvider);
         //回访状态
         JSONObject visitStateProvider = new JSONObject();
-        userProvider.put("provider", "visitStateProvider");
+        visitStateProvider.put("provider", "visitStateProvider");
         metadata.put("state", visitStateProvider);
         //回访方式
         metadata.put("mode", getDDProvider(11L));
