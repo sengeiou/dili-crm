@@ -25,7 +25,8 @@ function endEditing(gridId) {
 }
 
 // 新增一行空数据并开启编辑模式
-function openInsert(gridId) {
+function openInsert(gridId, defaultType) {
+	if(!defaultType) defaultType = 1;
 	if (!dataAuth.addMenu) {
 		return;
 	}
@@ -35,7 +36,7 @@ function openInsert(gridId) {
 		return;
 	}
 	editIndexMap[gridId] = grid.datagrid('getRows').length;
-	grid.datagrid('appendRow', {});
+	grid.datagrid('appendRow', {type:defaultType});
 	grid.datagrid('selectRow', editIndexMap[gridId]);
 	grid.datagrid('beginEdit', editIndexMap[gridId]);
 }
@@ -235,7 +236,7 @@ function queryGrid(node) {
 								iconCls : 'icon-add',
 								plain : true,
 								handler : function() {
-									openInsert('inlineGrid');
+									openInsert('inlineGrid', 2);
 								}
 							}, {
 								iconCls : 'icon-edit',

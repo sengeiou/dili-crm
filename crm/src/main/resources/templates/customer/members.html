@@ -5,7 +5,7 @@
 </div>
 <table class="easyui-datagrid" id="selectCustomerGrid" sortName="name" sortOrder="asc" fitColumns="true" remoteSort="false" loadMsg="数据加载中..." singleSelect="true" method="post" multiSort="true"
 	align="center" fit="true" striped="true" idField="id" pagination="true" pageSize="30" pageNumber="1" pagePosition="top" rownumbers="true"
-	   data-options="onDblClickRow:dbClickCustomer">
+	   data-options="onDblClickRow:dbClickMembers">
 	<thead>
 		<tr>
 			<th data-options="field:'name',width:50">客户名</th>
@@ -18,8 +18,8 @@
 </table>
 
 <script type="text/javascript">
-	function dbClickMembers(index, row) {
-		confirmMembersBtn();
+	function dbClickMembers(index, row) {alert(1);
+		confirmMembersBtn(row.id);
 	}
 	function search() {
 		var opts = $("#selectCustomerGrid").datagrid("options");

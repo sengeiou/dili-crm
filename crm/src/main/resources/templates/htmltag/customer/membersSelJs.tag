@@ -25,7 +25,7 @@
             title : '客户选择',
             width : 800,
             height : 400,
-            href : '${contextPath!}/selectDialog/customer.html',
+            href : '${contextPath!}/customer/members.html',
             modal : true,
             buttons : [{
                 text : '确定',
