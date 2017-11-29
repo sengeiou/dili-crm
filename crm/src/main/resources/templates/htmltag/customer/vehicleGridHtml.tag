@@ -1,4 +1,4 @@
-<div id="vehicleDiv" style="display: inline;float: left;padding-left: 5px;width: 46%">
+<div id="vehicleDiv" style="width: 100%">
 
     <!-- =========================================================车辆表格========================================================= -->
     <table class="easyui-datagrid" id="vehicleGrid" style="height:185px;padding:0px;width:100%;"

@@ -1,4 +1,4 @@
-<div id="membersDiv" style="display: inline;float: left;padding-left: 15px;width: 92%">
+<div id="membersDiv" style="width: 96%">
     <!-- =========================================================成员客户表格========================================================= -->
     <table class="easyui-datagrid" id="membersGrid" style="height:185px;padding:0px;width:100%;" title="成员客户" collapsible="true"
            pagination="false" rownumbers="true" remoteSort="false" data-options="
@@ -16,7 +16,7 @@
             <th width="30%" data-options="field:'phone',   sortable:'true', order:'asc', align:'center', resizable:'true', fixed:'false'">
                 电话
             </th>
-            <th width="20%" data-options="field:'membersOpt', formatter:membersOptFmt, sortable:'true', order:'asc', align:'center', resizable:'true', fixed:'false'">
+            <th width="21%" data-options="field:'membersOpt', formatter:membersOptFmt, sortable:'true', order:'asc', align:'center', resizable:'true', fixed:'false'">
                 操作
             </th>
         </tr>

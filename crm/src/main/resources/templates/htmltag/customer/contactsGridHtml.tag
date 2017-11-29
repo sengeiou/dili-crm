@@ -1,4 +1,4 @@
-<div id="contactsDiv" style="display: inline;float: left;padding-left: 15px;width: 92%">
+<div id="contactsDiv" style="width: 96%">
     <!-- =========================================================联系人表格========================================================= -->
     <table class="easyui-datagrid" id="contactsGrid" style="height:185px;padding:0px;width:100%;" title="联系人" collapsible="true"
            pagination="false" rownumbers="true" remoteSort="false" data-options="onDblClickRow:openUpdateContacts,
@@ -31,7 +31,7 @@
             <th width="20%" data-options="field:'notes',   sortable:'true', order:'asc', align:'center', resizable:'true', fixed:'false'">
                 备注
             </th>
-            <th width="9%" data-options="field:'contactsOpt', formatter:contactsOptFmt, sortable:'true', order:'asc', align:'center', resizable:'true', fixed:'false'">
+            <th width="8%" data-options="field:'contactsOpt', formatter:contactsOptFmt, sortable:'true', order:'asc', align:'center', resizable:'true', fixed:'false'">
                 操作
             </th>
         </tr>
