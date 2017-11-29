@@ -2,16 +2,21 @@ package com.dili.crm.service.impl;
 
 import com.dili.crm.dao.CustomerVisitMapper;
 import com.dili.crm.domain.CustomerVisit;
+import com.dili.crm.domain.VisitEvent;
 import com.dili.crm.domain.dto.CustomerVisitChartDTO;
 import com.dili.crm.service.CustomerVisitService;
+import com.dili.crm.service.VisitEventService;
 import com.dili.ss.base.BaseServiceImpl;
 import com.dili.ss.domain.BaseOutput;
+import com.dili.ss.dto.DTOUtils;
 import com.dili.sysadmin.sdk.domain.UserTicket;
 import com.dili.sysadmin.sdk.session.SessionContext;
-
-import java.util.List;
-
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.CollectionUtils;
+
+import javax.annotation.Resource;
+import java.util.List;
 
 /**
  * 由MyBatis Generator工具自动生成
@@ -23,6 +28,8 @@ public class CustomerVisitServiceImpl extends BaseServiceImpl<CustomerVisit, Lon
     public CustomerVisitMapper getActualDao() {
         return (CustomerVisitMapper)getDao();
     }
+    @Resource
+    private VisitEventService visitEventService;
 
     @Override
     public BaseOutput insertSelectiveWithOutput(CustomerVisit customerVisit) {
@@ -31,6 +38,7 @@ public class CustomerVisitServiceImpl extends BaseServiceImpl<CustomerVisit, Lon
             return BaseOutput.failure("新增失败，登录超时");
         }
         customerVisit.setCreatedId(userTicket.getId());
+        customerVisit.setModifiedId(userTicket.getId());
         super.insertSelective(customerVisit);
         return BaseOutput.success("新增成功");
     }
@@ -44,4 +52,35 @@ public class CustomerVisitServiceImpl extends BaseServiceImpl<CustomerVisit, Lon
 	public BaseOutput<List<CustomerVisitChartDTO>> selectCustomerVisitGroupByState() {
 		return BaseOutput.success().setData(this.getActualDao().selectCustomerVisitGroupByState());
 	}
+
+    @Override
+    public BaseOutput updateSelectiveWithOutput(CustomerVisit customerVisit) {
+        UserTicket userTicket = SessionContext.getSessionContext().getUserTicket();
+        if(userTicket == null){
+            return BaseOutput.failure("新增失败，登录超时");
+        }
+        VisitEvent ve = DTOUtils.newDTO(VisitEvent.class);
+        ve.setCustomerVisitId(customerVisit.getId());
+        List<VisitEvent> events = visitEventService.list(ve);
+        //当编辑后点击更新后如无事件则回访记录保持新建状态；
+        //如果有事件点击更新后状态为进行中；
+        if (!CollectionUtils.isEmpty(events)){
+            customerVisit.setState(2);
+        }
+        super.updateSelective(customerVisit);
+        return BaseOutput.success("更新成功");
+    }
+
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public BaseOutput deleteAndEvent(Long id) {
+        UserTicket userTicket = SessionContext.getSessionContext().getUserTicket();
+        if(userTicket == null){
+            return BaseOutput.failure("新增失败，登录超时");
+        }
+        super.delete(id);
+        visitEventService.deleteByVisit(id);
+        return BaseOutput.success("删除成功");
+    }
+
 }

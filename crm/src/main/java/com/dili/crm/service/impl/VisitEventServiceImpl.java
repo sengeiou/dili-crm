@@ -4,7 +4,9 @@ import com.dili.crm.dao.VisitEventMapper;
 import com.dili.crm.domain.VisitEvent;
 import com.dili.crm.service.VisitEventService;
 import com.dili.ss.base.BaseServiceImpl;
+import com.dili.ss.dto.DTOUtils;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  * 由MyBatis Generator工具自动生成
@@ -15,5 +17,13 @@ public class VisitEventServiceImpl extends BaseServiceImpl<VisitEvent, Long> imp
 
     public VisitEventMapper getActualDao() {
         return (VisitEventMapper)getDao();
+    }
+
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public Integer deleteByVisit(Long visitId) {
+        VisitEvent visitEvent = DTOUtils.newDTO(VisitEvent.class);
+        visitEvent.setCustomerVisitId(visitId);
+        return getActualDao().delete(visitEvent);
     }
 }

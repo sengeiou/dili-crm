@@ -1,39 +1,50 @@
  <#body>
+     <script>
+         <#controls_user dlgId="userSelectDialog" controlId="userId"/>
+         <#controls_customer dlgId="customerSelectDialog" controlId="customerId"/>
+     </script>
     <div class="easyui-layout" fit="true">
         <!-- ====================================================================================================================== -->
         <!-- 上方布局 -->
         <!-- ====================================================================================================================== -->
         <div region="north" height="auto" align="center">
+            <div id="nav" style="padding-left:15px;padding-top:10px;" align="left">
+                <#nav/>
+            </div>
             <!-- =========================================================表单========================================================= -->
-            <div class="easyui-panel" style="width:100%;" align="left">
+            <div class="easyui-panel" style="width:100%; border: hidden;" align="left" >
+                <div id="userSelectDialog" style="display: none;"></div>
+                <div id="customerSelectDialog" style="display: none;"></div>
                 <form id="form" class="easyui-form" method="post" fit="true">
                     <table style="padding:10px;">
                         <tr>
-                            <td style="padding:5px;">
-                                <input class="easyui-numberbox" name="customerId" id="customerId" style="width:100%" data-options="label:'回访对象:', validType:'length[0,19]'" />
+                            <td style="padding:5px;width: 20%;">
+                                <input class="easyui-textbox" name="customerId" id="customerId"  panelHeight="auto" label="回访对象:" style="width: 100%;"
+                                       data-options="editable:false,
+									buttonText:'选择',
+									onClickButton:_selectCustomer,onChange:_changeTextboxShowClear" />
                             </td>
-                            <td style="padding:5px;">
-                                <input class="easyui-textbox" name="subject" id="subject" style="width:100%" data-options="label:'主题:', validType:'length[0,40]'" />
+                            <td style="padding:5px;width: 20%;">
+                                <input class="easyui-textbox" name="subject" id="subject" style="width:100%;" data-options="label:'主题:', validType:'length[0,40]'" />
                             </td>
-                            <td style="padding:5px;">
-                                <input name="mode" id="mode" style="width:100%;" panelWidth="auto" data-options="editable:false" panelHeight="auto" label="回访方式:"/>
+                            <td style="padding:5px;width: 20%;">
+                                <input name="mode" id="mode" style="width:100%;"  data-options="editable:false" panelHeight="auto" label="回访方式:"/>
                                 <#comboProvider _id="mode" _provider='dataDictionaryValueProvider' _queryParams='{dd_id:"11"}'/>
                             </td>
-                        </tr>
-                        <tr>
-                            <td style="padding:5px;">
-                                <input name="state" id="state" style="width:100%;" panelWidth="auto" data-options="editable:false" panelHeight="auto" label="回访状态:"/>
+                            <td style="padding:5px;width: 20%;">
+                                <input name="state" id="state" style="width:100%;" data-options="editable:false" panelHeight="auto" label="回访状态:"/>
                                 <#comboProvider _id="state" _provider='visitStateProvider'/>
                             </td>
-                            <td style="padding:5px;">
-                                <input class="easyui-numberbox" name="userId" id="userId" style="width:100%" data-options="label:'回访人:', validType:'length[0,19]'" />
-                            </td>
-                            <td style="padding:5px;">
-                                <input name="priority" id="priority" style="width:100%;" data-options="editable:false" panelWidth="auto" panelHeight="auto" label="优先级:"/>
-                                <#comboProvider _id="priority" _provider='dataDictionaryValueProvider' _queryParams='{dd_id:"10"}'/>
-                            </td>
                         </tr>
                         <tr>
+                            <td style="padding:5px;">
+                                <input class="easyui-textbox" name="userId" id="userId"  panelHeight="auto" label="回访人:" style="width: 100%;"
+                                       data-options="editable:false,buttonText:'选择',onClickButton:_selectUser,onChange:_changeTextboxShowClear" />
+                            </td>
+                            <td style="padding:5px;">
+                                <input name="priority" id="priority" style="width:100%;" data-options="editable:false" panelHeight="auto" label="优先级:"/>
+                                <#comboProvider _id="priority" _provider='dataDictionaryValueProvider' _queryParams='{dd_id:"10"}'/>
+                            </td>
                             <td>
                                 <a href="#" class="easyui-linkbutton" iconCls="icon-search" id="queryBtn"
                                    onclick="queryGrid()">查询</a>
@@ -51,86 +62,42 @@
         <div region="center" style="width:100%;" height="auto">
             <!-- =========================================================表格========================================================= -->
             <table class="easyui-datagrid" title="回访信息" id="grid" fitColumns="true" noheader="true"
-                   pagination="true" pageSize="30" pageNumber="1" pagePosition="top" rownumbers="true" remoteSort="false"
+                   pagination="true" pageSize="30" pageNumber="1" pagePosition="top" rownumbers="false" remoteSort="false"
                    loadMsg="数据加载中..." singleSelect="true" method="post" multiSort="false" sortName="userId"
                    align="center" fit="true" striped="true"  idField="id" data-options="onDblClickRow:openUpdate, onHeaderContextMenu:headerContextMenu">
                 <thead>
                     <tr>
-                        <th data-options="field:'userId',   sortable:'true', order:'asc', align:'center', resizable:'true', fixed:'false'">
-                            回访人
+                        <th width="10%" data-options="field:'id',sortable:'true', order:'asc', align:'center', resizable:'true', fixed:'false'">
+                            回访编号
                         </th>
-                        <th data-options="field:'customerId',   sortable:'true', order:'asc', align:'center', resizable:'true', fixed:'false'">
-                            回访对象
-                        </th>
-                        <th data-options="field:'subject',   sortable:'true', order:'asc', align:'center', resizable:'true', fixed:'false'">
+                        <th width="20%" data-options="field:'subject',sortable:'true', order:'asc', align:'center', resizable:'true', fixed:'false'">
                             主题
                         </th>
-                        <th data-options="field:'mode',  _provider:'dataDictionaryValueProvider', sortable:'true', order:'asc', align:'center', resizable:'true', fixed:'false'">
-                            回访方式
+                        <th width="10%" data-options="field:'customerName', _provider:'visitCustomerProvider', sortable:'true', order:'asc', align:'center', resizable:'true', fixed:'false'">
+                            回访对象
                         </th>
-                        <th data-options="field:'priority',  _provider:'dataDictionaryValueProvider', sortable:'true', order:'asc', align:'center', resizable:'true', fixed:'false'">
+                        <th width="10%" data-options="field:'customerPhone', _provider:'visitCustomerProvider', sortable:'true', order:'asc', align:'center', resizable:'true', fixed:'false'">
+                            电话
+                        </th>
+                        <th width="8%" data-options="field:'priority',  _provider:'dataDictionaryValueProvider',_queryParams:{'dd_id':'10'}, sortable:'true', order:'asc', align:'center', resizable:'true', fixed:'false'">
                             优先级
                         </th>
-                        <th data-options="field:'finishTime',  _provider:'datetimeProvider', sortable:'true', order:'asc', align:'center', resizable:'true', fixed:'false'">
-                            完成时间
+                        <th width="10%" data-options="field:'mode',  _provider:'dataDictionaryValueProvider',_queryParams:{'dd_id':'11'}, sortable:'true', order:'asc', align:'center', resizable:'true', fixed:'false'">
+                            回访方式
                         </th>
-                        <th data-options="field:'state',  _provider:'visitStateProvider', sortable:'true', order:'asc', align:'center', resizable:'true', fixed:'false'">
-                            回访状态
+                        <th width="10%" data-options="field:'userId', _provider:'ownerProvider',  sortable:'true', order:'asc', align:'center', resizable:'true', fixed:'false'">
+                            回访人
                         </th>
-                        <th data-options="field:'notes',   sortable:'true', order:'asc', align:'center', resizable:'true', fixed:'false'">
-                            描述
+                        <th width="8%" data-options="field:'state',  _provider:'visitStateProvider', sortable:'true', order:'asc', align:'center', resizable:'true', fixed:'false'">
+                            状态
                         </th>
-                        <th data-options="field:'created',  _provider:'datetimeProvider', sortable:'true', order:'asc', align:'center', resizable:'true', fixed:'false'">
-                            创建时间
-                        </th>
-                        <th data-options="field:'modified',  _provider:'datetimeProvider', sortable:'true', order:'asc', align:'center', resizable:'true', fixed:'false'">
+                        <th width="16%" data-options="field:'modified',  _provider:'datetimeProvider', sortable:'true', order:'asc', align:'center', resizable:'true', fixed:'false'">
                             修改时间
-                        </th>
-                        <th data-options="field:'modifiedId',   sortable:'true', order:'asc', align:'center', resizable:'true', fixed:'false'">
-                            修改人
-                        </th>
-                        <th data-options="field:'createdId',   sortable:'true', order:'asc', align:'center', resizable:'true', fixed:'false'">
-                            回访创建者
                         </th>
                     </tr>
                 </thead>
             </table>
-            <!-- datagrid工具栏 -->
-            <div id="toolbar" style="padding:2px 5px;">
-                <a href="#" class="easyui-linkbutton" iconCls="icon-add" onclick="openInsert()" plain="true"></a>
-                <a href="#" class="easyui-linkbutton" iconCls="icon-edit" onclick="openUpdate()" plain="true"></a>
-                <a href="#" class="easyui-linkbutton" iconCls="icon-remove" onclick="del()" plain="true"></a>
-                <a href="#" class="easyui-linkbutton" iconCls="icon-export" onclick="doExport('grid')" plain="true"></a>
-                <div style="float:right">
-                边框显示:<select onchange="changeBorder('grid',this.value)">
-                    <option value="lines-both">全边框</option>
-                    <option value="lines-no">无边框</option>
-                    <option value="lines-right">右边框</option>
-                    <option value="lines-bottom">下边框</option>
-                </select>
-                行条纹:<input type="checkbox" checked="checked" onclick="$('#grid').datagrid({striped:$(this).is(':checked')})">
-                </div>
-            </div>
         </div>
-    </div>
-    <!-- 隐藏编辑框 -->
-    <div id="dlg" class="easyui-dialog" resizable="false" constrain="true" shadow="true" draggable="false" title="CustomerVisit信息" style="padding:20px" modal="true" border="thin" closed="true"
-         data-options="
-				iconCls: 'icon-save',
-				height: 480,
-				buttons: [{
-					text:'Ok',
-					iconCls:'icon-ok',
-					handler:saveOrUpdate
-				},{
-					text:'取消',
-					handler:function(){
-						$('#dlg').dialog('close');
-					}
-				}]
-			">
-
-
     </div>
     <!-- ====================================================================================================================== -->
     <!-- style & script 分隔线 -->
@@ -138,62 +105,32 @@
     <script type="text/javascript">
         //打开新增窗口
         function openInsert(){
-            window.location.href="${contextPath}/customerVisit/edit.html?id=#insert";
+            window.location.href="${contextPath}/customerVisit/detail.html?id=";
             return;
         }
 
         //打开修改窗口
         function openUpdate(){
-            var selected = $("#grid").datagrid("getSelected");
-            if (null == selected) {
-                $.messager.alert('警告','请选中一条数据');
-                return;
-            }
-            window.location.href="${contextPath}/customerVisit/edit.html?id="+selected["id"]+"#update";
-            return;
-        }
-
-        function saveOrUpdate(){
-            if(!$('#_form').form("validate")){
-                return;
-            }
-            var _formData = removeKeyStartWith($("#_form").serializeObject(),"_");
-            var _url = null;
-            //没有id就新增
-            if(_formData.id == null || _formData.id==""){
-                _url = "${contextPath}/customerVisit/insert";
-            }else{//有id就修改
-                _url = "${contextPath}/customerVisit/update";
-            }
-            $.ajax({
-                type: "POST",
-                url: _url,
-                data: _formData,
-                processData:true,
-                dataType: "json",
-                async : true,
-                success: function (data) {
-                    if(data.code=="200"){
-                        $("#grid").datagrid("reload");
-                        $('#dlg').dialog('close');
-                    }else{
-                        $.messager.alert('错误',data.result);
-                    }
-                },
-                error: function(){
-                    $.messager.alert('错误','远程访问失败');
+            //如果有修改或者查看的权限，才执行后台操作
+            <%if(hasResource("editVisit") || hasResource("viewVisit")) {%>
+                var selected = $("#grid").datagrid("getSelected");
+                if (null == selected) {
+                    $.messager.alert('警告','请选中一条数据','warning');
+                    return;
                 }
-            });
+                window.location.href="${contextPath}/customerVisit/detail.html?id="+selected["id"];
+                return;
+            <%}%>
         }
 
         //根据主键删除
         function del() {
             var selected = $("#grid").datagrid("getSelected");
             if (null == selected) {
-                $.messager.alert('警告','请选中一条数据');
+                $.messager.alert('警告','请选中一条数据','warning');
                 return;
             }
-            $.messager.confirm('确认','您确认想要删除记录吗？',function(r){
+            $.messager.confirm('确认','回访事件也会一并删除，您确认想要删除该回访信息吗？',function(r){
                 if (r){
                     $.ajax({
                         type: "POST",
@@ -204,14 +141,15 @@
                         async : true,
                         success: function (data) {
                             if(data.code=="200"){
-                                $("#grid").datagrid("reload");
-                                $('#dlg').dialog('close');
+                                $.messager.alert('信息',data.result,"info",function(){
+                                    $("#grid").datagrid("reload");
+                                });
                             }else{
-                                $.messager.alert('错误',data.result);
+                                $.messager.alert('错误',data.result,"error");
                             }
                         },
                         error: function(){
-                            $.messager.alert('错误','远程访问失败');
+                            $.messager.alert('错误','远程访问失败',"error");
                         }
                     });
                 }
@@ -284,39 +222,53 @@
          */
         $(function () {
             bindFormEvent("form", "userId", queryGrid);
-            if (document.addEventListener) {
-                document.addEventListener("keyup",getKey,false);
-            } else if (document.attachEvent) {
-                document.attachEvent("onkeyup",getKey);
-            } else {
-                document.onkeyup = getKey;
-            }
+//            if (document.addEventListener) {
+//                document.addEventListener("keyup",getKey,false);
+//            } else if (document.attachEvent) {
+//                document.attachEvent("onkeyup",getKey);
+//            } else {
+//                document.onkeyup = getKey;
+//            }
             var pager = $('#grid').treegrid('getPager');    // get the pager of treegrid
             pager.pagination({
                 layout:['list','sep','first','prev','links','next','last','sep','refresh','info'],
                 links:3,
-                buttons:[{
-                    iconCls:'icon-add',
-                    handler:function(){
-                        openInsert();
-                    }
-                },{
-                    iconCls:'icon-edit',
-                    handler:function(){
-                        openUpdate();
-                    }
-                },{
-                    iconCls:'icon-remove',
-                    handler:function(){
-                        del();
-                    }
-                },{
-                    iconCls:'icon-export',
-                    handler:function(){
-                        doExport('grid', true);
-                    }
-                }]
+                buttons:[
+                <%if(hasResource("addVisit")) {%>
+                    {
+                        iconCls:'icon-add',
+                        handler:function(){
+                            openInsert();
+                        }
+                    },
+                <%}%>
+                <%if(hasResource("editVisit")) {%>
+                      {
+                         iconCls:'icon-edit',
+                         handler:function(){
+                             openUpdate();
+                         }
+                      },
+                 <%}%>
+      /*           <%if(hasResource("removeVisit")) {%>
+                    {
+                        iconCls:'icon-remove',
+                            handler:function(){
+                            del();
+                        }
+                     },
+                 <%}%>*/
+                 <%if(hasResource("exportVisit")) {%>
+                    {
+                        iconCls:'icon-export',
+                            handler:function(){
+                            doExport('grid', true);
+                        }
+                     },
+                 <%}%>
+                ]
             });
+            queryGrid();
         })
     </script>
 </#body>

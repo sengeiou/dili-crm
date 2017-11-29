@@ -3,6 +3,8 @@ package com.dili.crm.controller;
 import com.dili.crm.domain.VisitEvent;
 import com.dili.crm.service.VisitEventService;
 import com.dili.ss.domain.BaseOutput;
+import com.dili.sysadmin.sdk.domain.UserTicket;
+import com.dili.sysadmin.sdk.session.SessionContext;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
@@ -56,6 +58,11 @@ public class VisitEventController {
 	})
     @RequestMapping(value="/insert", method = {RequestMethod.GET, RequestMethod.POST})
     public @ResponseBody BaseOutput insert(VisitEvent visitEvent) {
+        UserTicket userTicket = SessionContext.getSessionContext().getUserTicket();
+        if(userTicket == null){
+            return BaseOutput.failure("新增失败，登录超时");
+        }
+        visitEvent.setUserId(userTicket.getId());
         visitEventService.insertSelective(visitEvent);
         return BaseOutput.success("新增成功");
     }
