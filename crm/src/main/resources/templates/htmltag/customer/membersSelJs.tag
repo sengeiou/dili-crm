@@ -30,7 +30,7 @@
             buttons : [{
                 text : '确定',
                 handler : function() {
-                    confirmMembersBtn($("#selectCustomerGrid").datagrid("getSelected")["id"]);
+                    confirmMembersBtn($("#selectMembersGrid").datagrid("getSelected")["id"]);
                 }
             }, {
                 text : '取消',

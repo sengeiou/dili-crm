@@ -1,9 +1,9 @@
 <div style="margin: 5px 5px;">
-	<form class="easyui-form" id="searchCustomerForm">
-	客户名: <input id="searchCustomerTextbox" name="searchCustomerTextbox" class="easyui-textbox" data-options="buttonIcon:'icon-search',onClickButton:search,onChange:_changeTextboxShowClear" style="width: 300px">
+	<form class="easyui-form" id="searchMembersForm">
+	客户名: <input id="searchMembersTextbox" name="searchMembersTextbox" class="easyui-textbox" data-options="buttonIcon:'icon-search',onClickButton:search,onChange:_changeTextboxShowClear" style="width: 300px">
 	</form>
 </div>
-<table class="easyui-datagrid" id="selectCustomerGrid" sortName="name" sortOrder="asc" fitColumns="true" remoteSort="false" loadMsg="数据加载中..." singleSelect="true" method="post" multiSort="true"
+<table class="easyui-datagrid" id="selectMembersGrid" sortName="name" sortOrder="asc" fitColumns="true" remoteSort="false" loadMsg="数据加载中..." singleSelect="true" method="post" multiSort="true"
 	align="center" fit="true" striped="true" idField="id" pagination="true" pageSize="30" pageNumber="1" pagePosition="top" rownumbers="true"
 	   data-options="onDblClickRow:dbClickMembers">
 	<thead>
@@ -18,22 +18,22 @@
 </table>
 
 <script type="text/javascript">
-	function dbClickMembers(index, row) {alert(1);
+	function dbClickMembers(index, row) {
 		confirmMembersBtn(row.id);
 	}
 	function search() {
-		var opts = $("#selectCustomerGrid").datagrid("options");
+		var opts = $("#selectMembersGrid").datagrid("options");
         if (null == opts.url || "" == opts.url) {
-            opts.url = '${contextPath!}/selectDialog/listCustomer';
+            opts.url = '${contextPath!}/customer/listPage';
         }
-		var text = $('#searchCustomerTextbox').textbox('getText');
-		$('#selectCustomerGrid').datagrid('load', bindGridMeta2Data("selectCustomerGrid",{name : text}));
+		var text = $('#searchMembersTextbox').textbox('getText');
+		$('#selectMembersGrid').datagrid('load', bindGridMeta2Data("selectMembersGrid",{name : text}));
 	}
 
 	$(function() {
-		$('#searchCustomerTextbox').textbox('addClearBtn', 'icon-clear');
-		$('#searchCustomerTextbox').textbox('textbox').focus();
-        bindFormEvent("searchCustomerForm", "searchCustomerTextbox", search, closeCustomerSelectDlg);
+		$('#searchMembersTextbox').textbox('addClearBtn', 'icon-clear');
+		$('#searchMembersTextbox').textbox('textbox').focus();
+        bindFormEvent("searchMembersForm", "searchMembersTextbox", search, closeMembersSelectDlg);
         search();
 	})
 </script>
