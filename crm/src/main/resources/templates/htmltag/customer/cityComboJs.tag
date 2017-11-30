@@ -5,12 +5,6 @@
     //标识城市控件是否为手工输入状态(手工输入不合法)
     var manualInput = false;
 
-    //加载成功后默认选中第一项
-    function onCityComboLoadSuccess() {
-        var data = $(this).combobox("getData");
-        if(data == null || data.length<=0) return;
-        $(this).combobox("select", data[0]["value"]);
-    }
     //根据newValue加载combobx(easyui的jquery对象)
     function reloadCombobox(jq, newValue) {
         if(newValue && newValue.length >= 1){
