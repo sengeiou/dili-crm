@@ -349,6 +349,7 @@
                 if (r) {
                     //禁用保存
                     $("#saveBtn").linkbutton("disable");
+                    $("#saveAndExitBtn").linkbutton("disable");
                     var _formData = removeKeyStartWith($("#_form").serializeObject(),"_");
                     var _url = null;
                     //没有id就新增
@@ -373,10 +374,14 @@
                                     }
                                     window.location.href = url;
                                 }else{
+                                    $("#saveBtn").linkbutton("enable");
+                                    $("#saveAndExitBtn").linkbutton("enable");
                                     $.messager.alert('错误',data.result);
                                 }
                             },
                             error: function(){
+                                $("#saveBtn").linkbutton("enable");
+                                $("#saveAndExitBtn").linkbutton("enable");
                                 $.messager.alert('错误','远程访问失败');
                             }
                        });

@@ -60,6 +60,14 @@ public class CustomerServiceImpl extends BaseServiceImpl<Customer, Long> impleme
         if(userTicket == null){
             return BaseOutput.failure("新增失败，登录超时");
         }
+	    Customer condition = DTOUtils.newDTO(Customer.class);
+        condition.setCertificateType(customer.getCertificateType());
+        condition.setCertificateNumber(customer.getCertificateNumber());
+        condition.setYn(1);
+        List<Customer> list = list(condition);
+        if(!list.isEmpty()){
+        	return BaseOutput.failure("证件号码已存在");
+        }
         customer.setCreatedId(userTicket.getId());
         customer.setOwnerId(userTicket.getId());
         super.insertSelective(customer);
