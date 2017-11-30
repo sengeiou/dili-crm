@@ -27,6 +27,7 @@ import java.util.Map;
 /**
  * 由MyBatis Generator工具自动生成
  * This file was generated on 2017-11-13 17:11:22.
+ * @author asiamaster
  */
 @Api("/customer")
 @Controller
@@ -120,7 +121,7 @@ public class CustomerController {
     //根据机构类型加载证件类型数据
     @RequestMapping(value="/getCertificateTypeComboboxData", method = {RequestMethod.GET, RequestMethod.POST})
 	public @ResponseBody BaseOutput<String> getCertificateTypeComboboxData(@RequestParam(required = false) String organizationType) throws Exception {
-    	Map params = new HashMap();
+    	Map params = new HashMap(2);
     	params.put("organizationType", organizationType);
 		String json = JSONArray.toJSONString(valueProviderUtils.getLookupList("certificateTypeProvider", null, params));
 		return BaseOutput.success("加载成功").setData(json);

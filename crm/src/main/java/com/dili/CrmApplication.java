@@ -4,10 +4,7 @@ import com.dili.ss.datasource.aop.DynamicRoutingDataSourceRegister;
 import com.dili.ss.retrofitful.annotation.RestfulScan;
 import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.boot.SpringApplication;
-import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.boot.autoconfigure.thymeleaf.ThymeleafAutoConfiguration;
-import org.springframework.boot.autoconfigure.velocity.VelocityAutoConfiguration;
 import org.springframework.boot.web.support.SpringBootServletInitializer;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Import;
@@ -24,7 +21,7 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 @SpringBootApplication
 //@EnableScheduling
 @EnableTransactionManagement
-@EnableAutoConfiguration(exclude = {ThymeleafAutoConfiguration.class, VelocityAutoConfiguration.class})
+//@EnableAutoConfiguration(exclude = {ThymeleafAutoConfiguration.class, VelocityAutoConfiguration.class})
 @MapperScan(basePackages = {"com.dili.crm.dao", "com.dili.ss.dao", "com.dili.ss.quartz.dao"})
 //@ImportResource(locations = "classpath:applicationContext.xml")
 @ComponentScan(basePackages={"com.dili.ss","com.dili.crm","com.dili.sysadmin"})
