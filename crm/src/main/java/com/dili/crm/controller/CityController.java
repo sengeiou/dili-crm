@@ -54,7 +54,6 @@ public class CityController {
     @RequestMapping(value="/listPage", method = {RequestMethod.GET, RequestMethod.POST})
     public @ResponseBody String listPage(City city) throws Exception {
     	List<City> list = cityService.listByExample(city);
-		Page<T> page = (Page)list;
 		List<Map> results = ValueProviderUtils.buildDataByProvider(city, list);
 		for(Map c : results) {
 			c.put("state", "closed");
