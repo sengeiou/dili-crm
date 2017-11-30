@@ -63,11 +63,11 @@
             <!-- =========================================================表格========================================================= -->
             <table class="easyui-datagrid" title="回访信息" id="grid" fitColumns="true" noheader="true"
                    pagination="true" pageSize="30" pageNumber="1" pagePosition="top" rownumbers="false" remoteSort="false"
-                   loadMsg="数据加载中..." singleSelect="true" method="post" multiSort="false" sortName="userId"
+                   loadMsg="数据加载中..." singleSelect="true" method="post" multiSort="false" sortName="id" sortOrder="desc"
                    align="center" fit="true" striped="true"  idField="id" data-options="onDblClickRow:openUpdate, onHeaderContextMenu:headerContextMenu">
                 <thead>
                     <tr>
-                        <th width="10%" data-options="field:'id',sortable:'true', order:'asc', align:'center', resizable:'true', fixed:'false'">
+                        <th width="10%" data-options="field:'id',sortable:'true', order:'desc', align:'center', resizable:'true', fixed:'false'">
                             回访编号
                         </th>
                         <th width="20%" data-options="field:'subject',sortable:'true', order:'asc', align:'center', resizable:'true', fixed:'false'">
@@ -225,7 +225,7 @@
          *          表单提交需执行的任务
          */
         $(function () {
-            bindFormEvent("form", "userId", queryGrid);
+            bindFormEvent("form", "id", queryGrid);
 //            if (document.addEventListener) {
 //                document.addEventListener("keyup",getKey,false);
 //            } else if (document.attachEvent) {
