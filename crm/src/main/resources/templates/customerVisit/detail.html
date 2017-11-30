@@ -26,59 +26,57 @@
                     <a id="cancelBtn" href="#" class="easyui-linkbutton" data-options="width:80" onclick="doBack()">取消</a>
                 </div>
             </div>
-            <div style="margin-top:40px">
-                <div id="stateDiv" style="padding-left:10px;width:30%;display: none;" align="center">
-                    <input id="stateValue"  style="width: 100%;height: 30px; background-color: lightgrey;border: hidden;text-align: center;font-size: large" value="" disabled="disabled">
+            <div style="margin-top:50px">
+                <div id="stateDiv" style="padding-left:10px;width:99%;display: none;">
+                    <input id="stateValue"  style="width: 93%;height: 30px; background-color: lightgrey;border: hidden;text-align: center;font-size: large" value="" disabled="disabled">
                 </div>
                 <form id="_form" class="easyui-form" method="post" fit="true">
                     <input name="_id" id="_id" type="hidden">
-                    <table width="60%">
+                    <table width="99%" align="center">
                         <tr>
-                            <td style="padding:5px;" width="50%">
-                                <input class="easyui-textbox" name="_createdName" id="_createdName" style="width: 99%;" data-options="label:'回访创建者:'"  editable="true"/>
+                            <td style="padding:5px;" width="33%">
+                                <input class="easyui-textbox" name="_createdName" id="_createdName" style="width: 80%;" data-options="label:'回访创建者:'"  editable="true"/>
                             </td>
-                            <td style="padding:5px;" width="50%">
-                                <input class="easyui-textbox" name="_subject" id="_subject" style="width: 99%;" data-options="label:'主题:', validType:'length[0,40]'" required="true" />
+                            <td style="padding:5px;"  width="33%">
+                                <input class="easyui-textbox" name="_subject" id="_subject" style="width: 80%;" data-options="label:'主题:', validType:'length[0,40]'" required="true" />
+                            </td>
+                            <td style="padding:5px;" width="33%">
+                                <input class="easyui-textbox" name="userId" id="userId" panelWidth="auto" panelHeight="auto" label="回访人:" style="width: 80%;" required="true"
+                                       data-options="editable:false,buttonText:'选择',onClickButton:_selectUser,onChange:_changeTextboxShowClear" />
                             </td>
                         </tr>
                         <tr>
                             <td style="padding:5px;">
-                                <input class="easyui-textbox" name="userId" id="userId" panelWidth="auto" panelHeight="auto" label="回访人:" style="width: 99%;" required="true"
-                                       data-options="editable:false,buttonText:'选择',onClickButton:_selectUser,onChange:_changeTextboxShowClear" />
-                            </td>
-                            <td style="padding:5px;">
-                                <input class="easyui-textbox" name="customerId" id="customerId" panelWidth="auto" panelHeight="auto" label="回访对象:" style="width: 99%;" required="true"
+                                <input class="easyui-textbox" name="customerId" id="customerId" panelWidth="auto" panelHeight="auto" label="回访对象:" style="width: 80%;" required="true"
                                        data-options="editable:false,
 									buttonText:'选择',
 									onClickButton:_selectCustomer,onChange:_changeTextboxShowClear" />
                             </td>
-                        </tr>
-                        <tr>
                             <td style="padding:5px;">
-                                <input name="_mode" class="easyui-combobox" id="_mode" style="width:99%;" panelWidth="auto" panelHeight="auto" label="回访方式:" required="true" editable="false"/>
+                                <input name="_mode" class="easyui-combobox" id="_mode" style="width:80%;" panelWidth="auto" panelHeight="auto" label="回访方式:" required="true" editable="false"/>
                                 <#comboProvider _id="_mode" _provider='dataDictionaryValueProvider' _queryParams='{dd_id:"11"}'/>
                             </td>
                             <td style="padding:5px;">
-                                <input class="easyui-combobox" name="_priority" id="_priority" style="width:99%;" data-options="editable:false" panelWidth="auto" panelHeight="auto" label="优先级:" />
+                                <input class="easyui-combobox" name="_priority" id="_priority" style="width:80%;" data-options="editable:false" panelWidth="auto" panelHeight="auto" label="优先级:" />
                                 <#comboProvider _id="_priority" _provider='dataDictionaryValueProvider' _queryParams='{dd_id:"10"}'/>
                             </td>
                         </tr>
                         <tr>
                             <td style="padding:5px;">
-                                <input class="easyui-datetimebox" name="_finishTime" id="_finishTime" style="width:99%" data-options="label:'完成时间:',editable:false"/>
+                                <input class="easyui-datetimebox" name="_finishTime" id="_finishTime" style="width:80%" data-options="label:'完成时间:',editable:false"/>
                             </td>
-                            <td style="padding:5px;">
-                                <input class="easyui-textbox" name="_notes" id="_notes" style="width:99%" multiline="true" data-options="label:'描述:', validType:'length[0,200]'" />
+                            <td style="padding:5px;" colspan="2">
+                                <input class="easyui-textbox" name="_notes" id="_notes" style="width:90%" multiline="true" data-options="label:'描述:', validType:'length[0,200]'" />
                             </td>
                         </tr>
                     </table>
                 </form>
             </div>
             <!--------------------事件信息------------------------>
-            <div id="eventDiv" style="width: 80%;display: none;">
+            <div id="eventDiv" style="padding:10px;width: 99%;display: none;">
                 <!-- =========================================================事件表格========================================================= -->
                 <p />
-                <table class="easyui-datagrid" id="eventGrid" style="height:auto;width: 100%;" title="事件" collapsible="true"
+                <table class="easyui-datagrid" id="eventGrid" style="height:auto;width: 93%;" title="事件" collapsible="true"
                        pagination="false" rownumbers="false" remoteSort="false" data-options="onDblClickRow:openUpdateEvent
                         <%if(hasResource("editVisit") && hasResource("addVisitEvent") && has(view)==false) {%>
                             ,tools:[{iconCls:'icon-add',handler:openInsertEvent}]
