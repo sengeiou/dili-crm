@@ -28,7 +28,7 @@
             </tr>
             <tr>
                 <td style="padding-top:10px;padding-left:15px;">
-                    <input name="_address_cityId" id="_address_cityId" style="width:100%;" panelWidth="auto" required="true" panelHeight="auto" label="所在城市:"  data-options="validType:'length[1,20]', editable:true, hasDownArrow:false, onChange:changeName, onSelect:selectName, onLoadSuccess:onCityComboLoadSuccess"/>
+                    <input name="_address_cityId" id="_address_cityId" style="width:100%;" panelWidth="auto" required="true" panelHeight="auto" label="所在城市:"  data-options="validType:'length[1,20]', editable:true, hasDownArrow:false, onChange:changeName, onSelect:selectName, onLoadSuccess:onComboLoadSuccessSelectOne"/>
                     <#comboProvider _id="_address_cityId" _provider="cityProvider" _valueField="value" _textField="label" />
                 </td>
             </tr>
