@@ -1,4 +1,4 @@
-<div id="addressDiv" style="width: 100%">
+<div id="addressDiv" style="width: 100%;">
     <!-- =========================================================地址表格========================================================= -->
     <table class="easyui-datagrid" id="addressGrid" style="height:185px;padding:0px;width:100%;" title="地址" collapsible="true"
            pagination="false" rownumbers="true" remoteSort="false" data-options="onDblClickRow:openUpdateAddress,

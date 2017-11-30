@@ -210,11 +210,11 @@
             <div align="center">
                 <table width="96%">
                     <tr>
-                        <td width="50%">
+                        <td width="50%" valign="top">
             <!--  =========================================================地址表格div=========================================================  -->
             <#customer_addressGridHtml/>
                         </td>
-                        <td width="50%">
+                        <td width="50%" valign="top">
             <!--  =========================================================车辆表格div=========================================================  -->
             <#customer_vehicleGridHtml/>
                         </td>
@@ -226,6 +226,8 @@
             <#customer_membersGridHtml/>
             <!--  =========================================================业务系统账号表格div=========================================================  -->
             <#customer_customerExtensionsGridHtml/>
+            <!--   =========================================================客户画像表格div========================================================= -->
+            <#customer_portrait/>
             </div>
         </div> <!-- end of center layout -->
 
@@ -260,6 +262,8 @@
      <#customer_membersSelJs dlgId="membersSelectDialog" />
      <!-- 业务系统账号js -->
      <#customer_customerExtensionsJs/>
+     <!-- 客户画像js -->
+     <#customer_portraitJs/>
     <script type="text/javascript">
         // ============================   客户相关js st  ==============================
         //打开新增客户窗口
