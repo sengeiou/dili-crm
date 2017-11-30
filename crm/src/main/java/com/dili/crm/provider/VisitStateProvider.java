@@ -19,6 +19,7 @@ public class VisitStateProvider implements ValueProvider {
 
     static {
         buffer = new ArrayList<ValuePair<?>>();
+        buffer.add(new ValuePairImpl(EMPTY_ITEM_TEXT, null));
         buffer.add(new ValuePairImpl("新建", "1"));
         buffer.add(new ValuePairImpl("进行中", "2"));
         buffer.add(new ValuePairImpl("完成", "3"));
