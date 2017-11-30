@@ -59,7 +59,7 @@
                   ">
                 <thead>
                     <tr>
-                        <th data-options="field:'name',   sortable:'true', order:'asc', align:'left', resizable:'true', fixed:'false'">
+                        <th data-options="field:'name',   sortable:'true', order:'asc', align:'left', resizable:'true', fixed:'false',formatter:clientFormatterFun">
                             	客户名称
                         </th>
 						<th data-options="field:'phone',   sortable:'true', order:'asc', align:'center', resizable:'true', fixed:'false'">
@@ -83,7 +83,7 @@
 		        </div>
 		        <div region="center" style="width:100%;" height="auto">
 			        <div  class="easyui-panel" title="异常订单"  style="width:100%;height:100%;padding:0px;">
-		   		        <iframe id="orders" style="width:100%;height:99%" scrolling="no" frameborder="no" marginwidth="0" marginheight="0" border="0" src="http://www.baidu.com" >
+		   		        <iframe id="orders" style="width:100%;height:99%" scrolling="no" frameborder="no" marginwidth="0" marginheight="0" border="0" src="http://ap.diligrp.com/find/sZ41Z1fttfttf0.html" >
 						</iframe>
 					</div>
 		        </div>
@@ -97,13 +97,13 @@
         <div class="easyui-layout" fit="true">
 		        <div region="west" height="auto" align="center" style="width:50%;margin-right:20px">
 		  			 <div  class="easyui-panel" title="近一月 销售top10"  style="width:100%;height:100%;">
-		   		        <iframe id="orders" style="width:99%;height:99%" scrolling="no" frameborder="no" marginwidth="0" marginheight="0" border="0" src="http://www.baidu.com">
+		   		        <iframe id="orders" style="width:99%;height:99%" scrolling="no" frameborder="no" marginwidth="0" marginheight="0" border="0" src="http://ap.diligrp.com/find/sZ41Z1fttfttf0.html">
 						</iframe>
 					</div>
 		        </div>
 		        <div region="center"  height="auto" align="center"  style="width:100%;">
 		         <div  class="easyui-panel" title="近一月 采购top10"  style="width:100%;height:100%;">
-		   		        <iframe id="orders" style="width:100%;height:99%" scrolling="no" frameborder="no" marginwidth="0" marginheight="0" border="0" src="http://www.baidu.com">
+		   		        <iframe id="orders" style="width:100%;height:99%" scrolling="no" frameborder="no" marginwidth="0" marginheight="0" border="0" src="http://ap.diligrp.com/find/sZ41Z1fttfttf0.html">
 						</iframe>
 					</div>
 		        </div>
@@ -122,7 +122,10 @@
     <script type="text/javascript">
 
         // ============================   客户相关js st  ==============================
-
+		function clientFormatterFun(value, row, index){
+        	var clientId=row['id'];
+        	return "<a href='${contextPath}/customer/detail.html?id="+clientId+"'>"+value+"</a>"
+        }
         //打开修改客户窗口
         function openUpdate(){
             var selected = $("#grid").treegrid("getSelected");

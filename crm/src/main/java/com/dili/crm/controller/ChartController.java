@@ -35,25 +35,24 @@ public class ChartController {
 	CustomerService customerService;
 	@Autowired CustomerVisitService customerVisitService;
 
-	@ApiOperation("跳转到图表页面")
+	@ApiOperation("跳转到报表页面")
 	@RequestMapping(value = "/index.html", method = RequestMethod.GET)
 	public String index(ModelMap modelMap) {
 		return "chart/index";
 	}
 
-	@ApiOperation("跳转到图表页面")
+	@ApiOperation("跳转到客户报表页面")
 	@RequestMapping(value = "/customer.html", method = RequestMethod.GET)
 	public String customerChart(ModelMap modelMap) {
 		return "chart/customer";
 	}
-	@ApiOperation("跳转到图表页面")
+	@ApiOperation("跳转到客户回访报表页面")
 	@RequestMapping(value = "/customerVisit.html", method = RequestMethod.GET)
 	public String customerVisitChart(ModelMap modelMap) {
 		return "chart/customerVisit";
 	}
-	@ApiOperation(value = "查询Address", notes = "查询Address，返回列表信息")
-	@ApiImplicitParams({
-			@ApiImplicitParam(name = "Address", paramType = "form", value = "Address的form信息", required = false, dataType = "string") })
+	
+	@ApiOperation(value = "查询客户类型分布", notes = "查询Address，返回列表信息")
 	@RequestMapping(value = "/customerTypeChart", method = { RequestMethod.GET, RequestMethod.POST })
 	public @ResponseBody Object customerTypeChart() {
 		List<CustomerChartDTO>data=this.customerService.selectCustomersGroupByType().getData();
@@ -67,7 +66,8 @@ public class ChartController {
 		}
 		
 	}
-
+	@ApiOperation(value = "查询客户类型分布", notes = "查询客户类型分布，返回客户类型分布信息")
+	
 	@RequestMapping(value = "/customerMarketChart", method = { RequestMethod.GET, RequestMethod.POST })
 	public @ResponseBody Object customerMarketChart() {
 		 List<CustomerChartDTO>data=this.customerService.selectCustomersGroupByMarket().getData();
@@ -80,7 +80,8 @@ public class ChartController {
 			}
 			
 	}
-
+	@ApiOperation(value = "查询客户行业分布", notes = "查询客户行业分布，返回客户行业分布信息")
+	
 	@RequestMapping(value = "/customerProfessionChart", method = { RequestMethod.GET, RequestMethod.POST })
 	public @ResponseBody Object customerProfessionChart() {
 		 List<CustomerChartDTO>data=this.customerService.selectCustomersGroupByProfession().getData();
@@ -93,6 +94,7 @@ public class ChartController {
 			}
 			
 	}
+	@ApiOperation(value = "查询回访方式分布", notes = "查询回访方式分布，返回回访方式分布信息")
 	
 	@RequestMapping(value = "/customerVisitModeChart", method = { RequestMethod.GET, RequestMethod.POST })
 	public @ResponseBody Object customerVisitModeChart() {
@@ -106,6 +108,8 @@ public class ChartController {
 			}
 			
 	}
+	
+	@ApiOperation(value = "查询回访状态分布", notes = "查询回访状态分布，返回状态分布信息")
 	
 	
 	@RequestMapping(value = "/customerVisitStateChart", method = { RequestMethod.GET, RequestMethod.POST })
