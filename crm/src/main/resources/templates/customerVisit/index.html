@@ -82,7 +82,7 @@
                         <th width="8%" data-options="field:'priority',  _provider:'dataDictionaryValueProvider',_queryParams:{'dd_id':'10'}, sortable:'true', order:'asc', align:'center', resizable:'true', fixed:'false'">
                             优先级
                         </th>
-                        <th width="10%" data-options="field:'mode',  _provider:'dataDictionaryValueProvider',_queryParams:{'dd_id':'11'}, sortable:'true', order:'asc', align:'center', resizable:'true', fixed:'false'">
+                        <th width="8%" data-options="field:'mode',  _provider:'dataDictionaryValueProvider',_queryParams:{'dd_id':'11'}, sortable:'true', order:'asc', align:'center', resizable:'true', fixed:'false'">
                             回访方式
                         </th>
                         <th width="10%" data-options="field:'userId', _provider:'ownerProvider',  sortable:'true', order:'asc', align:'center', resizable:'true', fixed:'false'">
@@ -91,7 +91,7 @@
                         <th width="8%" data-options="field:'state',  _provider:'visitStateProvider', sortable:'true', order:'asc', align:'center', resizable:'true', fixed:'false'">
                             状态
                         </th>
-                        <th width="16%" data-options="field:'modified',  _provider:'datetimeProvider', sortable:'true', order:'asc', align:'center', resizable:'true', fixed:'false'">
+                        <th width="17%" data-options="field:'modified',  _provider:'datetimeProvider', sortable:'true', order:'asc', align:'center', resizable:'true', fixed:'false'">
                             修改时间
                         </th>
                     </tr>
@@ -174,7 +174,11 @@
 
         //清空表单
         function clearForm() {
-            $('#form').form('clear');
+            $(':input','#form')
+                .not(':button, :submit, :reset')
+                .val('')
+                .removeAttr('checked')
+                .removeAttr('selected');
         }
 
         //表格表头右键菜单
