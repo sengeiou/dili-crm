@@ -1,5 +1,6 @@
 package com.dili;
 
+import com.dili.ss.datasource.aop.DynamicRoutingDataSourceRegister;
 import com.dili.ss.retrofitful.annotation.RestfulScan;
 import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.boot.SpringApplication;
@@ -9,6 +10,7 @@ import org.springframework.boot.autoconfigure.thymeleaf.ThymeleafAutoConfigurati
 import org.springframework.boot.autoconfigure.velocity.VelocityAutoConfiguration;
 import org.springframework.boot.web.support.SpringBootServletInitializer;
 import org.springframework.context.annotation.ComponentScan;
+import org.springframework.context.annotation.Import;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 /**
@@ -27,6 +29,7 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 //@ImportResource(locations = "classpath:applicationContext.xml")
 @ComponentScan(basePackages={"com.dili.ss","com.dili.crm","com.dili.sysadmin"})
 @RestfulScan({"com.dili.crm.rpc", "com.dili.sysadmin.sdk.rpc"})
+@Import({DynamicRoutingDataSourceRegister.class})// 注册动态多数据源
 //@EnableEncryptableProperties
 //@PropertySource(name="EncryptedProperties", value = "classpath:security.properties")
 //@EncryptablePropertySource(name = "EncryptedProperties", value = "classpath:security.properties")
