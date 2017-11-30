@@ -1,5 +1,6 @@
 package com.dili.crm.service.impl;
 
+import com.alibaba.fastjson.JSONObject;
 import com.dili.crm.dao.CustomerMapper;
 import com.dili.crm.domain.Customer;
 import com.dili.crm.domain.dto.CustomerChartDTO;
@@ -15,13 +16,17 @@ import com.dili.sysadmin.sdk.domain.UserTicket;
 import com.dili.sysadmin.sdk.session.SessionContext;
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
+import com.google.common.collect.Lists;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.ui.ModelMap;
 import tk.mybatis.mapper.entity.Example;
 
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * 由MyBatis Generator工具自动生成
@@ -112,7 +117,28 @@ public class CustomerServiceImpl extends BaseServiceImpl<Customer, Long> impleme
 		return BaseOutput.success().setData(this.getActualDao().selectCustomersGroupByProfession());
 	}
 
-    @Override
+	@Override
+	public void handleDetail(ModelMap modelMap, Long id) throws Exception {
+		UserTicket userTicket = SessionContext.getSessionContext().getUserTicket();
+		if(userTicket == null){
+			throw new RuntimeException("未登录");
+		}
+		//页面上用于展示拥有者和新增时获取拥有者id
+		modelMap.put("user", userTicket);
+
+		Customer customer = get(id);
+		if(customer == null){
+			throw new RuntimeException("根据id["+id+"]找不到对应客户");
+		}
+		List<Map> list = ValueProviderUtils.buildDataByProvider(getCustomerMetadata(), Lists.newArrayList(customer));
+		modelMap.put("customer", JSONObject.toJSONString(list.get(0)));
+		if(customer.getParentId() != null){
+			Customer parent = get(customer.getParentId());
+			modelMap.put("parentCustomer", parent);
+		}
+	}
+
+	@Override
     public String listMembersPage(MembersDto membersDto) throws Exception {
         String parentIdsStr = getActualDao().getParentCustomers(membersDto.getId());
         if(StringUtils.isBlank(parentIdsStr)) return null;
@@ -142,6 +168,42 @@ public class CustomerServiceImpl extends BaseServiceImpl<Customer, Long> impleme
 		Customer customer = get(id);
 		customer.setParentId(null);
 		return updateWithOutput(customer);
+	}
+
+	/**
+	 * 由于无法获取到表头上的meta信息，展示客户详情只有id参数，所以需要在后台构建
+	 * @return
+	 */
+	private Map getCustomerMetadata(){
+		Map<Object, Object> metadata = new HashMap<>();
+		JSONObject ownerProvider = new JSONObject();
+		ownerProvider.put("provider", "ownerProvider");
+		metadata.put("ownerId", ownerProvider);
+		JSONObject cityProvider = new JSONObject();
+		cityProvider.put("provider", "cityProvider");
+		metadata.put("operatingArea", cityProvider);
+		metadata.put("certificateType", getDDProvider(3L));
+		metadata.put("organizationType", getDDProvider(5L));
+		metadata.put("market", getDDProvider(2L));
+		metadata.put("type", getDDProvider(4L));
+		metadata.put("profession", getDDProvider(6L));
+		metadata.put("certificateTime", getDatetimeProvider());
+		metadata.put("created", getDatetimeProvider());
+		return metadata;
+	}
+
+	//获取时间提供者
+	private JSONObject getDatetimeProvider(){
+		JSONObject datetimeProvider = new JSONObject();
+		datetimeProvider.put("provider", "datetimeProvider");
+		return datetimeProvider;
+	}
+	//获取数据字典提供者
+	private JSONObject getDDProvider(Long ddId){
+		JSONObject dataDictionaryValueProvider = new JSONObject();
+		dataDictionaryValueProvider.put("provider", "dataDictionaryValueProvider");
+		dataDictionaryValueProvider.put("queryParams", "{dd_id:"+ddId+"}");
+		return dataDictionaryValueProvider;
 	}
 
 }

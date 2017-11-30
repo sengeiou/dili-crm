@@ -5,6 +5,7 @@ import com.dili.crm.domain.dto.CustomerChartDTO;
 import com.dili.crm.domain.dto.MembersDto;
 import com.dili.ss.base.BaseService;
 import com.dili.ss.domain.BaseOutput;
+import org.springframework.ui.ModelMap;
 
 import java.util.List;
 
@@ -47,6 +48,13 @@ public interface CustomerService extends BaseService<Customer, Long> {
 	BaseOutput<List<CustomerChartDTO>> selectCustomersGroupByMarket();
 	
 	BaseOutput<List<CustomerChartDTO>> selectCustomersGroupByProfession();
+
+	/**
+	 * 处理客户详情
+	 * @param modelMap
+	 * @param id
+	 */
+	void handleDetail(ModelMap modelMap, Long id) throws Exception;
 
 	/**
 	 * 根据客户名称(模糊)和客户id查询可以添加的成员客户，

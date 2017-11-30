@@ -132,11 +132,11 @@
 
                     <tr>
                         <td style="padding-top:10px;padding-left:15px;">
-                            <input name="_certificateType" id="_certificateType" data-options="editable:false, required:true" style="width:96%;" panelWidth="auto" panelHeight="auto" label="证件类型:" />
+                            <input name="_certificateType" id="_certificateType" data-options="editable:false, <%if(has(customer)){%>readonly:true,disabled:true,<%}%>required:true" style="width:96%;" panelWidth="auto" panelHeight="auto" label="证件类型:" />
 
                         </td>
                         <td style="padding-top:10px;padding-left:15px;">
-                            <input class="easyui-textbox" name="_certificateNumber" id="_certificateNumber" style="width:96%;" data-options="label:'证件号:', validType:'length[1,40]', required:true, onChange:changeCertificateNumber" />
+                            <input class="easyui-textbox" name="_certificateNumber" id="_certificateNumber" style="width:96%;" data-options="label:'证件号:', validType:'length[1,40]',<%if(has(customer)){%>readonly:true,disabled:true,<%}%> required:true, onChange:changeCertificateNumber" />
                         </td>
                         <td style="padding-top:10px;padding-left:15px;">
                             <input class="easyui-textbox" name="_certificateAddr" id="_certificateAddr" style="width:96%;" data-options="label:'证件地址:', validType:'length[0,100]'" />
@@ -278,18 +278,21 @@
                 //新增下级客户需要设置父id
                 formData["parentId"] = "${parentCustomer.id}";
                 formData["parentName"] = "${parentCustomer.name}";
-                formData[orginal_key_prefix + "organizationType"] = "individuals";
-                //根据组织类型加载证件类型、性别、民族、证件日期控件、注册资金和企业员工数
-                loadByOrganizationType(formData);
-                formData = addKeyStartWith(getOriginalData(formData),"_");
-                $('#_form').form('load', formData);
-            <%}%>
 
+            <%}%>
+            //组织类型默认选中"个人"
+            formData[orginal_key_prefix + "organizationType"] = "individuals";
+            //根据组织类型加载证件类型、性别、民族、证件日期控件、注册资金和企业员工数f
+            loadByOrganizationType(formData);
+            formData = addKeyStartWith(getOriginalData(formData),"_");
+            $('#_form').form('load', formData);
             formFocus("_form", "_name");
             $("#vehicleDiv").hide();
             $("#addressDiv").hide();
             $("#contactsDiv").hide();
             $("#membersDiv").hide();
+            $("#customerExtensionsDiv").hide();
+            $("#portraitDiv").hide();
         }
 
         //打开修改客户窗口
@@ -301,8 +304,6 @@
 
             //设置客户所有者(这里表格中的提供者已经作了转义,只需要对应上字段即可)
             formData["ownerName"] = selected["ownerId"];
-            //设置父id
-//            formData["parentId"] = selected["parentId"];
             //设置上级客户名称
             <%
             if(has(parentCustomer) && parentCustomer!=null){
@@ -315,6 +316,7 @@
             //根据组织类型加载证件类型、性别、民族、证件日期控件、注册资金和企业员工数
             loadByOrganizationType(formData);
             formData = addKeyStartWith(getOriginalData(formData),"_");
+            //设置经营地区的显示值
             formData["_operatingArea"] = selected["operatingArea"];
             $('#_form').form('load', formData);
             formFocus("_form", "_name");

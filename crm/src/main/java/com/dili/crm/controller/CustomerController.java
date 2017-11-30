@@ -1,7 +1,6 @@
 package com.dili.crm.controller;
 
 import com.alibaba.fastjson.JSONArray;
-import com.alibaba.fastjson.JSONObject;
 import com.dili.crm.domain.Customer;
 import com.dili.crm.domain.dto.MembersDto;
 import com.dili.crm.service.CustomerService;
@@ -9,7 +8,6 @@ import com.dili.ss.domain.BaseOutput;
 import com.dili.ss.metadata.ValueProviderUtils;
 import com.dili.sysadmin.sdk.domain.UserTicket;
 import com.dili.sysadmin.sdk.session.SessionContext;
-import com.google.common.collect.Lists;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
@@ -53,23 +51,7 @@ public class CustomerController {
 	@ApiOperation("跳转到Customer详情页面")
 	@RequestMapping(value="/detail.html", method = {RequestMethod.GET, RequestMethod.POST})
 	public String detail(ModelMap modelMap, @RequestParam(name="id", required = true) Long id) throws Exception {
-		UserTicket userTicket = SessionContext.getSessionContext().getUserTicket();
-		if(userTicket == null){
-			throw new RuntimeException("未登录");
-		}
-		//页面上用于展示拥有者和新增时获取拥有者id
-		modelMap.put("user", userTicket);
-
-		Customer customer = customerService.get(id);
-		if(customer == null){
-			throw new RuntimeException("根据id["+id+"]找不到对应客户");
-		}
-		List<Map> list = ValueProviderUtils.buildDataByProvider(getCustomerMetadata(), Lists.newArrayList(customer));
-		modelMap.put("customer", JSONObject.toJSONString(list.get(0)));
-		if(customer.getParentId() != null){
-			Customer parent = customerService.get(customer.getParentId());
-			modelMap.put("parentCustomer", parent);
-		}
+		customerService.handleDetail(modelMap, id);
 		return "customer/detail";
 	}
 
@@ -89,41 +71,6 @@ public class CustomerController {
 		return "customer/detail";
 	}
 
-	/**
-	 * 由于无法获取到表头上的meta信息，展示客户详情只有id参数，所以需要在后台构建
-	 * @return
-	 */
-	private Map getCustomerMetadata(){
-		Map<Object, Object> metadata = new HashMap<>();
-		JSONObject ownerProvider = new JSONObject();
-		ownerProvider.put("provider", "ownerProvider");
-		metadata.put("ownerId", ownerProvider);
-		JSONObject cityProvider = new JSONObject();
-		cityProvider.put("provider", "cityProvider");
-		metadata.put("operatingArea", cityProvider);
-		metadata.put("certificateType", getDDProvider(3L));
-		metadata.put("organizationType", getDDProvider(5L));
-		metadata.put("market", getDDProvider(2L));
-		metadata.put("type", getDDProvider(4L));
-		metadata.put("profession", getDDProvider(6L));
-		metadata.put("certificateTime", getDatetimeProvider());
-
-		metadata.put("created", getDatetimeProvider());
-		return metadata;
-	}
-	//获取时间提供者
-	private JSONObject getDatetimeProvider(){
-		JSONObject datetimeProvider = new JSONObject();
-		datetimeProvider.put("provider", "datetimeProvider");
-		return datetimeProvider;
-	}
-	//获取数据字典提供者
-	private JSONObject getDDProvider(Long ddId){
-		JSONObject dataDictionaryValueProvider = new JSONObject();
-		dataDictionaryValueProvider.put("provider", "dataDictionaryValueProvider");
-		dataDictionaryValueProvider.put("queryParams", "{dd_id:"+ddId+"}");
-		return dataDictionaryValueProvider;
-	}
 
     @ApiOperation(value="查询Customer", notes = "查询Customer，返回列表信息")
     @ApiImplicitParams({
