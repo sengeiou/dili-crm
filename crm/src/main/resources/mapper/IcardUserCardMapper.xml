@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.dili.crm.dao.IcardUserCardMapper">
+  <resultMap id="BaseResultMap" type="com.dili.crm.domain.IcardUserCard">
+    <!--
+      WARNING - @mbg.generated
+    -->
+    <id column="id" jdbcType="BIGINT" property="id" />
+    <result column="device_id" jdbcType="VARCHAR" property="deviceId" />
+    <result column="card_no" jdbcType="VARCHAR" property="cardNo" />
+    <result column="category" jdbcType="TINYINT" property="category" />
+    <result column="type" jdbcType="INTEGER" property="type" />
+    <result column="account_id" jdbcType="BIGINT" property="accountId" />
+    <result column="status" jdbcType="TINYINT" property="status" />
+    <result column="verify_code" jdbcType="CHAR" property="verifyCode" />
+    <result column="cash_pledge" jdbcType="BIGINT" property="cashPledge" />
+    <result column="relieve_lock_time" jdbcType="TIMESTAMP" property="relieveLockTime" />
+    <result column="relieve_loss_time" jdbcType="TIMESTAMP" property="relieveLossTime" />
+    <result column="parent_account_id" jdbcType="BIGINT" property="parentAccountId" />
+    <result column="auth_account_id" jdbcType="BIGINT" property="authAccountId" />
+    <result column="institution_code" jdbcType="VARCHAR" property="institutionCode" />
+    <result column="institution_name" jdbcType="VARCHAR" property="institutionName" />
+    <result column="user_station_id" jdbcType="BIGINT" property="userStationId" />
+    <result column="employee_id" jdbcType="BIGINT" property="employeeId" />
+    <result column="version" jdbcType="SMALLINT" property="version" />
+    <result column="created_time" jdbcType="TIMESTAMP" property="createdTime" />
+    <result column="modified_time" jdbcType="TIMESTAMP" property="modifiedTime" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    <!--
+      WARNING - @mbg.generated
+    -->
+    id, device_id, card_no, category, type, account_id, status, verify_code, cash_pledge, 
+    relieve_lock_time, relieve_loss_time, parent_account_id, auth_account_id, institution_code, 
+    institution_name, user_station_id, employee_id, version, created_time, modified_time
+  </sql>
+  <select id="selectBy" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    <!--
+      WARNING - @mbg.generated
+    -->
+    select 
+    <include refid="Base_Column_List" />
+    from icard_user_card
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <update id="updateBy" parameterType="com.dili.crm.domain.IcardUserCard">
+    <!--
+      WARNING - @mbg.generated
+    -->
+    update icard_user_card
+    <set>
+      <if test="deviceId != null">
+        device_id = #{deviceId,jdbcType=VARCHAR},
+      </if>
+      <if test="cardNo != null">
+        card_no = #{cardNo,jdbcType=VARCHAR},
+      </if>
+      <if test="category != null">
+        category = #{category,jdbcType=TINYINT},
+      </if>
+      <if test="type != null">
+        type = #{type,jdbcType=INTEGER},
+      </if>
+      <if test="accountId != null">
+        account_id = #{accountId,jdbcType=BIGINT},
+      </if>
+      <if test="status != null">
+        status = #{status,jdbcType=TINYINT},
+      </if>
+      <if test="verifyCode != null">
+        verify_code = #{verifyCode,jdbcType=CHAR},
+      </if>
+      <if test="cashPledge != null">
+        cash_pledge = #{cashPledge,jdbcType=BIGINT},
+      </if>
+      <if test="relieveLockTime != null">
+        relieve_lock_time = #{relieveLockTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="relieveLossTime != null">
+        relieve_loss_time = #{relieveLossTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="parentAccountId != null">
+        parent_account_id = #{parentAccountId,jdbcType=BIGINT},
+      </if>
+      <if test="authAccountId != null">
+        auth_account_id = #{authAccountId,jdbcType=BIGINT},
+      </if>
+      <if test="institutionCode != null">
+        institution_code = #{institutionCode,jdbcType=VARCHAR},
+      </if>
+      <if test="institutionName != null">
+        institution_name = #{institutionName,jdbcType=VARCHAR},
+      </if>
+      <if test="userStationId != null">
+        user_station_id = #{userStationId,jdbcType=BIGINT},
+      </if>
+      <if test="employeeId != null">
+        employee_id = #{employeeId,jdbcType=BIGINT},
+      </if>
+      <if test="version != null">
+        version = #{version,jdbcType=SMALLINT},
+      </if>
+      <if test="createdTime != null">
+        created_time = #{createdTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="modifiedTime != null">
+        modified_time = #{modifiedTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+</mapper>

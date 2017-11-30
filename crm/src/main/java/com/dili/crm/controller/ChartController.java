@@ -128,7 +128,9 @@ public class ChartController {
 	 private Map<Object, Object> getCustomerVisitMetadata(){
 	        Map<Object, Object> metadata = new HashMap<>();
 	        //回访状态
+	        //回访状态
 	        JSONObject visitStateProvider = new JSONObject();
+	        visitStateProvider.put("provider", "visitStateProvider");
 	        metadata.put("state", visitStateProvider);
 	        //回访方式
 	        metadata.put("mode", getDDProvider(11L));

@@ -14,14 +14,14 @@
 		    <div class="easyui-layout" fit="true"  style="height:50%;">
 		        <div region="west" height="auto" align="center" style="width:50%">
 			        <div  class="easyui-panel"   style="height:100%;">
-			   		        <div id="customerTypeChart" style="width:98%;height:100%;" ></div>
-							<#echarts _id="customerTypeChart" _title="回访状态分布" _type="Pie"  _url="${contextPath}/chart/customerVisitModeChart" _nameField="type" _valueField="count"></#echarts>
+			   		        <div id="customerTypeChart" style="width:98%;height:50%;" ></div>
+							<#echarts _id="customerTypeChart" _title="回访状态分布" _type="Pie"  _url="${contextPath}/chart/customerVisitModeChart" _nameField="mode" _valueField="count"></#echarts>
 					</div>
 		        </div>
 		        <div region="center" height="auto">
 			        <div  class="easyui-panel"   style="height:100%;">
-			   		        <div id="customerProfessionChart" style="width:98%;height:100%;" ></div>
-							<#echarts _id="customerProfessionChart" _title="客户行业分布" _type="Pie"  _url="${contextPath}/chart/customerVisitStateChart" _nameField="profession" _valueField="count" ></#echarts>
+			   		        <div id="customerProfessionChart" style="width:98%;height:50%;" ></div>
+							<#echarts _id="customerProfessionChart" _title="回访方式分布" _type="Pie"  _url="${contextPath}/chart/customerVisitStateChart" _nameField="state" _valueField="count" ></#echarts>
 					</div>
 		        </div>
 		    </div>

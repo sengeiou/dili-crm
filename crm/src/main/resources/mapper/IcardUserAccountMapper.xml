@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.dili.crm.dao.IcardUserAccountMapper">
+  <resultMap id="BaseResultMap" type="com.dili.crm.domain.IcardUserAccount">
+    <!--
+      WARNING - @mbg.generated
+    -->
+    <id column="id" jdbcType="BIGINT" property="id" />
+    <result column="type" jdbcType="TINYINT" property="type" />
+    <result column="fund_account_id" jdbcType="BIGINT" property="fundAccountId" />
+    <result column="name" jdbcType="VARCHAR" property="name" />
+    <result column="gender" jdbcType="TINYINT" property="gender" />
+    <result column="mobile" jdbcType="VARCHAR" property="mobile" />
+    <result column="telphone" jdbcType="VARCHAR" property="telphone" />
+    <result column="id_code" jdbcType="VARCHAR" property="idCode" />
+    <result column="address" jdbcType="VARCHAR" property="address" />
+    <result column="login_pwd" jdbcType="VARCHAR" property="loginPwd" />
+    <result column="trade_pwd" jdbcType="VARCHAR" property="tradePwd" />
+    <result column="force_pwd_change" jdbcType="TINYINT" property="forcePwdChange" />
+    <result column="last_login_time" jdbcType="TIMESTAMP" property="lastLoginTime" />
+    <result column="secret_key" jdbcType="VARCHAR" property="secretKey" />
+    <result column="organization_id" jdbcType="BIGINT" property="organizationId" />
+    <result column="institution_code" jdbcType="VARCHAR" property="institutionCode" />
+    <result column="institution_name" jdbcType="VARCHAR" property="institutionName" />
+    <result column="created_time" jdbcType="TIMESTAMP" property="createdTime" />
+    <result column="modified_time" jdbcType="TIMESTAMP" property="modifiedTime" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    <!--
+      WARNING - @mbg.generated
+    -->
+    id, type, fund_account_id, name, gender, mobile, telphone, id_code, address, login_pwd, 
+    trade_pwd, force_pwd_change, last_login_time, secret_key, organization_id, institution_code, 
+    institution_name, created_time, modified_time
+  </sql>
+  <select id="selectBy" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    <!--
+      WARNING - @mbg.generated
+    -->
+    select 
+    <include refid="Base_Column_List" />
+    from icard_user_account
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <update id="updateBy" parameterType="com.dili.crm.domain.IcardUserAccount">
+    <!--
+      WARNING - @mbg.generated
+    -->
+    update icard_user_account
+    <set>
+      <if test="type != null">
+        type = #{type,jdbcType=TINYINT},
+      </if>
+      <if test="fundAccountId != null">
+        fund_account_id = #{fundAccountId,jdbcType=BIGINT},
+      </if>
+      <if test="name != null">
+        name = #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="gender != null">
+        gender = #{gender,jdbcType=TINYINT},
+      </if>
+      <if test="mobile != null">
+        mobile = #{mobile,jdbcType=VARCHAR},
+      </if>
+      <if test="telphone != null">
+        telphone = #{telphone,jdbcType=VARCHAR},
+      </if>
+      <if test="idCode != null">
+        id_code = #{idCode,jdbcType=VARCHAR},
+      </if>
+      <if test="address != null">
+        address = #{address,jdbcType=VARCHAR},
+      </if>
+      <if test="loginPwd != null">
+        login_pwd = #{loginPwd,jdbcType=VARCHAR},
+      </if>
+      <if test="tradePwd != null">
+        trade_pwd = #{tradePwd,jdbcType=VARCHAR},
+      </if>
+      <if test="forcePwdChange != null">
+        force_pwd_change = #{forcePwdChange,jdbcType=TINYINT},
+      </if>
+      <if test="lastLoginTime != null">
+        last_login_time = #{lastLoginTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="secretKey != null">
+        secret_key = #{secretKey,jdbcType=VARCHAR},
+      </if>
+      <if test="organizationId != null">
+        organization_id = #{organizationId,jdbcType=BIGINT},
+      </if>
+      <if test="institutionCode != null">
+        institution_code = #{institutionCode,jdbcType=VARCHAR},
+      </if>
+      <if test="institutionName != null">
+        institution_name = #{institutionName,jdbcType=VARCHAR},
+      </if>
+      <if test="createdTime != null">
+        created_time = #{createdTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="modifiedTime != null">
+        modified_time = #{modifiedTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+</mapper>
