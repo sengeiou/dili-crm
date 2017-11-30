@@ -266,12 +266,14 @@
                     {
                         iconCls:'icon-export',
                             handler:function(){
-                            doExport('grid', true);
+                            doExport('grid');
                         }
                      },
                  <%}%>
                 ]
             });
+            //表格仅显示下边框
+            $('#grid').datagrid('getPanel').removeClass('lines-both lines-no lines-right lines-bottom').addClass("lines-bottom");
             queryGrid();
         })
     </script>

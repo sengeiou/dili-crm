@@ -32,21 +32,22 @@
                 </div>
                 <form id="_form" class="easyui-form" method="post" fit="true">
                     <input name="_id" id="_id" type="hidden">
-                    <table width="99%">
+                    <table width="60%">
                         <tr>
-                            <td style="padding:5px;">
-                                <input class="easyui-textbox" name="_createdName" id="_createdName" style="width:30%" data-options="label:'回访创建者:'"  editable="true"/>
+                            <td style="padding:5px;" width="50%">
+                                <input class="easyui-textbox" name="_createdName" id="_createdName" style="width: 99%;" data-options="label:'回访创建者:'"  editable="true"/>
+                            </td>
+                            <td style="padding:5px;" width="50%">
+                                <input class="easyui-textbox" name="_subject" id="_subject" style="width: 99%;" data-options="label:'主题:', validType:'length[0,40]'" required="true" />
                             </td>
                         </tr>
                         <tr>
                             <td style="padding:5px;">
-                                <input class="easyui-textbox" name="userId" id="userId" panelWidth="auto" panelHeight="auto" label="回访人:" style="width: 30%;" required="true"
+                                <input class="easyui-textbox" name="userId" id="userId" panelWidth="auto" panelHeight="auto" label="回访人:" style="width: 99%;" required="true"
                                        data-options="editable:false,buttonText:'选择',onClickButton:_selectUser,onChange:_changeTextboxShowClear" />
                             </td>
-                        </tr>
-                        <tr>
                             <td style="padding:5px;">
-                                <input class="easyui-textbox" name="customerId" id="customerId" panelWidth="auto" panelHeight="auto" label="回访对象:" style="width: 30%;" required="true"
+                                <input class="easyui-textbox" name="customerId" id="customerId" panelWidth="auto" panelHeight="auto" label="回访对象:" style="width: 99%;" required="true"
                                        data-options="editable:false,
 									buttonText:'选择',
 									onClickButton:_selectCustomer,onChange:_changeTextboxShowClear" />
@@ -54,29 +55,20 @@
                         </tr>
                         <tr>
                             <td style="padding:5px;">
-                                <input class="easyui-textbox" name="_subject" id="_subject" style="width:30%" data-options="label:'主题:', validType:'length[0,40]'" required="true" />
-                            </td>
-                        </tr>
-                        <tr>
-                            <td style="padding:5px;">
-                                <input name="_mode" class="easyui-combobox" id="_mode" style="width:30%;" panelWidth="auto" panelHeight="auto" label="回访方式:" required="true" editable="false"/>
+                                <input name="_mode" class="easyui-combobox" id="_mode" style="width:99%;" panelWidth="auto" panelHeight="auto" label="回访方式:" required="true" editable="false"/>
                                 <#comboProvider _id="_mode" _provider='dataDictionaryValueProvider' _queryParams='{dd_id:"11"}'/>
                             </td>
-                        </tr>
-                        <tr>
                             <td style="padding:5px;">
-                                <input class="easyui-combobox" name="_priority" id="_priority" style="width:30%;" data-options="editable:false" panelWidth="auto" panelHeight="auto" label="优先级:" />
+                                <input class="easyui-combobox" name="_priority" id="_priority" style="width:99%;" data-options="editable:false" panelWidth="auto" panelHeight="auto" label="优先级:" />
                                 <#comboProvider _id="_priority" _provider='dataDictionaryValueProvider' _queryParams='{dd_id:"10"}'/>
                             </td>
                         </tr>
                         <tr>
                             <td style="padding:5px;">
-                                <input class="easyui-datetimebox" name="_finishTime" id="_finishTime" style="width:30%" data-options="label:'完成时间:',editable:false"/>
+                                <input class="easyui-datetimebox" name="_finishTime" id="_finishTime" style="width:99%" data-options="label:'完成时间:',editable:false"/>
                             </td>
-                        </tr>
-                        <tr>
                             <td style="padding:5px;">
-                                <input class="easyui-textbox" name="_notes" id="_notes" style="width:30%" multiline="true" data-options="label:'描述:', validType:'length[0,200]'" />
+                                <input class="easyui-textbox" name="_notes" id="_notes" style="width:99%" multiline="true" data-options="label:'描述:', validType:'length[0,200]'" />
                             </td>
                         </tr>
                     </table>
@@ -88,7 +80,7 @@
                 <p />
                 <table class="easyui-datagrid" id="eventGrid" style="height:auto;width: 100%;" title="事件" collapsible="true"
                        pagination="false" rownumbers="false" remoteSort="false" data-options="onDblClickRow:openUpdateEvent
-                        <%if(hasResource("addVisitEvent") && has(view)==false) {%>
+                        <%if(hasResource("editVisit") && hasResource("addVisitEvent") && has(view)==false) {%>
                             ,tools:[{iconCls:'icon-add',handler:openInsertEvent}]
                         <%}%>
                     "
@@ -195,8 +187,14 @@
             <%}else{%>
                 $("#customerId").textbox("disable", true);
                 $("#_createdName").textbox("disable", true);
-                $('#modifyPage').show();
-            <%}%>
+                //如果有编辑权限，才显示保存等按钮。否则跟查看一样，禁用form
+                <%if(hasResource("editVisit")) {%>
+                    $('#modifyPage').show();
+                <%}else{%>
+                    //打开此页面，仅有查看权限
+                    ableEasyUiForm('_form','disable',true);
+                    $('.icon-clear').removeClass('icon-clear');
+            <%}}%>
         }
 
         /**
