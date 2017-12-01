@@ -167,6 +167,12 @@
 .l-btn:hover .icon-export{
 	background-image:url('icons/export-on.png');
 }
+.icon-detail{
+	background:url('icons/detail.png') no-repeat;
+}
+.l-btn:hover .icon-detail{
+	background-image:url('icons/detail-on.png');
+}
 .icon-add-child{
 	background:url('icons/edit_add_child.png') no-repeat center center;
 }
