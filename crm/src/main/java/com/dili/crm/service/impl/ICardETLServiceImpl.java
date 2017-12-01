@@ -2,10 +2,12 @@ package com.dili.crm.service.impl;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
 
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -24,17 +26,53 @@ import com.dili.crm.service.IcardUserCardService;
 import com.dili.ss.domain.BasePage;
 import com.dili.ss.dto.DTOUtils;
 
-@Service
+@Component
 public class ICardETLServiceImpl implements ICardETLService{
 	@Autowired private IcardUserAccountService icardUserAccountService;
 	@Autowired private IcardUserCardService icardUserCardService;
 	@Autowired private CustomerService customerService;
 	@Autowired private CustomerExtensionsService customerExtensionsService;
 	
-	public Customer transAllData(int batchSize) {
+
+
+	private boolean saveOrUpdate(Customer customer,List<CustomerExtensions> customerExtensionsList) {
+		this.customerService.saveOrUpdate(customer);
+		for(CustomerExtensions customerExtensions:customerExtensionsList) {
+			customerExtensions.setCustomerId(customer.getId());
+		}
+		this.customerExtensionsService.batchInsert(customerExtensionsList);
+		return true;
+	}
+	private Customer findLatestCustomer() {
+		Customer example=DTOUtils.newDTO(Customer.class);
+		example.setSourceSystem("电子结算");
+		example.setPage(1);
+		example.setRows(1);
+		example.setSort("created");
+		example.setOrder("ASC");
+		BasePage<Customer>page=this.customerService.listPageByExample(example);
+		List<Customer>data=page.getDatas();
+		if(data!=null&&data.size()==1) {
+			return data.get(0);
+		}
+		return null;
+	}
+	@Transactional
+	public boolean transIncrementData(Customer latestCustomer,int batchSize) {
+		if(latestCustomer==null) {
+			latestCustomer=this.findLatestCustomer();
+		}
 		IcardUserAccount example=DTOUtils.newDTO(IcardUserAccount.class);
-		example.mset("page", 1);
-		example.mset("rows", batchSize);
+		example.setPage(1);
+		example.setRows(batchSize);
+		example.setSort("created_time");
+		example.setOrder("ASC");
+		if(latestCustomer!=null) {
+			example.setCreatedTime(latestCustomer.getCreated());
+		}
+		
+		
+		
 		BasePage<IcardUserAccount>page=icardUserAccountService.listPageByExample(example);
 		List<IcardUserAccount>data=page.getDatas();
 		if(data!=null&&data.size()>0) {
@@ -50,27 +88,17 @@ public class ICardETLServiceImpl implements ICardETLService{
 				List<CustomerExtensions> customerExtensionsList=this.transIcardUserCardAsCustomerExtensions(icardUserCardList);
 				this.saveOrUpdate(customer, customerExtensionsList);
 			}
+			return true;
 		}
 		
-		return null;
-	}
-	@Transactional
-	public boolean saveOrUpdate(Customer customer,List<CustomerExtensions> customerExtensionsList) {
-//		this.customerService.saveOrUpdate(customer);
-//		for(CustomerExtensions customerExtensions:customerExtensionsList) {
-//			customerExtensions.setCustomerId(customer.getId());
-//		}
-//		this.customerExtensionsService.batchInsert(customerExtensionsList);
-		return true;
-	}
-	public Customer transIncrementData(Customer latestCustomer,int batchSize) {
-		return latestCustomer;
+		return false;
 	}
 	private Customer transUserAccountAsCustomer(IcardUserAccount icardUserAccount) {
 		Customer customer=DTOUtils.newDTO(Customer.class);
 		customer.setCertificateType("id");
 		customer.setCertificateNumber(icardUserAccount.getIdCode());
 		customer.setName(icardUserAccount.getName());
+		customer.setCreated(icardUserAccount.getCreatedTime());
 		//1-男 2-女
 		if(Byte.valueOf("1").equals(icardUserAccount.getGender())) {
 			customer.setSex("male"); 
