@@ -1,6 +1,7 @@
 package com.dili.crm.service.impl;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import org.apache.commons.lang3.StringUtils;
@@ -14,6 +15,7 @@ import com.dili.crm.domain.Customer;
 import com.dili.crm.domain.CustomerExtensions;
 import com.dili.crm.domain.IcardUserAccount;
 import com.dili.crm.domain.IcardUserCard;
+import com.dili.crm.domain.dto.IcardUserCardDTO;
 import com.dili.crm.service.CustomerExtensionsService;
 import com.dili.crm.service.CustomerService;
 import com.dili.crm.service.ICardETLService;
@@ -36,11 +38,12 @@ public class ICardETLServiceImpl implements ICardETLService{
 		BasePage<IcardUserAccount>page=icardUserAccountService.listPageByExample(example);
 		List<IcardUserAccount>data=page.getDatas();
 		if(data!=null&&data.size()>0) {
-			IcardUserCard condtion=DTOUtils.newDTO(IcardUserCard.class);
+			IcardUserCardDTO condtion=DTOUtils.newDTO(IcardUserCardDTO.class);
+			//4:已经退卡
+			condtion.setStatusNotIn(Arrays.asList(Byte.valueOf("4")));
 			for(IcardUserAccount icardUserAccount:data) {
 				Customer customer=this.transUserAccountAsCustomer(icardUserAccount);
 				
-//				condtion.setStatus();FIXME
 				condtion.setAccountId(icardUserAccount.getId());
 				List<IcardUserCard> icardUserCardList=this.icardUserCardService.list(condtion);
 				
@@ -53,11 +56,11 @@ public class ICardETLServiceImpl implements ICardETLService{
 	}
 	@Transactional
 	public boolean saveOrUpdate(Customer customer,List<CustomerExtensions> customerExtensionsList) {
-		this.customerService.saveOrUpdate(customer);
-		for(CustomerExtensions customerExtensions:customerExtensionsList) {
-			customerExtensions.setCustomerId(customer.getId());
-		}
-		this.customerExtensionsService.batchInsert(customerExtensionsList);
+//		this.customerService.saveOrUpdate(customer);
+//		for(CustomerExtensions customerExtensions:customerExtensionsList) {
+//			customerExtensions.setCustomerId(customer.getId());
+//		}
+//		this.customerExtensionsService.batchInsert(customerExtensionsList);
 		return true;
 	}
 	public Customer transIncrementData(Customer latestCustomer,int batchSize) {
@@ -68,7 +71,13 @@ public class ICardETLServiceImpl implements ICardETLService{
 		customer.setCertificateType("id");
 		customer.setCertificateNumber(icardUserAccount.getIdCode());
 		customer.setName(icardUserAccount.getName());
-//		customer.setSex(icardUserAccount.getGender()); //TODO
+		//1-男 2-女
+		if(Byte.valueOf("1").equals(icardUserAccount.getGender())) {
+			customer.setSex("male"); 
+		}else {
+			customer.setSex("female"); 
+		}
+
 		if(StringUtils.isNotBlank(icardUserAccount.getMobile())) {
 			customer.setPhone(icardUserAccount.getMobile());
 		}else {
@@ -84,8 +93,20 @@ public class ICardETLServiceImpl implements ICardETLService{
 		for(IcardUserCard icardUserCard:icardUserCardList) {
 			CustomerExtensions customerExtensions=DTOUtils.newDTO(CustomerExtensions.class);
 			
-			customerExtensions.setAcctId(icardUserCard.getCardNo());
-//			customerExtensions.setAcctType(icardUserCard.getCategory());TODO
+			customerExtensions.setAcctId(String.valueOf(icardUserCard.getId()));
+			customerExtensions.setNotes("卡号:"+icardUserCard.getCardNo());
+			//10-主卡 20-副卡 30-临时卡 40-联营卡（目前应该没这种卡）  50和60都是银行卡
+			if(Byte.valueOf("10").equals(icardUserCard.getCategory())) {
+				customerExtensions.setAcctType("masterCard");
+			}else if(Byte.valueOf("20").equals(icardUserCard.getCategory())) {
+				customerExtensions.setAcctType("slaveCard");
+			}else if(Byte.valueOf("30").equals(icardUserCard.getCategory())) {
+				customerExtensions.setAcctType("tempCard");
+			}else if(Byte.valueOf("40").equals(icardUserCard.getCategory())) {
+				customerExtensions.setAcctType("unionCard");
+			}else{
+				customerExtensions.setAcctType("bankCard");
+			}
 			customerExtensions.setSystem("电子结算");
 			resultList.add(customerExtensions);
 		}
