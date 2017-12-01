@@ -1,4 +1,4 @@
-<a href="http://crm.diligrp.com:8085/crm/index.html" style="font-size:14px; display: inline;">首页</a>&nbsp;&nbsp;<div style="font-size:14px; display: inline;">当前位置:</div>
+<div style="font-size:14px; display: inline;">当前位置:</div>
 <%
     for(parentMenu in parentMenus){
         var url = @parentMenu.getMenuUrl();
