@@ -10,6 +10,9 @@ import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 import java.util.List;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
@@ -25,6 +28,9 @@ import org.springframework.web.bind.annotation.ResponseBody;
 @Controller
 @RequestMapping("/visitEvent")
 public class VisitEventController {
+
+    private Logger logger = LoggerFactory.getLogger(CustomerVisitController.class);
+
     @Autowired
     VisitEventService visitEventService;
 
@@ -58,13 +64,13 @@ public class VisitEventController {
 	})
     @RequestMapping(value="/insert", method = {RequestMethod.GET, RequestMethod.POST})
     public @ResponseBody BaseOutput insert(VisitEvent visitEvent) {
-        UserTicket userTicket = SessionContext.getSessionContext().getUserTicket();
-        if(userTicket == null){
-            return BaseOutput.failure("新增失败，登录超时");
+        try {
+            return visitEventService.insertSelectiveWithOut(visitEvent);
+        }catch (Exception e){
+            logger.error(String.format("回访事件数据[%s] 新增失败",visitEvent,e.getMessage()),e);
+            return BaseOutput.failure("新增失败，系统异常");
         }
-        visitEvent.setUserId(userTicket.getId());
-        visitEventService.insertSelective(visitEvent);
-        return BaseOutput.success("新增成功");
+
     }
 
     @ApiOperation("修改VisitEvent")

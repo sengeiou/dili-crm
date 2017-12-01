@@ -2,6 +2,7 @@ package com.dili.crm.service;
 
 import com.dili.crm.domain.VisitEvent;
 import com.dili.ss.base.BaseService;
+import com.dili.ss.domain.BaseOutput;
 
 /**
  * 由MyBatis Generator工具自动生成
@@ -15,5 +16,7 @@ public interface VisitEventService extends BaseService<VisitEvent, Long> {
      * @return
      */
     Integer deleteByVisit(Long visitId);
+
+    BaseOutput insertSelectiveWithOut(VisitEvent visitEvent);
 
 }

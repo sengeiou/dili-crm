@@ -282,9 +282,7 @@
                         success: function (ret) {
                             if(ret.code=="200"){
                                 if (type==2){ //保存并新建
-                                    $.messager.alert('提示',ret.result,'info',function () {
-                                        openInsert();
-                                    });
+                                    openInsert();
                                 }else{
                                     window.location.href="${contextPath}/customerVisit/index.html";
                                 }
@@ -356,10 +354,7 @@
                         async : true,
                         success: function (ret) {
                             if(ret.code=="200"){
-                                $.messager.alert('提示',ret.result,'info',function () {
-                                    $('#eventDlg').dialog('close');
-                                    listEvents();
-                                });
+                                window.location.reload();//刷新当前页面
                             }else{
                                 $.messager.alert('错误',ret.result,'error');
                             }

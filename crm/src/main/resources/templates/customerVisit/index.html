@@ -141,9 +141,7 @@
                         async : true,
                         success: function (data) {
                             if(data.code=="200"){
-                                $.messager.alert('信息',data.result,"info",function(){
-                                    $("#grid").datagrid("reload");
-                                });
+                                $("#grid").datagrid("reload");
                             }else{
                                 $.messager.alert('错误',data.result,"error");
                             }
