@@ -19,14 +19,14 @@
                 <tr>
                     <td width="100%">
                         <#menubutton _divId="mainMenu" _service="menuServiceImpl" _method="findUserMenu" _queryParams="${userid}"
-                                _textField="name" _idField="id" _parentIdField="parentId" plain="true" hasDownArrow="true"
+                                _textField="name" _idField="id" _parentIdField="parentId" plain="true" hasDownArrow="false"
                                 align="left" noline="true" onClick="menuClickHandler">
                         </#menubutton>
                     </td>
 
                     <td style="align:right;">
                         <div id="userMenu" class="easyui-panel" style="padding:1px; width: 120px;background-color: #EEEEEE;">
-                            <a id="menubutton_right" href="#" class="easyui-menubutton" data-options="menu:'#menu_right', plain:true, hasDownArrow:true">${username}</a>
+                            <a id="menubutton_right" href="#" class="easyui-menubutton" data-options="menu:'#menu_right', plain:true, hasDownArrow:false">${username}</a>
                         </div>
                         <div id="menu_right" data-options="zIndex:'110000' , align:'left', noline:true, onClick:menuClickHandler">
                             <div id="menu_userDetail" data-options="blankKey:'' ">
@@ -58,9 +58,12 @@
     <!-- ====================================================================================================================== -->
     <script type="text/javascript">
         function menuClickHandler(item) {
+            //如果没有子菜单，当前调用者则是easyui-linkbutton，回调事件没有item参数，只能从options中获取
+            if(item == null){
+                item = $(this).linkbutton("options");
+            }
             var title = item.text;
             var url = item.menuUrl;
-
             if ("menu_logout" == item.id) {
                 logout();
                 return;
