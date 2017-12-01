@@ -16,24 +16,26 @@ import java.util.Map;
  */
 @Component
 public class SexProvider implements ValueProvider {
-    private static final List<ValuePair<?>> buffer;
+    private static final List<ValuePair<?>> BUFFER;
 
     static {
-        buffer = new ArrayList<ValuePair<?>>();
-        buffer.add(new ValuePairImpl("男", "male"));
-        buffer.add(new ValuePairImpl("女", "female"));
-        buffer.add(new ValuePairImpl("未知", "unknown"));
+        BUFFER = new ArrayList<ValuePair<?>>();
+        BUFFER.add(new ValuePairImpl("男", "male"));
+        BUFFER.add(new ValuePairImpl("女", "female"));
+        BUFFER.add(new ValuePairImpl("未知", "unknown"));
     }
 
     @Override
     public List<ValuePair<?>> getLookupList(Object obj, Map metaMap, FieldMeta fieldMeta) {
-        return buffer;
+        return BUFFER;
     }
 
     @Override
     public String getDisplayText(Object obj, Map metaMap, FieldMeta fieldMeta) {
-        if(obj == null || obj.equals("")) return null;
-        for(ValuePair<?> valuePair : buffer){
+        if(obj == null || "".equals(obj)){
+            return null;
+        }
+        for(ValuePair<?> valuePair : BUFFER){
             if(obj.toString().equals(valuePair.getValue())){
                 return valuePair.getText();
             }

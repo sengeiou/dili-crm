@@ -16,23 +16,25 @@ import java.util.Map;
 @Component
 public class YnProvider implements ValueProvider {
 
-    private static final List<ValuePair<?>> buffer;
+    private static final List<ValuePair<?>> BUFFER;
 
     static {
-        buffer = new ArrayList<ValuePair<?>>();
-        buffer.add(new ValuePairImpl("可用", "1"));
-        buffer.add(new ValuePairImpl("不可用", "0"));
+        BUFFER = new ArrayList<ValuePair<?>>();
+        BUFFER.add(new ValuePairImpl("可用", "1"));
+        BUFFER.add(new ValuePairImpl("不可用", "0"));
     }
 
     @Override
     public List<ValuePair<?>> getLookupList(Object obj, Map metaMap, FieldMeta fieldMeta) {
-        return buffer;
+        return BUFFER;
     }
 
     @Override
     public String getDisplayText(Object obj, Map metaMap, FieldMeta fieldMeta) {
-        if(obj == null || obj.equals("")) return null;
-        for(ValuePair<?> valuePair : buffer){
+        if(obj == null || "".equals(obj)){
+            return null;
+        }
+        for(ValuePair<?> valuePair : BUFFER){
             if(obj.toString().equals(valuePair.getValue())){
                 return valuePair.getText();
             }

@@ -29,7 +29,9 @@ public class OwnerProvider implements ValueProvider {
 
     @Override
     public String getDisplayText(Object obj, Map metaMap, FieldMeta fieldMeta) {
-        if(obj == null || obj.equals("")) return null;
+        if(obj == null || "".equals(obj)){
+            return null;
+        }
         BaseOutput<User> userBaseOutput= userRpc.get(Long.parseLong(obj.toString()));
         User user = userBaseOutput.getData();
         if(user == null) return null;

@@ -37,7 +37,7 @@ public class CacheServiceImpl implements CacheService {
 			return;
 		}
 		for (Department department : output.getData()) {
-			CrmCache.departmentMap.put(department.getId(), department);
+			CrmCache.DEPARTMENT_Map.put(department.getId(), department);
 		}
 		CrmCache.lastRefreshDepartmentMapTime = System.currentTimeMillis();
 	}
@@ -50,7 +50,7 @@ public class CacheServiceImpl implements CacheService {
 		}
 		List<City> output = cityService.listByExample(DTOUtils.newDTO(City.class));
 		for (City city : output) {
-			CrmCache.cityMap.put(city.getId(), city);
+			CrmCache.CITY_MAP.put(city.getId(), city);
 		}
 		CrmCache.lastRefreshCityMapTime = System.currentTimeMillis();
 	}

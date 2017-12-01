@@ -56,12 +56,14 @@ public class CityProvider implements ValueProvider {
 
     @Override
     public String getDisplayText(Object obj, Map metaMap, FieldMeta fieldMeta) {
-        if(obj == null || obj.equals("")) return null;
+        if(obj == null || "".equals(obj)) {
+            return null;
+        }
         cacheService.refreshCity();
         if(!NumberUtils.isDigits(obj.toString())){
             return null;
         }
-        City city = CrmCache.cityMap.get(Long.parseLong(obj.toString()));
+        City city = CrmCache.CITY_MAP.get(Long.parseLong(obj.toString()));
         if(city == null){
             return null;
         }

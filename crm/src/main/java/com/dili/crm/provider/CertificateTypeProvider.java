@@ -28,21 +28,21 @@ public class CertificateTypeProvider extends DataDictionaryValueProvider {
     public List<ValuePair<?>> getLookupList(Object value, Map paramMap, FieldMeta fieldMeta){
         List<ValuePair<?>> valuePairs = super.getLookupList(value, paramMap, fieldMeta);
         Object organizationType = paramMap.get("organizationType");
-        if(organizationType == null || organizationType.equals("")){
+        if(organizationType == null || "".equals(organizationType)){
             return null;
         }
         Iterator<ValuePair<?>> iterator = valuePairs.iterator();
         while(iterator.hasNext()){
             ValuePair<?> valuePair = iterator.next();
             //个人
-            if(organizationType.equals("individuals")){
+            if("individuals".equals(organizationType)){
                 //个人没有营业执照
-                if(valuePair.getValue() != null && valuePair.getValue().equals("businessLicense")) {
+                if(valuePair.getValue() != null && "businessLicense".equals(valuePair.getValue())) {
                     iterator.remove();
                 }
-            }else if(organizationType.equals("enterprise")){//企业
+            }else if("enterprise".equals(organizationType)){//企业
                 //企业只有营业执照
-                if(valuePair.getValue() != null && !valuePair.getValue().equals("businessLicense")) {
+                if(valuePair.getValue() != null && !"businessLicense".equals(valuePair.getValue())) {
                     iterator.remove();
                 }
             }

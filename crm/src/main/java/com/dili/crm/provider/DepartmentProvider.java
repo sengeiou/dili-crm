@@ -25,26 +25,28 @@ public class DepartmentProvider implements ValueProvider {
     @Override
     public List<ValuePair<?>> getLookupList(Object val, Map metaMap, FieldMeta fieldMeta) {
         List<ValuePair<?>> buffer = new ArrayList<ValuePair<?>>();
-        if(CrmCache.departmentMap == null || CrmCache.departmentMap.isEmpty()) {
+        if(CrmCache.DEPARTMENT_Map == null || CrmCache.DEPARTMENT_Map.isEmpty()) {
             cacheService.refreshDepartment();
         }
-        if(CrmCache.departmentMap == null) return null;
-        for(Long id : CrmCache.departmentMap.keySet()){
-            buffer.add(new ValuePairImpl<>(CrmCache.departmentMap.get(id).getName(), id));
+        if(CrmCache.DEPARTMENT_Map == null) return null;
+        for(Long id : CrmCache.DEPARTMENT_Map.keySet()){
+            buffer.add(new ValuePairImpl<>(CrmCache.DEPARTMENT_Map.get(id).getName(), id));
         }
         return buffer;
     }
 
     @Override
     public String getDisplayText(Object obj, Map metaMap, FieldMeta fieldMeta) {
-        if(obj == null || obj.equals("")) return null;
-        if(CrmCache.departmentMap == null || CrmCache.departmentMap.isEmpty()) {
+        if(obj == null || "".equals(obj)){
+            return null;
+        }
+        if(CrmCache.DEPARTMENT_Map == null || CrmCache.DEPARTMENT_Map.isEmpty()) {
             cacheService.refreshDepartment();
         }
-        if(CrmCache.departmentMap == null) return null;
-        for(Long id : CrmCache.departmentMap.keySet()){
+        if(CrmCache.DEPARTMENT_Map == null) return null;
+        for(Long id : CrmCache.DEPARTMENT_Map.keySet()){
             if(id.equals(Long.parseLong(obj.toString()))){
-                return CrmCache.departmentMap.get(id).getName();
+                return CrmCache.DEPARTMENT_Map.get(id).getName();
             }
         }
         return null;

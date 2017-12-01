@@ -28,7 +28,9 @@ public class CustomerProvider implements ValueProvider {
 
     @Override
     public String getDisplayText(Object obj, Map metaMap, FieldMeta fieldMeta) {
-        if(obj == null || obj.equals("")) return null;
+        if(obj == null || "".equals(obj)){
+            return null;
+        }
         Customer customer = customerService.get(Long.parseLong(obj.toString()));
         if(customer == null) return null;
         return customer.getName();
