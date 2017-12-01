@@ -14,6 +14,7 @@ import com.dili.sysadmin.sdk.session.SessionContext;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
+import tk.mybatis.mapper.entity.Example;
 
 import javax.annotation.Resource;
 import java.util.List;
@@ -54,20 +55,20 @@ public class CustomerVisitServiceImpl extends BaseServiceImpl<CustomerVisit, Lon
 	}
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public BaseOutput updateSelectiveWithOutput(CustomerVisit customerVisit) {
         UserTicket userTicket = SessionContext.getSessionContext().getUserTicket();
         if(userTicket == null){
             return BaseOutput.failure("新增失败，登录超时");
         }
-        VisitEvent ve = DTOUtils.newDTO(VisitEvent.class);
-        ve.setCustomerVisitId(customerVisit.getId());
-        List<VisitEvent> events = visitEventService.list(ve);
-        //当编辑后点击更新后如无事件则回访记录保持新建状态；
-        //如果有事件点击更新后状态为进行中；
-        if (!CollectionUtils.isEmpty(events)){
-            customerVisit.setState(2);
+        if (null != customerVisit.getModified()){
+            Example example = new Example(CustomerVisit.class);
+            Example.Criteria criteria = example.createCriteria();
+            criteria.andEqualTo("modified",customerVisit.getModified());
+            getActualDao().updateByExampleSelective(customerVisit,example);
+        }else{
+            super.updateSelective(customerVisit);
         }
-        super.updateSelective(customerVisit);
         return BaseOutput.success("更新成功");
     }
 
