@@ -37,7 +37,7 @@ public class CacheServiceImpl implements CacheService {
 			return;
 		}
 		for (Department department : output.getData()) {
-			CrmCache.DEPARTMENT_Map.put(department.getId(), department);
+			CrmCache.DEPARTMENT_MAP.put(department.getId(), department);
 		}
 		CrmCache.lastRefreshDepartmentMapTime = System.currentTimeMillis();
 	}
