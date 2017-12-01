@@ -43,15 +43,17 @@ public class SessionFilter implements Filter {
     @Autowired
     private UserUrlRedis userResRedis;
 
+    @Override
     public void destroy() {}
 
+    @Override
     public void init(FilterConfig conf) throws ServletException {
         filterConfig = conf;
 //        userResRedis = SpringUtil.getBean(UserResRedis.class);
 //        config = SpringUtil.getBean(ManageConfig.class);
     }
 
-
+    @Override
     public void doFilter(ServletRequest request, ServletResponse response,
                          FilterChain filter) throws IOException, ServletException {
         WebContent.resetLocal();
@@ -188,6 +190,7 @@ public class SessionFilter implements Filter {
             this.customHeaders.put(name, value);
         }
 
+        @Override
         public String getHeader(String name) {
             // check the custom headers first
             String headerValue = customHeaders.get(name);
@@ -199,6 +202,7 @@ public class SessionFilter implements Filter {
             return ((HttpServletRequest) getRequest()).getHeader(name);
         }
 
+        @Override
         public Enumeration<String> getHeaderNames() {
             // create a set of the custom header names
             Set<String> set = new HashSet<String>(customHeaders.keySet());

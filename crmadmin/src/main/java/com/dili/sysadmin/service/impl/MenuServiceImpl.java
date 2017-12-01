@@ -130,11 +130,27 @@ public class MenuServiceImpl extends BaseServiceImpl<Menu, Long> implements Menu
 	@Override
 	public List<Menu> getParentMenus(String id) {
 		String parentIds = getActualDao().getParentMenus(id);
-		if(StringUtils.isBlank(parentIds)) return null;
+		if(StringUtils.isBlank(parentIds)){
+			return null;
+		}
 		String[] parentIdArr = parentIds.split(",");
 		MenuCondition menuCondition = new MenuCondition();
-		menuCondition.setIds((List)Arrays.asList(parentIdArr));
-		return listByExample(menuCondition);
+		//递归查出来的父id需要反转
+		List ids = Arrays.asList(parentIdArr);
+		Collections.reverse(ids);
+		menuCondition.setIds(ids);
+		//然而in查询无法按in的顺序获得结果，还是要根据ids的顺序重排
+		List<Menu> menus = listByExample(menuCondition);
+		List<Menu> sortedMenus = new ArrayList<>(menus.size());
+		for(int i=0; i<ids.size(); i++){
+			for(Menu menu : menus){
+				if(ids.get(i).equals(menu.getId().toString())){
+					sortedMenus.add(menu);
+					break;
+				}
+			}
+		}
+		return sortedMenus;
 	}
 
 	@Override
