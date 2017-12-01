@@ -55,6 +55,7 @@ public class CustomerServiceImpl extends BaseServiceImpl<Customer, Long> impleme
         return super.listEasyuiPageByExample(domain, useProvider);
     }
 
+    @Override
     public BaseOutput insertSelectiveWithOutput(Customer customer) {
         UserTicket userTicket = SessionContext.getSessionContext().getUserTicket();
         if(userTicket == null){
