@@ -1,28 +1,17 @@
 <#body>
-    <script>
-        <#controls_user dlgId="userSelectDialog" controlId="userId"/>
-        <#controls_customer dlgId="customerSelectDialog" controlId="customerId"/>
-    </script>
+
     <style>
         input{height: 18px;}
     </style>
     <div class="easyui-layout" style="margin-left: 20px;" fit="true">
-        <div id="userSelectDialog" style="display: none;"></div>
-        <div id="customerSelectDialog" style="display: none;"></div>
         <div region="center" style="width:99%;" minHeight="360" border="false">
             <!-- 上方导航栏 (锁定不滚动) -->
             <div id="nav" style="padding-left:10px;padding-top:10px;position:fixed;z-index:2008;width:99%;height:30px;background-color:white" align="left">
                 <#nav/>
                 <div style="display: inline;float:right;padding-right: 300px;">
-                    <span id="newPage" style="display: none;">
-                            <a id="saveBtn" href="#" class="easyui-linkbutton" data-options="width:80" onclick="saveOrUpdate(1)">保存</a>&nbsp;&nbsp;
-                            <a id="saveAndNewBtn" href="#" class="easyui-linkbutton" data-options="width:100" onclick="saveOrUpdate(2)">保存并新建</a>
-                            <a id="saveAndFilishedBtn" href="#" class="easyui-linkbutton" data-options="width:100" onclick="saveOrUpdate(3)">保存并完成</a>&nbsp;&nbsp;
-                        </span>
-                    <span id="modifyPage" style="display: none;">
-                            <a id="modifyBtn" href="#" class="easyui-linkbutton" data-options="width:80" onclick="saveOrUpdate(1)">更新</a>&nbsp;&nbsp;
-                            <a id="modifyAndFilishedBtn" href="#" class="easyui-linkbutton" data-options="width:100" onclick="saveOrUpdate(3)">完成回访</a>&nbsp;&nbsp;
-                        </span>
+                    <%if (hasResource("editVisit") && has(edit)){%>
+                        <a id="editBtn" href="#" class="easyui-linkbutton" data-options="width:80" onclick="toEdit()">编辑</a>&nbsp;&nbsp;
+                    <%}%>
                     <a id="cancelBtn" href="#" class="easyui-linkbutton" data-options="width:80" onclick="doBack()">取消</a>
                 </div>
             </div>
@@ -35,38 +24,36 @@
                     <table width="99%" align="center">
                         <tr>
                             <td style="padding:5px;" width="33%">
-                                <input class="easyui-textbox" name="_createdName" id="_createdName" style="width: 80%;" data-options="label:'回访创建者:'"  editable="true"/>
+                                <input class="easyui-textbox" name="_createdName" id="_createdName" style="width: 80%;" data-options="cls:'noborder', readonly:true, label:'回访创建者:'"  editable="true"/>
                             </td>
                             <td style="padding:5px;"  width="33%">
-                                <input class="easyui-textbox" name="_subject" id="_subject" style="width: 80%;" data-options="label:'主题:', validType:'length[0,40]'" required="true" />
+                                <input class="easyui-textbox" name="_subject" id="_subject" style="width: 80%;" data-options="cls:'noborder', readonly:true, editable:false,label:'主题:', validType:'length[0,40]'"  />
                             </td>
                             <td style="padding:5px;" width="33%">
-                                <input class="easyui-textbox" name="userId" id="userId" panelWidth="auto" panelHeight="auto" label="回访人:" style="width: 80%;" required="true"
-                                       data-options="editable:false,buttonText:'选择',onClickButton:_selectUser,onChange:_changeTextboxShowClear" />
+                                <input class="easyui-textbox" name="userId" id="userId" panelWidth="auto" panelHeight="auto" label="回访人:" style="width: 80%;"
+                                       data-options="cls:'noborder', readonly:true, editable:false, hasDownArrow:false" />
                             </td>
                         </tr>
                         <tr>
                             <td style="padding:5px;">
-                                <input class="easyui-textbox" name="customerId" id="customerId" panelWidth="auto" panelHeight="auto" label="回访对象:" style="width: 80%;" required="true"
-                                       data-options="editable:false,
-									buttonText:'选择',
-									onClickButton:_selectCustomer,onChange:_changeTextboxShowClear" />
+                                <input class="easyui-textbox" name="customerId" id="customerId" panelWidth="auto" panelHeight="auto" label="回访对象:" style="width: 80%;"
+                                       data-options="cls:'noborder', readonly:true, editable:false" />
                             </td>
                             <td style="padding:5px;">
-                                <input name="_mode" class="easyui-combobox" id="_mode" style="width:80%;" panelWidth="auto" panelHeight="auto" label="回访方式:" required="true" editable="false"/>
+                                <input name="_mode" class="easyui-combobox" id="_mode" style="width:80%;" panelWidth="auto" panelHeight="auto" label="回访方式:" data-options="cls:'noborder', readonly:true, editable:false, hasDownArrow:false"/>
                                 <#comboProvider _id="_mode" _provider='dataDictionaryValueProvider' _queryParams='{dd_id:"11"}'/>
                             </td>
                             <td style="padding:5px;">
-                                <input class="easyui-combobox" name="_priority" id="_priority" style="width:80%;" data-options="editable:false" panelWidth="auto" panelHeight="auto" label="优先级:" />
+                                <input class="easyui-combobox" name="_priority" id="_priority" style="width:80%;" data-options="cls:'noborder', readonly:true, editable:false, hasDownArrow:false" panelWidth="auto" panelHeight="auto" label="优先级:" />
                                 <#comboProvider _id="_priority" _provider='dataDictionaryValueProvider' _queryParams='{dd_id:"10"}'/>
                             </td>
                         </tr>
                         <tr>
                             <td style="padding:5px;">
-                                <input class="easyui-datetimebox" name="_finishTime" id="_finishTime" style="width:80%" data-options="label:'完成时间:',editable:false"/>
+                                <input class="easyui-datetimebox" name="_finishTime" id="_finishTime" style="width:80%" data-options="label:'完成时间:',cls:'noborder', readonly:true, editable:false, hasDownArrow:false"/>
                             </td>
                             <td style="padding:5px;" colspan="2">
-                                <input class="easyui-textbox" name="_notes" id="_notes" style="width:90%" multiline="true" data-options="label:'描述:', validType:'length[0,200]'" />
+                                <input class="easyui-textbox" name="_notes" id="_notes" style="width:90%" multiline="true" data-options="label:'描述:', cls:'noborder', readonly:true, editable:false" />
                             </td>
                         </tr>
                     </table>
@@ -77,11 +64,7 @@
                 <!-- =========================================================事件表格========================================================= -->
                 <p />
                 <table class="easyui-datagrid" id="eventGrid" style="height:auto;width: 93%;" title="事件" collapsible="true"
-                       pagination="false" rownumbers="false" remoteSort="false" data-options="onDblClickRow:openUpdateEvent
-                        <%if(hasResource("editVisit") && hasResource("addVisitEvent") && has(view)==false) {%>
-                            ,tools:[{iconCls:'icon-add',handler:openInsertEvent}]
-                        <%}%>
-                    "
+                       pagination="false" rownumbers="false" remoteSort="false"
                        loadMsg="数据加载中..." singleSelect="true" method="post" multiSort="false"
                        align="left"  striped="false" idField="id" >
                     <thead>
@@ -98,9 +81,6 @@
                         <th width="56%" data-options="field:'notes', sortable:'false', order:'asc', align:'center', resizable:'true', fixed:'false'">
                             事件描述
                         </th>
-                    <!--    <th width="11%" data-options="field:'eventOpt', formatter:eventOptFmt, sortable:'false', order:'asc', align:'center', resizable:'true', fixed:'false'">
-                            操作
-                        </th>-->
                     </tr>
                     </thead>
                 </table>
@@ -108,117 +88,16 @@
         </div>
     </div>
 
-    <!-- 事件隐藏框 -->
-    <div id="eventDlg" class="easyui-dialog" resizable="false" constrain="true" shadow="true" draggable="false" title="事件信息" style="padding:20px;width: 550px;height: 310px;" modal="true" border="thin" closed="true"
-         data-options="
-				iconCls: 'icon-save',
-				height: 230,
-				buttons: [{
-					text:'确定',
-					iconCls:'icon-ok',
-					handler:saveOrUpdateEvent
-				},{
-					text:'取消',
-					handler:function(){
-						$('#eventDlg').dialog('close');
-					}
-				}]
-			">
-        <form id="_eventForm" class="easyui-form" method="post" fit="true" style="width: 100%;">
-            <input name="_event_id" id="_event_id" type="hidden">
-            <table style="width: 100%;">
-                <tr>
-                    <td style="padding-top:10px;padding-left:15px;width: 100%;">
-                        <input class="easyui-datetimebox" name="_event_time" id="_event_time" required="true" style="width:80%" data-options="label:'时间:',editable:false" />
-                    </td>
-                </tr>
-                <tr>
-                    <td style="padding-top:10px;padding-left:15px;width: 100%;">
-                        <input class="easyui-combobox" name="_event_mode" id="_event_mode" style="width:80%" panelHeight="auto" label="方式:" required="true" editable="false"/>
-                        <#comboProvider _id="_event_mode" _provider='dataDictionaryValueProvider' _queryParams='{dd_id:"11"}'/>
-                    </td>
-                </tr>
-                <tr>
-                    <td style="padding-top:10px;padding-left:15px;width: 100%;">
-                        <input class="easyui-textbox" name="_event_user" id="_event_user" required="true" style="width:80%" data-options="label:'处理人:'" disabled="disabled" editable="false"/>
-                    </td>
-                </tr>
-                <tr>
-                    <td style="padding-top:10px;padding-left:15px;width: 100%;">
-                        <input class="easyui-textbox" name="_event_notes" id="_event_notes" style="width:80%;height:50px;" multiline="true" data-options="label:'事件描述:', validType:'length[0,200]'" />
-                    </td>
-                </tr>
-            </table>
-        </form>
-
-    </div>
 
     <script type="text/javascript">
-        //打开修改客户窗口
-        function openUpdate(){
-            <%if (has(customerVisit)){%>
-                var selected = ${customerVisit};
-            <%}else{%>
-                var selected = null;
-            <%}%>
-            if (null == selected) {
-                $.messager.alert('警告','请选中一条数据','warning');
-                return;
-            }
-            $('#_form').form('clear');
-            var formData = $.extend({},selected);
-            //设置客户所有者(这里表格中的提供者已经作了转义,只需要对应上字段即可)
-            formData["createdName"] = selected["createdId"];
-            formData = addKeyStartWith(getOriginalData(formData),"_");
-            $('#_form').form('load', formData);
-            $("#customerId").textbox("initValue", selected["customerId"]);
-            $("#userId").textbox("initValue", selected["$_createdId"]);
-            $("#userId").textbox("setText", selected["createdId"]);
-            $("#eventDiv").show();
-            $("#stateDiv").show();  //状态div
-            $("#stateValue").val(selected["state"]);  //状态显示值
-            listEvents();
-            <%if (has(view)){%>
-                //查看
-                ableEasyUiForm('_form','disable',true);
-                $('.icon-clear').removeClass('icon-clear');
-            <%}else{%>
-                $("#customerId").textbox("disable", true);
-                $("#_createdName").textbox("disable", true);
-                //如果有编辑权限，才显示保存等按钮。否则跟查看一样，禁用form
-                <%if(hasResource("editVisit")) {%>
-                    $('#modifyPage').show();
-                <%}else{%>
-                    //打开此页面，仅有查看权限
-                    ableEasyUiForm('_form','disable',true);
-                    $('.icon-clear').removeClass('icon-clear');
-            <%}}%>
-        }
-
         /**
-         * 打开新增回访窗口
+         * 打开编辑回访窗口
          */
-        function openInsert(){
-            $('#newPage').show();
-            diableBtn(false);
-            $('#_form').form('clear');
-            $("#_createdName").textbox("setValue", "${user.realName}");
-            $("#_createdName").textbox("disable", true);
-            $("#userId").textbox("initValue", "${user.id}");
-            $("#userId").textbox("setText", "${user.realName}");
+        function toEdit(){
+            var visitId = $("#_id").val();
+            window.location.href="${contextPath}/customerVisit/edit.html?id="+visitId;
         }
 
-        //全局按键事件
-        function getKey(e){
-            e = e || window.event;
-            var keycode = e.which ? e.which : e.keyCode;
-            if(keycode == 46){ //如果按下删除键
-                var selected = $("#grid").treegrid("getSelected");
-                if(selected && selected!= null){
-                    del();
-                }
-            }
-        }
 
         /**
          * 绑定页面回车事件，以及初始化页面时的光标定位
@@ -231,188 +110,30 @@
          */
         $(function () {
             <%if (has(customerVisit)){%>
-                openUpdate();
+                var selected = ${customerVisit};
+                $('#_form').form('clear');
+                var formData = $.extend({},selected);
+                //设置客户所有者(这里表格中的提供者已经作了转义,只需要对应上字段即可)
+                formData["createdName"] = selected["createdId"];
+                formData = addKeyStartWith(getOriginalData(formData),"_");
+                $('#_form').form('load', formData);
+                $("#customerId").textbox("initValue", selected["customerId"]);
+                $("#userId").textbox("initValue", selected["$_createdId"]);
+                $("#userId").textbox("setText", selected["createdId"]);
+                $("#eventDiv").show();
+                $("#stateDiv").show();  //状态div
+                $("#stateValue").val(selected["state"]);  //状态显示值
+                listEvents();
             <%}else{%>
-                openInsert();
+
             <%}%>
 
         });
 
-        /**
-         * 保存回访信息
-         * @param type 操作类型 1-保存;2-保存并新建;3-保存并完成
-         */
-        function saveOrUpdate(type){
-            if(!$('#_form').form("validate")){
-                return;
-            }
-            if (type==3){
-                var finishTime = $("#_finishTime").datetimebox("getValue");
-                if (null == finishTime || ""==finishTime){
-                    $.messager.alert('警告','完成回访时,完成时间不能为空','warning');
-                    return false;
-                }
-            }
-            $.messager.confirm('确认','您确认想要保存吗？',function(r) {
-                if (r) {
-                    diableBtn(true);
-                    var _formData = removeKeyStartWith($("#_form").serializeObject(),"_");
-                    var _url = null;
-                    //没有id就新增
-                    if(_formData.id == null || _formData.id==""){
-                        if (type==3){   //完成
-                            _url = "${contextPath}/customerVisit/insertAndFinished";
-                        }else{
-                            _url = "${contextPath}/customerVisit/insert";
-                        }
-                    }else{//有id就修改
-                        if (type==3){  //完成
-                            _url = "${contextPath}/customerVisit/updateAndFinished";
-                        }else{
-                            _url = "${contextPath}/customerVisit/update";
-                        }
-                    }
-                    $.ajax({
-                        type: "POST",
-                        url: _url,
-                        data: _formData,
-                        processData:true,
-                        dataType: "json",
-                        async : true,
-                        success: function (ret) {
-                            if(ret.code=="200"){
-                                if (type==2){ //保存并新建
-                                    openInsert();
-                                }else{
-                                    window.location.href="${contextPath}/customerVisit/index.html";
-                                }
-                            }else{
-                                $.messager.alert('错误',ret.result,'error');
-                            }
-                        },
-                        error: function(){
-                            $.messager.alert('错误','远程访问失败','error');
-                        }
-                    });
-                }
-            });
-        }
+
 
         /**
-         * 禁用或启用btn
-         * @param b
-         */
-        function diableBtn(b) {
-            $("#saveBtn").prop("disabled",b);
-            $("#saveAndNewBtn").prop("disabled",b);
-            $("#saveAndFilishedBtn").prop("disabled",b);
-            $("#cancelBtn").prop("disabled",b);
-            $("#newBtn").prop("disabled",b);
-            $("#modifyAndFilishedBtn").prop("disabled",b);
-        }
-
-        /**
-         * 修改时,打开插入事件框
-         */
-        function openInsertEvent() {
-            $('#eventDlg').dialog('open');
-            $('#eventDlg').dialog('center');
-            $('#_eventForm').form('clear');
-            $('#_event_user').textbox("initValue","${user.realName}");
-        }
-
-        /**
-         * 保存事件
-         */
-        function saveOrUpdateEvent() {
-            if(!$('#_eventForm').form("validate")){
-                return;
-            }
-            $.messager.confirm('确认','您确认想要保存吗？',function(r) {
-                if(r){
-                    var _formData = removeKeyStartWith($("#_eventForm").serializeObject(),"_event_");
-                    var _url = null;
-                    //没有id就新增
-                    if(_formData.id == null || _formData.id==""){
-                        _url = "${contextPath}/visitEvent/insert";
-                    }else{//有id就修改
-                        _url = "${contextPath}/visitEvent/update";
-                    }
-                    //设置当前选择的回访id
-                    var visitId = $("#_id").val();
-                    if (typeof(visitId)=="undefined" || null == visitId || ""==visitId){
-                        $.messager.alert('错误','回访ID丢失，请返回列表后，重新操作！','error');
-                        return;
-                    }
-                    _formData["customerVisitId"] = visitId;
-                    $.ajax({
-                        type: "POST",
-                        url: _url,
-                        data: _formData,
-                        processData:true,
-                        dataType: "json",
-                        async : true,
-                        success: function (ret) {
-                            if(ret.code=="200"){
-                                window.location.reload();//刷新当前页面
-                            }else{
-                                $.messager.alert('错误',ret.result,'error');
-                            }
-                        },
-                        error: function(){
-                            $.messager.alert('错误','远程访问失败','error');
-                        }
-                    });
-                }
-            });
-        }
-
-        /**
-         * 修改信息时，修改事件信息
-         * @param index
-         */
-        function openUpdateEvent(index){
-            //TODO 目前没有修改操作，所以此方法，目前直接返回
-            return;
-            <%if (has(view)){%>
-                return;
-            <%}%>
-            <%if(hasResource("editVisitEvent")) {%>
-                $("#eventGrid").datagrid("selectRow", index);
-                var selected = $("#eventGrid").datagrid("getSelected");
-                if (null == selected) {
-                    $.messager.alert('警告','请选中一条数据');
-                    return;
-                }
-                $('#eventDlg').dialog('open');
-                $('#eventDlg').dialog('center');
-                var formData = $.extend({},selected);
-                formData = addKeyStartWith(getOriginalData(formData),"_event_");
-                $('#_eventForm').form('load', formData);
-                $("#_event_user").textbox("initValue", selected["userId"]);
-            <%}%>
-        }
-
-        /**
-         * 事件列表，操作信息
-         * @param value
-         * @param row
-         * @param index
-         * @returns {string}
-         */
-        function eventOptFmt(value,row,index) {
-            var html="";
-            <%if(hasResource("editVisitEvent")) {%>
-                html=html+"<img src='${contextPath}/resources/easyui/css/themes/icons/pencil.png' style='cursor: pointer' id='eventUpdate"+index+"' onclick='openUpdateEvent("+index+")'/>&nbsp;&nbsp;&nbsp;";
-            <%}%>
-            <%if(hasResource("removeVisitEvent")) {%>
-                html=html+"    <img src='${contextPath}/resources/easyui/css/themes/icons/edit_remove.png' style='cursor: pointer' id='eventRemove"+index+"' onclick='delAddress(\""+row["id"]+"\")'/>";
-            <%}%>
-            return html;
-        }
-
-        /**
-         * 修改回访信息时，加载事件信息列表
+         * 加载事件信息列表
          */
         function listEvents(){
             var opts = $("#eventGrid").datagrid("options");

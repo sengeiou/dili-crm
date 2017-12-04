@@ -146,7 +146,29 @@ public class CustomerVisitController {
         if(userTicket == null){
             throw new RuntimeException("未登录");
         }
-        String view = "customerVisit/detail";
+        //页面上用于展示拥有者和新增时获取拥有者id
+        modelMap.put("user", userTicket);
+        if (null != id) {
+            CustomerVisit customerVisit = customerVisitService.get(id);
+            if (customerVisit == null) {
+                throw new RuntimeException("根据id[" + id + "]找不到对应客户");
+            }
+            if(3!=customerVisit.getState()){
+                modelMap.put("edit","edit");
+            }
+            List<Map> list = ValueProviderUtils.buildDataByProvider(getCustomerVisitMetadata(), Lists.newArrayList(customerVisit));
+            modelMap.put("customerVisit", JSONObject.toJSONString(list.get(0)));
+        }
+        return "customerVisit/detail";
+    }
+
+    @ApiOperation("跳转到CustomerVisit编辑页面")
+    @RequestMapping(value="/edit.html", method = {RequestMethod.GET, RequestMethod.POST})
+    public String edit(ModelMap modelMap, @RequestParam(name="id", required = false) Long id) throws Exception {
+        UserTicket userTicket = SessionContext.getSessionContext().getUserTicket();
+        if(userTicket == null){
+            throw new RuntimeException("未登录");
+        }
         //页面上用于展示拥有者和新增时获取拥有者id
         modelMap.put("user", userTicket);
         if (null != id) {
@@ -160,7 +182,7 @@ public class CustomerVisitController {
             List<Map> list = ValueProviderUtils.buildDataByProvider(getCustomerVisitMetadata(), Lists.newArrayList(customerVisit));
             modelMap.put("customerVisit", JSONObject.toJSONString(list.get(0)));
         }
-        return view;
+        return "customerVisit/edit";
     }
 
     /**

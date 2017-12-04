@@ -105,7 +105,7 @@
     <script type="text/javascript">
         //打开新增窗口
         function openInsert(){
-            window.location.href="${contextPath}/customerVisit/detail.html?id=";
+            window.location.href="${contextPath}/customerVisit/edit.html?id=";
             return;
         }
 
@@ -118,9 +118,25 @@
                     $.messager.alert('警告','请选中一条数据','warning');
                     return;
                 }
-                window.location.href="${contextPath}/customerVisit/detail.html?id="+selected["id"];
-                return;
+                var state = selected["$_state"];
+                if (3==state){
+                    window.location.href="${contextPath}/customerVisit/detail.html?id="+selected["id"];
+                }else{
+                    window.location.href="${contextPath}/customerVisit/edit.html?id="+selected["id"];
+                }
             <%}%>
+        }
+
+        /**
+         * 打开查看页面
+         */
+        function openDetail(){
+            var selected = $("#grid").treegrid("getSelected");
+            if (null == selected) {
+                $.messager.alert('警告','请选中一条数据','warning');
+                return;
+            }
+            window.location.href="${contextPath}/customerVisit/detail.html?id="+selected["id"];
         }
 
         //根据主键删除
@@ -236,6 +252,14 @@
                 layout:['list','sep','first','prev','links','next','last','sep','refresh','info'],
                 links:3,
                 buttons:[
+                <%if(hasResource("viewVisit")) {%>
+                    {
+                        iconCls:'icon-detail',
+                        handler:function(){
+                            openDetail();
+                        }
+                    },
+                <%}%>
                 <%if(hasResource("addVisit")) {%>
                     {
                         iconCls:'icon-add',
