@@ -1,30 +1,20 @@
 package com.dili.crm.service.impl;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Date;
-import java.util.List;
-
-import org.apache.commons.lang3.StringUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
-import com.dili.crm.dao.CustomerExtensionsMapper;
-import com.dili.crm.dao.CustomerMapper;
 import com.dili.crm.domain.Customer;
 import com.dili.crm.domain.CustomerExtensions;
 import com.dili.crm.domain.IcardUserAccount;
 import com.dili.crm.domain.IcardUserCard;
 import com.dili.crm.domain.dto.IcardUserCardDTO;
-import com.dili.crm.service.CustomerExtensionsService;
-import com.dili.crm.service.CustomerService;
-import com.dili.crm.service.ICardETLService;
-import com.dili.crm.service.IcardUserAccountService;
-import com.dili.crm.service.IcardUserCardService;
+import com.dili.crm.service.*;
 import com.dili.ss.domain.BasePage;
 import com.dili.ss.dto.DTOUtils;
+import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 @Component
 public class ICardETLServiceImpl implements ICardETLService{
@@ -57,7 +47,7 @@ public class ICardETLServiceImpl implements ICardETLService{
 		}
 		return null;
 	}
-	@Transactional
+
 	public boolean transIncrementData(Customer latestCustomer,int batchSize) {
 		if(latestCustomer==null) {
 			latestCustomer=this.findLatestCustomer();
@@ -70,9 +60,9 @@ public class ICardETLServiceImpl implements ICardETLService{
 		if(latestCustomer!=null) {
 			example.setCreatedTime(latestCustomer.getCreated());
 		}
-		
-		
-		
+
+
+
 		BasePage<IcardUserAccount>page=icardUserAccountService.listPageByExample(example);
 		List<IcardUserAccount>data=page.getDatas();
 		if(data!=null&&data.size()>0) {

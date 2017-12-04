@@ -1,6 +1,18 @@
 <script type="text/javascript">
     // ============================   地址相关js st  =============================
 
+    //修改客户窗口打开时查询地址
+    function listAddress(){
+    <%if (has(customer)){%>
+            var opts = $("#addressGrid").datagrid("options");
+            if (null == opts.url || "" == opts.url) {
+                opts.url = "${contextPath}/address/listPage";
+            }
+            var selected = ${customer};
+            $("#addressGrid").datagrid("load", bindGridMeta2Data("addressGrid", {"customerId":selected["id"]}));
+        <%}%>
+    }
+    <%if(has(action) && action=="edit"){%>
     //选择地址之前切换反相色的图标
     function onBeforeSelectAddress(index, row) {
         //获取当前选中的行索引
@@ -84,18 +96,6 @@
         <%}%>
     }
 
-    //修改客户窗口打开时查询地址
-    function listAddress(){
-        <%if (has(customer)){%>
-        var opts = $("#addressGrid").datagrid("options");
-        if (null == opts.url || "" == opts.url) {
-            opts.url = "${contextPath}/address/listPage";
-        }
-        var selected = ${customer};
-        $("#addressGrid").datagrid("load", bindGridMeta2Data("addressGrid", {"customerId":selected["id"]}));
-        <%}%>
-    }
-
     //根据主键删除地址
     function delAddress(id) {
         var selectedId;
@@ -133,6 +133,6 @@
             }
         });
     }
-
+    <%}%>
     // ============================   地址相关js end  =============================
 </script>

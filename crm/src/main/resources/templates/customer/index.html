@@ -208,6 +208,16 @@
                 $.messager.alert('警告','请选中一条数据');
                 return;
             }
+            window.location.href="${contextPath}/customer/edit.html?id="+selected["id"];
+        }
+
+        //打开修改客户窗口
+        function openDetail(){
+            var selected = $("#grid").treegrid("getSelected");
+            if (null == selected) {
+                $.messager.alert('警告','请选中一条数据');
+                return;
+            }
             window.location.href="${contextPath}/customer/detail.html?id="+selected["id"];
         }
 
@@ -342,7 +352,7 @@
                 },{
                     iconCls:'icon-detail',
                     handler:function(){
-                        openUpdate();
+                        openDetail();
                     }
                 },{
                     iconCls:'icon-export',

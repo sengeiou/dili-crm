@@ -53,7 +53,16 @@ public class CustomerController {
 	@RequestMapping(value="/detail.html", method = {RequestMethod.GET, RequestMethod.POST})
 	public String detail(ModelMap modelMap, @RequestParam(name="id", required = true) Long id) throws Exception {
 		customerService.handleDetail(modelMap, id);
+		modelMap.put("action", "detail");
 		return "customer/detail";
+	}
+
+	@ApiOperation("跳转到Customer编辑页面")
+	@RequestMapping(value="/edit.html", method = {RequestMethod.GET, RequestMethod.POST})
+	public String edit(ModelMap modelMap, @RequestParam(name="id", required = true) Long id) throws Exception {
+		customerService.handleDetail(modelMap, id);
+		modelMap.put("action", "edit");
+		return "customer/edit";
 	}
 
 	@ApiOperation("跳转到Customer新增页面")

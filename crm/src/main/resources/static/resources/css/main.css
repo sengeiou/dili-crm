@@ -38,6 +38,11 @@ h2 {
 
 /* datagrid row border end */
 
+/* 无边框文本框 */
+.noborder{
+    border-bottom-width:0px; border-left-width:0px; border-top-width:0px; border-right-width:0px;
+}
+
 /* easyui基础字体设置 */
 /*更改表格标题文字大小*/
 .datagrid-header span {     font-size: 15px !important; }  .datagrid-header-row {     /* background-color: #e3e3e3; */     /* color: #111 */     Height: 30px; }

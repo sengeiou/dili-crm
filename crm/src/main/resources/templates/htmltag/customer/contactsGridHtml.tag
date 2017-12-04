@@ -1,8 +1,8 @@
 <div id="contactsDiv" style="width: 96%">
     <!-- =========================================================联系人表格========================================================= -->
     <table class="easyui-datagrid" id="contactsGrid" style="height:185px;padding:0px;width:100%;" title="联系人" collapsible="true"
-           pagination="false" rownumbers="true" remoteSort="false" data-options="onDblClickRow:openUpdateContacts,
-           loadMsg:0, onBeforeSelect:onBeforeSelectContacts,tools:[{iconCls:'icon-add',handler:openInsertContacts}]"
+           pagination="false" rownumbers="true" remoteSort="false" data-options="loadMsg:0
+          <%if(has(action) && action=="edit"){%>,onDblClickRow:openUpdateContacts, onBeforeSelect:onBeforeSelectContacts,tools:[{iconCls:'icon-add',handler:openInsertContacts}]<%}%>"
            loadMsg="数据加载中..." singleSelect="true" method="post" multiSort="false"
            align="center"  striped="false" idField="id" >
         <thead>
@@ -28,12 +28,14 @@
             <th width="12%" data-options="field:'address',   sortable:'true', order:'asc', align:'center', resizable:'true', fixed:'false'">
                 地址
             </th>
-            <th width="20%" data-options="field:'notes',   sortable:'true', order:'asc', align:'center', resizable:'true', fixed:'false'">
+            <th width="<%if(has(action) && action=="edit"){%>21%<%}else{%>29%<%}%>" data-options="field:'notes',   sortable:'true', order:'asc', align:'center', resizable:'true', fixed:'false'">
                 备注
             </th>
+            <%if(has(action) && action=="edit"){%>
             <th width="8%" data-options="field:'contactsOpt', formatter:contactsOptFmt, sortable:'true', order:'asc', align:'center', resizable:'true', fixed:'false'">
                 操作
             </th>
+            <%}%>
         </tr>
         </thead>
     </table>

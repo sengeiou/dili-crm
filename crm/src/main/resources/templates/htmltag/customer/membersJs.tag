@@ -1,6 +1,18 @@
 <script type="text/javascript">
     // ============================   成员客户相关js st  =============================
 
+    //修改客户窗口打开时查询成员客户
+    function listMembers(){
+    <%if (has(customer)){%>
+            var opts = $("#membersGrid").datagrid("options");
+            if (null == opts.url || "" == opts.url) {
+                opts.url = "${contextPath}/customer/listPage";
+            }
+            var selected = ${customer};
+            $("#membersGrid").datagrid("load",  bindGridMeta2Data("membersGrid", {"parentId":selected["id"]}));
+        <%}%>
+    }
+    <%if(has(action) && action=="edit"){%>
     //选择成员客户之前切换反相色的图标
     function onBeforeSelectMembers(index, row) {
         //获取当前选中的行索引
@@ -43,18 +55,6 @@
         <%}%>
     }
 
-    //修改客户窗口打开时查询成员客户
-    function listMembers(){
-        <%if (has(customer)){%>
-        var opts = $("#membersGrid").datagrid("options");
-        if (null == opts.url || "" == opts.url) {
-            opts.url = "${contextPath}/customer/listPage";
-        }
-        var selected = ${customer};
-        $("#membersGrid").datagrid("load",  bindGridMeta2Data("membersGrid", {"parentId":selected["id"]}));
-        <%}%>
-    }
-
     //根据主键删除成员客户
     function delMembers(id) {
         var selectedId;
@@ -92,6 +92,7 @@
             }
         });
     }
+    <%}%>
     // ============================   成员客户相关js end  =============================
 
 

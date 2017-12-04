@@ -1,6 +1,19 @@
 <script type="text/javascript">
     // ============================   车辆相关js st  =============================
 
+    //修改客户窗口打开时查询车辆
+    function listVehicle(){
+    <%if (has(customer)){%>
+            var opts = $("#vehicleGrid").datagrid("options");
+            if (null == opts.url || "" == opts.url) {
+                opts.url = "${contextPath}/vehicle/listPage";
+            }
+            var selected = ${customer};
+            $("#vehicleGrid").datagrid("load",  {"customerId":selected["id"]});
+        <%}%>
+    }
+
+    <%if(has(action) && action=="edit"){%>
     //选择车辆之前切换反相色的图标
     function onBeforeSelectVehicle(index, row) {
         //获取当前选中的行索引
@@ -79,18 +92,6 @@
         <%}%>
     }
 
-    //修改客户窗口打开时查询车辆
-    function listVehicle(){
-        <%if (has(customer)){%>
-        var opts = $("#vehicleGrid").datagrid("options");
-        if (null == opts.url || "" == opts.url) {
-            opts.url = "${contextPath}/vehicle/listPage";
-        }
-        var selected = ${customer};
-        $("#vehicleGrid").datagrid("load",  {"customerId":selected["id"]});
-        <%}%>
-    }
-
     //根据主键删除车辆
     function delVehicle(id) {
         var selectedId;
@@ -128,5 +129,6 @@
             }
         });
     }
+    <%}%>
     // ============================   车辆相关js end  =============================
 </script>

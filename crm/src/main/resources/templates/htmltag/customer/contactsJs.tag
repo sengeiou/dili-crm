@@ -1,6 +1,17 @@
 <script type="text/javascript">
     // ============================   联系人相关js st  =============================
-
+    //修改客户窗口打开时查询联系人
+    function listContacts(){
+    <%if (has(customer)){%>
+            var opts = $("#contactsGrid").datagrid("options");
+            if (null == opts.url || "" == opts.url) {
+                opts.url = "${contextPath}/contacts/listPage";
+            }
+            var selected = ${customer};
+            $("#contactsGrid").datagrid("load",  bindGridMeta2Data("contactsGrid", {"customerId":selected["id"]}));
+        <%}%>
+    }
+    <%if(has(action) && action=="edit"){%>
     //选择联系人之前切换反相色的图标
     function onBeforeSelectContacts(index, row) {
         //获取当前选中的行索引
@@ -79,18 +90,6 @@
         <%}%>
     }
 
-    //修改客户窗口打开时查询联系人
-    function listContacts(){
-        <%if (has(customer)){%>
-        var opts = $("#contactsGrid").datagrid("options");
-        if (null == opts.url || "" == opts.url) {
-            opts.url = "${contextPath}/contacts/listPage";
-        }
-        var selected = ${customer};
-        $("#contactsGrid").datagrid("load",  bindGridMeta2Data("contactsGrid", {"customerId":selected["id"]}));
-        <%}%>
-    }
-
     //根据主键删除联系人
     function delContacts(id) {
         var selectedId;
@@ -128,5 +127,6 @@
             }
         });
     }
+    <%}%>
     // ============================   联系人相关js end  =============================
 </script>
