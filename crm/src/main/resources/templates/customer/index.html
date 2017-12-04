@@ -336,46 +336,46 @@
                         openDetail();
                     }
                 }
-            <%if(hasResource("insertCustomer")) {%>
+                <#resource code="insertCustomer">
             ,{
                     iconCls:'icon-add',
                     handler:function(){
                         openInsert();
                     }
                 }
-            <%}%>
-            <%if(hasResource("insertChildCustomer")) {%>
+            </#resource>
+            <#resource code="insertChildCustomer">
                 ,{
                     iconCls:'icon-add-child',
                     handler:function(){
                         openChildInsert();
                     }
                 }
-            <%}%>
-            <%if(hasResource("updateCustomer")) {%>
+            </#resource>
+            <#resource code="updateCustomer">
                 ,{
                     iconCls:'icon-edit',
                     handler:function(){
                         openUpdate();
                     }
                 }
-            <%}%>
-            <%if(hasResource("deleteCustomer")) {%>
+            </#resource>
+            <#resource code="deleteCustomer">
             ,{
                     iconCls:'icon-remove',
                     handler:function(){
                         del();
                     }
                 }
-            <%}%>
-            <%if(hasResource("exportCustomer")) {%>
+            </#resource>
+            <#resource code="exportCustomer">
             ,{
                     iconCls:'icon-export',
                     handler:function(){
                         doExport('grid', true);
                     }
                 }
-            <%}%>
+            </#resource>
             ]
             });
             //表格仅显示下边框

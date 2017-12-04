@@ -22,9 +22,9 @@
             <div id="nav" style="padding-left:15px;padding-top:10px;position:fixed;z-index:2008;width:100%;height:30px;background-color:white" align="left">
             <#nav/>
                 <div style="display: inline;float:right;padding-right: 300px;">
-                    <%if(hasResource("editCustomer")) {%>
+                    <#resource code="updateCustomer">
                     <a id="saveBtn" href="#" class="easyui-linkbutton" data-options="width:80" onclick="Javascript:window.location.href='${contextPath}/customer/edit.html?id=${id}';">编辑</a>&nbsp;&nbsp;
-                    <%}%>
+                    </#resource>
                     <a id="cancelBtn" href="#" class="easyui-linkbutton" data-options="width:80" onclick="Javascript:window.location.href='${contextPath}/customer/index.html';">取消</a>
                 </div>
             </div>
