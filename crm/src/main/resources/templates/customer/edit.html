@@ -431,6 +431,10 @@
 
         //根据组织类型切换控件
         function switchByOrganizationType(organizationType){
+//            加载时组织类型默认为个人
+            if(null == organizationType){
+                organizationType = "individuals";
+            }
 //            根据组织类型加载证件类型下拉框
             loadCertificateTypeByOrganizationType(organizationType);
             if(organizationType == "individuals"){
