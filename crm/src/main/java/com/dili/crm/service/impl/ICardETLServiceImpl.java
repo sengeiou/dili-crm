@@ -124,6 +124,8 @@ public class ICardETLServiceImpl implements ICardETLService{
 		}
 		//settlement:电子结算
 		customer.setSourceSystem("settlement");
+		//individuals:个人
+		customer.setOrganizationType("individuals");
 		customer.setYn(1);
 		
 		return customer;

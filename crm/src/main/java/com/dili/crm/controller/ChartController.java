@@ -61,12 +61,7 @@ public class ChartController {
 		Map<Object, Object> metadata =this.getCustomerMetadata();
 		try {
 			List<Map> list = ValueProviderUtils.buildDataByProvider(metadata, data);
-			for(Map<String,Object>row:list) {
-				if(StringUtils.isBlank(String.valueOf(row.get("type")))) {
-					row.put("type", "其他");
-				}
-			}
-			return list;
+			return this.addOthers(list, "type");
 		} catch (Exception e) {
 			return Collections.emptyList();
 		}
@@ -80,12 +75,7 @@ public class ChartController {
 			Map<Object, Object> metadata =this.getCustomerMetadata();
 			try {
 				List<Map> list = ValueProviderUtils.buildDataByProvider(metadata, data);
-				for(Map<String,Object>row:list) {
-					if(StringUtils.isBlank(String.valueOf(row.get("market")))) {
-						row.put("makret", "其他");
-					}
-				}
-				return list;
+				return this.addOthers(list, "makret");
 			} catch (Exception e) {
 				return Collections.emptyList();
 			}
@@ -99,12 +89,7 @@ public class ChartController {
 			Map<Object, Object> metadata =this.getCustomerMetadata();
 			try {
 				List<Map> list = ValueProviderUtils.buildDataByProvider(metadata, data);
-				for(Map<String,Object>row:list) {
-					if(StringUtils.isBlank(String.valueOf(row.get("profession")))) {
-						row.put("profession", "其他");
-					}
-				}
-				return list;
+				return this.addOthers(list, "profession");
 			} catch (Exception e) {
 				return Collections.emptyList();
 			}
@@ -140,7 +125,14 @@ public class ChartController {
 			}
 			
 	}
-	
+	private List<Map>addOthers(List<Map> list,String key){
+		for(Map<String,Object>row:list) {
+			if(StringUtils.isBlank(String.valueOf(row.get(key)))) {
+				row.put(key, "其他");
+			}
+		}
+		return list;
+	}
 	 private Map<Object, Object> getCustomerVisitMetadata(){
 	        Map<Object, Object> metadata = new HashMap<>();
 	        //回访状态
