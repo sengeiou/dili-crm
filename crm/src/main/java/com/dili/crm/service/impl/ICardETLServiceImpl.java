@@ -1,20 +1,31 @@
 package com.dili.crm.service.impl;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Date;
+import java.util.List;
+
+import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import com.dili.crm.dao.CustomerExtensionsMapper;
+import com.dili.crm.dao.CustomerMapper;
 import com.dili.crm.domain.Customer;
 import com.dili.crm.domain.CustomerExtensions;
 import com.dili.crm.domain.IcardUserAccount;
 import com.dili.crm.domain.IcardUserCard;
 import com.dili.crm.domain.dto.IcardUserCardDTO;
-import com.dili.crm.service.*;
+import com.dili.crm.provider.YnProvider;
+import com.dili.crm.service.CustomerExtensionsService;
+import com.dili.crm.service.CustomerService;
+import com.dili.crm.service.ICardETLService;
+import com.dili.crm.service.IcardUserAccountService;
+import com.dili.crm.service.IcardUserCardService;
 import com.dili.ss.domain.BasePage;
 import com.dili.ss.dto.DTOUtils;
-import org.apache.commons.lang3.StringUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
-
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
 
 @Component
 public class ICardETLServiceImpl implements ICardETLService{
@@ -24,22 +35,32 @@ public class ICardETLServiceImpl implements ICardETLService{
 	@Autowired private CustomerExtensionsService customerExtensionsService;
 	
 
-
+	@Transactional
 	private boolean saveOrUpdate(Customer customer,List<CustomerExtensions> customerExtensionsList) {
-		this.customerService.saveOrUpdate(customer);
+		Customer condtion=DTOUtils.newDTO(Customer.class);
+		condtion.setCertificateNumber(customer.getCertificateNumber());
+		List<Customer>list=this.customerService.list(condtion);
+		if(list!=null&&list.size()==1) {
+			customer=list.get(0);
+		}else {
+			this.customerService.saveOrUpdate(customer);	
+		}
+		
 		for(CustomerExtensions customerExtensions:customerExtensionsList) {
 			customerExtensions.setCustomerId(customer.getId());
 		}
+		
 		this.customerExtensionsService.batchInsert(customerExtensionsList);
 		return true;
 	}
 	private Customer findLatestCustomer() {
 		Customer example=DTOUtils.newDTO(Customer.class);
-		example.setSourceSystem("电子结算");
+		//settlement:电子结算
+		example.setSourceSystem("settlement");
 		example.setPage(1);
 		example.setRows(1);
 		example.setSort("created");
-		example.setOrder("ASC");
+		example.setOrder("DESC");
 		BasePage<Customer>page=this.customerService.listPageByExample(example);
 		List<Customer>data=page.getDatas();
 		if(data!=null&&data.size()==1) {
@@ -47,7 +68,7 @@ public class ICardETLServiceImpl implements ICardETLService{
 		}
 		return null;
 	}
-
+	
 	public boolean transIncrementData(Customer latestCustomer,int batchSize) {
 		if(latestCustomer==null) {
 			latestCustomer=this.findLatestCustomer();
@@ -60,9 +81,9 @@ public class ICardETLServiceImpl implements ICardETLService{
 		if(latestCustomer!=null) {
 			example.setCreatedTime(latestCustomer.getCreated());
 		}
-
-
-
+		
+		
+		
 		BasePage<IcardUserAccount>page=icardUserAccountService.listPageByExample(example);
 		List<IcardUserAccount>data=page.getDatas();
 		if(data!=null&&data.size()>0) {
@@ -101,8 +122,9 @@ public class ICardETLServiceImpl implements ICardETLService{
 		}else {
 			customer.setPhone(icardUserAccount.getTelphone());
 		}
-		customer.setSourceSystem("电子结算");
-		
+		//settlement:电子结算
+		customer.setSourceSystem("settlement");
+		customer.setYn(1);
 		
 		return customer;
 	}
@@ -125,7 +147,8 @@ public class ICardETLServiceImpl implements ICardETLService{
 			}else{
 				customerExtensions.setAcctType("bankCard");
 			}
-			customerExtensions.setSystem("电子结算");
+			//settlement:电子结算
+			customerExtensions.setSystem("settlement");
 			resultList.add(customerExtensions);
 		}
 

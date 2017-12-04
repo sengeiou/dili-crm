@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
@@ -60,6 +61,11 @@ public class ChartController {
 		Map<Object, Object> metadata =this.getCustomerMetadata();
 		try {
 			List<Map> list = ValueProviderUtils.buildDataByProvider(metadata, data);
+			for(Map<String,Object>row:list) {
+				if(StringUtils.isBlank(String.valueOf(row.get("type")))) {
+					row.put("type", "其他");
+				}
+			}
 			return list;
 		} catch (Exception e) {
 			return Collections.emptyList();
@@ -74,6 +80,11 @@ public class ChartController {
 			Map<Object, Object> metadata =this.getCustomerMetadata();
 			try {
 				List<Map> list = ValueProviderUtils.buildDataByProvider(metadata, data);
+				for(Map<String,Object>row:list) {
+					if(StringUtils.isBlank(String.valueOf(row.get("market")))) {
+						row.put("makret", "其他");
+					}
+				}
 				return list;
 			} catch (Exception e) {
 				return Collections.emptyList();
@@ -88,6 +99,11 @@ public class ChartController {
 			Map<Object, Object> metadata =this.getCustomerMetadata();
 			try {
 				List<Map> list = ValueProviderUtils.buildDataByProvider(metadata, data);
+				for(Map<String,Object>row:list) {
+					if(StringUtils.isBlank(String.valueOf(row.get("profession")))) {
+						row.put("profession", "其他");
+					}
+				}
 				return list;
 			} catch (Exception e) {
 				return Collections.emptyList();
