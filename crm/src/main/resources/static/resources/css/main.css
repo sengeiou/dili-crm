@@ -40,7 +40,7 @@ h2 {
 
 /* 无边框文本框 */
 .noborder{
-    border-bottom-width:0px; border-left-width:0px; border-top-width:0px; border-right-width:0px;
+    border:none;
 }
 
 /* easyui基础字体设置 */
