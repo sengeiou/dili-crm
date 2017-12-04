@@ -115,7 +115,7 @@
                    pagination="true" pageSize="30" pageNumber="1" pagePosition="top" rownumbers="true" remoteSort="true"
                    loadMsg="数据加载中..." singleSelect="true" method="post" multiSort="false" sortName="name"
                    align="center" fit="true" striped="true"
-                   data-options="onDblClickRow:openUpdate,
+                   data-options="onDblClickRow:<%if(hasResource("updateCustomer")) {%>openUpdate,<%}else{%>openDetail,<%}%>
                    onHeaderContextMenu:headerContextMenu,
                    autoRowHeight:false,
                    idField:'id',
@@ -329,37 +329,54 @@
             pager.pagination({
                 layout:['list','sep','first','prev','links','next','last','sep','refresh','info'],
                 links:3,
-                buttons:[{
+                buttons:[
+                {
+                    iconCls:'icon-detail',
+                        handler:function(){
+                        openDetail();
+                    }
+                }
+            <%if(hasResource("insertCustomer")) {%>
+            ,{
                     iconCls:'icon-add',
                     handler:function(){
                         openInsert();
                     }
-                },{
+                }
+            <%}%>
+            <%if(hasResource("insertChildCustomer")) {%>
+                ,{
                     iconCls:'icon-add-child',
                     handler:function(){
                         openChildInsert();
                     }
-                },{
+                }
+            <%}%>
+            <%if(hasResource("updateCustomer")) {%>
+                ,{
                     iconCls:'icon-edit',
                     handler:function(){
                         openUpdate();
                     }
-                },{
+                }
+            <%}%>
+            <%if(hasResource("deleteCustomer")) {%>
+            ,{
                     iconCls:'icon-remove',
                     handler:function(){
                         del();
                     }
-                },{
-                    iconCls:'icon-detail',
-                    handler:function(){
-                        openDetail();
-                    }
-                },{
+                }
+            <%}%>
+            <%if(hasResource("exportCustomer")) {%>
+            ,{
                     iconCls:'icon-export',
                     handler:function(){
                         doExport('grid', true);
                     }
-                }]
+                }
+            <%}%>
+            ]
             });
             //表格仅显示下边框
             $('#grid').datagrid('getPanel').removeClass('lines-both lines-no lines-right lines-bottom').addClass("lines-bottom");
