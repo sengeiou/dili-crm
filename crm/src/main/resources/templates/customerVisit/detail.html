@@ -24,36 +24,36 @@
                     <table width="99%" align="center">
                         <tr>
                             <td style="padding:5px;" width="33%">
-                                <input class="easyui-textbox" name="_createdName" id="_createdName" style="width: 80%;" data-options="cls:'noborder', readonly:true, label:'回访创建者:'"  editable="true"/>
+                                <input class="easyui-textbox" name="_createdName" id="_createdName" style="width: 80%;" data-options="labelAlign:'right',cls:'noborder', readonly:true, label:'回访创建者:'"  editable="true"/>
                             </td>
                             <td style="padding:5px;"  width="33%">
-                                <input class="easyui-textbox" name="_subject" id="_subject" style="width: 80%;" data-options="cls:'noborder', readonly:true, editable:false,label:'主题:', validType:'length[0,40]'"  />
+                                <input class="easyui-textbox" name="_subject" id="_subject" style="width: 80%;" data-options="labelAlign:'right',cls:'noborder', readonly:true, editable:false,label:'主题:', validType:'length[0,40]'"  />
                             </td>
                             <td style="padding:5px;" width="33%">
                                 <input class="easyui-textbox" name="userId" id="userId" panelWidth="auto" panelHeight="auto" label="回访人:" style="width: 80%;"
-                                       data-options="cls:'noborder', readonly:true, editable:false, hasDownArrow:false" />
+                                       data-options="labelAlign:'right',cls:'noborder', readonly:true, editable:false, hasDownArrow:false" />
                             </td>
                         </tr>
                         <tr>
                             <td style="padding:5px;">
                                 <input class="easyui-textbox" name="customerId" id="customerId" panelWidth="auto" panelHeight="auto" label="回访对象:" style="width: 80%;"
-                                       data-options="cls:'noborder', readonly:true, editable:false" />
+                                       data-options="labelAlign:'right',cls:'noborder', readonly:true, editable:false" />
                             </td>
                             <td style="padding:5px;">
-                                <input name="_mode" class="easyui-combobox" id="_mode" style="width:80%;" panelWidth="auto" panelHeight="auto" label="回访方式:" data-options="cls:'noborder', readonly:true, editable:false, hasDownArrow:false"/>
+                                <input name="_mode" class="easyui-combobox" id="_mode" style="width:80%;" panelWidth="auto" panelHeight="auto" label="回访方式:" data-options="labelAlign:'right',cls:'noborder', readonly:true, editable:false, hasDownArrow:false"/>
                                 <#comboProvider _id="_mode" _provider='dataDictionaryValueProvider' _queryParams='{dd_id:"11"}'/>
                             </td>
                             <td style="padding:5px;">
-                                <input class="easyui-combobox" name="_priority" id="_priority" style="width:80%;" data-options="cls:'noborder', readonly:true, editable:false, hasDownArrow:false" panelWidth="auto" panelHeight="auto" label="优先级:" />
+                                <input class="easyui-combobox" name="_priority" id="_priority" style="width:80%;" data-options="labelAlign:'right',cls:'noborder', readonly:true, editable:false, hasDownArrow:false" panelWidth="auto" panelHeight="auto" label="优先级:" />
                                 <#comboProvider _id="_priority" _provider='dataDictionaryValueProvider' _queryParams='{dd_id:"10"}'/>
                             </td>
                         </tr>
                         <tr>
                             <td style="padding:5px;">
-                                <input class="easyui-datetimebox" name="_finishTime" id="_finishTime" style="width:80%" data-options="label:'完成时间:',cls:'noborder', readonly:true, editable:false, hasDownArrow:false"/>
+                                <input class="easyui-datetimebox" name="_finishTime" id="_finishTime" style="width:80%" data-options="labelAlign:'right',label:'完成时间:',cls:'noborder', readonly:true, editable:false, hasDownArrow:false"/>
                             </td>
                             <td style="padding:5px;" colspan="2">
-                                <input class="easyui-textbox" name="_notes" id="_notes" style="width:90%" multiline="true" data-options="label:'描述:', cls:'noborder', readonly:true, editable:false" />
+                                <input class="easyui-textbox" name="_notes" id="_notes" style="width:90%" multiline="true" data-options="labelAlign:'right',label:'描述:', cls:'noborder', readonly:true, editable:false" />
                             </td>
                         </tr>
                     </table>
