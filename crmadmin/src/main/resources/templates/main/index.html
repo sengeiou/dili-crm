@@ -14,18 +14,18 @@
         <!-- ====================================================================================================================== -->
         <!-- 上方布局 -->
         <!-- ====================================================================================================================== -->
-        <div region="north" height="auto" align="center">
+        <div region="north" height="auto" style="border:0px;" align="center">
             <table width="100%" style="padding: 0px; margin:0px;border-spacing: 0; border: 0px inset #0092DC;background-color: #EEEEEE;" >
                 <tr>
                     <td width="100%">
-                        <#menubutton _divId="mainMenu" _service="menuServiceImpl" _method="findUserMenu" _queryParams="${userid}"
+                        <#menubutton _divId="mainMenu" _service="menuServiceImpl" _method="findUserMenu" _queryParams="${userid}" _menuWidth="100" _menuHeight="40"
                                 _textField="name" _idField="id" _parentIdField="parentId" plain="true" hasDownArrow="false" itemHeight="40" minWidth="80"
                                 align="left" noline="true" onClick="menuClickHandler">
                         </#menubutton>
                     </td>
 
                     <td style="align:right;">
-                        <div id="userMenu" class="easyui-panel" style="padding:1px; width: 120px;background-color: #EEEEEE;">
+                        <div id="userMenu" class="easyui-panel" style="padding:1px; width: 140px;background-color: #EEEEEE;">
                             <a id="menubutton_right" href="#" class="easyui-menubutton" data-options="menu:'#menu_right', plain:true, hasDownArrow:false">${username}</a>
                         </div>
                         <div id="menu_right" data-options="zIndex:'110000' , align:'left', noline:true, onClick:menuClickHandler" itemHeight="40">
@@ -64,6 +64,9 @@
             }
             var title = item.text;
             var url = item.menuUrl;
+            if(!url || null == url || url===""){
+                return;
+            }
             if ("menu_logout" == item.id) {
                 logout();
                 return;
@@ -79,7 +82,7 @@
                 url = "${contextPath}/main/changePwd.html"
             }
 
-            var content = '<iframe scrolling="auto" frameborder="0"  src="'+url+'" onLoad="" style="width:100%; height: 99.3%;"></iframe>';
+            var content = '<iframe scrolling="auto" frameborder="0" src="'+url+'" onLoad="" style="width:100%; height: 99.3%;"></iframe>';
 
             $('#mainPanel').panel({
                 content:content,
