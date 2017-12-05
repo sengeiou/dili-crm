@@ -3,8 +3,10 @@ package com.dili.crm.service.impl;
 import com.alibaba.fastjson.JSONObject;
 import com.dili.crm.dao.CustomerMapper;
 import com.dili.crm.domain.Customer;
+import com.dili.crm.domain.User;
 import com.dili.crm.domain.dto.CustomerChartDTO;
 import com.dili.crm.domain.dto.MembersDto;
+import com.dili.crm.rpc.UserRpc;
 import com.dili.crm.service.CacheService;
 import com.dili.crm.service.CustomerService;
 import com.dili.ss.base.BaseServiceImpl;
@@ -42,6 +44,9 @@ public class CustomerServiceImpl extends BaseServiceImpl<Customer, Long> impleme
     @Autowired
     private CacheService cacheService;
 
+	@Autowired
+	private UserRpc userRpc;
+
     @Override
     public List<Customer> list(Customer condtion) {
         condtion.setYn(1);
@@ -68,6 +73,13 @@ public class CustomerServiceImpl extends BaseServiceImpl<Customer, Long> impleme
         List<Customer> list = list(condition);
         if(!list.isEmpty()){
         	return BaseOutput.failure("证件号码已存在");
+        }
+        //本系统新增的，写死为crm，对应数据字典
+	    customer.setSourceSystem("crm");
+        Long depId = userTicket.getDepId();
+        //设置归属部门
+        if(depId != null) {
+	        customer.setDepartment(depId.toString());
         }
         customer.setCreatedId(userTicket.getId());
         customer.setOwnerId(userTicket.getId());
@@ -140,8 +152,15 @@ public class CustomerServiceImpl extends BaseServiceImpl<Customer, Long> impleme
 			throw new RuntimeException("根据id["+id+"]找不到对应客户");
 		}
 		List<Map> list = ValueProviderUtils.buildDataByProvider(getCustomerMetadata(), Lists.newArrayList(customer));
-		modelMap.put("customerId", list.get(0).get("id"));
-		modelMap.put("customer", JSONObject.toJSONString(list.get(0)));
+		Map userMap = list.get(0);
+		if(userMap.get("createdId") != null){
+			BaseOutput<User> userBaseOutput = userRpc.get(Long.parseLong(userMap.get("createdId").toString()));
+			if(userBaseOutput.isSuccess()) {
+				userMap.put("createdName", userRpc.get(Long.parseLong(userMap.get("createdId").toString())).getData().getRealName());
+			}
+		}
+		modelMap.put("customerId", userMap.get("id"));
+		modelMap.put("customer", JSONObject.toJSONString(userMap));
 		if(customer.getParentId() != null){
 			Customer parent = get(customer.getParentId());
 			modelMap.put("parentCustomer", parent);
