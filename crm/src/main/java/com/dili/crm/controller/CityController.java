@@ -4,13 +4,13 @@ import com.alibaba.fastjson.JSONArray;
 import com.dili.crm.domain.City;
 import com.dili.crm.service.CityService;
 import com.dili.ss.domain.BaseOutput;
+import com.dili.ss.dto.DTO;
+import com.dili.ss.dto.DTOUtils;
 import com.dili.ss.metadata.ValueProviderUtils;
-import com.github.pagehelper.Page;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
-import org.apache.poi.ss.formula.functions.T;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
@@ -53,6 +53,14 @@ public class CityController {
 	})
     @RequestMapping(value="/listPage", method = {RequestMethod.GET, RequestMethod.POST})
     public @ResponseBody String listPage(City city) throws Exception {
+    	DTO queryDto = DTOUtils.go(city);
+    	//如果只有sort和order字段,即没有查询条件的情况下，就只查parentId=0的(中国)
+	    if(queryDto.size()<=2){
+		    city.setParentId(0L);
+	    }
+	    //最多查100条，避免页面卡死
+	    city.setRows(100);
+    	city.setPage(1);
     	List<City> list = cityService.listByExample(city);
 		List<Map> results = ValueProviderUtils.buildDataByProvider(city, list);
 		for(Map c : results) {
@@ -67,6 +75,7 @@ public class CityController {
 	})
     @RequestMapping(value="/insert", method = {RequestMethod.GET, RequestMethod.POST})
     public @ResponseBody BaseOutput insert(City city) {
+	    city.setYn(true);
         cityService.insertSelective(city);
         return BaseOutput.success("新增成功");
     }

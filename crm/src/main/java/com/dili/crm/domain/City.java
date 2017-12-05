@@ -42,6 +42,7 @@ public interface City extends IBaseDomain {
     @Column(name = "`name`")
     @FieldDef(label="名称", maxLength = 20)
     @EditMode(editor = FieldEditor.Text, required = false)
+    @Like(Like.BOTH)
     String getName();
 
     void setName(String name);
@@ -56,6 +57,7 @@ public interface City extends IBaseDomain {
     @Column(name = "`short_name`")
     @FieldDef(label="简称", maxLength = 20)
     @EditMode(editor = FieldEditor.Text, required = false)
+    @Like(Like.BOTH)
     String getShortName();
 
     void setShortName(String shortName);
@@ -70,6 +72,7 @@ public interface City extends IBaseDomain {
     @Column(name = "`city_code`")
     @FieldDef(label="区号", maxLength = 10)
     @EditMode(editor = FieldEditor.Text, required = false)
+    @Like(Like.BOTH)
     String getCityCode();
 
     void setCityCode(String cityCode);
@@ -99,6 +102,7 @@ public interface City extends IBaseDomain {
     @Column(name = "`pinyin`")
     @FieldDef(label="拼音", maxLength = 40)
     @EditMode(editor = FieldEditor.Text, required = false)
+    @Like(Like.BOTH)
     String getPinyin();
 
     void setPinyin(String pinyin);
@@ -114,6 +118,5 @@ public interface City extends IBaseDomain {
     @FieldDef(label="是否有效（1：有效 -1：无效）")
     @EditMode(editor = FieldEditor.Number, required = true)
     Boolean getYn();
-
     void setYn(Boolean yn);
 }

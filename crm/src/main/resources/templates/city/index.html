@@ -3,7 +3,7 @@
         input{height: 18px;}
     </style>
  <div class="easyui-layout" style="margin-left: 0px;" fit="true">
- 		<div region="north" style="width:100%;" minHeight="190" border="false">
+ 		<div region="north" style="width:100%;" minHeight="140" border="false">
  			 <!-- 上方导航栏 (锁定不滚动) -->
             <div id="nav" style="padding-left:10px;padding-top:10px;position:fixed;z-index:2008;width:100%;height:30px;background-color:white" align="left">
                 <#nav/>
@@ -13,33 +13,11 @@
                     <table style="padding:10px;">
                         <tr>
                             <td style="padding:5px;">
-                                <input class="easyui-datetimebox" name="created" id="created" style="width:100%" data-options="label:'创建时间:'" />
-
-                            </td>
-                            <!--td style="padding:5px;">
-                                <input class="easyui-datetimebox" name="modified" id="modified" style="width:100%" data-options="label:'修改时间:'" />
-
-                            </td-->
-                            <td style="padding:5px;">
                                 <input class="easyui-textbox" name="name" id="name" style="width:100%" data-options="label:'名称:', validType:'length[0,20]'" />
 
                             </td>
                             <td style="padding:5px;">
-                                <input class="easyui-numberbox" name="parentId" id="parentId" style="width:100%" data-options="label:'父ID:', validType:'length[0,19]'" />
-
-                            </td>
-                            <td style="padding:5px;">
                                 <input class="easyui-textbox" name="shortName" id="shortName" style="width:100%" data-options="label:'简称:', validType:'length[0,20]'" />
-
-                            </td>
-                        </tr>
-                        <tr>
-                            <td style="padding:5px;">
-                                <input class="easyui-textbox" name="levelType" id="levelType" style="width:100%" data-options="label:'级别:', validType:'length[0,3]'" />
-
-                            </td>
-                            <td style="padding:5px;">
-                                <input class="easyui-textbox" name="cityCode" id="cityCode" style="width:100%" data-options="label:'区号:', validType:'length[0,10]'" />
 
                             </td>
                             <td style="padding:5px;">
@@ -47,15 +25,16 @@
 
                             </td>
                             <td style="padding:5px;">
-                                <input class="easyui-textbox" name="lng" id="lng" style="width:100%" data-options="label:'lng:', validType:'length[0,20]'" />
-
-                            </td>
-                            <td style="padding:5px;">
-                                <input class="easyui-textbox" name="lat" id="lat" style="width:100%" data-options="label:'lat:', validType:'length[0,20]'" />
+                                <input class="easyui-textbox" name="levelType" id="levelType" style="width:100%" data-options="label:'级别:', validType:'length[0,3]'" />
 
                             </td>
                         </tr>
                         <tr>
+
+                            <td style="padding:5px;">
+                                <input class="easyui-textbox" name="cityCode" id="cityCode" style="width:100%" data-options="label:'区号:', validType:'length[0,10]'" />
+
+                            </td>
                             <td style="padding:5px;">
                                 <input class="easyui-textbox" name="pinyin" id="pinyin" style="width:100%" data-options="label:'拼音:', validType:'length[0,40]'" />
 
@@ -64,10 +43,6 @@
                                 <input class="easyui-textbox" name="shortPy" id="shortPy" style="width:100%" data-options="label:'拼音简写:', validType:'length[0,20]'" />
 
                             </td>
-                            <!--td style="padding:5px;">
-                                <input class="easyui-numberbox" name="yn" id="yn" style="width:100%" data-options="label:'是否有效（1：有效 -1：无效）:', validType:'length[0,1]'" 
-                                    required="true" />
-                            </td-->
                             <td>
                                 <a href="#" class="easyui-linkbutton" iconCls="icon-search" id="queryBtn"
                                    onclick="queryGrid()">查询</a>
@@ -88,22 +63,13 @@
                    align="center" fit="true" striped="true" toolbar="#toolbar" 
                    data-options="idField:'id',
 							treeField:'name',
+							onDblClickRow:openUpdate,
 					   _parentIdField:'parentId',
 					   loadFilter:treegridLoadFilter">
                 <thead>
                     <tr>
                         <th data-options="field:'name',   sortable:'true', order:'asc', align:'left', resizable:'true', fixed:'false'">
                             名称
-                        </th>
-                        <th data-options="field:'created',  _provider:'datetimeProvider', sortable:'true', order:'asc', align:'center', resizable:'true', fixed:'false'">
-                            创建时间
-                        </th>
-                        <th data-options="field:'modified',  _provider:'datetimeProvider', sortable:'true', order:'asc', align:'center', resizable:'true', fixed:'false'">
-                            修改时间
-                        </th>
-
-                        <th data-options="field:'parentId',   sortable:'true', order:'asc', align:'center', resizable:'true', fixed:'false'">
-                            父ID
                         </th>
                         <th data-options="field:'shortName',   sortable:'true', order:'asc', align:'center', resizable:'true', fixed:'false'">
                             简称
@@ -129,16 +95,22 @@
                         <th data-options="field:'shortPy',   sortable:'true', order:'asc', align:'center', resizable:'true', fixed:'false'">
                             拼音简写
                         </th>
-                        <th data-options="field:'yn',   sortable:'true', order:'asc', align:'center', resizable:'true', fixed:'false'">
+                        <th data-options="field:'yn', _provider:'cityYnProvider',  sortable:'true', order:'asc', align:'center', resizable:'true', fixed:'false'">
                             是否有效
+                        </th>
+                        <th data-options="field:'created',  _provider:'datetimeProvider', sortable:'true', order:'asc', align:'center', resizable:'true', fixed:'false'">
+                            创建时间
+                        </th>
+                        <th data-options="field:'modified',  _provider:'datetimeProvider', sortable:'true', order:'asc', align:'center', resizable:'true', fixed:'false'">
+                            修改时间
                         </th>
                     </tr>
                 </thead>
             </table>
             <!-- treegrid工具栏 -->
             <div id="toolbar">
-                <a href="#" class="easyui-linkbutton" iconCls="icon-add" onclick="openInsert(true)" plain="true">添加根区域</a>
-                <a href="#" class="easyui-linkbutton" iconCls="icon-add" onclick="openInsert(false)" plain="true">添加子区域</a>
+                <a href="#" class="easyui-linkbutton" iconCls="icon-add" onclick="openInsert(true)" plain="true"></a>
+                <a href="#" class="easyui-linkbutton" iconCls="icon-add-child" onclick="openInsert(false)" plain="true"></a>
                 <a href="#" class="easyui-linkbutton" iconCls="icon-edit" onclick="openUpdate()" plain="true"></a>
                 <a href="#" class="easyui-linkbutton" iconCls="icon-remove" onclick="del()" plain="true"></a>
                 <a href="#" class="easyui-linkbutton" iconCls="icon-export" onclick="doExport('grid')" plain="true"></a>
@@ -169,32 +141,27 @@
            
             <tr>
                 <td style="padding:5px;">
-                    <input class="easyui-textbox" name="_name" id="_name" style="width:100%" data-options="label:'名称:', validType:'length[0,20]'" />
+                    <input class="easyui-textbox" name="_name" id="_name" style="width:100%" required="true" data-options="label:'名称:', validType:'length[0,20]'" />
                 </td>
             </tr>
             <tr>
                 <td style="padding:5px;">
-                    <input class="easyui-numberbox" name="_parentId" id="_parentId"  readonly="true"  style="width:100%" data-options="label:'父ID:'" />
+                    <input class="easyui-textbox" name="_shortName" id="_shortName" style="width:100%" required="true" data-options="label:'简称:', validType:'length[0,20]'" />
                 </td>
             </tr>
             <tr>
                 <td style="padding:5px;">
-                    <input class="easyui-textbox" name="_shortName" id="_shortName" style="width:100%" data-options="label:'简称:', validType:'length[0,20]'" />
+                    <input class="easyui-textbox" name="_levelType" id="_levelType" readonly="true" required="true"  style="width:100%" data-options="label:'级别:', validType:'length[0,3]'" />
                 </td>
             </tr>
             <tr>
                 <td style="padding:5px;">
-                    <input class="easyui-textbox" name="_levelType" id="_levelType" readonly="true"  style="width:100%" data-options="label:'级别:', validType:'length[0,3]'" />
+                    <input class="easyui-textbox" name="_cityCode" id="_cityCode" style="width:100%" required="true" data-options="label:'区号:', validType:'length[0,10]'" />
                 </td>
             </tr>
             <tr>
                 <td style="padding:5px;">
-                    <input class="easyui-textbox" name="_cityCode" id="_cityCode" style="width:100%" data-options="label:'区号:', validType:'length[0,10]'" />
-                </td>
-            </tr>
-            <tr>
-                <td style="padding:5px;">
-                    <input class="easyui-textbox" name="_mergerName" id="_mergerName" style="width:100%" data-options="label:'合并名称:', validType:'length[0,50]'" />
+                    <input class="easyui-textbox" name="_mergerName" id="_mergerName" style="width:100%" required="true" data-options="label:'合并名称:', validType:'length[0,50]'" />
                 </td>
             </tr>
             <tr>
@@ -209,18 +176,19 @@
             </tr>
             <tr>
                 <td style="padding:5px;">
-                    <input class="easyui-textbox" name="_pinyin" id="_pinyin" style="width:100%" data-options="label:'拼音:', validType:'length[0,40]'" />
+                    <input class="easyui-textbox" name="_pinyin" id="_pinyin" style="width:100%" required="true" data-options="label:'拼音:', validType:'length[0,40]'" />
                 </td>
             </tr>
             <tr>
                 <td style="padding:5px;">
-                    <input class="easyui-textbox" name="_shortPy" id="_shortPy" style="width:100%" data-options="label:'拼音简写:', validType:'length[0,20]'" />
+                    <input class="easyui-textbox" name="_shortPy" id="_shortPy" style="width:100%" required="true" data-options="label:'拼音简写:', validType:'length[0,20]'" />
                 </td>
             </tr>
             <tr>
                 <td style="padding:5px;">
-                    <input class="easyui-numberbox" name="_yn" id="_yn" style="width:100%" data-options="label:'是否有效（1：有效 -1：无效）:', validType:'length[0,1]'" 
+                    <input name="_yn" id="_yn" style="width:100%" panelWidth="auto" panelHeight="auto" data-options="label:'是否有效:', editable:false"
                         required="true" />
+                    <#comboProvider _id="_yn" _provider='cityYnProvider' />
                 </td>
             </tr>
         </table>
@@ -252,6 +220,8 @@
             var formData = $.extend({},parentNode);
             formData = addKeyStartWith(getOriginalData(formData),"_");
             $('#_form').form('load', formData);
+            var data = $("#_yn").combobox("getData");
+            $("#_yn").combobox("select", data[0]["value"]);
         }
         function editor(grid){
         	this.grid=grid;
@@ -381,16 +351,12 @@
             var opts = $("#grid").treegrid("options");
             //opts.url = "${contextPath}/city/listPage?parentId=0";
             //if (null == opts.url || "" == opts.url) {
-                opts.url ="${contextPath}/city/listPage?parentId=0";
+                opts.url ="${contextPath}/city/listPage";
             //}
             if(!$('#form').form("validate")){
                 return;
             }
-            var param = bindMetadata("grid", true);
-            var formData = $("#form").serializeObject();
-            $.extend(param, formData);
-            $("#grid").treegrid("load", param);
-          
+            $("#grid").treegrid("load", bindGridMeta2Form("grid", "form"));
         }
 
 
