@@ -1,5 +1,7 @@
 package com.dili.crm.component;
 
+import com.dili.CrmApplication;
+import com.dili.crm.service.ICardETLService;
 import com.dili.ss.quartz.domain.ScheduleJob;
 import com.dili.ss.quartz.domain.ScheduleMessage;
 import com.dili.ss.quartz.service.ScheduleJobService;
@@ -7,6 +9,7 @@ import com.dili.ss.service.CommonService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.SpringApplication;
 import org.springframework.context.ApplicationListener;
 import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.stereotype.Component;
@@ -27,6 +30,7 @@ public class ExtractCustomerJob implements ApplicationListener<ContextRefreshedE
 
 	@Autowired
 	CommonService commonService;
+	@Autowired	ICardETLService service;
 
 	@Override
 	public void onApplicationEvent(ContextRefreshedEvent contextRefreshedEvent) {
@@ -44,9 +48,12 @@ public class ExtractCustomerJob implements ApplicationListener<ContextRefreshedE
 	 * @param scheduleMessage
 	 */
 	public void scan(ScheduleMessage scheduleMessage) {
-//		log.info("客户数据抽取");
-//		List<Customer> customers = commonService.selectDto("select * from customer", Customer.class);
-//		System.out.println("抓取到"+customers.size()+"条客户数据");
+    	while(true) {
+    		boolean v=service.transIncrementData(null, 1000);
+    		if(!v) {
+    			break;
+    		}
+    	}
 	}
 
 }
