@@ -42,10 +42,16 @@ public class ICardETLServiceImpl implements ICardETLService{
 		condtion.setCertificateNumber(customer.getCertificateNumber());
 		List<Customer>list=this.customerService.list(condtion);
 		if(list!=null&&list.size()==1) {
-			customer=list.get(0);
-		}else {
-			this.customerService.saveOrUpdate(customer);	
+			Customer customerItem=list.get(0);
+			if(customer.getCreated()!=null) {
+				if(customer.getCreated().after(customerItem.getCreated())) {
+					customerItem.setCreated(customer.getCreated());
+				}
+			}
+			customer=customerItem;
 		}
+		this.customerService.saveOrUpdate(customer);
+		
 		List<CustomerExtensions>extensionList=new ArrayList<>();
 		for(CustomerExtensions customerExtensions:customerExtensionsList) {
 			CustomerExtensions customerExtensionsCondtion=DTOUtils.newDTO(CustomerExtensions.class);
@@ -128,6 +134,7 @@ public class ICardETLServiceImpl implements ICardETLService{
 		customer.setCertificateNumber(icardUserAccount.getIdCode());
 		customer.setName(icardUserAccount.getName());
 		customer.setCreated(icardUserAccount.getCreatedTime());
+		customer.setModified(icardUserAccount.getCreatedTime());
 		//1-男 2-女
 		if(Byte.valueOf("1").equals(icardUserAccount.getGender())) {
 			customer.setSex("male"); 
