@@ -1,6 +1,5 @@
 package com.dili.crm.component;
 
-import com.dili.CrmApplication;
 import com.dili.crm.service.ICardETLService;
 import com.dili.ss.quartz.domain.ScheduleJob;
 import com.dili.ss.quartz.domain.ScheduleMessage;
@@ -9,7 +8,6 @@ import com.dili.ss.service.CommonService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.SpringApplication;
 import org.springframework.context.ApplicationListener;
 import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.stereotype.Component;
@@ -48,12 +46,12 @@ public class ExtractCustomerJob implements ApplicationListener<ContextRefreshedE
 	 * @param scheduleMessage
 	 */
 	public void scan(ScheduleMessage scheduleMessage) {
-    	while(true) {
-    		boolean v=service.transIncrementData(null, 1000);
-    		if(!v) {
-    			break;
-    		}
-    	}
+//    	while(true) {
+//    		boolean v=service.transIncrementData(null, 1000);
+//    		if(!v) {
+//    			break;
+//    		}
+//    	}
 	}
 
 }
