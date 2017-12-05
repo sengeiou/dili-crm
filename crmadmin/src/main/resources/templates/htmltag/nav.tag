@@ -1,13 +1,13 @@
-<div style="font-size:14px; display: inline;">当前位置:</div>
+<div style="font-size:16px; font-weight: bold; display: inline;">当前位置:</div>
 <%
-    for(parentMenu in parentMenus){
-        var url = @parentMenu.getMenuUrl();
-        url = (url == null || url == "") ? "" : url;
-        var href = url == "" ? "" : "href=\""+url+"\"";
-        if(parentMenuLP.last){
+for(parentMenu in parentMenus){
+var url = @parentMenu.getMenuUrl();
+url = (url == null || url == "") ? "" : url;
+var href = url == "" ? "" : "href=\""+url+"\"";
+if(parentMenuLP.last){
 %>
-<a style="font-size:14px; display: inline;">${@parentMenu.getName()}</a>
+<a style="font-size:16px; display: inline;">${@parentMenu.getName()}</a>
 <%} else {%>
-<a ${href} style="font-size:14px; display: inline;">${@parentMenu.getName()}</a> <div style="font-size:14px; display: inline;"> > </div>
+<a ${href} style="font-size:16px; display: inline;">${@parentMenu.getName()}</a> <div style="font-size:16px; display: inline;"> > </div>
 <%}
 }%>

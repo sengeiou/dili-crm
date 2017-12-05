@@ -79,6 +79,9 @@
 .icon-lock{
 	background:url('icons/lock.png') no-repeat center center;
 }
+.l-btn:hover .icon-lock{
+	background-image:url('icons/lock-on.png');
+}
 .icon-more{
 	background:url('icons/more.png') no-repeat center center;
 }

@@ -19,7 +19,7 @@
                 <tr>
                     <td width="100%">
                         <#menubutton _divId="mainMenu" _service="menuServiceImpl" _method="findUserMenu" _queryParams="${userid}"
-                                _textField="name" _idField="id" _parentIdField="parentId" plain="true" hasDownArrow="false"
+                                _textField="name" _idField="id" _parentIdField="parentId" plain="true" hasDownArrow="false" itemHeight="40" minWidth="80"
                                 align="left" noline="true" onClick="menuClickHandler">
                         </#menubutton>
                     </td>
@@ -28,7 +28,7 @@
                         <div id="userMenu" class="easyui-panel" style="padding:1px; width: 120px;background-color: #EEEEEE;">
                             <a id="menubutton_right" href="#" class="easyui-menubutton" data-options="menu:'#menu_right', plain:true, hasDownArrow:false">${username}</a>
                         </div>
-                        <div id="menu_right" data-options="zIndex:'110000' , align:'left', noline:true, onClick:menuClickHandler">
+                        <div id="menu_right" data-options="zIndex:'110000' , align:'left', noline:true, onClick:menuClickHandler" itemHeight="40">
                             <div id="menu_userDetail" data-options="blankKey:'' ">
                                 用户信息
                             </div>

@@ -78,7 +78,7 @@ public class CustomerController {
 			Customer parent = customerService.get(id);
 			modelMap.put("parentCustomer", parent);
 		}
-		return "customer/detail";
+		return "customer/edit";
 	}
 
 

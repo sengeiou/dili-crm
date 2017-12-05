@@ -140,7 +140,7 @@ public class CustomerServiceImpl extends BaseServiceImpl<Customer, Long> impleme
 			throw new RuntimeException("根据id["+id+"]找不到对应客户");
 		}
 		List<Map> list = ValueProviderUtils.buildDataByProvider(getCustomerMetadata(), Lists.newArrayList(customer));
-		modelMap.put("id", list.get(0).get("id"));
+		modelMap.put("customerId", list.get(0).get("id"));
 		modelMap.put("customer", JSONObject.toJSONString(list.get(0)));
 		if(customer.getParentId() != null){
 			Customer parent = get(customer.getParentId());
@@ -151,7 +151,9 @@ public class CustomerServiceImpl extends BaseServiceImpl<Customer, Long> impleme
 	@Override
     public String listMembersPage(MembersDto membersDto) throws Exception {
         String parentIdsStr = getActualDao().getParentCustomers(membersDto.getId());
-        if(StringUtils.isBlank(parentIdsStr)) return null;
+        if(StringUtils.isBlank(parentIdsStr)) {
+        	return null;
+        }
         List<String> parentIds = Arrays.asList(parentIdsStr.split(","));
 	    membersDto.setIdNotIn(parentIds);
         membersDto.setId(null);
