@@ -275,7 +275,11 @@
 
         })
         $(document).ready(function(){
+        	var clientRefreshFrequency=${clientRefreshFrequency};
         	queryGrid();
+        	setInterval(queryGrid,clientRefreshFrequency*1000);
+        		
+        	
         });
     </script>
 </#body>

@@ -26,6 +26,7 @@ import com.dili.crm.service.IcardUserAccountService;
 import com.dili.crm.service.IcardUserCardService;
 import com.dili.ss.domain.BasePage;
 import com.dili.ss.dto.DTOUtils;
+import com.mysql.fabric.xmlrpc.base.Array;
 
 @Component
 public class ICardETLServiceImpl implements ICardETLService{
@@ -45,12 +46,22 @@ public class ICardETLServiceImpl implements ICardETLService{
 		}else {
 			this.customerService.saveOrUpdate(customer);	
 		}
-		
+		List<CustomerExtensions>extensionList=new ArrayList<>();
 		for(CustomerExtensions customerExtensions:customerExtensionsList) {
-			customerExtensions.setCustomerId(customer.getId());
+			CustomerExtensions customerExtensionsCondtion=DTOUtils.newDTO(CustomerExtensions.class);
+			
+			customerExtensionsCondtion.setAcctId(customerExtensions.getAcctId());
+			customerExtensions.setSystem("settlement");
+			
+			List<CustomerExtensions>extensions=this.customerExtensionsService.list(customerExtensionsCondtion);
+			if(extensions==null||extensions.size()==0) {
+				customerExtensions.setCustomerId(customer.getId());
+				extensionList.add(customerExtensions);
+			}
 		}
-		
-		this.customerExtensionsService.batchInsert(customerExtensionsList);
+		if(extensionList.size()>0) {
+			this.customerExtensionsService.batchInsert(customerExtensionsList);
+		}
 		return true;
 	}
 	private Customer findLatestCustomer() {
@@ -92,6 +103,9 @@ public class ICardETLServiceImpl implements ICardETLService{
 			condtion.setStatusNotIn(Arrays.asList(Byte.valueOf("4")));
 			for(IcardUserAccount icardUserAccount:data) {
 				Customer customer=this.transUserAccountAsCustomer(icardUserAccount);
+				if(customer==null) {
+					continue;
+				}
 				
 				condtion.setAccountId(icardUserAccount.getId());
 				List<IcardUserCard> icardUserCardList=this.icardUserCardService.list(condtion);
@@ -105,6 +119,10 @@ public class ICardETLServiceImpl implements ICardETLService{
 		return false;
 	}
 	private Customer transUserAccountAsCustomer(IcardUserAccount icardUserAccount) {
+		if(StringUtils.trimToEmpty(icardUserAccount.getName()).equals("不记名")||StringUtils.trimToNull(icardUserAccount.getIdCode())==null) {
+			return null;
+		}
+		
 		Customer customer=DTOUtils.newDTO(Customer.class);
 		customer.setCertificateType("id");
 		customer.setCertificateNumber(icardUserAccount.getIdCode());
