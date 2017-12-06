@@ -382,11 +382,11 @@ function onClickDdGridRow(index, row) {
 }
 
 function onTreeLoadSuccess(node, data) {
-	var selectedNode = ddValueTree.tree('getSelected');
+	var selectedNode = $('#ddValueTree').tree('getSelected');
 	if (!selectedNode) {
-		selectedNode = ddValueTree.tree('getRoot');
+		selectedNode = $('#ddValueTree').tree('getRoot');
 	}
-	ddValueTree.tree('select', selectedNode.target);
+	$('#ddValueTree').tree('select', selectedNode.target);
 	queryDdValueGrid(selectedNode.attributes.ddId);
 }
 
@@ -395,7 +395,7 @@ function openDdValueWindow(ddId) {
 				title : '数据字典值列表',
 				minimizable : false,
 				maximizable : false,
-				width : 900,
+				width : 1200,
 				height : 500,
 				modal : true,
 				href : '${contextPath}/dataDictionaryValue/list?ddId=' + ddId,
