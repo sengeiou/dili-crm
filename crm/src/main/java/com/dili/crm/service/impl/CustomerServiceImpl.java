@@ -173,6 +173,7 @@ public class CustomerServiceImpl extends BaseServiceImpl<Customer, Long> impleme
         if(StringUtils.isBlank(parentIdsStr)) {
         	return null;
         }
+        Long id = membersDto.getId();
         List<String> parentIds = Arrays.asList(parentIdsStr.split(","));
 	    membersDto.setIdNotIn(parentIds);
         membersDto.setId(null);
@@ -181,7 +182,7 @@ public class CustomerServiceImpl extends BaseServiceImpl<Customer, Long> impleme
 	    //这里构建name和id not in的等条件部分
 	    buildExampleByGetterMethods(membersDto, example);
 	    Example.Criteria criteria = example.getOredCriteria().get(0);
-	    criteria.andCondition("(`parent_id` != '1' or `parent_id` is null)");
+	    criteria.andCondition("(`parent_id` != '"+id+"' or `parent_id` is null)");
 	    //设置分页信息
 	    Integer page = membersDto.getPage();
 	    page = (page == null) ? Integer.valueOf(1) : page;
