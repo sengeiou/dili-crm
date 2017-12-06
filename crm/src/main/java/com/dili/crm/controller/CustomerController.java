@@ -97,7 +97,7 @@ public class CustomerController {
 	})
     @RequestMapping(value="/listPage", method = {RequestMethod.GET, RequestMethod.POST})
     public @ResponseBody String listPage(Customer customer) throws Exception {
-        return customerService.listEasyuiPageByExample(customer, true).toString();
+        return JSONArray.toJSONString(customerService.listByExample(customer));
     }
 
     @ApiOperation("新增Customer")

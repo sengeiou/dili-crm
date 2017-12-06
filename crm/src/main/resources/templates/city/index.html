@@ -66,7 +66,6 @@
 							onDblClickRow:openUpdate,
 					   _parentIdField:'parentId',
 					   onBeforeExpand:onBeforeExpand,
-					   onBeforeLoad:onBeforeLoad,
 					   onLoadSuccess:onLoadSuccess,
 					   loadFilter:treegridLoadFilter">
                 <thead>
@@ -141,7 +140,6 @@
     <form id="_form" class="easyui-form" method="post" fit="true">
         <input name="_id" id="_id" type="hidden">
         <table width="360px">
-           
             <tr>
                 <td style="padding:5px;">
                     <input class="easyui-textbox" name="_name" id="_name" style="width:100%" required="true" data-options="label:'名称:', validType:'length[0,20]'" />
@@ -204,25 +202,29 @@
     <script type="text/javascript">
 
         var onBeforeExpand = function(row,param){
-            $("#grid").treegrid("options").url ="${contextPath}/city/listPage?parentId="+row.id;
+            $("#grid").treegrid("options").url ="${contextPath}/city/expand?parentId="+row.id;
         };
         var onBeforeLoad = function(row,param){
             if(param['id']){
                 delete param['id'];
             }
         }
+        //加载完了必须要重设url，否则删除的时候可能会调用expand
         var onLoadSuccess = function(){
-            var root=$("#grid").treegrid("getRoot");
-            var children=$("#grid").treegrid("getChildren",root.id);
-//            if(root&&children&&children.length==0){//展开第一级,加载第二级节点数据
-//                $("#grid").treegrid("expand",root.id);
+            $(this).treegrid("options").url="${contextPath}/city/listPage";
+        }
+
+        //表格查询
+        function queryGrid() {
+            var opts = $("#grid").treegrid("options");
+//            if (null == opts.url || "" == opts.url) {
+                opts.url ="${contextPath}/city/listPage";
 //            }
-//            $("#grid").treegrid("options").url="${contextPath}/city/listPage?parentId=0";
+            $("#grid").treegrid("load", bindGridMeta2Form("grid", "form"));
         }
 
         //打开新增窗口
         function openInsert(isRoot){
-
             var selected={"id":null,"levelType":-1,"mergerName":""};
             if (!isRoot) {
             	selected = $("#grid").treegrid('getSelected');
@@ -262,29 +264,7 @@
         	};
         	
         }
-        /*function openInsert(isRoot) {
-        	 //$("#grid").treegrid("reload");
 
-        	var grid=$("#grid");
-        	var node = undefined;
-        	if (!isRoot) {
-        		node = grid.treegrid('getSelected');
-        		if (!node) {
-        			$.messager.alert('警告', '请选择一条记录');
-        			return;
-        		}
-        	}
-        	editId = 'temp';
-        	grid.treegrid('append', {
-        				parent : node ? node.id : null,
-        				data : [{
-        							id : 'temp'
-        						}]
-        			});
-
-        	grid.treegrid('select', 'temp');
-        	grid.treegrid('beginEdit', 'temp');
-        }*/
         //打开修改窗口
         function openUpdate(){
             var selected = $("#grid").treegrid("getSelected");
@@ -365,18 +345,6 @@
             });
 
         }
-        //表格查询
-        function queryGrid() {
-            var opts = $("#grid").treegrid("options");
-//            if (null == opts.url || "" == opts.url) {
-                opts.url ="${contextPath}/city/listPage";
-//            }
-//            if(!$('#form').form("validate")){
-//                return;
-//            }
-            $("#grid").treegrid("load", bindGridMeta2Form("grid", "form"));
-        }
-
 
         //清空表单
         function clearForm() {

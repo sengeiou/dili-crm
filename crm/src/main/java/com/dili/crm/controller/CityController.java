@@ -2,11 +2,13 @@ package com.dili.crm.controller;
 
 import com.alibaba.fastjson.JSONArray;
 import com.dili.crm.domain.City;
+import com.dili.crm.domain.dto.CityDto;
 import com.dili.crm.service.CityService;
 import com.dili.ss.domain.BaseOutput;
+import com.dili.ss.domain.EasyuiPageOutput;
 import com.dili.ss.dto.DTO;
 import com.dili.ss.dto.DTOUtils;
-import com.dili.ss.metadata.ValueProviderUtils;
+import com.google.common.collect.Lists;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
@@ -54,20 +56,49 @@ public class CityController {
     @RequestMapping(value="/listPage", method = {RequestMethod.GET, RequestMethod.POST})
     public @ResponseBody String listPage(City city) throws Exception {
     	DTO queryDto = DTOUtils.go(city);
+	    CityDto cityDto= DTOUtils.as(city, CityDto.class);
     	//如果只有sort和order字段,即没有查询条件的情况下，就只查parentId=0的(中国)
 	    if(queryDto.size()<=2){
-		    city.setParentId(0L);
+//		    cityDto.setParentId(0L);
+		    //全查时查两级
+		    cityDto.setLevelTypes(Lists.newArrayList(0, 1));
 	    }
 	    //最多查100条，避免页面卡死
 	    city.setRows(100);
     	city.setPage(1);
-    	List<City> list = cityService.listByExample(city);
-		List<Map> results = ValueProviderUtils.buildDataByProvider(city, list);
-		for(Map c : results) {
-			c.put("state", "closed");
+	    EasyuiPageOutput easyuiPageOutput = cityService.listEasyuiPageByExample(cityDto, true);
+		for(Object rowObj : easyuiPageOutput.getRows()) {
+			if(DTOUtils.isDTOProxy(rowObj)){
+				DTOUtils.as(rowObj, CityDto.class).setState("closed");
+			}else {
+				Map rowMap = (Map) rowObj;
+				rowMap.put("state", "closed");
+			}
 		}
-		return JSONArray.toJSONString(results);
+		return easyuiPageOutput.toString();
     }
+
+	/**
+	 * 展开城市树
+	 * @param parentId
+	 * @return
+	 * @throws Exception
+	 */
+	@RequestMapping(value="/expand", method = {RequestMethod.GET, RequestMethod.POST})
+	public @ResponseBody String expand(Long parentId) throws Exception {
+		City city = DTOUtils.newDTO(City.class);
+		city.setParentId(parentId);
+		EasyuiPageOutput easyuiPageOutput = cityService.listEasyuiPageByExample(city, true);
+		for(Object rowObj : easyuiPageOutput.getRows()) {
+			if(DTOUtils.isDTOProxy(rowObj)){
+				DTOUtils.as(rowObj, CityDto.class).setState("closed");
+			}else {
+				Map rowMap = (Map) rowObj;
+				rowMap.put("state", "closed");
+			}
+		}
+		return JSONArray.toJSONString(easyuiPageOutput.getRows());
+	}
 
     @ApiOperation("新增City")
     @ApiImplicitParams({
