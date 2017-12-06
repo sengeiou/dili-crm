@@ -121,7 +121,7 @@
 
                     <tr>
                         <td style="padding-top:10px;padding-left:15px;">
-                            <input name="_organizationType" id="_organizationType" style="width:96%;" panelWidth="auto" panelHeight="auto" label="组织类型:" data-options="labelAlign:'right', validType:'length[1,20]', required:true, editable:false,  onChange:changeOrganizationType"/>
+                            <input name="_organizationType" id="_organizationType" style="width:96%;" panelWidth="auto" panelHeight="auto" label="组织类型:" data-options="labelAlign:'right', validType:'length[1,20]', required:true, editable:false, <%if(has(customer)){%>readonly:true,disabled:true,<%}%> onChange:changeOrganizationType"/>
                             <#comboProvider _id="_organizationType" _provider='dataDictionaryValueProvider' _queryParams='{dd_id:"5"}'/>
                         </td>
                         <td style="padding-top:10px;padding-left:15px;">
@@ -193,7 +193,7 @@
                             <#comboProvider _id="_sourceSystem" _provider='dataDictionaryValueProvider' _queryParams='{dd_id:"8"}'/>
                         </td>
                         <td style="padding-top:10px;padding-left:15px;">
-                            <input name="_department" id="_department" style="width:96%;" data-options="label:'归属部门:', labelAlign:'right', validType:'length[0,20]',editable:false" />
+                            <input name="_department" id="_department" style="width:96%;" disabled="true" data-options="label:'归属部门:', labelAlign:'right', readonly:true,editable:false" />
                             <#comboProvider _id="_department" _provider='departmentProvider'/>
                         </td>
                         <td style="padding-top:10px;padding-left:15px;">
