@@ -14,13 +14,27 @@ function ableForm(formId,type,value) {
 }
 
 /**
- * 禁用form中的所有控件
+ * 禁/启用easyUiForm中的所有控件
  * @param formId 表单ID
- * @param type 操作类型:disable | readonly | editable
  * @param value 值：true | false
  */
-function ableEasyUiForm(formId,type,value) {
-    var formId = ("#"+formId);
-    $(formId+" .easyui-textbox,"+formId+" .easyui-datetimebox,"+formId+" .easyui-combobox").textbox(type,value);
-    $(formId+" .textbox-label-disabled").removeClass("textbox-label-disabled");
+function disableEasyUiForm(formId,value) {
+    var formId = ("#" + formId);
+    if (value) {
+        $(formId + " .easyui-textbox," + formId + " .easyui-datetimebox," + formId + " .easyui-combobox").textbox('disable');
+        $(formId + " .textbox-label-disabled").removeClass("textbox-label-disabled");
+    }else{
+        $(formId + " .easyui-textbox," + formId + " .easyui-datetimebox," + formId + " .easyui-combobox").textbox('enable');
+    }
+}
+
+/**
+ * 设置easyUiForm中的所有控件是否可读，可编辑
+ * @param formId 表单ID
+ * @param type 操作类型: readonly | editable
+ * @param value 值：true | false
+ */
+function readOrEditEasyUiForm(formId,type,value) {
+    var formId = ("#" + formId);
+    $(formId + " .easyui-textbox," + formId + " .easyui-datetimebox," + formId + " .easyui-combobox").textbox(type,value);
 }
