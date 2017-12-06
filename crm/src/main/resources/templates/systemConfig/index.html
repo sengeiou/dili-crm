@@ -6,28 +6,31 @@
         //标识键盘选择的时候不进行后台联想
         var isSelect = false;
         //联想输入框演示
-        function changeName(newValue, oldValue){
-            if(isSelect) {
-                isSelect =false;
+        function changeName(newValue, oldValue) {
+            if (isSelect) {
+                isSelect = false;
                 return;
             }
-            if(newValue && newValue.length >= 1){
+            if (newValue && newValue.length >= 1) {
                 var opts = $(this).combobox("options");
                 opts.queryParams.value = $(this).combobox("getValue");
                 $(this).combobox("reload");
             }
         }
         //键盘下键选择的时候设置isSelect标识为true,在onchange事件时判断isSelect标识为true不联想
-        function selectName(record){
+        function selectName(record) {
             isSelect = true;
         }
         //按下回车键时不选中,仅关闭下拉选项
-        var keyHandler = $.extend($.fn.combobox.defaults.keyHandler,{
-            enter: function(e){$(this).combo("hidePanel");}
+        var keyHandler = $.extend($.fn.combobox.defaults.keyHandler, {
+            enter: function (e) {
+                $(this).combo("hidePanel");
+            }
         });
         //按下回车键时不填充默认时间
-        var dateKeyHandler = $.extend($.fn.datebox.defaults.keyHandler,{
-            enter: function(e){}
+        var dateKeyHandler = $.extend($.fn.datebox.defaults.keyHandler, {
+            enter: function (e) {
+            }
         });
     </script>
     <div class="easyui-layout" fit="true">
@@ -44,13 +47,16 @@
                     <table style="padding:10px;">
                         <tr>
                             <td>
-                                <input name="name" id="name" style="width:100%;" panelWidth="auto" panelHeight="auto" label="名称:" class="easyui-textbox" labelAlign="left"/>
+                                <input name="name" id="name" style="width:100%;" panelWidth="auto" panelHeight="auto"
+                                       label="名称:" class="easyui-textbox" labelAlign="left"/>
                             </td>
                             <td>
-                                <input name="code" id="code" style="width:100%;" panelWidth="auto" panelHeight="auto" label="编码:" class="easyui-textbox" labelAlign="left"/>
+                                <input name="code" id="code" style="width:100%;" panelWidth="auto" panelHeight="auto"
+                                       label="编码:" class="easyui-textbox" labelAlign="left"/>
                             </td>
                             <td>
-                                <input name="yn" id="yn" style="width:100%;" panelWidth="auto" panelHeight="auto" label="状态:" data-options="editable:false" labelAlign="left"/>
+                                <input name="yn" id="yn" style="width:100%;" panelWidth="auto" panelHeight="auto"
+                                       label="状态:" data-options="editable:false" labelAlign="left"/>
                                 <#comboProvider _id="yn" _data="[{label: '可用',value: '1'},{label: '不可用',value: '0'}]" _valueField="value" _textField="label"/>
                             </td>
                             <td>
@@ -69,53 +75,45 @@
         <!-- 表格 -->
         <div region="center" style="width:100%;" height="auto">
             <!-- =========================================================表格========================================================= -->
-            <table class="easyui-datagrid" title="系统配置列表" noheader="true" id="grid" height="680px" fitColumns="true"
+            <table class="easyui-datagrid" title="系统配置列表" noheader="true" id="grid" fitColumns="true"
                    pagination="true" pageSize="30" pageNumber="1" pagePosition="top" rownumbers="true" remoteSort="true"
                    loadMsg="数据加载中..." singleSelect="true" method="post" multiSort="false" sortName="name"
-                   align="center" fit="true" striped="true" toolbar="#toolbar" idField="id" data-options="onDblClickRow:openUpdate">
+                   align="center" fit="true" striped="true" idField="id"
+                   data-options="onDblClickRow:openUpdate">
                 <thead>
                 <tr>
-                    <th width="12%" data-options="field:'name', sortable:'true', order:'asc', align:'center', resizable:'true', fixed:'false'">
+                    <th width="12%"
+                        data-options="field:'name', sortable:'true', order:'asc', align:'center', resizable:'true', fixed:'false'">
                         名称
                     </th>
-                    <th width="12%" data-options="field:'code', sortable:'true', order:'asc', align:'center', resizable:'true', fixed:'false'">
+                    <th width="12%"
+                        data-options="field:'code', sortable:'true', order:'asc', align:'center', resizable:'true', fixed:'false'">
                         编码
                     </th>
-                    <th width="12%" data-options="field:'value', sortable:'true', order:'asc', align:'center', resizable:'true', fixed:'false'">
+                    <th width="12%"
+                        data-options="field:'value', sortable:'true', order:'asc', align:'center', resizable:'true', fixed:'false'">
                         值
                     </th>
-                    <th width="35%" data-options="field:'notes', sortable:'true', order:'asc', align:'center', resizable:'true', fixed:'false'">
+                    <th width="35%"
+                        data-options="field:'notes', sortable:'true', order:'asc', align:'center', resizable:'true', fixed:'false'">
                         描述
                     </th>
-                    <th width="12%" data-options="field:'created', _provider:'datetimeProvider', sortable:'true', order:'asc', align:'center', resizable:'true', fixed:'false'">
+                    <th width="12%"
+                        data-options="field:'created', _provider:'datetimeProvider', sortable:'true', order:'asc', align:'center', resizable:'true', fixed:'false'">
                         创建时间
                     </th>
-                    <th width="12%" data-options="field:'modified', _provider:'datetimeProvider', sortable:'true', order:'asc', align:'center', resizable:'true', fixed:'false'">
+                    <th width="12%"
+                        data-options="field:'modified', _provider:'datetimeProvider', sortable:'true', order:'asc', align:'center', resizable:'true', fixed:'false'">
                         修改时间
                     </th>
-                    <th width="6%" data-options="field:'yn', _provider:'ynProvider', align:'center', resizable:'true', fixed:'false'">
+                    <th width="6%"
+                        data-options="field:'yn', _provider:'ynProvider', align:'center', resizable:'true', fixed:'false'">
                         状态
                     </th>
                 </tr>
                 </thead>
             </table>
-            <!-- datagrid工具栏 -->
-            <div id="toolbar" style="padding:2px 5px;">
-                <a href="#" class="easyui-linkbutton" iconCls="icon-search" onclick="openQueryDlg()" plain="true">动态查询</a>
-                <a href="#" class="easyui-linkbutton" iconCls="icon-add" onclick="openInsert()" plain="true">新增</a>
-                <a href="#" class="easyui-linkbutton" iconCls="icon-edit" onclick="openUpdate()" plain="true">修改</a>
-                <a href="#" class="easyui-linkbutton" iconCls="icon-remove" onclick="del()" plain="true">删除</a>
-                <a href="#" class="easyui-linkbutton" iconCls="icon-export" onclick="doExport('grid')" plain="true">导出</a>
-                <div style="float:right">
-                    边框显示:<select onchange="changeBorder('grid',this.value)">
-                    <option value="lines-both">全边框</option>
-                    <option value="lines-no">无边框</option>
-                    <option value="lines-right">右边框</option>
-                    <option value="lines-bottom">下边框</option>
-                </select>
-                    行条纹:<input type="checkbox" checked="checked" onclick="$('#grid').datagrid({striped:$(this).is(':checked')})">
-                </div>
-            </div>
+
         </div>
     </div>
     <!-- 隐藏编辑框 -->
@@ -136,27 +134,27 @@
         <form id="_form" class="easyui-form" method="post" fit="true">
             <table>
                 <tr>
-                    <td>
+                    <td style="padding:10px;">
                         <input name="_id" id="_id" type="hidden">
-                        <input class="easyui-textbox" name="_name" id="_name" style="width:100%"
+                        <input class="easyui-textbox" name="_name" id="_name" style="width:100%" labelAlign="right"
                                data-options="label:'名称:'" required="true">
                     </td>
                 </tr>
                 <tr>
-                    <td>
-                        <input class="easyui-textbox" name="_code" id="_code" label="编码:"
+                    <td style="padding:10px;">
+                        <input class="easyui-textbox" name="_code" id="_code" label="编码:" labelAlign="right"
                                style="width:100%;">
                     </td>
                 </tr>
                 <tr>
-                    <td>
-                        <input class="easyui-textbox" name="_value" id="_value" label="值:"
+                    <td style="padding:10px;">
+                        <input class="easyui-textbox" name="_value" id="_value" label="值:" labelAlign="right"
                                style="width:100%;">
                     </td>
                 </tr>
                 <tr>
-                    <td>
-                        <input class="easyui-textbox" name="_notes" id="_notes" label="描述:"
+                    <td style="padding:10px;">
+                        <input class="easyui-textbox" name="_notes" id="_notes" label="描述:" labelAlign="right"
                                style="width:100%;">
                     </td>
                 </tr>
@@ -168,54 +166,54 @@
     <!-- ====================================================================================================================== -->
     <script type="text/javascript">
         //打开新增窗口
-        function openInsert(){
+        function openInsert() {
 //            alert(JSON.stringify(removeKeyStartWith(json,"_")));
             $('#dlg').dialog('open');
             $('#_form').form('clear');
         }
 
         //打开修改窗口
-        function openUpdate(){
+        function openUpdate() {
             var selected = $("#grid").datagrid("getSelected");
             if (null == selected) {
-                $.messager.alert('警告','请选中一条数据');
+                $.messager.alert('警告', '请选中一条数据');
                 return;
             }
             $('#dlg').dialog('open');
-            var formData = $.extend({},selected);
-            var formData = addKeyStartWith(getOriginalData(formData),"_");
+            var formData = $.extend({}, selected);
+            var formData = addKeyStartWith(getOriginalData(formData), "_");
             $('#_form').form('load', formData);
         }
 
-        function saveOrUpdate(){
-            if(!$('#_form').form("validate")){
+        function saveOrUpdate() {
+            if (!$('#_form').form("validate")) {
                 return;
             }
-            var _formData = removeKeyStartWith($("#_form").serializeObject(),"_");
+            var _formData = removeKeyStartWith($("#_form").serializeObject(), "_");
             var _url = null;
             //没有id就新增
-            if(_formData.id == null || _formData.id==""){
+            if (_formData.id == null || _formData.id == "") {
                 _url = "${contextPath}/systemConfig/insert";
-            }else{//有id就修改
+            } else {//有id就修改
                 _url = "${contextPath}/systemConfig/update";
             }
             $.ajax({
                 type: "POST",
                 url: _url,
                 data: _formData,
-                processData:true,
+                processData: true,
                 dataType: "json",
-                async : true,
+                async: true,
                 success: function (data) {
-                    if(data.code=="200"){
+                    if (data.code == "200") {
                         $("#grid").datagrid("reload");
                         $('#dlg').dialog('close');
-                    }else{
-                        $.messager.alert('错误',data.result);
+                    } else {
+                        $.messager.alert('错误', data.result);
                     }
                 },
-                error: function(){
-                    $.messager.alert('错误','远程访问失败');
+                error: function () {
+                    $.messager.alert('错误', '远程访问失败');
                 }
             });
         }
@@ -224,28 +222,28 @@
         function del() {
             var selected = $("#grid").datagrid("getSelected");
             if (null == selected) {
-                $.messager.alert('警告','请选中一条数据');
+                $.messager.alert('警告', '请选中一条数据');
                 return;
             }
-            $.messager.confirm('确认','您确认想要删除记录吗？',function(r){
-                if (r){
+            $.messager.confirm('确认', '您确认想要删除记录吗？', function (r) {
+                if (r) {
                     $.ajax({
                         type: "POST",
                         url: "${contextPath}/systemConfig/delete",
-                        data: {id:selected.id},
-                        processData:true,
+                        data: {id: selected.id},
+                        processData: true,
                         dataType: "json",
-                        async : true,
+                        async: true,
                         success: function (data) {
-                            if(data.code=="200"){
+                            if (data.code == "200") {
                                 $("#grid").datagrid("reload");
                                 $('#dlg').dialog('close');
-                            }else{
-                                $.messager.alert('错误',data.result);
+                            } else {
+                                $.messager.alert('错误', data.result);
                             }
                         },
-                        error: function(){
-                            $.messager.alert('错误','远程访问失败');
+                        error: function () {
+                            $.messager.alert('错误', '远程访问失败');
                         }
                     });
                 }
@@ -260,7 +258,7 @@
 //            }
             var param = bindMetadata("grid", true);
             var formData = $("#form").serializeObject();
-            $.extend( formData, param);
+            $.extend(formData, param);
             $("#grid").datagrid("load", formData);
         }
 
@@ -271,6 +269,45 @@
         }
 
         $(function () {
+
+            var pager = $('#grid').treegrid('getPager');    // get the pager of treegrid
+            pager.pagination({
+                layout: ['list', 'sep', 'first', 'prev', 'links', 'next', 'last', 'sep', 'refresh', 'info'],
+                links: 3,
+                buttons: [
+                    {
+                        iconCls: 'icon-search',
+                        handler: function () {
+                            openQueryDlg();
+                        }
+                    }
+                    , {
+                        iconCls: 'icon-add',
+                        handler: function () {
+                            openInsert();
+                        }
+                    }
+                    , {
+                        iconCls: 'icon-edit',
+                        handler: function () {
+                            openUpdate();
+                        }
+                    }
+                    , {
+                        iconCls: 'icon-remove',
+                        handler: function () {
+                            del();
+                        }
+                    }
+                    , {
+                        iconCls: 'icon-export',
+                        handler: function () {
+                            doExport('grid');
+                        }
+                    }
+                ]
+            });
+
             //表格仅显示下边框
             $('#grid').datagrid('getPanel').removeClass('lines-both lines-no lines-right lines-bottom').addClass("lines-bottom");
 
