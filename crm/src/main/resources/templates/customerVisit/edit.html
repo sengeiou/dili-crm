@@ -180,7 +180,7 @@
             listEvents();
             <%if (has(view)){%>
                 //查看
-                ableEasyUiForm('_form','disable',true);
+                disableEasyUiForm('_form',true);
                 $('.icon-clear').removeClass('icon-clear');
             <%}else{%>
                 $("#customerId").textbox("disable", true);
@@ -190,7 +190,7 @@
                     $('#modifyPage').show();
                 <%}else{%>
                     //打开此页面，仅有查看权限
-                    ableEasyUiForm('_form','disable',true);
+                    disableEasyUiForm('_form',true);
                     $('.icon-clear').removeClass('icon-clear');
             <%}}%>
         }
