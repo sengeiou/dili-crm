@@ -28,6 +28,10 @@ import com.dili.ss.domain.BasePage;
 import com.dili.ss.dto.DTOUtils;
 import com.mysql.fabric.xmlrpc.base.Array;
 
+/**
+ * @author wangguofeng
+ *
+ */
 @Component
 public class ICardETLServiceImpl implements ICardETLService{
 	@Autowired private IcardUserAccountService icardUserAccountService;
@@ -36,13 +40,20 @@ public class ICardETLServiceImpl implements ICardETLService{
 	@Autowired private CustomerExtensionsService customerExtensionsService;
 	
 
+	/**
+	 * @param customer 要插入或者更新到crm的客户信息
+	 * @param customerExtensionsList 要插入到或者更新到cmr的帐户信息
+	 * @return true保存成功,false 保存失败
+	 */
 	@Transactional
 	private boolean saveOrUpdate(Customer customer,List<CustomerExtensions> customerExtensionsList) {
 		Customer condtion=DTOUtils.newDTO(Customer.class);
 		condtion.setCertificateNumber(customer.getCertificateNumber());
+		//用身份证号在crm系统查询用户信息
 		List<Customer>list=this.customerService.list(condtion);
 		if(list!=null&&list.size()==1) {
 			Customer customerItem=list.get(0);
+			//更新用户信息对应的创建时间(电子结算系统里面,相同身份证号的用户信息有多条)
 			if(customer.getCreated()!=null) {
 				if(customer.getCreated().after(customerItem.getCreated())) {
 					customerItem.setCreated(customer.getCreated());
@@ -52,6 +63,7 @@ public class ICardETLServiceImpl implements ICardETLService{
 		}
 		this.customerService.saveOrUpdate(customer);
 		
+		//对账号信息做插入或者更新的判断
 		List<CustomerExtensions>extensionList=new ArrayList<>();
 		for(CustomerExtensions customerExtensions:customerExtensionsList) {
 			CustomerExtensions customerExtensionsCondtion=DTOUtils.newDTO(CustomerExtensions.class);
@@ -70,12 +82,18 @@ public class ICardETLServiceImpl implements ICardETLService{
 		}
 		return true;
 	}
+	
+	/**
+	 * 查询最后一条用户信息，用来做为从电子结算查询的条件
+	 * @return 返回最后一条客户信息
+	 */
 	private Customer findLatestCustomer() {
 		Customer example=DTOUtils.newDTO(Customer.class);
 		//settlement:电子结算
 		example.setSourceSystem("settlement");
 		example.setPage(1);
 		example.setRows(1);
+		//时间降序获得第一条用户信息
 		example.setSort("created");
 		example.setOrder("DESC");
 		BasePage<Customer>page=this.customerService.listPageByExample(example);
@@ -90,6 +108,7 @@ public class ICardETLServiceImpl implements ICardETLService{
 		if(latestCustomer==null) {
 			latestCustomer=this.findLatestCustomer();
 		}
+		//构造从电子结算查询的条件对象
 		IcardUserAccount example=DTOUtils.newDTO(IcardUserAccount.class);
 		example.setPage(1);
 		example.setRows(batchSize);
@@ -100,7 +119,7 @@ public class ICardETLServiceImpl implements ICardETLService{
 		}
 		
 		
-		
+		//从电子结算查询用户信息
 		BasePage<IcardUserAccount>page=icardUserAccountService.listPageByExample(example);
 		List<IcardUserAccount>data=page.getDatas();
 		if(data!=null&&data.size()>0) {
@@ -108,15 +127,18 @@ public class ICardETLServiceImpl implements ICardETLService{
 			//4:已经退卡
 			condtion.setStatusNotIn(Arrays.asList(Byte.valueOf("4")));
 			for(IcardUserAccount icardUserAccount:data) {
+				//将电子结算用户转换为crm用户信息
 				Customer customer=this.transUserAccountAsCustomer(icardUserAccount);
 				if(customer==null) {
 					continue;
 				}
 				
 				condtion.setAccountId(icardUserAccount.getId());
+				//从电子结算查询用户对应的帐号信息
 				List<IcardUserCard> icardUserCardList=this.icardUserCardService.list(condtion);
-				
+				//转换帐号信息
 				List<CustomerExtensions> customerExtensionsList=this.transIcardUserCardAsCustomerExtensions(icardUserCardList);
+				//保存数据到crm
 				this.saveOrUpdate(customer, customerExtensionsList);
 			}
 			return true;
@@ -124,6 +146,11 @@ public class ICardETLServiceImpl implements ICardETLService{
 		
 		return false;
 	}
+	
+	/**
+	 * @param icardUserAccount 电子结算系统的用户信息
+	 * @return 返回crm用户信息对象
+	 */
 	private Customer transUserAccountAsCustomer(IcardUserAccount icardUserAccount) {
 		if(StringUtils.trimToEmpty(icardUserAccount.getName()).equals("不记名")||StringUtils.trimToNull(icardUserAccount.getIdCode())==null) {
 			return null;
@@ -155,6 +182,11 @@ public class ICardETLServiceImpl implements ICardETLService{
 		
 		return customer;
 	}
+	
+	/**
+	 * @param icardUserCardList 电子结算系统帐号列表
+	 * @return 返回crm系统统帐号列表
+	 */
 	private List<CustomerExtensions> transIcardUserCardAsCustomerExtensions(List<IcardUserCard> icardUserCardList) {
 		List<CustomerExtensions>resultList=new ArrayList<>();
 		for(IcardUserCard icardUserCard:icardUserCardList) {
