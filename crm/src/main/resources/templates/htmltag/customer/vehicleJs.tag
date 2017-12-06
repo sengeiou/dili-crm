@@ -9,7 +9,7 @@
                 opts.url = "${contextPath}/vehicle/listPage";
             }
             var selected = ${customer};
-            $("#vehicleGrid").datagrid("load",  {"customerId":selected["id"]});
+            $("#vehicleGrid").datagrid("load",  bindGridMeta2Data('vehicleGrid',{"customerId":selected["id"]}));
         <%}%>
     }
 
