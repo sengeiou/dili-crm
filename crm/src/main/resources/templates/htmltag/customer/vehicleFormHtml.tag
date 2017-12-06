@@ -29,7 +29,8 @@
             </tr>
             <tr>
                 <td style="padding:5px;">
-                    <input class="easyui-textbox" name="_vehicle_type" id="_vehicle_type" style="width:100%" data-options="label:'车型:', validType:'length[0,20]'" />
+                    <input  name="_vehicle_type" id="_vehicle_type" style="width:100%" data-options="label:'车型:', editable:false, validType:'length[0,20]'" />
+                    <#comboProvider _id="_vehicle_type" _provider='dataDictionaryValueProvider' _queryParams='{dd_id:"14"}'/>
                 </td>
             </tr>
         </table>

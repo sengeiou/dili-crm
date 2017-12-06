@@ -14,7 +14,7 @@
             <th width="25%" data-options="field:'registrationNumber',   sortable:'true', order:'asc', align:'center', resizable:'true', fixed:'false'">
                 车牌号
             </th>
-            <th width="<%if(has(action) && action=="edit"){%>25%<%}else{%>37%<%}%>" data-options="field:'type',   sortable:'true', order:'asc', align:'center', resizable:'true', fixed:'false'">
+            <th width="<%if(has(action) && action=="edit"){%>25%<%}else{%>37%<%}%>" data-options="field:'type',   _provider:'dataDictionaryValueProvider', _queryParams:{'dd_id':'14'}, sortable:'true', order:'asc', align:'center', resizable:'true', fixed:'false'">
                 车型
             </th>
             <%if(has(action) && action=="edit"){%>
