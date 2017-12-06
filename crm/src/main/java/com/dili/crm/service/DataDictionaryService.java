@@ -10,5 +10,10 @@ import com.dili.ss.base.BaseService;
  */
 public interface DataDictionaryService extends BaseService<DataDictionary, Long> {
 
+	/**
+	 * 根据DataDictionary编码查询数据字典和数据字典值的DTO
+	 * @param code
+	 * @return
+	 */
 	DataDictionaryDto findByCode(String code);
 }
