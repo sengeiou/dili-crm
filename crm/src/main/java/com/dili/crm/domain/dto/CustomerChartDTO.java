@@ -8,12 +8,19 @@ import com.dili.ss.dto.IDTO;
  */
 public interface CustomerChartDTO  extends IDTO{
 
+	//统计出的用户数量
 	Integer getCount() ;
 	void setCount(Integer count);
+	
+	//行业名称
 	String getProfession() ;
 	void setProfession(String profession) ;
+
+	//市场名称
 	String getMarket();
 	void setMarket(String market);
+
+	//用户类型
 	String getType();
 	void setType(String type);
 	

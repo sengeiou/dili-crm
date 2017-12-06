@@ -43,10 +43,19 @@ public interface CustomerService extends BaseService<Customer, Long> {
 	 */
 	BaseOutput deleteWithOutput(Long aLong);
 	
+	/**基于用户类型分组查询统计数据
+	 * @return 用户数量,用户类型数据列表
+	 */
 	BaseOutput<List<CustomerChartDTO>> selectCustomersGroupByType();
 	
+	/**基于用户所属市场分组查询统计数据
+	 * @return 用户数量,市场数据列表
+	 */
 	BaseOutput<List<CustomerChartDTO>> selectCustomersGroupByMarket();
-	
+
+	/**基于用户行业分组查询统计数据
+	 * @return 用户数量,用户行业 数据列表
+	 */
 	BaseOutput<List<CustomerChartDTO>> selectCustomersGroupByProfession();
 
 	/**

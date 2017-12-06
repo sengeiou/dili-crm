@@ -20,8 +20,15 @@ public interface CustomerVisitService extends BaseService<CustomerVisit, Long> {
      */
     BaseOutput insertSelectiveWithOutput(CustomerVisit customerVisit);
 
+	/**基于回访信息类型分组查询统计数据
+	 * @return 信息数量,类型数据列表
+	 */
     BaseOutput<List<CustomerVisitChartDTO>> selectCustomerVisitGroupByMode();
 
+
+	/**基于回访信息状态分组查询统计数据
+	 * @return 信息数量,状态数据列表
+	 */
     BaseOutput<List<CustomerVisitChartDTO>> selectCustomerVisitGroupByState();
 
     /**
