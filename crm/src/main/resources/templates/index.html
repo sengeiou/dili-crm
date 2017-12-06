@@ -49,9 +49,9 @@
 		        <div region="west" height="auto" align="center" style="width:50%">
 		  			<table class="easyui-datagrid" id="grid"   title="近期新增客户" noheader="false" 
                    pagination="false" pageSize="10" pageNumber="1" pagePosition="top" rownumbers="true" remoteSort="false"
-                   loadMsg="数据加载中..." singleSelect="true" method="post" multiSort="false" sortName="created" sortOrder="desc" 
+                   singleSelect="true" method="post" multiSort="false"
                    align="center"  striped="true" 
-                   data-options="onDblClickRow:openUpdate,
+                   data-options="onDblClickRow:openUpdate,loadMsg:0,
                    onHeaderContextMenu:headerContextMenu,
                    autoRowHeight:false,
                    idField:'id',
@@ -59,21 +59,21 @@
                   ">
                 <thead>
                     <tr>
-                        <th width="20%" data-options="field:'name',   sortable:'true', order:'asc', align:'left', resizable:'true', fixed:'false',formatter:clientFormatterFun">
+                        <th width="20%" data-options="field:'name',   sortable:false, order:'asc', align:'left', resizable:'true', fixed:'false',formatter:clientFormatterFun">
                             	客户名称
                         </th>
-						<th width="20%" data-options="field:'phone',   sortable:'true', order:'asc', align:'center', resizable:'true', fixed:'false'">
+						<th width="20%" data-options="field:'phone',   sortable:false, order:'asc', align:'center', resizable:'true', fixed:'false'">
                             	电话
                         </th>
-                         <th width="20%"  data-options="field:'market', _provider:'dataDictionaryValueProvider', _queryParams:{'dd_id':'2'},  sortable:'true', order:'asc', align:'center', resizable:'true', fixed:'false'">
+                         <th width="20%"  data-options="field:'market', _provider:'dataDictionaryValueProvider', _queryParams:{'dd_id':'2'},  sortable:false, order:'asc', align:'center', resizable:'true', fixed:'false'">
                             	所属市场
                         </th>
                         
-                        <th width="20%" data-options="field:'sourceSystem', _provider:'dataDictionaryValueProvider', _queryParams:{'dd_id':'8'},  sortable:'true', order:'asc', align:'center', resizable:'true', fixed:'false'">
+                        <th width="20%" data-options="field:'sourceSystem', _provider:'dataDictionaryValueProvider', _queryParams:{'dd_id':'8'},  sortable:false, order:'asc', align:'center', resizable:'true', fixed:'false'">
                             	来源系统
                         </th>     
                         
-                          <th width="20%" data-options="field:'created', _provider:'datetimeProvider',  sortable:'true', order:'asc', align:'center', resizable:'true', fixed:'false'">
+                          <th width="20%" data-options="field:'created', _provider:'datetimeProvider',  sortable:false, order:'asc', align:'center', resizable:'true', fixed:'false'">
                             	创建时间
                         </th>
                         

@@ -152,7 +152,7 @@
                                 }
                           }
                     %>
-                        <th data-options="field:'${field.javaProperty}', ${attr} <%if(provider!=null){%>_provider:'${provider}',<%}%> sortable:'true', order:'asc', align:'center', resizable:'true', fixed:'false'">
+                        <th data-options="field:'${field.javaProperty}', ${attr} <%if(provider!=null){%>_provider:'${provider}',<%}%> sortable:true, order:'asc', align:'center', resizable:'true', fixed:'false'">
                             ${fieldName}
                         </th>
                     <%
@@ -184,7 +184,7 @@
 				iconCls: 'icon-save',
 				height: 480,
 				buttons: [{
-					text:'Ok',
+					text:'确认',
 					iconCls:'icon-ok',
 					handler:saveOrUpdate
 				},{
