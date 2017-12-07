@@ -1,21 +1,30 @@
 package com.dili.crm.controller;
 
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.alibaba.fastjson.JSONObject;
+import com.dili.crm.domain.Customer;
 import com.dili.crm.domain.SystemConfig;
 import com.dili.crm.service.CustomerService;
 import com.dili.crm.service.DataDictionaryService;
 import com.dili.crm.service.DataDictionaryValueService;
 import com.dili.crm.service.SystemConfigService;
 import com.dili.ss.dto.DTOUtils;
+import com.dili.ss.metadata.ValueProviderUtils;
 
 import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiImplicitParam;
+import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 
 @Api
@@ -33,6 +42,42 @@ public class IndexController {
 			 modelMap.put("clientRefreshFrequency", clientRefreshFrequency);
 	        return "index";
 	    }
+	 
+	    @ApiOperation(value="分页查询Customer", notes = "分页查询Customer")
+	    @ApiImplicitParams({
+			@ApiImplicitParam(name="Customer", paramType="form", value = "Customer的form信息", required = false, dataType = "string")
+		})
+	    @RequestMapping(value="/listCustomers", method = {RequestMethod.GET, RequestMethod.POST})
+	    public  @ResponseBody Object listCustomers(Customer customer) throws Exception {
+	    	customer.setPage(1);
+	    	customer.setRows(10);
+	    	customer.setSort("created");
+	    	customer.setOrder("DESC");
+	    	List<Customer>data=this.customerService.listByExample(customer);
+			Map<Object, Object> metadata =this.getCustomerMetadata();
+			try {
+				List<Map> list = ValueProviderUtils.buildDataByProvider(metadata, data);
+				return list;
+			} catch (Exception e) {
+				return Collections.emptyList();
+			}
+	        
+	    }
+		private Map<Object, Object> getCustomerMetadata(){
+			Map<Object, Object> metadata = new HashMap<>();
+
+			metadata.put("market", getDDProvider(2L));
+			metadata.put("sourceSystem", getDDProvider(8L));
+			metadata.put("profession", getDDProvider(6L));
+			return metadata;
+		}
+		//获取数据字典提供者
+		private JSONObject getDDProvider(Long ddId){
+			JSONObject dataDictionaryValueProvider = new JSONObject();
+			dataDictionaryValueProvider.put("provider", "dataDictionaryValueProvider");
+			dataDictionaryValueProvider.put("queryParams", "{dd_id:"+ddId+"}");
+			return dataDictionaryValueProvider;
+		}
 	 private int getRefreshFrequency() {
 		 int default_frequency=5;//seconds
 		 

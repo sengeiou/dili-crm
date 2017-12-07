@@ -39,6 +39,7 @@
     <div class="easyui-layout" fit="true">
         <div id="userSelectDialog" style="display: none;"></div>
         <div id="customerSelectDialog" style="display: none;"></div>
+        <div id="header" class="panel-title" style="height:32px;padding:0px;margin:0px;border:0px;vertical-align:center;"><span >近期新增客户</span> <span style="float:right; padding-right:60px;">更多...</span></div>
         <!-- ====================================================================================================================== -->
         <!-- 上方布局 -->
         <!-- ====================================================================================================================== -->
@@ -47,39 +48,37 @@
             
             <div class="easyui-layout" fit="true">
 		        <div region="west" height="auto" align="center" style="width:50%">
-		  			<table class="easyui-datagrid" id="grid"   title="近期新增客户" noheader="false" 
-                   pagination="false" pageSize="10" pageNumber="1" pagePosition="top" rownumbers="true" remoteSort="false"
-                   singleSelect="true" method="post" multiSort="false"
-                   align="center"  striped="true" 
-                   data-options="onDblClickRow:openUpdate,loadMsg:0,
-                   onHeaderContextMenu:headerContextMenu,
-                   autoRowHeight:false,
-                   idField:'id',
-                   queryParams:{page:1,rows:10}
-                  ">
-                <thead>
-                    <tr>
-                        <th width="20%" data-options="field:'name',   sortable:false, order:'asc', align:'left', resizable:'true', fixed:'false',formatter:clientFormatterFun">
-                            	客户名称
-                        </th>
-						<th width="20%" data-options="field:'phone',   sortable:false, order:'asc', align:'center', resizable:'true', fixed:'false'">
-                            	电话
-                        </th>
-                         <th width="20%"  data-options="field:'market', _provider:'dataDictionaryValueProvider', _queryParams:{'dd_id':'2'},  sortable:false, order:'asc', align:'center', resizable:'true', fixed:'false'">
-                            	所属市场
-                        </th>
-                        
-                        <th width="20%" data-options="field:'sourceSystem', _provider:'dataDictionaryValueProvider', _queryParams:{'dd_id':'8'},  sortable:false, order:'asc', align:'center', resizable:'true', fixed:'false'">
-                            	来源系统
-                        </th>     
-                        
-                          <th width="20%" data-options="field:'created', _provider:'datetimeProvider',  sortable:false, order:'asc', align:'center', resizable:'true', fixed:'false'">
-                            	创建时间
-                        </th>
-                        
-                    </tr>
-                </thead>
+		        
+		        	<div  class="easyui-panel" title="近期新增客户" header="#header"  style="border: 0px;width:100%;height:100%;">
+		   		        <table  id="grid" style="border: 0px">
+		                <thead>
+		                    <tr>
+		                        <th width="20%" data-options="field:'name',   sortable:false, order:'asc', align:'left', resizable:'true', fixed:'false',formatter:clientFormatterFun">
+		                            	客户名称
+		                        </th>
+								<th width="20%" data-options="field:'phone',   sortable:false, order:'asc', align:'center', resizable:'true', fixed:'false'">
+		                            	电话
+		                        </th>
+		                         <th width="20%"  data-options="field:'market', _provider:'dataDictionaryValueProvider', _queryParams:{'dd_id':'2'},  sortable:false, order:'asc', align:'center', resizable:'true', fixed:'false'">
+		                            	所属市场
+		                        </th>
+		                        
+		                        <th width="20%" data-options="field:'sourceSystem', _provider:'dataDictionaryValueProvider', _queryParams:{'dd_id':'8'},  sortable:false, order:'asc', align:'center', resizable:'true', fixed:'false'">
+		                            	来源系统
+		                        </th>     
+		                        
+		                          <th width="20%" data-options="field:'created', _provider:'datetimeProvider',  sortable:false, order:'asc', align:'center', resizable:'true', fixed:'false'">
+		                            	创建时间
+		                        </th>
+		                        
+		                    </tr>
+		                </thead>
+		                <tbody></tbody>
             </table>
+					</div>
+					
+					
+		  			
 		        </div>
 		        <div region="center" style="width:100%;border:0px;" height="auto">
 			        <div  class="easyui-panel" title="异常订单"  style="width:100%;height:100%;padding:0px;">
@@ -170,11 +169,45 @@
         }
         //客户表格查询
         function queryGrid() {
-            var opts = $("#grid").datagrid("options");
-            if (null == opts.url || "" == opts.url) {
-                opts.url = "${contextPath}/customer/listPage";
-            }
-            $("#grid").datagrid("load", bindGridMeta2Data("grid", {"rows":10}));
+            $.ajax({
+                type: "POST",
+                url: "${contextPath}/listCustomers",
+                data: {},
+                processData:true,
+                dataType: "json",
+                async : true,
+                success: function (rows) {
+                       //console.info(JSON.stringify(data.rows));
+                       var tbody=$('<tbody></tbody>');
+                       $.each(rows,function(k,v){
+                    	   var name=v.name?v.name:'';
+                    	   var link= "<a href='${contextPath}/customer/detail.html?id="+v.id+"'>"+name+"</a>";
+                    	   
+                    	   var phone=v.phone?v.phone:'';
+                    	   var market=v.market?v.market:'';
+                    	   var sourceSystem=v.sourceSystem?v.sourceSystem:'';
+                    	   var created="";
+                    	   if(v.created){
+                    		   var date=new Date();
+                    		   date.setTime(v.created);
+                    		   created=date.toLocaleString();
+                    	   }else{
+                    		   created="";
+                    	   }
+                    	   
+                    	   var created=v.created?v.created:'';
+                    	   var tr="<tr><td>"+link+"</td><td>"+phone+"</td><td>"+market+"</td><td>"+sourceSystem+"</td><td>"+created+"</td></tr>";
+                    	   tbody.append(tr);
+                    	   
+                       });
+                       $('#grid tbody').html(tbody.html())
+                       
+                },
+                error: function(){
+                   // alert('error')
+                }
+            });
+
         }
 
 

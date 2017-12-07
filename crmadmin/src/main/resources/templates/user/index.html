@@ -43,8 +43,8 @@
 	<!-- 表格 -->
 	<div region="center" style="width: 100%;" height="auto">
 		<!-- =========================================================表格========================================================= -->
-		<table class="easyui-datagrid" title="用户列表" noheader="true" id="userGrid" fitColumns="true" pagination="true" pageSize="30" pageNumber="1" pagePosition="bottom" rownumbers="false" remoteSort="true"
-			loadMsg="数据加载中..." singleSelect="true" method="post" multiSort="false" sortName="id" align="center" fit="true" striped="true" toolbar="#toolbar" idField="id"
+		<table class="easyui-datagrid" title="用户列表" noheader="true" id="userGrid" fitColumns="true" pagination="true" pageSize="30" pageNumber="1" pagePosition="top" rownumbers="false" remoteSort="true"
+			loadMsg="数据加载中..." singleSelect="true" method="post" multiSort="false" sortName="id" align="center" fit="true" striped="true"  idField="id"
 			data-options="onHeaderContextMenu:headerContextMenu,onDblClickRow:onDblClickRow">
 			<thead>
 				<tr>
@@ -62,10 +62,6 @@
 		</table>
 		<!-- datagrid工具栏 -->
 		<div id="toolbar" style="padding: 2px 5px;">
-			<#resource code="addUser"> <a href="#" class="easyui-linkbutton" iconCls="icon-add" onclick="onAddClicked()" plain="true">新增</a> </#resource>
-			<#resource code="editUser"> <a href="#" class="easyui-linkbutton" iconCls="icon-edit" onclick="onEditClicked()" plain="true">修改</a> </#resource>
-			<#resource code="removeUser"> <a href="#" class="easyui-linkbutton" iconCls="icon-remove" onclick="onRemoveClicked()" plain="true">删除</a> </#resource>
-			<a href="#" class="easyui-linkbutton" iconCls="icon-export" onclick="doExport('userGrid')" plain="true">导出</a>
 			
 		</div>
 	</div>
@@ -230,4 +226,60 @@
 	$.parser.onComplete = function() {
 		$.messager.progress("close");
 	}
+	
+    $(function () {
+        bindFormEvent("form", "customerId", queryGrid);
+//        if (document.addEventListener) {
+//            document.addEventListener("keyup",getKey,false);
+//        } else if (document.attachEvent) {
+//            document.attachEvent("onkeyup",getKey);
+//        } else {
+//            document.onkeyup = getKey;
+//        }
+        var pager = $('#userGrid').datagrid('getPager');    // get the pager of treegrid
+        pager.pagination({
+            layout:['list','first','prev','links','next','last','sep','refresh','info'],
+            links:3,
+            buttons:[
+            	  <%if(hasResource("addUser")) {%>
+                {
+                    iconCls:'icon-add',
+                    text:'新增',
+                    handler:function(){
+                    	onAddClicked();
+                    }
+                },
+                <%}%>
+            <%if(hasResource("editUser")) {%>
+                  {
+                     iconCls:'icon-edit',
+                     text:'修改',
+                     handler:function(){
+                         openUpdate();
+                     }
+                  },
+             <%}%>
+             <%if(hasResource("removeUser")) {%>
+             {
+                iconCls:'icon-remove',
+                text:'删除',
+                handler:function(){
+                	onRemoveClicked();
+                }
+             },
+        	<%}%>
+
+                {
+                    iconCls:'icon-export',
+                    text:'导出',
+                        handler:function(){
+                        doExport('userGrid');
+                    }
+                 }
+            ]
+        });
+        //表格仅显示下边框
+        $('#userGrid').datagrid('getPanel').removeClass('lines-both lines-no lines-right lines-bottom').addClass("lines-bottom");
+    })
+    
 </script> <#user_datalistButtonsJs /> </#body>

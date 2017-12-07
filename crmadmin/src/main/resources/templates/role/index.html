@@ -35,8 +35,8 @@
 	<!-- 表格 -->
 	<div region="center" style="width: 100%;" height="auto">
 		<!-- =========================================================表格========================================================= -->
-		<table class="easyui-datagrid" title="角色列表" noheader="true" id="roleGrid" fitColumns="true" pagination="true" pageSize="30" pageNumber="1" pagePosition="bottom" rownumbers="false" remoteSort="false"
-			loadMsg="数据加载中..." singleSelect="true" method="post" multiSort="true" sortName="id" align="center" fit="true" striped="true" toolbar="#toolbar" idField="id"
+		<table class="easyui-datagrid" title="角色列表" noheader="true" id="roleGrid" fitColumns="true" pagination="true" pageSize="30" pageNumber="1" pagePosition="top" rownumbers="false" remoteSort="false"
+			loadMsg="数据加载中..." singleSelect="true" method="post" multiSort="true" sortName="id" align="center" fit="true" striped="true"  idField="id"
 			data-options="onBeforeEdit:onBeforeEdit, onAfterEdit:onAfterEdit, onCancelEdit:onCancelEdit, onHeaderContextMenu:headerContextMenu, onDblClickRow:onDblClickRow">
 			<thead>
 				<tr>
@@ -53,13 +53,7 @@
 				</tr>
 			</thead>
 		</table>
-		<!-- datagrid工具栏 -->
-		<div id="toolbar" style="padding: 2px 5px;">
-			<#resource code='addRole'> <a href="#" class="easyui-linkbutton" iconCls="icon-add" onclick="onAddClicked()" plain="true">新增</a> </#resource>
-			<#resource code="editRole"> <a href="#" class="easyui-linkbutton" iconCls="icon-edit" onclick="onEditClicked()" plain="true">修改</a> </#resource>
-			<#resource code="removeRole"> <a href="#" class="easyui-linkbutton" iconCls="icon-remove" onclick="onRemoveClicked()" plain="true">删除</a> </#resource>
-			<a href="#" class="easyui-linkbutton" iconCls="icon-export" onclick="doExport('roleGrid')" plain="true">导出</a>
-		</div>
+
 	</div>
 </div>
 
@@ -135,6 +129,61 @@
 	$.parser.onComplete = function() {
 		$.messager.progress("close");
 	}
+	
+	 $(function () {
+	        bindFormEvent("form", "customerId", queryGrid);
+//	        if (document.addEventListener) {
+//	            document.addEventListener("keyup",getKey,false);
+//	        } else if (document.attachEvent) {
+//	            document.attachEvent("onkeyup",getKey);
+//	        } else {
+//	            document.onkeyup = getKey;
+//	        }
+	        var pager = $('#roleGrid').datagrid('getPager');    // get the pager of treegrid
+	        pager.pagination({
+	            layout:['list','first','prev','links','next','last','sep','refresh','info'],
+	            links:3,
+	            buttons:[
+	            	  <%if(hasResource("addRole")) {%>
+	                {
+	                    iconCls:'icon-add',
+	                    text:'新增',
+	                    handler:function(){
+	                    	onAddClicked();
+	                    }
+	                },
+	                <%}%>
+	            <%if(hasResource("editRole")) {%>
+	                  {
+	                     iconCls:'icon-edit',
+	                     text:'修改',
+	                     handler:function(){
+	                    	 onEditClicked();
+	                     }
+	                  },
+	             <%}%>
+	             <%if(hasResource("removeRole")) {%>
+	             {
+	                iconCls:'icon-remove',
+	                text:'删除',
+	                handler:function(){
+	                	onRemoveClicked();
+	                }
+	             },
+	        	<%}%>
+
+	                {
+	                    iconCls:'icon-export',
+	                    text:'导出',
+	                        handler:function(){
+	                        doExport('roleGrid');
+	                    }
+	                 }
+	            ]
+	        });
+	        //表格仅显示下边框
+	        $('#roleGrid').datagrid('getPanel').removeClass('lines-both lines-no lines-right lines-bottom').addClass("lines-bottom");
+	    })
 </script> <script type="text/javascript">
 					<#role_indexJs />
 				</script> </#body>
