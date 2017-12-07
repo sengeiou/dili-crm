@@ -276,9 +276,8 @@
             }
             var pager = $('#grid').treegrid('getPager');    // get the pager of treegrid
             pager.pagination({
-                layout:['list','first','prev','links','next','last','manual','refresh','info'],
-                links:3,
-                buttons:[
+                <#controls_paginationOpts/>
+                ,buttons:[
                 {
                     iconCls:'icon-detail',
                     text:'详情',
