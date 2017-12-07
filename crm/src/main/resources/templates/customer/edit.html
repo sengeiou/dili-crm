@@ -81,10 +81,10 @@
             <#nav/>
                 <div style="display: inline;float:right;padding-right: 300px;">
                     <#resource code="updateCustomer">
-                    <a id="saveBtn" href="#" class="easyui-linkbutton" data-options="width:80" onclick="saveOrUpdate()">保存</a>&nbsp;&nbsp;
-                    <a id="saveAndExitBtn" href="#" class="easyui-linkbutton" data-options="width:100" onclick="saveAndExit()">保存并退出</a>&nbsp;&nbsp;
+                    <a id="saveBtn" href="#" class="easyui-linkbutton" data-options="width:80" iconCls="icon-save" onclick="saveOrUpdate()">保存</a>&nbsp;&nbsp;
+                    <a id="saveAndExitBtn" href="#" class="easyui-linkbutton" data-options="width:120" iconCls="icon-save" onclick="saveAndExit()">保存并退出</a>&nbsp;&nbsp;
                     </#resource>
-                    <a id="cancelBtn" href="#" class="easyui-linkbutton" data-options="width:80" onclick="Javascript:window.location.href='${contextPath}/customer/index.html';">取消</a>
+                    <a id="cancelBtn" href="#" class="easyui-linkbutton" iconCls="icon-cancel" data-options="width:80" onclick="Javascript:window.location.href='${contextPath}/customer/index.html';">取消</a>
                 </div>
             </div>
             <!-- 基本信息表单 -->

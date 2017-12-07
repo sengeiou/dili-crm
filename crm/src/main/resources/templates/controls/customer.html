@@ -1,6 +1,27 @@
+
+<script type="text/javascript">
+    function dbClickCustomer(index, row) {
+        confirmCustomerBtn("${textboxId}");
+    }
+    function searchCustomer() {
+        var opts = $("#selectCustomerGrid").datagrid("options");
+        if (null == opts.url || "" == opts.url) {
+            opts.url = '${contextPath!}/selectDialog/listCustomer';
+        }
+        var text = $('#searchCustomerTextbox').textbox('getText');
+        $('#selectCustomerGrid').datagrid('load', bindGridMeta2Data("selectCustomerGrid",{name : text}));
+    }
+
+    $(function() {
+        $('#searchCustomerTextbox').textbox('addClearBtn', 'icon-clear');
+        bindFormEvent("searchCustomerForm", "searchCustomerTextbox", searchCustomer, closeCustomerSelectDlg);
+        searchCustomer();
+    })
+</script>
 <div style="margin: 5px 5px;">
 	<form class="easyui-form" id="searchCustomerForm">
-	客户名: <input id="searchCustomerTextbox" name="searchCustomerTextbox" class="easyui-textbox" data-options="buttonIcon:'icon-search',onClickButton:search,onChange:_changeTextboxShowClear" style="width: 300px">
+		<input id="searchCustomerTextbox" name="searchCustomerTextbox" label="客户名:" labelAlign="right" class="easyui-textbox" style="width: 300px"/>
+		<a class="easyui-linkbutton"  data-options="width:80" iconCls="icon-search" onclick="searchCustomer();">查询</a>
 	</form>
 </div>
 <table class="easyui-datagrid" id="selectCustomerGrid" sortName="name" sortOrder="asc" fitColumns="true" remoteSort="false" loadMsg="数据加载中..." singleSelect="true" method="post" multiSort="true"
@@ -16,24 +37,3 @@
 		</tr>
 	</thead>
 </table>
-
-<script type="text/javascript">
-	function dbClickCustomer(index, row) {
-		confirmCustomerBtn("${textboxId}");
-	}
-	function search() {
-		var opts = $("#selectCustomerGrid").datagrid("options");
-        if (null == opts.url || "" == opts.url) {
-            opts.url = '${contextPath!}/selectDialog/listCustomer';
-        }
-		var text = $('#searchCustomerTextbox').textbox('getText');
-		$('#selectCustomerGrid').datagrid('load', bindGridMeta2Data("selectCustomerGrid",{name : text}));
-	}
-
-	$(function() {
-		$('#searchCustomerTextbox').textbox('addClearBtn', 'icon-clear');
-		$('#searchCustomerTextbox').textbox('textbox').focus();
-        bindFormEvent("searchCustomerForm", "searchCustomerTextbox", search, closeCustomerSelectDlg);
-        search();
-	})
-</script>

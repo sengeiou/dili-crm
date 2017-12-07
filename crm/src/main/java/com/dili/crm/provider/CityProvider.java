@@ -21,6 +21,7 @@ import java.util.Map;
 
 /**
  * 城市提供者
+ * @author asiamaster
  */
 @Component
 public class CityProvider implements ValueProvider {
