@@ -13,40 +13,40 @@
                     <table style="padding:10px;">
                         <tr>
                             <td style="padding:5px;">
-                                <input class="easyui-textbox" name="name" id="name" style="width:100%" data-options="label:'名称:', validType:'length[0,20]'" />
+                                <input class="easyui-textbox" name="name" id="name" style="width:100%" data-options="labelAlign:'right',label:'名称:', validType:'length[0,20]'" />
 
                             </td>
                             <td style="padding:5px;">
-                                <input class="easyui-textbox" name="shortName" id="shortName" style="width:100%" data-options="label:'简称:', validType:'length[0,20]'" />
+                                <input class="easyui-textbox" name="shortName" id="shortName" style="width:100%" data-options="labelAlign:'right',label:'简称:', validType:'length[0,20]'" />
 
                             </td>
                             <td style="padding:5px;">
-                                <input class="easyui-textbox" name="mergerName" id="mergerName" style="width:100%" data-options="label:'合并名称:', validType:'length[0,50]'" />
+                                <input class="easyui-textbox" name="mergerName" id="mergerName" style="width:100%" data-options="labelAlign:'right',label:'合并名称:', validType:'length[0,50]'" />
 
                             </td>
                             <td style="padding:5px;">
-                                <input class="easyui-textbox" name="levelType" id="levelType" style="width:100%" data-options="label:'级别:', validType:'length[0,3]'" />
+                                <input class="easyui-textbox" name="levelType" id="levelType" style="width:100%" data-options="labelAlign:'right',label:'级别:', validType:'length[0,3]'" />
 
                             </td>
                         </tr>
                         <tr>
 
                             <td style="padding:5px;">
-                                <input class="easyui-textbox" name="cityCode" id="cityCode" style="width:100%" data-options="label:'区号:', validType:'length[0,10]'" />
+                                <input class="easyui-textbox" name="cityCode" id="cityCode" style="width:100%" data-options="labelAlign:'right',label:'区号:', validType:'length[0,10]'" />
 
                             </td>
                             <td style="padding:5px;">
-                                <input class="easyui-textbox" name="pinyin" id="pinyin" style="width:100%" data-options="label:'拼音:', validType:'length[0,40]'" />
+                                <input class="easyui-textbox" name="pinyin" id="pinyin" style="width:100%" data-options="labelAlign:'right',label:'拼音:', validType:'length[0,40]'" />
 
                             </td>
                             <td style="padding:5px;">
-                                <input class="easyui-textbox" name="shortPy" id="shortPy" style="width:100%" data-options="label:'拼音简写:', validType:'length[0,20]'" />
+                                <input class="easyui-textbox" name="shortPy" id="shortPy" style="width:100%" data-options="labelAlign:'right',label:'拼音简写:', validType:'length[0,20]'" />
 
                             </td>
-                            <td>
+                           <td style="padding-left:28px;padding-top: 10px; padding-bottom: 10px;">&nbsp;&nbsp;
                                 <a href="#" class="easyui-linkbutton" iconCls="icon-search" id="queryBtn"
                                    onclick="queryGrid()">查询</a>
-                                <a href="javascript:void(0)" class="easyui-linkbutton" onclick="clearForm()">清除</a>
+                                <a href="javascript:void(0)"  iconCls="icon-clear"  class="easyui-linkbutton" onclick="clearForm()">清除</a>
                             </td>
                         </tr>
                     </table>
@@ -111,11 +111,11 @@
             </table>
             <!-- treegrid工具栏 -->
             <div id="toolbar">
-                <a href="#" class="easyui-linkbutton" iconCls="icon-add" onclick="openInsert(true)" plain="true"></a>
-                <a href="#" class="easyui-linkbutton" iconCls="icon-add-child" onclick="openInsert(false)" plain="true"></a>
-                <a href="#" class="easyui-linkbutton" iconCls="icon-edit" onclick="openUpdate()" plain="true"></a>
-                <a href="#" class="easyui-linkbutton" iconCls="icon-remove" onclick="del()" plain="true"></a>
-                <a href="#" class="easyui-linkbutton" iconCls="icon-export" onclick="doExport('grid')" plain="true"></a>
+                <a href="#" class="easyui-linkbutton" iconCls="icon-add" onclick="openInsert(true)" plain="true">新增顶级</a>
+                <a href="#" class="easyui-linkbutton" iconCls="icon-add-child" onclick="openInsert(false)" plain="true">新增子级</a>
+                <a href="#" class="easyui-linkbutton" iconCls="icon-edit" onclick="openUpdate()" plain="true">修改</a>
+                <a href="#" class="easyui-linkbutton" iconCls="icon-remove" onclick="del()" plain="true">删除</a>
+                <a href="#" class="easyui-linkbutton" iconCls="icon-export" onclick="doExport('grid')" plain="true">导出</a>
 
             </div>
             </div>
