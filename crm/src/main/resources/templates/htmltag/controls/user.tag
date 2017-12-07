@@ -32,11 +32,13 @@ function showUserDlg(id) {
 				modal : true,
 				buttons : [{
 							text : '确定',
+							iconCls:"icon-ok",
 							handler : function() {
 								confirmUserBtn(id);
 							}
 						}, {
 							text : '取消',
+							iconCls:"icon-cancel",
 							handler : function() {
 								closeUserSelectDlg();
 							}

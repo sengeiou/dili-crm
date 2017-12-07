@@ -1,9 +1,13 @@
+<div class="easyui-layout" fit="true">
+	<div region="north" height="40" align="left">
 <div style="margin: 5px 5px;">
 	<form class="easyui-form" id="searchUserForm">
 		<input id="searchUserTextbox" label="真实姓名:" labelAlign="right" name="searchUserTextbox" class="easyui-textbox" style="width: 300px">
 		<a class="easyui-linkbutton"  data-options="width:80" iconCls="icon-search" onclick="searchUser();">查询</a>
 	</form>
 </div>
+	</div>
+	<div region="center" align="center">
 <table class="easyui-datagrid" id="selectUserGrid" sortName="userName" sortOrder="asc" fitColumns="true" remoteSort="false" loadMsg="数据加载中..." singleSelect="true" method="post" multiSort="true"
 	align="center" fit="true" striped="true" idField="id" data-options="onDblClickRow:dbClickUser">
 	<thead>
@@ -15,7 +19,8 @@
 		</tr>
 	</thead>
 </table>
-
+	</div>
+</div>
 <script type="text/javascript">
 	function dbClickUser(index, row) {
 		confirmUserBtn("${textboxId}");

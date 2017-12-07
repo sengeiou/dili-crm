@@ -24,7 +24,7 @@
         $('#${dlgId}').dialog({
             title : '客户选择',
             width : 800,
-            height : 400,
+            height : 480,
             href : '${contextPath!}/customer/members.html',
             queryParams : {
                 id : id
@@ -32,11 +32,13 @@
             modal : true,
             buttons : [{
                 text : '确定',
+                iconCls:"icon-ok",
                 handler : function() {
                     confirmMembersBtn($("#selectMembersGrid").datagrid("getSelected")["id"]);
                 }
             }, {
                 text : '取消',
+                iconCls:"icon-cancel",
                 handler : function() {
                     closeMembersSelectDlg();
                 }

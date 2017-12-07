@@ -18,12 +18,16 @@
         searchCustomer();
     })
 </script>
+<div class="easyui-layout" fit="true">
+	<div region="north" height="40" align="left">
 <div style="margin: 5px 5px;">
 	<form class="easyui-form" id="searchCustomerForm">
 		<input id="searchCustomerTextbox" name="searchCustomerTextbox" label="客户名:" labelAlign="right" class="easyui-textbox" style="width: 300px"/>
 		<a class="easyui-linkbutton"  data-options="width:80" iconCls="icon-search" onclick="searchCustomer();">查询</a>
 	</form>
 </div>
+	</div>
+	<div region="center" align="center">
 <table class="easyui-datagrid" id="selectCustomerGrid" sortName="name" sortOrder="asc" fitColumns="true" remoteSort="false" loadMsg="数据加载中..." singleSelect="true" method="post" multiSort="true"
 	align="center" fit="true" striped="true" idField="id" pagination="true" pageSize="30" pageNumber="1" pagePosition="top" rownumbers="true"
 	   data-options="onDblClickRow:dbClickCustomer">
@@ -37,3 +41,5 @@
 		</tr>
 	</thead>
 </table>
+	</div>
+</div>
