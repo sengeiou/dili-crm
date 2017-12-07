@@ -276,11 +276,12 @@
             }
             var pager = $('#grid').treegrid('getPager');    // get the pager of treegrid
             pager.pagination({
-                layout:['list','sep','first','prev','links','next','last','sep','refresh','info'],
+                layout:['list','first','prev','links','next','last','manual','refresh','info'],
                 links:3,
                 buttons:[
                 {
                     iconCls:'icon-detail',
+                    text:'详情',
                         handler:function(){
                         openDetail();
                     }
@@ -288,6 +289,7 @@
                 <#resource code="insertCustomer">
             ,{
                     iconCls:'icon-add',
+                    text:'新增顶级',
                     handler:function(){
                         openInsert();
                     }
@@ -296,6 +298,7 @@
             <#resource code="insertChildCustomer">
                 ,{
                     iconCls:'icon-add-child',
+                    text:'新增子级',
                     handler:function(){
                         openChildInsert();
                     }
@@ -304,6 +307,7 @@
             <#resource code="updateCustomer">
                 ,{
                     iconCls:'icon-edit',
+                    text:'修改',
                     handler:function(){
                         openUpdate();
                     }
@@ -312,6 +316,7 @@
             <#resource code="deleteCustomer">
             ,{
                     iconCls:'icon-remove',
+                    text:'删除',
                     handler:function(){
                         del();
                     }
@@ -320,6 +325,7 @@
             <#resource code="exportCustomer">
             ,{
                     iconCls:'icon-export',
+                    text:'导出',
                     handler:function(){
                         doExport('grid', true);
                     }
