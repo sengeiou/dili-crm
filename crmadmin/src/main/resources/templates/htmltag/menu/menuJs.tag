@@ -147,18 +147,21 @@ function queryGrid(node) {
 					toolbar : [{
 								iconCls : 'icon-add',
 								plain : true,
+								text:'新增',
 								handler : function() {
 									openInsert('grid');
 								}
 							}, {
 								iconCls : 'icon-edit',
 								plain : true,
+								text:'修改',
 								handler : function() {
 									openUpdate('grid');
 								}
 							}, {
 								iconCls : 'icon-remove',
 								plain : true,
+								text:'删除',
 								handler : function() {
 									del('grid');
 								}
@@ -235,18 +238,21 @@ function queryGrid(node) {
 					toolbar : [{
 								iconCls : 'icon-add',
 								plain : true,
+								text : '新增',
 								handler : function() {
 									openInsert('inlineGrid', 2);
 								}
 							}, {
 								iconCls : 'icon-edit',
 								plain : true,
+								text : '修改',
 								handler : function() {
 									openUpdate('inlineGrid');
 								}
 							}, {
 								iconCls : 'icon-remove',
 								plain : true,
+								text : '删除',
 								handler : function() {
 									del('inlineGrid');
 								}
@@ -336,18 +342,21 @@ function queryGrid(node) {
 					toolbar : [{
 								iconCls : 'icon-add',
 								plain : true,
+								text : '新增',
 								handler : function() {
 									openInsert('grid');
 								}
 							}, {
 								iconCls : 'icon-edit',
 								plain : true,
+								text : '修改',
 								handler : function() {
 									openUpdate('grid');
 								}
 							}, {
 								iconCls : 'icon-remove',
 								plain : true,
+								text : '删除',
 								handler : function() {
 									del('grid');
 								}
