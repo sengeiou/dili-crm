@@ -1,14 +1,14 @@
 <!-- 隐藏编辑框 -->
 <div id="contactsDlg" class="easyui-dialog" resizable="false" constrain="true" shadow="true" draggable="false" title="联系人信息" style="padding:20px" modal="true" border="thin" closed="true"
      data-options="
-				iconCls: 'icon-save',
 				height: 420,
 				buttons: [{
-					text:'Ok',
+					text:'确认',
 					iconCls:'icon-ok',
 					handler:saveOrUpdateContacts
 				},{
 					text:'取消',
+					iconCls:'icon-cancel',
 					handler:function(){
 						$('#contactsDlg').dialog('close');
 					}

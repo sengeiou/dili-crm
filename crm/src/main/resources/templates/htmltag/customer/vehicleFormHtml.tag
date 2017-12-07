@@ -1,14 +1,14 @@
 <!-- 隐藏编辑框 -->
 <div id="vehicleDlg" class="easyui-dialog" resizable="false" constrain="true" shadow="true" draggable="false" title="车辆信息" style="padding:20px" modal="true" border="thin" closed="true"
      data-options="
-				iconCls: 'icon-save',
 				height: 230,
 				buttons: [{
-					text:'Ok',
+					text:'确认',
 					iconCls:'icon-ok',
 					handler:saveOrUpdateVehicle
 				},{
 					text:'取消',
+					iconCls:'icon-cancel',
 					handler:function(){
 						$('#vehicleDlg').dialog('close');
 					}

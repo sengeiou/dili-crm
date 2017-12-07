@@ -2,7 +2,7 @@
     <!-- =========================================================地址表格========================================================= -->
     <table class="easyui-datagrid" id="addressGrid" style="height:185px;padding:0px;width:100%;" title="地址" collapsible="true"
            pagination="false" rownumbers="true" remoteSort="false" data-options="loadMsg:0
-          <%if(has(action) && action=="edit"){%>, onDblClickRow:openUpdateAddress, onBeforeSelect:onBeforeSelectAddress,tools:[{iconCls:'icon-add',handler:openInsertAddress}]<%}%>"
+          <%if(has(action) && action=="edit"){%>, onDblClickRow:openUpdateAddress, onBeforeSelect:onBeforeSelectAddress,tools:[{iconCls:'icon-add',  handler:openInsertAddress}]<%}%>"
            loadMsg="数据加载中..." singleSelect="true" method="post" multiSort="false"
            align="center"  striped="false" idField="id" >
         <thead>

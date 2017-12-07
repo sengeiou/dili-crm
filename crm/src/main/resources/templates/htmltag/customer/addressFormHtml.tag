@@ -1,6 +1,5 @@
 <div id="addressDlg" class="easyui-dialog" resizable="false" constrain="true" shadow="true" draggable="false" title="地址信息" style="padding:20px" modal="true" border="thin" closed="true"
      data-options="
-				iconCls: 'icon-save',
 				height: 230,
 				buttons: [{
 					text:'确定',
@@ -8,6 +7,7 @@
 					handler:saveOrUpdateAddress
 				},{
 					text:'取消',
+					iconCls:'icon-cancel',
 					handler:function(){
 						$('#addressDlg').dialog('close');
 					}
