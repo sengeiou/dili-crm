@@ -10,9 +10,9 @@
                 <#nav/>
                 <div style="display: inline;float:right;padding-right: 300px;">
                     <%if (hasResource("editVisit") && has(edit)){%>
-                        <a id="editBtn" href="#" class="easyui-linkbutton" data-options="width:80" onclick="toEdit()">编辑</a>&nbsp;&nbsp;
+                        <a id="editBtn" href="#" class="easyui-linkbutton" iconCls="icon-edit" data-options="width:80" onclick="toEdit()">编辑</a>&nbsp;&nbsp;
                     <%}%>
-                    <a id="cancelBtn" href="#" class="easyui-linkbutton" data-options="width:80" onclick="doBack()">取消</a>
+                    <a id="cancelBtn" href="#" class="easyui-linkbutton" iconCls="icon-cancel" data-options="width:80" onclick="doBack()">取消</a>
                 </div>
             </div>
             <div style="margin-top:50px">
@@ -36,7 +36,7 @@
                         </tr>
                         <tr>
                             <td style="padding:5px;">
-                                <input class="easyui-textbox" name="customerId" id="customerId" panelWidth="auto" panelHeight="auto" label="回访对象:" style="width: 80%;"
+                                <input class="easyui-textbox" name="customerId" id="customerId" panelWidth="auto" panelHeight="auto" label="回访客户:" style="width: 80%;"
                                        data-options="labelAlign:'right',cls:'noborder', readonly:true, editable:false" />
                             </td>
                             <td style="padding:5px;">
@@ -52,8 +52,14 @@
                             <td style="padding:5px;">
                                 <input class="easyui-datetimebox" name="_finishTime" id="_finishTime" style="width:80%" data-options="labelAlign:'right',label:'完成时间:',cls:'noborder', readonly:true, editable:false, hasDownArrow:false"/>
                             </td>
+                            <td style="padding:5px;" >
+                                <input class="easyui-textbox" name="_code" id="_code" style="width:80%"  data-options="labelAlign:'right',label:'回访编码:',cls:'noborder',readonly:true, editable:false" />
+                            </td>
+                            <td></td>
+                        </tr>
+                        <tr>
                             <td style="padding:5px;" colspan="2">
-                                <input class="easyui-textbox" name="_notes" id="_notes" style="width:90%" multiline="true" data-options="labelAlign:'right',label:'描述:', cls:'noborder', readonly:true, editable:false" />
+                                <input class="easyui-textbox" name="_notes" id="_notes" style="width:90%" multiline="true" data-options="labelAlign:'right',label:'描述:', validType:'length[0,200]'" />
                             </td>
                         </tr>
                     </table>

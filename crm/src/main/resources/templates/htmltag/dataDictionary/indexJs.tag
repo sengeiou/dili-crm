@@ -483,5 +483,27 @@ $(function() {
 			} else {
 				document.onkeyup = getKey;
 			}
+			var pager = $('#grid').datagrid('getPager');    // get the pager of treegrid
+			pager.pagination({
+				<#controls_paginationOpts/>,
+				buttons:[
+					{
+						iconCls:'icon-add',
+						text:'新增',
+						handler:function(){
+							openInsertDd();
+						}
+					},
+					{
+						iconCls:'icon-remove',
+						text:'删除',
+						handler:function(){
+							delDd();
+						}
+					}
+				]
+			});
+			//表格仅显示下边框
+			$('#grid').datagrid('getPanel').removeClass('lines-both lines-no lines-right lines-bottom').addClass("lines-bottom");
 			queryDdGrid();
 		});
