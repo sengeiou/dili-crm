@@ -11,8 +11,8 @@
 	<!-- 表格 -->
 	<div region="center" height="auto">
 		<!-- =========================================================表格========================================================= -->
-		<table class="easyui-datagrid" id="ddValueGrid" fitColumns="true" pagination="true" pageSize="30" pageNumber="1" pagePosition="both" rownumbers="true" remoteSort="false" loadMsg="数据加载中..."
-			singleSelect="true" method="post" align="center" fit="true" toolbar="#ddValueToolbar" idField="id"
+		<table class="easyui-datagrid" id="ddValueGrid" fitColumns="true" pagination="true" pageSize="30" pageNumber="1" pagePosition="top" rownumbers="true" remoteSort="false" loadMsg="数据加载中..."
+			singleSelect="true" method="post" align="center" fit="true" idField="id"
 			data-options="onDblClickRow:openUpdateDdValue,onBeginEdit:onBeginEditDdValue,onAfterEdit:onAfterEditDdValue,
 				onCancelEdit:onCancelEditDdValue">
 			<thead>
@@ -33,11 +33,6 @@
 				</tr>
 			</thead>
 		</table>
-		<!-- datagrid工具栏 -->
-		<div id="ddValueToolbar" style="padding: 2px 5px;">
-			<a href="#" class="easyui-linkbutton" iconCls="icon-add" onclick="openInsertDdValue()" plain="true"></a> <a href="#" class="easyui-linkbutton" iconCls="icon-edit" onclick="openUpdateDdValue()"
-				plain="true"></a> <a href="#" class="easyui-linkbutton" iconCls="icon-remove" onclick="delDdValue()" plain="true"></a>
-		</div>
 	</div>
 </div>
 <script type="text/javascript">
