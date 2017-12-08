@@ -141,9 +141,8 @@
 //	        }
 	        var pager = $('#roleGrid').datagrid('getPager');    // get the pager of treegrid
 	        pager.pagination({
-	            layout:['list','first','prev','links','next','last','sep','refresh','info'],
-	            links:3,
-	            buttons:[
+	        	<#controls_paginationOpts/>
+	            ,buttons:[
 	            	  <%if(hasResource("addRole")) {%>
 	                {
 	                    iconCls:'icon-add',
