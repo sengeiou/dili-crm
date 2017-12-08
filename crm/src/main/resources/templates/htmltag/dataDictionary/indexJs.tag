@@ -495,6 +495,13 @@ $(function() {
 						}
 					},
 					{
+						iconCls:'icon-edit',
+						text:'修改',
+						handler:function(){
+							openUpdateDd();
+						}
+					},
+					{
 						iconCls:'icon-remove',
 						text:'删除',
 						handler:function(){
