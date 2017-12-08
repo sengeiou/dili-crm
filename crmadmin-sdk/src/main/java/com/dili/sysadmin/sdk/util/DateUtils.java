@@ -5,8 +5,7 @@ import java.util.Date;
 import java.util.TimeZone;
 
 /**
- * @author duanyugen
- *
+ *  日期工具
  */
 public final class DateUtils {
     public static Date date(int year, int month, int day) {

@@ -31,6 +31,12 @@ public interface CustomerVisit extends IBaseDomain {
 
     void setUserId(Long userId);
 
+    @Column(name = "`code`")
+    @FieldDef(label="回访编号")
+    @EditMode(editor = FieldEditor.Text, required = false)
+    String getCode();
+    void setCode(String code);
+
     @Column(name = "`customer_id`")
     @FieldDef(label="回访对象")
     @EditMode(editor = FieldEditor.Number, required = false)

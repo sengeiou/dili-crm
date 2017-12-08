@@ -2,18 +2,17 @@ package com.dili.crm.service.impl;
 
 import com.dili.crm.dao.CustomerVisitMapper;
 import com.dili.crm.domain.CustomerVisit;
-import com.dili.crm.domain.VisitEvent;
 import com.dili.crm.domain.dto.CustomerVisitChartDTO;
+import com.dili.crm.service.BizNumberService;
 import com.dili.crm.service.CustomerVisitService;
 import com.dili.crm.service.VisitEventService;
 import com.dili.ss.base.BaseServiceImpl;
 import com.dili.ss.domain.BaseOutput;
-import com.dili.ss.dto.DTOUtils;
 import com.dili.sysadmin.sdk.domain.UserTicket;
 import com.dili.sysadmin.sdk.session.SessionContext;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.util.CollectionUtils;
 import tk.mybatis.mapper.entity.Example;
 
 import javax.annotation.Resource;
@@ -32,6 +31,8 @@ public class CustomerVisitServiceImpl extends BaseServiceImpl<CustomerVisit, Lon
     @Resource
     private VisitEventService visitEventService;
 
+    @Autowired
+    private BizNumberService bizNumberService;
     @Override
     public BaseOutput insertSelectiveWithOutput(CustomerVisit customerVisit) {
         UserTicket userTicket = SessionContext.getSessionContext().getUserTicket();
@@ -40,6 +41,7 @@ public class CustomerVisitServiceImpl extends BaseServiceImpl<CustomerVisit, Lon
         }
         customerVisit.setCreatedId(userTicket.getId());
         customerVisit.setModifiedId(userTicket.getId());
+        customerVisit.setCode(bizNumberService.getCustomerVisitCode());
         super.insertSelective(customerVisit);
         return BaseOutput.success("新增成功");
     }
