@@ -226,3 +226,44 @@ function queryDdValueGrid(selectedNode) {
 	param.parentId = selectedNode.id;
 	$('#ddValueGrid').datagrid("load", param);
 }
+
+/**
+* 绑定页面回车事件，以及初始化页面时的光标定位
+*
+* @formId 表单ID
+* @elementName 光标定位在指点表单元素的name属性的值
+* @submitFun 表单提交需执行的任务
+*/
+$(function() {
+
+	var pager = $('#ddValueGrid').datagrid('getPager'); // get the pager of treegrid
+	pager.pagination({
+		<#controls_paginationOpts/>
+		,buttons:[
+			{
+				iconCls:'icon-add',
+				text:'新增',
+				handler:function(){
+					openInsertDdValue();
+				}
+			},
+			{
+				iconCls:'icon-edit',
+				text:'修改',
+				handler:function(){
+					openUpdateDdValue();
+				}
+			},
+			{
+				iconCls:'icon-remove',
+				text:'删除',
+				handler:function(){
+					delDdValue();
+				}
+			}
+		]
+	});
+	//表格仅显示下边框
+	$('#ddValueGrid').datagrid('getPanel').removeClass('lines-both lines-no lines-right lines-bottom').addClass("lines-bottom");
+	queryDdGrid();
+});

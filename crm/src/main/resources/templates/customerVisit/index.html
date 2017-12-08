@@ -19,7 +19,7 @@
                     <table style="padding:5px;">
                         <tr>
                             <td style="padding:10px;">
-                                <input class="easyui-textbox" name="customerId" id="customerId"  panelHeight="auto" label="回访对象:" style="width: 100%;"
+                                <input class="easyui-textbox" name="customerId" id="customerId"  panelHeight="auto" label="回访客户:" style="width: 100%;"
                                        data-options="labelAlign:'right',editable:false,
 									buttonText:'选择',
 									onClickButton:_selectCustomer,onChange:_changeTextboxShowClear" />
@@ -47,8 +47,8 @@
                             </td>
                             <td style="padding-left: 28px;">
                                 <a href="#" class="easyui-linkbutton" iconCls="icon-search" id="queryBtn"
-                                   onclick="queryGrid()">查询</a>
-                                <a href="javascript:void(0)" class="easyui-linkbutton" onclick="clearForm()">清除</a>
+                                   onclick="queryGrid()">查询</a>&nbsp;&nbsp;
+                                <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-clear" onclick="clearForm()">清除</a>
                             </td>
                         </tr>
                     </table>
@@ -62,19 +62,19 @@
         <div region="center" style="width:100%;" height="auto">
             <!-- =========================================================表格========================================================= -->
             <table class="easyui-datagrid" title="回访信息" id="grid" fitColumns="true" noheader="true"
-                   pagination="true" pageSize="30" pageNumber="1" pagePosition="top" rownumbers="true" remoteSort="false"
-                   loadMsg="数据加载中..." singleSelect="true" method="post" multiSort="false" sortName="id" sortOrder="desc"
+                   pagination="true" pageSize="30" pageNumber="1" pagePosition="top" rownumbers="true" remoteSort="true"
+                   loadMsg="数据加载中..." singleSelect="true" method="post" multiSort="false" sortName="code" sortOrder="desc"
                    align="center" fit="true" striped="true"  idField="id" data-options="onDblClickRow:openUpdate, onHeaderContextMenu:headerContextMenu">
                 <thead>
                     <tr>
-                        <th width="10%" data-options="field:'id',sortable:'true', order:'desc', align:'center', resizable:'true', fixed:'false'">
+                        <th width="10%" data-options="field:'code',sortable:'true', order:'desc', align:'center', resizable:'true', fixed:'false'">
                             回访编号
                         </th>
                         <th width="20%" data-options="field:'subject',sortable:'true', order:'asc', align:'center', resizable:'true', fixed:'false'">
                             主题
                         </th>
                         <th width="10%" data-options="field:'customerName', _provider:'visitCustomerProvider', sortable:'true', order:'asc', align:'center', resizable:'true', fixed:'false'">
-                            回访对象
+                            回访客户
                         </th>
                         <th width="10%" data-options="field:'customerPhone', _provider:'visitCustomerProvider', sortable:'true', order:'asc', align:'center', resizable:'true', fixed:'false'">
                             电话
@@ -249,12 +249,12 @@
 //            }
             var pager = $('#grid').treegrid('getPager');    // get the pager of treegrid
             pager.pagination({
-                layout:['list','sep','first','prev','links','next','last','sep','refresh','info'],
-                links:3,
+                <#controls_paginationOpts/>,
                 buttons:[
                 <%if(hasResource("viewVisit")) {%>
                     {
                         iconCls:'icon-detail',
+                        text:'详情',
                         handler:function(){
                             openDetail();
                         }
@@ -263,6 +263,7 @@
                 <%if(hasResource("addVisit")) {%>
                     {
                         iconCls:'icon-add',
+                        text:'新增',
                         handler:function(){
                             openInsert();
                         }
@@ -271,15 +272,17 @@
                 <%if(hasResource("editVisit")) {%>
                       {
                          iconCls:'icon-edit',
+                         text:'修改',
                          handler:function(){
                              openUpdate();
                          }
                       },
                  <%}%>
       /*           <%if(hasResource("removeVisit")) {%>
-                    {
+                     {
                         iconCls:'icon-remove',
-                            handler:function(){
+                        text:'删除',
+                        handler:function(){
                             del();
                         }
                      },
@@ -287,7 +290,8 @@
                  <%if(hasResource("exportVisit")) {%>
                     {
                         iconCls:'icon-export',
-                            handler:function(){
+                        text:'导出',
+                        handler:function(){
                             doExport('grid');
                         }
                      },

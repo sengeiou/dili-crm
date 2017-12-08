@@ -15,15 +15,15 @@
                 <#nav/>
                 <div style="display: inline;float:right;padding-right: 300px;">
                     <span id="newPage" style="display: none;">
-                            <a id="saveBtn" href="#" class="easyui-linkbutton" data-options="width:80" onclick="saveOrUpdate(1)">保存</a>&nbsp;&nbsp;
-                            <a id="saveAndNewBtn" href="#" class="easyui-linkbutton" data-options="width:100" onclick="saveOrUpdate(2)">保存并新建</a>
-                            <a id="saveAndFilishedBtn" href="#" class="easyui-linkbutton" data-options="width:100" onclick="saveOrUpdate(3)">保存并完成</a>&nbsp;&nbsp;
+                            <a id="saveBtn" href="#" class="easyui-linkbutton" iconCls="icon-save" data-options="width:80" onclick="saveOrUpdate(1)">保存</a>&nbsp;&nbsp;
+                            <a id="saveAndNewBtn" href="#" class="easyui-linkbutton" iconCls="icon-save" data-options="width:120" onclick="saveOrUpdate(2)">保存并新建</a>&nbsp;&nbsp;
+                            <a id="saveAndFilishedBtn" href="#" class="easyui-linkbutton" iconCls="icon-save" data-options="width:120" onclick="saveOrUpdate(3)">保存并完成</a>&nbsp;&nbsp;
                         </span>
-                    <span id="modifyPage" style="display: none;">
-                            <a id="modifyBtn" href="#" class="easyui-linkbutton" data-options="width:80" onclick="saveOrUpdate(1)">更新</a>&nbsp;&nbsp;
-                            <a id="modifyAndFilishedBtn" href="#" class="easyui-linkbutton" data-options="width:100" onclick="saveOrUpdate(3)">完成回访</a>&nbsp;&nbsp;
+                        <span id="modifyPage" style="display: none;">
+                            <a id="modifyBtn" href="#" class="easyui-linkbutton" iconCls="icon-save" data-options="width:80" onclick="saveOrUpdate(1)">更新</a>&nbsp;&nbsp;
+                            <a id="modifyAndFilishedBtn" href="#" class="easyui-linkbutton" iconCls="icon-save" data-options="width:100" onclick="saveOrUpdate(3)">完成回访</a>&nbsp;&nbsp;
                         </span>
-                    <a id="cancelBtn" href="#" class="easyui-linkbutton" data-options="width:80" onclick="doBack()">取消</a>
+                    <a id="cancelBtn" href="#" class="easyui-linkbutton" iconCls="icon-cancel" data-options="width:80" onclick="doBack()">取消</a>
                 </div>
             </div>
             <div style="margin-top:50px">
@@ -47,7 +47,7 @@
                         </tr>
                         <tr>
                             <td style="padding:5px;">
-                                <input class="easyui-textbox" name="customerId" id="customerId" panelWidth="auto" panelHeight="auto" label="回访对象:" style="width: 80%;" required="true"
+                                <input class="easyui-textbox" name="customerId" id="customerId" panelWidth="auto" panelHeight="auto" label="回访客户:" style="width: 80%;" required="true"
                                        data-options="labelAlign:'right',editable:false,
 									buttonText:'选择',
 									onClickButton:_selectCustomer,onChange:_changeTextboxShowClear" />
@@ -61,14 +61,32 @@
                                 <#comboProvider _id="_priority" _provider='dataDictionaryValueProvider' _queryParams='{dd_id:"10"}'/>
                             </td>
                         </tr>
-                        <tr>
-                            <td style="padding:5px;">
-                                <input class="easyui-datetimebox" name="_finishTime" id="_finishTime" style="width:80%" data-options="labelAlign:'right',label:'完成时间:',editable:false"/>
-                            </td>
-                            <td style="padding:5px;" colspan="2">
-                                <input class="easyui-textbox" name="_notes" id="_notes" style="width:90%" multiline="true" data-options="labelAlign:'right',label:'描述:', validType:'length[0,200]'" />
-                            </td>
-                        </tr>
+                        <%if (has(customerVisit)){%>
+                            <tr>
+                                <td style="padding:5px;">
+                                    <input class="easyui-datetimebox" name="_finishTime" id="_finishTime" style="width:80%" data-options="labelAlign:'right',label:'完成时间:',editable:false"/>
+                                </td>
+                                <td style="padding:5px;" >
+                                    <input class="easyui-textbox" name="_code" id="_code" style="width:80%"  data-options="labelAlign:'right',label:'回访编码:',disabled:true" />
+                                </td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td style="padding:5px;" colspan="2">
+                                    <input class="easyui-textbox" name="_notes" id="_notes" style="width:90%" multiline="true" data-options="labelAlign:'right',label:'描述:', validType:'length[0,200]'" />
+                                </td>
+                            </tr>
+                        <%}else{%>
+                            <tr>
+                                <td style="padding:5px;">
+                                    <input class="easyui-datetimebox" name="_finishTime" id="_finishTime" style="width:80%" data-options="labelAlign:'right',label:'完成时间:',editable:false"/>
+                                </td>
+                                <td style="padding:5px;" colspan="2">
+                                    <input class="easyui-textbox" name="_notes" id="_notes" style="width:90%" multiline="true" data-options="labelAlign:'right',label:'描述:', validType:'length[0,200]'" />
+                                </td>
+                            </tr>
+                        <%}%>
+
                     </table>
                 </form>
             </div>
@@ -78,10 +96,10 @@
                 <p />
                 <table class="easyui-datagrid" id="eventGrid" style="height:auto;width: 93%;" title="事件" collapsible="true"
                        pagination="false" rownumbers="false" remoteSort="false" data-options="onDblClickRow:openUpdateEvent
-                        <%if(hasResource("editVisit") && hasResource("addVisitEvent") && has(view)==false) {%>
-                            ,tools:[{iconCls:'icon-add',handler:openInsertEvent}]
-                        <%}%>
-                    "
+                         <%if(hasResource("editVisit") && hasResource("addVisitEvent") && has(view)==false) {%>
+                            ,tools:[{text:'dfafa',iconCls:'icon-add',handler:openInsertEvent}]
+                         <%}%>
+                         "
                        loadMsg="数据加载中..." singleSelect="true" method="post" multiSort="false"
                        align="left"  striped="false" idField="id" >
                     <thead>
@@ -111,14 +129,14 @@
     <!-- 事件隐藏框 -->
     <div id="eventDlg" class="easyui-dialog" resizable="false" constrain="true" shadow="true" draggable="false" title="事件信息" style="padding:20px;width: 550px;height: 310px;" modal="true" border="thin" closed="true"
          data-options="
-				iconCls: 'icon-save',
 				height: 230,
 				buttons: [{
-					text:'确定',
-					iconCls:'icon-ok',
+					text:'保存',
+					iconCls:'icon-save',
 					handler:saveOrUpdateEvent
 				},{
 					text:'取消',
+					iconCls:'icon-cancel',
 					handler:function(){
 						$('#eventDlg').dialog('close');
 					}
@@ -129,18 +147,18 @@
             <table style="width: 100%;">
                 <tr>
                     <td style="padding-top:10px;padding-left:15px;width: 100%;">
-                        <input class="easyui-datetimebox" name="_event_time" id="_event_time" required="true" style="width:80%" data-options="labelAlign:'right',label:'时间:',editable:false" />
+                        <input class="easyui-datetimebox" name="_event_time" id="_event_time" required="true" style="width:60%" data-options="labelAlign:'right',label:'时间:',editable:false" />
                     </td>
                 </tr>
                 <tr>
                     <td style="padding-top:10px;padding-left:15px;width: 100%;">
-                        <input class="easyui-combobox" name="_event_mode" id="_event_mode" style="width:80%" panelHeight="auto" label="方式:" data-options="labelAlign:'right'" required="true" editable="false"/>
+                        <input class="easyui-combobox" name="_event_mode" id="_event_mode" style="width:60%" panelHeight="auto" label="方式:" data-options="labelAlign:'right'" required="true" editable="false"/>
                         <#comboProvider _id="_event_mode" _provider='dataDictionaryValueProvider' _queryParams='{dd_id:"11"}'/>
                     </td>
                 </tr>
                 <tr>
                     <td style="padding-top:10px;padding-left:15px;width: 100%;">
-                        <input class="easyui-textbox" name="_event_user" id="_event_user" required="true" style="width:80%" data-options="labelAlign:'right',label:'处理人:'" disabled="disabled" editable="false"/>
+                        <input class="easyui-textbox" name="_event_user" id="_event_user" required="true" style="width:60%" data-options="labelAlign:'right',label:'处理人:'" disabled="disabled" editable="false"/>
                     </td>
                 </tr>
                 <tr>
@@ -319,6 +337,7 @@
             $('#eventDlg').dialog('center');
             $('#_eventForm').form('clear');
             $('#_event_user').textbox("initValue","${user.realName}");
+            $('#_event_time').textbox("initValue",datetimeFormatter(new Date()));
         }
 
         /**

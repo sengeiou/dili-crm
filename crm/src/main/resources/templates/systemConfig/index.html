@@ -44,25 +44,25 @@
             <!-- =========================================================表单========================================================= -->
             <div class="easyui-panel" style="width:100%;border:0px;" align="left">
                 <form id="form" name="form" class="easyui-form" method="post" fit="true">
-                    <table style="padding:10px;">
+                    <table style="padding-bottom:5px;">
                         <tr>
-                            <td>
+                            <td style="padding: 5px;">
                                 <input name="name" id="name" style="width:100%;" panelWidth="auto" panelHeight="auto"
-                                       label="名称:" class="easyui-textbox" labelAlign="left"/>
+                                       label="名称:" class="easyui-textbox" labelAlign="right"/>
                             </td>
-                            <td>
+                            <td style="padding: 5px;">
                                 <input name="code" id="code" style="width:100%;" panelWidth="auto" panelHeight="auto"
-                                       label="编码:" class="easyui-textbox" labelAlign="left"/>
+                                       label="编码:" class="easyui-textbox" labelAlign="right"/>
                             </td>
-                            <td>
+                            <td style="padding: 5px;">
                                 <input name="yn" id="yn" style="width:100%;" panelWidth="auto" panelHeight="auto"
-                                       label="状态:" data-options="editable:false" labelAlign="left"/>
+                                       label="状态:" data-options="editable:false" labelAlign="right"/>
                                 <#comboProvider _id="yn" _data="[{label: '可用',value: '1'},{label: '不可用',value: '0'}]" _valueField="value" _textField="label"/>
                             </td>
-                            <td>
+                            <td style="padding: 5px;">
                                 <a href="#" class="easyui-linkbutton" iconCls="icon-search" id="queryBtn"
-                                   onclick="queryGrid()">查询</a>
-                                <a href="javascript:void(0)" class="easyui-linkbutton" onclick="clearForm()">清除</a>
+                                   onclick="queryGrid()">查询</a>&nbsp;&nbsp;
+                                <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-clear" onclick="clearForm()">清除</a>
                             </td>
                         </tr>
                     </table>
@@ -94,19 +94,19 @@
                         data-options="field:'value', sortable:'true', order:'asc', align:'center', resizable:'true', fixed:'false'">
                         值
                     </th>
-                    <th width="35%"
+                    <th width="30%"
                         data-options="field:'notes', sortable:'true', order:'asc', align:'center', resizable:'true', fixed:'false'">
                         描述
                     </th>
-                    <th width="12%"
+                    <th width="14%"
                         data-options="field:'created', _provider:'datetimeProvider', sortable:'true', order:'asc', align:'center', resizable:'true', fixed:'false'">
                         创建时间
                     </th>
-                    <th width="12%"
+                    <th width="14%"
                         data-options="field:'modified', _provider:'datetimeProvider', sortable:'true', order:'asc', align:'center', resizable:'true', fixed:'false'">
                         修改时间
                     </th>
-                    <th width="6%"
+                    <th width="7%"
                         data-options="field:'yn', _provider:'ynProvider', align:'center', resizable:'true', fixed:'false'">
                         状态
                     </th>
@@ -270,37 +270,41 @@
 
         $(function () {
 
-            var pager = $('#grid').treegrid('getPager');    // get the pager of treegrid
+            var pager = $('#grid').datagrid('getPager');    // get the pager of treegrid
             pager.pagination({
-                layout: ['list', 'sep', 'first', 'prev', 'links', 'next', 'last', 'sep', 'refresh', 'info'],
-                links: 3,
+                <#controls_paginationOpts/>,
                 buttons: [
                     {
                         iconCls: 'icon-search',
+                        text:'查询',
                         handler: function () {
                             openQueryDlg();
                         }
                     }
                     , {
                         iconCls: 'icon-add',
+                        text:'新增',
                         handler: function () {
                             openInsert();
                         }
                     }
                     , {
                         iconCls: 'icon-edit',
+                        text:'修改',
                         handler: function () {
                             openUpdate();
                         }
                     }
                     , {
                         iconCls: 'icon-remove',
+                        text:'删除',
                         handler: function () {
                             del();
                         }
                     }
                     , {
                         iconCls: 'icon-export',
+                        text:'导出',
                         handler: function () {
                             doExport('grid');
                         }
