@@ -1,5 +1,9 @@
 <div id="addressDiv" class="easyui-panel" style="width: 100%;" header="#addressHeader">
-    <#controls_panelHeader panelId="addressDiv" headerId="addressHeader" title="地址" insertFun="openInsertAddress"></#controls_panelHeader>
+    <% var insertFunction = "";
+    if(has(action) && action=="edit"){
+        insertFunction = "openInsertAddress";
+    }%>
+    <#controls_panelHeader panelId="addressDiv" headerId="addressHeader" title="地址" insertFun="${insertFunction}"></#controls_panelHeader>
 
     <!-- =========================================================地址表格========================================================= -->
     <table class="easyui-datagrid" id="addressGrid" style="height:150px;padding:0px;width:100%;" title="地址" noheader="true"

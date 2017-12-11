@@ -14,7 +14,7 @@
 <div id="${headerId}" class="panel-title" style="height:24px;border: 1px solid #d4d4d4; line-height:24px; margin: 0; padding-left:10px;">
     <span id="${headerId}Title">${title}</span>
     <div style="float:right; padding-right:15px;">
-    <%if(has(insertFun)){%><a  href="#" class="easyui-linkbutton" id="${headerId}Insert" iconCls="icon-add" onclick="${insertFun}()">新增</a>&nbsp;&nbsp;<%}%>
+    <%if(has(insertFun) && insertFun != ""){%><a  href="#" class="easyui-linkbutton" id="${headerId}Insert" iconCls="icon-add" onclick="${insertFun}()">新增</a>&nbsp;&nbsp;<%}%>
     <a  href="#" class="easyui-linkbutton" id="${headerId}Toggle"
         <%if(has(collapsed) && collapsed=="true"){%>
         iconCls="panel-tool-expand" onclick="toggle${panelId}()" >展开

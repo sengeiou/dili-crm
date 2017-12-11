@@ -1,5 +1,9 @@
 <div id="vehicleDiv" class="easyui-panel" style="width: 100%;" header="#vehicleHeader">
-    <#controls_panelHeader panelId="vehicleDiv" headerId="vehicleHeader" title="车辆" insertFun="openInsertVehicle"></#controls_panelHeader>
+    <% var insertFunction = "";
+    if(has(action) && action=="edit"){
+        insertFunction = "openInsertVehicle";
+    }%>
+    <#controls_panelHeader panelId="vehicleDiv" headerId="vehicleHeader" title="车辆" insertFun="${insertFunction}"></#controls_panelHeader>
 
     <!-- =========================================================车辆表格========================================================= -->
     <table class="easyui-datagrid" id="vehicleGrid" style="height:150px;padding:0px;width:100%;" title="车辆" noheader="true"

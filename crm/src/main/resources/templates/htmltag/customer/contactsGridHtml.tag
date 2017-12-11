@@ -1,5 +1,9 @@
 <div id="contactsDiv" class="easyui-panel" style="width: 96%;"  header="#contactsHeader">
-    <#controls_panelHeader panelId="contactsDiv" headerId="contactsHeader" title="联系人" insertFun="openInsertContacts"></#controls_panelHeader>
+    <% var insertFunction = "";
+    if(has(action) && action=="edit"){
+        insertFunction = "openInsertContacts";
+    }%>
+    <#controls_panelHeader panelId="contactsDiv" headerId="contactsHeader" title="联系人" insertFun="${insertFunction}"></#controls_panelHeader>
     <!-- =========================================================联系人表格========================================================= -->
     <table class="easyui-datagrid" id="contactsGrid" style="height:150px;padding:0px;width:100%;" noheader="true" title="联系人"
            pagination="false" rownumbers="true" remoteSort="false" data-options="loadMsg:0
