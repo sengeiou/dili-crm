@@ -1,6 +1,7 @@
-<div id="contactsDiv" style="width: 96%">
+<div id="contactsDiv" class="easyui-panel" style="width: 96%;"  header="#contactsHeader">
+    <#controls_panelHeader panelId="contactsDiv" headerId="contactsHeader" title="联系人" insertFun="openInsertContacts"></#controls_panelHeader>
     <!-- =========================================================联系人表格========================================================= -->
-    <table class="easyui-datagrid" id="contactsGrid" style="height:185px;padding:0px;width:100%;" title="联系人" collapsible="true"
+    <table class="easyui-datagrid" id="contactsGrid" style="height:150px;padding:0px;width:100%;" noheader="true" title="联系人"
            pagination="false" rownumbers="true" remoteSort="false" data-options="loadMsg:0
           <%if(has(action) && action=="edit"){%>,onDblClickRow:openUpdateContacts, onBeforeSelect:onBeforeSelectContacts,tools:[{iconCls:'icon-add',handler:openInsertContacts}]<%}%>"
            loadMsg="数据加载中..." singleSelect="true" method="post" multiSort="false"

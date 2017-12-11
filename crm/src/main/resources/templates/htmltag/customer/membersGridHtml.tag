@@ -1,6 +1,7 @@
-<div id="membersDiv" style="width: 96%">
+<div id="membersDiv" class="easyui-panel" style="width: 96%;"  header="#membersHeader">
+    <#controls_panelHeader panelId="membersDiv" headerId="membersHeader" title="成员客户" insertFun="_selectMembers"></#controls_panelHeader>
     <!-- =========================================================成员客户表格========================================================= -->
-    <table class="easyui-datagrid" id="membersGrid" style="height:185px;padding:0px;width:100%;" title="成员客户" collapsible="true"
+    <table class="easyui-datagrid" id="membersGrid" style="height:150px;padding:0px;width:100%;" title="成员客户" noheader="true"
            pagination="false" rownumbers="true" remoteSort="false" data-options="loadMsg:0
            <%if(has(action) && action=="edit"){%>, onBeforeSelect:onBeforeSelectMembers,tools:[{iconCls:'icon-add',handler:_selectMembers}]<%}%>"
            singleSelect="true" method="post" multiSort="false"

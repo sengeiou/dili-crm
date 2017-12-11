@@ -1,8 +1,9 @@
-<div id="vehicleDiv" style="width: 100%">
+<div id="vehicleDiv" class="easyui-panel" style="width: 100%;" header="#vehicleHeader">
+    <#controls_panelHeader panelId="vehicleDiv" headerId="vehicleHeader" title="车辆" insertFun="openInsertVehicle"></#controls_panelHeader>
 
     <!-- =========================================================车辆表格========================================================= -->
-    <table class="easyui-datagrid" id="vehicleGrid" style="height:185px;padding:0px;width:100%;"
-           pageNumber="1" rownumbers="true" remoteSort="false" title="车辆" collapsible="true"
+    <table class="easyui-datagrid" id="vehicleGrid" style="height:150px;padding:0px;width:100%;" title="车辆" noheader="true"
+           pageNumber="1" rownumbers="true" remoteSort="false"
            singleSelect="true" method="post" multiSort="false" sortName="name"
            align="center" striped="false" idField="id" data-options="loadMsg:0
           <%if(has(action) && action=="edit"){%>,onDblClickRow:openUpdateVehicle, onBeforeSelect:onBeforeSelectVehicle,tools:[{iconCls:'icon-add',handler:openInsertVehicle}]<%}%>">

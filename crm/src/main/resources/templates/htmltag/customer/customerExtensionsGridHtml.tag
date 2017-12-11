@@ -1,6 +1,7 @@
-<div id="customerExtensionsDiv" style="width: 96%">
+    <div id="customerExtensionsDiv" class="easyui-panel" style="width: 96%;"  header="#customerExtensionsHeader">
+        <#controls_panelHeader panelId="customerExtensionsDiv" headerId="customerExtensionsHeader" title="业务系统账号信息" ></#controls_panelHeader>
     <!-- =========================================================业务系统账号信息表格========================================================= -->
-    <table class="easyui-datagrid" id="customerExtensionsGrid" style="height:185px;padding:0px;width:100%;" title="业务系统账号信息" collapsible="true"
+    <table class="easyui-datagrid" id="customerExtensionsGrid" style="height:150px;padding:0px;width:100%;" title="业务系统账号信息" noheader="true"
            pagination="false" rownumbers="true" remoteSort="false" data-options="loadMsg:0"
            singleSelect="true" method="post" multiSort="false"
            align="center"  striped="false" idField="id" >
