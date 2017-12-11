@@ -1,16 +1,15 @@
  <#body>
-
     <div class="easyui-layout" fit="true">
 
         <!-- ====================================================================================================================== -->
         <!-- 上方布局 -->
         <!-- ====================================================================================================================== -->
-        <div region="north" height="auto" align="center">
+        <div region="north" height="auto" align="center" border="false">
             <div id="nav" style="padding-left:15px;padding-top:10px;" align="left">
             <#nav/>
             </div>
             <!-- =========================================================表单========================================================= -->
-            <div class="easyui-panel" style="width:100%;border: 0px;" align="left">
+            <div class="easyui-panel" style="width:100%;border: 0px;" align="left" border="false">
                 <form id="form" class="easyui-form" method="post" fit="true">
                     <table style="padding:10px;">
                         <tr>
@@ -59,11 +58,12 @@
         <!-- 中央布局 -->
         <!-- ====================================================================================================================== -->
         <!-- 表格 -->
-        <div region="center" style="width:100%;" height="auto">
+        <div region="center"  height="auto" align="center" border="false">
+            <div class="easyui-panel" align="center" style="width:96%;height:100%;" border="false">
             <!-- =========================================================表格========================================================= -->
             <table class="easyui-treegrid" id="grid" fitColumns="true"  title="客户信息" noheader="true"
                    pagination="true" pageSize="30" pageNumber="1" pagePosition="top" rownumbers="true" remoteSort="true"
-                   loadMsg="数据加载中..." singleSelect="true" method="post" multiSort="false" sortName="name"
+                   loadMsg="数据加载中..." singleSelect="true" method="post" multiSort="false" sortName="name" border="false"
                    align="center" fit="true" striped="true"
                    data-options="onDblClickRow:<%if(hasResource("updateCustomer")) {%>openUpdate,<%}else{%>openDetail,<%}%>
                    onHeaderContextMenu:headerContextMenu,
@@ -124,10 +124,9 @@
                     </tr>
                 </thead>
             </table>
-
-        </div>
+            </div>
+        </div> <!-- end of region="center" -->
     </div>
-
 
     <!-- ====================================================================================================================== -->
     <!-- style & script 分隔线 -->
