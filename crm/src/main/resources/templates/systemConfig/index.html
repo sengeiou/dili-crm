@@ -73,12 +73,13 @@
         <!-- 中央布局 -->
         <!-- ====================================================================================================================== -->
         <!-- 表格 -->
-        <div region="center" style="width:100%;" height="auto">
+        <div region="center" style="width:100%;" height="auto" align="center" border="false">
+            <div style="width: 96%;height: 100%;" align="center">
             <!-- =========================================================表格========================================================= -->
             <table class="easyui-datagrid" title="系统配置列表" noheader="true" id="grid" fitColumns="true"
                    pagination="true" pageSize="30" pageNumber="1" pagePosition="top" rownumbers="true" remoteSort="true"
                    loadMsg="数据加载中..." singleSelect="true" method="post" multiSort="false" sortName="name"
-                   align="center" fit="true" striped="true" idField="id"
+                   align="center" fit="true" striped="true" idField="id" border="false"
                    data-options="onDblClickRow:openUpdate">
                 <thead>
                 <tr>
@@ -113,7 +114,7 @@
                 </tr>
                 </thead>
             </table>
-
+            </div>
         </div>
     </div>
     <!-- 隐藏编辑框 -->

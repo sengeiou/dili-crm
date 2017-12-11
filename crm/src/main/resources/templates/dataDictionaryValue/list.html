@@ -9,10 +9,11 @@
 	<!-- 中央布局 -->
 	<!-- ====================================================================================================================== -->
 	<!-- 表格 -->
-	<div region="center" height="auto">
+	<div region="center" height="auto" align="center" border="false">
+		<div style="width: 96%;height: 100%;" align="center">
 		<!-- =========================================================表格========================================================= -->
 		<table class="easyui-datagrid" id="ddValueGrid" fitColumns="true" pagination="true" pageSize="30" pageNumber="1" pagePosition="top" rownumbers="true" remoteSort="false" loadMsg="数据加载中..."
-			singleSelect="true" method="post" align="center" fit="true" idField="id"
+			singleSelect="true" method="post" align="center" fit="true" idField="id" border="false"
 			data-options="onDblClickRow:openUpdateDdValue,onBeginEdit:onBeginEditDdValue,onAfterEdit:onAfterEditDdValue,
 				onCancelEdit:onCancelEditDdValue">
 			<thead>
@@ -33,6 +34,7 @@
 				</tr>
 			</thead>
 		</table>
+		</div>
 	</div>
 </div>
 <script type="text/javascript">

@@ -5,7 +5,7 @@
 	<!-- ====================================================================================================================== -->
 	<!-- 上方布局 -->
 	<!-- ====================================================================================================================== -->
-	<div region="north" height="auto" align="center">
+	<div region="north" height="auto" align="center" border="false">
 		<div id="nav" style="padding-left:15px;padding-top:10px;" align="left">
 			<#nav/>
 		</div>
@@ -33,10 +33,11 @@
 	<!-- 中央布局 -->
 	<!-- ====================================================================================================================== -->
 	<!-- 表格 -->
-	<div region="center" style="width: 100%;" height="auto">
+	<div region="center" style="width: 100%;" height="auto" align="center" border="false">
+		<div style="width: 96%;height: 100%;" align="center">
 		<!-- =========================================================表格========================================================= -->
 		<table class="easyui-datagrid" title="数据字典列表" noheader="true" id="grid" fitColumns="true" pagination="true" pageSize="30" pageNumber="1" pagePosition="top" rownumbers="true" remoteSort="false" loadMsg="数据加载中..."
-			singleSelect="true" method="post" multiSort="true" sortName="code" align="center" fit="true" striped="true"  idField="id"
+			singleSelect="true" method="post" multiSort="true" sortName="code" align="center" fit="true" striped="true"  idField="id" border="false"
 			data-options=" onClickRow:onClickDdGridRow,onDblClickRow:openUpdateDd,onBeginEdit:onBeginEditDdGrid,onAfterEdit:onAfterEditDdGrid,onCancelEdit:onCancelEditDdGrid">
 			<thead>
 				<tr>
@@ -53,6 +54,7 @@
 				</tr>
 			</thead>
 		</table>
+		</div>
 	</div>
 </div>
 <!-- ====================================================================================================================== --> <!-- style & script 分隔线 --> <!-- ====================================================================================================================== -->
