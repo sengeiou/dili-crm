@@ -46,7 +46,7 @@
         <div id="userSelectDialog" style="display: none;"></div>
         <div id="customerSelectDialog" style="display: none;"></div>
         <div id="header" class="panel-title" style="height:24px;border: none; border-bottom: 1px solid #d4d4d4;line-height:24px; margin: 0; padding-left:10px;">
-			<span >近期新增客户</span> <span style="float:right; padding-right:60px;">更多...</span>
+			<span >近期新增客户</span> <span style="float:right; padding-right:60px;"><a href="${contextPath}/customer/index.html">更多...</a></span>
 		</div>
         <!-- ====================================================================================================================== -->
         <!-- 上方布局 -->
@@ -198,16 +198,16 @@
                     	   if(v.created){
                     		   var date=new Date();
                     		   date.setTime(v.created);
-                    		   created=date.toLocaleString();
+                    		   created=datetimeFormatter(date);
                     	   }else{
                     		   created="";
                     	   }
                     	   
-                    	   var created=v.created?v.created:'';
                     	   var tr="<tr><td  >"+link+"</td><td >"+phone+"</td><td>"+market+"</td><td>"+sourceSystem+"</td><td>"+created+"</td></tr>";
                     	   tbody.append(tr);
                     	   
                        });
+                       
                        $('#grid tbody').html(tbody.html())
                        
                 },
