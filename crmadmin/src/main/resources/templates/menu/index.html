@@ -4,28 +4,37 @@
 	<!-- ====================================================================================================================== -->
 	<!-- 中央布局 -->
 	<!-- ====================================================================================================================== -->
-	<div region="north" height="auto" align="center" style="padding-bottom: 15px;">
+	<div region="north" height="auto" align="center" style="padding-bottom: 15px;"  border="false">
 		<div id="nav" style="padding-left:15px;padding-top:10px;" align="left">
 			<#nav/>
 		</div>
 	</div>
 	<!-- 表格 -->
-	<div region="center" style="width: 100%;"  height="100%">
-		<div id="p1" class="easyui-panel" style="width:100%;height:50%;">
-			<!-- =========================================================表格========================================================= -->
-			<table id="grid"></table>
-		</div>
-		<div id="p2" class="easyui-panel" style="width:100%;height:50%;">
-			<!-- =========================================================表格========================================================= -->
-			<table id="inlineGrid"></table>
+	<div region="center" style="width: 100%;"  height="100%"  border="false" align="center">
+		<div class="easyui-panel" align="center" style="width:96%;height:100%;" border="false">
+			<div class="easyui-layout" fit="true">
+				<div region="center" style="width: 100%;"  height="100%"  border="false" align="center">
+					<div id="p1" class="easyui-panel" style="width:100%;height:50%;">
+					<!-- =========================================================表格========================================================= -->
+						<table id="grid"></table>
+					</div>
+					<div id="p2" class="easyui-panel" style="width:100%;height:50%;">
+						<!-- =========================================================表格========================================================= -->
+						<table id="inlineGrid"></table>
+					</div>
+				</div>
+			
+				<div style="width: 20%;" height="auto" align="center" data-options="region:'west',title:'菜单管理',split:true">
+					<div id="p" class="easyui-panel" style="width: 100%;" data-options="iconCls:'icon-save'">
+						<ul id="menuTree" class="easyui-tree" url="${contextPath}/menu/list.json" lines="true"
+							data-options="onClick:queryGrid, loadFilter:treeLoadFilter, _idField:'id', _textField:'name', _parentIdField:'parentId',onLoadSuccess:onLoadSuccess" />
+					</div>
+				</div>
+			</div>
+		
 		</div>
 	</div>
-	<div style="width: 20%;" height="auto" align="center" data-options="region:'west',title:'菜单管理',split:true">
-		<div id="p" class="easyui-panel" style="width: 100%;" data-options="iconCls:'icon-save'">
-			<ul id="menuTree" class="easyui-tree" url="${contextPath}/menu/list.json" lines="true"
-				data-options="onClick:queryGrid, loadFilter:treeLoadFilter, _idField:'id', _textField:'name', _parentIdField:'parentId',onLoadSuccess:onLoadSuccess" />
-		</div>
-	</div>
+
 </div>
 <script type="text/javascript">
 	var dataAuth = {
