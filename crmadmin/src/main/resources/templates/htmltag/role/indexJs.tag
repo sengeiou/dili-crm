@@ -558,6 +558,9 @@ $(function() {
 							title : '角色权限',
 							width : 900,
 							height : 500,
+							collapsible:false,
+							minimizable:false,
+							maximizable:false,
 							href : '${contextPath!}/role/roleMenuAndResource.html?roleId=' + roleId,
 							onLoad : function() {
 								window.roleId = $('#roleId').val();
