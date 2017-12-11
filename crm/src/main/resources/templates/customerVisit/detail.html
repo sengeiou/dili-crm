@@ -3,8 +3,8 @@
     <style>
         input{height: 18px;}
     </style>
-    <div class="easyui-layout" style="margin-left: 20px;" fit="true">
-        <div region="center" style="width:99%;" minHeight="360" border="false">
+    <div class="easyui-layout"  fit="true">
+        <div region="center" style="width:100%;" minHeight="360" align="center" border="false">
             <!-- 上方导航栏 (锁定不滚动) -->
             <div id="nav" style="padding-left:10px;padding-top:10px;position:fixed;z-index:2008;width:99%;height:30px;background-color:white" align="left">
                 <#nav/>
@@ -15,61 +15,62 @@
                     <a id="cancelBtn" href="#" class="easyui-linkbutton" iconCls="icon-cancel" data-options="width:80" onclick="doBack()">取消</a>
                 </div>
             </div>
-            <div style="margin-top:50px">
-                <div id="stateDiv" style="padding-left:10px;width:99%;display: none;">
-                    <input id="stateValue"  style="width: 93%;height: 30px; background-color: lightgrey;border: hidden;text-align: center;font-size: large" value="" disabled="disabled">
+            <div align="center" style="margin-top:50px">
+                <div id="stateDiv" style="width:94%;display: none;">
+                    <input id="stateValue"  style="width: 100%;height: 30px; background-color: lightgrey;border: hidden;text-align: center;font-size: large" value="" disabled="disabled">
                 </div>
                 <form id="_form" class="easyui-form" method="post" fit="true">
                     <input name="_id" id="_id" type="hidden">
-                    <table width="99%" align="center">
+                    <table width="94%" align="center">
                         <tr>
-                            <td style="padding:5px;" width="33%">
+                            <td style="padding-top:10px;" width="33%">
                                 <input class="easyui-textbox" name="_createdName" id="_createdName" style="width: 80%;" data-options="labelAlign:'right',cls:'noborder', readonly:true, label:'回访创建者:'"  editable="true"/>
                             </td>
-                            <td style="padding:5px;"  width="33%">
+                            <td style="padding-top:10px;padding-left:10px;"  width="33%">
                                 <input class="easyui-textbox" name="_subject" id="_subject" style="width: 80%;" data-options="labelAlign:'right',cls:'noborder', readonly:true, editable:false,label:'主题:', validType:'length[0,40]'"  />
                             </td>
-                            <td style="padding:5px;" width="33%">
+                            <td style="padding-top:10px;padding-left:10px;" width="33%">
                                 <input class="easyui-textbox" name="userId" id="userId" panelWidth="auto" panelHeight="auto" label="回访人:" style="width: 80%;"
                                        data-options="labelAlign:'right',cls:'noborder', readonly:true, editable:false, hasDownArrow:false" />
                             </td>
                         </tr>
                         <tr>
-                            <td style="padding:5px;">
+                            <td style="padding-top:10px;">
                                 <input class="easyui-textbox" name="customerId" id="customerId" panelWidth="auto" panelHeight="auto" label="回访客户:" style="width: 80%;"
                                        data-options="labelAlign:'right',cls:'noborder', readonly:true, editable:false" />
                             </td>
-                            <td style="padding:5px;">
+                            <td style="padding-top:10px;padding-left:10px;">
                                 <input name="_mode" class="easyui-combobox" id="_mode" style="width:80%;" panelWidth="auto" panelHeight="auto" label="回访方式:" data-options="labelAlign:'right',cls:'noborder', readonly:true, editable:false, hasDownArrow:false"/>
                                 <#comboProvider _id="_mode" _provider='dataDictionaryValueProvider' _queryParams='{dd_id:"11"}'/>
                             </td>
-                            <td style="padding:5px;">
+                            <td style="padding-top:10px;padding-left:10px;">
                                 <input class="easyui-combobox" name="_priority" id="_priority" style="width:80%;" data-options="labelAlign:'right',cls:'noborder', readonly:true, editable:false, hasDownArrow:false" panelWidth="auto" panelHeight="auto" label="优先级:" />
                                 <#comboProvider _id="_priority" _provider='dataDictionaryValueProvider' _queryParams='{dd_id:"10"}'/>
                             </td>
                         </tr>
                         <tr>
-                            <td style="padding:5px;">
+                            <td style="padding-top:10px;">
                                 <input class="easyui-datetimebox" name="_finishTime" id="_finishTime" style="width:80%" data-options="labelAlign:'right',label:'完成时间:',cls:'noborder', readonly:true, editable:false, hasDownArrow:false"/>
                             </td>
-                            <td style="padding:5px;" >
-                                <input class="easyui-textbox" name="_code" id="_code" style="width:80%"  data-options="labelAlign:'right',label:'回访编码:',cls:'noborder',readonly:true, editable:false" />
+                            <td style="padding-top:10px;padding-left:10px;" >
+                                <input class="easyui-textbox" name="_code" id="_code" style="width:80%"  data-options="labelAlign:'right',label:'回访编号:',cls:'noborder',readonly:true, editable:false" />
                             </td>
                             <td></td>
                         </tr>
                         <tr>
-                            <td style="padding:5px;" colspan="2">
-                                <input class="easyui-textbox" name="_notes" id="_notes" style="width:90%" multiline="true" data-options="labelAlign:'right',label:'描述:', validType:'length[0,200]'" />
+                            <td style="padding-top:10px;" colspan="2">
+                                <input class="easyui-textbox" name="_notes" id="_notes" style="width:90%" multiline="true" data-options="labelAlign:'right',cls:'noborder',label:'描述:',readonly:true, editable:false" />
                             </td>
                         </tr>
                     </table>
                 </form>
             </div>
+            <p />
             <!--------------------事件信息------------------------>
-            <div id="eventDiv" style="padding-left:10px;width: 99%;display: none;">
+            <div id="eventDiv" class="easyui-panel" style="width: 94%;display: none;" header="#eventHeader">
+                <#controls_panelHeader panelId="eventDiv" headerId="eventHeader" title="事件"></#controls_panelHeader>
                 <!-- =========================================================事件表格========================================================= -->
-                <p />
-                <table class="easyui-datagrid" id="eventGrid" style="height:auto;width: 93%;" title="事件" collapsible="true"
+                <table class="easyui-datagrid" id="eventGrid" style="height:auto;width: 100%;" collapsible="true"
                        pagination="false" rownumbers="false" remoteSort="false"
                        loadMsg="数据加载中..." singleSelect="true" method="post" multiSort="false"
                        align="left"  striped="false" idField="id" >
