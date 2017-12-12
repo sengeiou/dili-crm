@@ -47,4 +47,7 @@
 	};
 </script> <script type="text/javascript">
 	<#department_indexJs/>
+	$(function() {
+		$('#grid').datagrid('getPanel').removeClass('lines-both lines-no lines-right lines-bottom').addClass("lines-bottom");
+	})
 </script> </#body>

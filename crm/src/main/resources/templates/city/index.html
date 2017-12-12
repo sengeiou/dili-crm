@@ -405,6 +405,7 @@
             } else {
                 document.onkeyup = getKey;
             }
+            $('#grid').treegrid('getPanel').removeClass('lines-both lines-no lines-right lines-bottom').addClass("lines-bottom");
             queryGrid();
         })
 
