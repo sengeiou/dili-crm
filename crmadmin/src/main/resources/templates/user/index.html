@@ -227,7 +227,17 @@
 	$.parser.onComplete = function() {
 		$.messager.progress("close");
 	}
-	
+
+    //打开修改窗口
+    function openUpdate() {
+        var selected = $("#userGrid").datagrid("getSelected");
+        if (null == selected) {
+            $.messager.alert('警告', '请选中一条数据');
+            return;
+        }
+        onEditClicked();
+    }
+    
     $(function () {
 //        bindFormEvent("form", "customerId", queryGrid);
 //        if (document.addEventListener) {
