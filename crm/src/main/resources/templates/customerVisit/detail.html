@@ -8,7 +8,7 @@
             <!-- 上方导航栏 (锁定不滚动) -->
             <div id="nav" style="padding-left:10px;padding-top:10px;position:fixed;z-index:2008;width:99%;height:30px;background-color:white" align="left">
                 <#nav/>
-                <div style="display: inline;float:right;padding-right: 300px;">
+                <div style="display: inline;float:right;padding-right: 40px;">
                     <%if (hasResource("editVisit") && has(edit)){%>
                         <a id="editBtn" href="#" class="easyui-linkbutton" iconCls="icon-edit" data-options="width:80" onclick="toEdit()">编辑</a>&nbsp;&nbsp;
                     <%}%>
@@ -67,7 +67,7 @@
             </div>
             <p />
             <!--------------------事件信息------------------------>
-            <div id="eventDiv" class="easyui-panel" style="width: 94%;display: none;" header="#eventHeader">
+            <div id="eventDiv" class="easyui-panel" style="width: 94%;display: none;" header="#eventHeader" border="false">
                 <#controls_panelHeader panelId="eventDiv" headerId="eventHeader" title="事件"></#controls_panelHeader>
                 <!-- =========================================================事件表格========================================================= -->
                 <table class="easyui-datagrid" id="eventGrid" style="height:auto;width: 100%;" collapsible="true"

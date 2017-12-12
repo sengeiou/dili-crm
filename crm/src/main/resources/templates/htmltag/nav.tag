@@ -1,4 +1,4 @@
-<div style="font-size:16px; font-weight: bold; display: inline;">当前位置:</div>
+<div style="font-size:16px; display: inline;"><img src="${contextPath}/resources/easyui/css/themes/blue/images/loading.gif" />当前位置:</div>
 <%
 for(parentMenu in parentMenus){
 var url = @parentMenu.getMenuUrl();
