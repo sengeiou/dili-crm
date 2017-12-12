@@ -2,33 +2,99 @@
     <style>
         td div div:first-child {
             border: 0;
-            background-color: #EEEEEE;
         }
          body {
              margin: 0;
              padding: 0;
          }
+        .panel-body {
+            background: none;
+        }
+        /*2017-12-11 by chenliangfang*/
+        /*顶部导航条*/
+        .panel-body {
+            font-size: 15px;
+        }
+        #header-menu {
+            padding-top: 10px;
+            padding-bottom: 10px;
+            box-sizing: border-box;
+            background: url(${contextPath}/resources/images/header-bg.png) no-repeat 0 center;
+            background-size: cover;
+        }
+        .mainMenu {
+            width: auto;
+            text-align: center;
+        }
+        .l-btn-plain.cur,
+        .l-btn-plain {
+            width: 120px;
+            /*padding-left: 20px;*/
+            /*padding-right: 20px;*/
+            text-align: center;
+            margin-right: 30px;
+            background: rgba(10,32,51,0.8);
+            color: #fff;
+        }
+        .l-btn-text {
+            line-height: 40px;
+        }
+        .l-btn-plain:hover {
+            background: #2b9eff;
+        }
+        .menu-text {
+            width: 100%;
+            padding-left: 0;
+            text-align: center;
+        }
+        .header-user .inform {
+            float: left;
+            margin-top: 10px;
+            margin-right: 20px
+        }
+        .header-user .inform-num {
+            display:inline-block;
+            padding:2px;
+            margin-left:-8px;
+            background:#f00;
+            color: #fff;
+            border-radius:50%;
+            vertical-align: top;
+            font-size: 12px;
+        }
+        .header-user .userhead {
+            float: left;
+            width: 30px;
+            height: 30px;
+            margin-top: 5px;
+            margin-right: 20px
+        }
+
     </style>
 
     <div class="easyui-layout" fit="true">
         <!-- ====================================================================================================================== -->
         <!-- 上方布局 -->
         <!-- ====================================================================================================================== -->
-        <div region="north" height="auto" style="border:0px;" align="center">
-            <table width="100%" style="padding: 0px; margin:0px;border-spacing: 0; border: 0px inset #0092DC;background-color: #EEEEEE;" >
+        <div  id="header-menu" region="north"height="auto" style="border:0px; width: 100%" align="center" >
+            <table width="100%" style="padding: 0px; margin:0px;border-spacing: 0; border: 0px inset #0092DC;" >
                 <tr>
-                    <td width="100%">
-                        <#menubutton _divId="mainMenu" _service="menuServiceImpl" _method="findUserMenu" _queryParams="${userid}" _menuWidth="100" _menuHeight="40"
-                                _textField="name" _idField="id" _parentIdField="parentId" plain="true" hasDownArrow="false" itemHeight="40" minWidth="80"
+                    <td style="padding-left: 30px"><img class="logo" src="${contextPath}/resources/images/logo.png" alt=""></td>
+                    <td>
+                        <#menubutton _divId="mainMenu" _panelAlign="center" _service="menuServiceImpl" _method="findUserMenu" _queryParams="${userid}" _menuWidth="120" _menuHeight="40"
+                                _textField="name" _idField="id" _parentIdField="parentId" plain="true" hasDownArrow="false" itemWidth="120" itemHeight="40" minWidth="50"
                                 align="left" noline="true" onClick="menuClickHandler">
                         </#menubutton>
                     </td>
 
-                    <td style="align:right;">
-                        <div id="userMenu" class="easyui-panel" style="padding:1px; width: 140px;background-color: #EEEEEE;">
+                    <td class="header-user" width="270px">
+                        <a href="" class="inform"><img src="${contextPath}/resources/images/icon/inform-icon.png" alt=""><span class="inform-num">99</span>
+                        </a>
+                        <a href="" class="userhead"><img src="${contextPath}/resources/images/icon/head-default.png" alt=""></a>
+                        <div id="userMenu" class="easyui-panel" style="padding:1px; float: left">
                             <a id="menubutton_right" href="#" class="easyui-menubutton" data-options="menu:'#menu_right', plain:true, hasDownArrow:false">${username}</a>
                         </div>
-                        <div id="menu_right" data-options="zIndex:'110000' , align:'left', noline:true, onClick:menuClickHandler" itemHeight="40">
+                        <div id="menu_right" style="width:88px" data-options="zIndex:'110000' , align:'left', noline:true, onClick:menuClickHandler" itemHeight="40">
                             <div id="menu_userDetail" data-options="menuUrl:'${contextPath}/main/userDetail.html' ">
                                 用户信息
                             </div>
