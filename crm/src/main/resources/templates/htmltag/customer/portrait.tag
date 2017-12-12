@@ -1,5 +1,6 @@
-<div id="portraitDiv" align="center" class="easyui-panel" title="客户画像" style="width: 96%" >
-    <table style="padding:0px;width:100%;">
+<p />
+<div id="portraitDiv" align="center" >
+    <table style="padding:0px;width:96%;">
         <!--<tr>-->
             <!--<td colspan="2" style="height:25px;font-size: 15px;color: inherit;font-weight:bold;">客户画像</td>-->
         <!--</tr>-->
