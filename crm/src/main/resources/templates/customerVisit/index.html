@@ -187,11 +187,7 @@
 
         //清空表单
         function clearForm() {
-            $(':input','#form')
-                .not(':button, :submit, :reset')
-                .val('')
-                .removeAttr('checked')
-                .removeAttr('selected');
+            clearEasyuiForm("form");
         }
 
         //表格表头右键菜单
