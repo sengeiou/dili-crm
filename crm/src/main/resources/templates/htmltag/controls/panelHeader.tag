@@ -4,22 +4,23 @@
     function toggle${panelId}() {
         if(isCollapse("${panelId}")){
             $("#${panelId}").panel("expand", true);
-            $("#${headerId}Toggle").linkbutton({text:'收起', iconCls:'panel-tool-collapse'});
+            $("#${headerId}Toggle").linkbutton({iconCls:'panel-tool-collapse'});
         }else{
             $("#${panelId}").panel("collapse", true);
-            $("#${headerId}Toggle").linkbutton({text:'展开', iconCls:'panel-tool-expand'});
+            $("#${headerId}Toggle").linkbutton({iconCls:'panel-tool-expand'});
         }
     }
 </script>
 <div id="${headerId}" class="panel-title" style="height:24px;border: 1px solid #d4d4d4; line-height:24px; margin: 0; padding-left:10px;">
-    <span id="${headerId}Title">${title}</span>
-    <div style="float:right; padding-right:15px;">
-    <%if(has(insertFun) && insertFun != ""){%><a  href="#" class="easyui-linkbutton" id="${headerId}Insert" iconCls="icon-add" onclick="${insertFun}()">新增</a>&nbsp;&nbsp;<%}%>
+    <span id="${headerId}Title">${title}
+     <%if(has(insertFun) && insertFun != ""){%>&nbsp;&nbsp;<a  href="#" class="easyui-linkbutton" id="${headerId}Insert" iconCls="icon-add" onclick="${insertFun}()"></a>&nbsp;&nbsp;<%}%>
+    </span>
+    <div style="float:right; padding-right:10px;">
     <a  href="#" class="easyui-linkbutton" id="${headerId}Toggle"
         <%if(has(collapsed) && collapsed=="true"){%>
-        iconCls="panel-tool-expand" onclick="toggle${panelId}()" >展开
+        iconCls="panel-tool-expand" onclick="toggle${panelId}()" >
         <%}else{%>
-        iconCls="panel-tool-collapse" onclick="toggle${panelId}()" >收起
+        iconCls="panel-tool-collapse" onclick="toggle${panelId}()" >
         <%}%>
         </a>
     </div>

@@ -1,13 +1,15 @@
 <div class="easyui-layout" fit="true">
-	<div region="north" height="40" align="left">
+	<div region="north" height="40" align="left" border="false">
 		<div style="margin: 5px 5px;">
 			<form class="easyui-form" id="searchMembersForm">
 				<input id="searchMembersTextbox" label="客户名:" labelAlign="right" name="searchMembersTextbox" class="easyui-textbox" style="width: 300px">
 				<a class="easyui-linkbutton"  data-options="width:80" iconCls="icon-search" onclick="searchMember();">查询</a>
+				&nbsp;&nbsp;
+				<a class="easyui-linkbutton"  data-options="width:80" iconCls="icon-ok" onclick="javascript:confirmMembersBtn();">确认</a>
 			</form>
 		</div>
 	</div>
-	<div region="center" align="center">
+	<div region="center" align="center" border="false">
 <table class="easyui-datagrid" id="selectMembersGrid" sortName="name" sortOrder="asc" fitColumns="true" remoteSort="false" loadMsg="数据加载中..." singleSelect="true" method="post" multiSort="true"
 	align="center" fit="true" striped="true" idField="id" pagination="true" pageSize="30" pageNumber="1" pagePosition="top" rownumbers="true"
 	   style="height:400px;"

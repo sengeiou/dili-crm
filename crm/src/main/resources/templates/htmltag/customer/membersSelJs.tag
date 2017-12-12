@@ -10,6 +10,14 @@
 
     // 确认选择事件
     function confirmMembersBtn(id) {
+        if(!id || id == null){
+            var selected = $('#selectMembersGrid').datagrid('getSelected');
+            if (null == selected) {
+                $.messager.alert('警告','请选中一条数据');
+                return;
+            }
+            id = selected.id;
+        }
         saveOrUpdateMembers(id);
         closeMembersSelectDlg();
     }
@@ -29,20 +37,7 @@
             queryParams : {
                 id : id
             },
-            modal : true,
-            buttons : [{
-                text : '确定',
-                iconCls:"icon-ok",
-                handler : function() {
-                    confirmMembersBtn($("#selectMembersGrid").datagrid("getSelected")["id"]);
-                }
-            }, {
-                text : '取消',
-                iconCls:"icon-cancel",
-                handler : function() {
-                    closeMembersSelectDlg();
-                }
-            }]
+            modal : true
         });
     }
 </script>

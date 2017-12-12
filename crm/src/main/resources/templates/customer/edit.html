@@ -91,7 +91,7 @@
             <div style="padding-top:40px" align="center">
             <form id="_form" class="easyui-form" method="post" fit="true">
                 <input name="_id" id="_id" type="hidden">
-                <table width="98%">
+                <table width="98%" style="border:0px;">
                     <tr>
                         <td style="padding-top:10px;padding-left:15px;" width="33%">
                             <input class="easyui-textbox" style="width:96%" id="_ownerName" name="_ownerName" data-options="labelAlign:'right', label:'客户所有者:'" disabled="false" editable="false"/>
@@ -212,7 +212,7 @@
             </form>
             </div>
             <div align="center">
-                <table width="96%">
+                <table width="96%" border="0">
                     <tr>
                         <td width="50%" valign="top">
             <!--  =========================================================地址表格div=========================================================  -->
@@ -294,11 +294,11 @@
             formData = addKeyStartWith(formData,"_");
             $('#_form').form('load', formData);
             formFocus("_form", "_name");
-            $("#vehicleDiv").hide();
-            $("#addressDiv").hide();
-            $("#contactsDiv").hide();
-            $("#membersDiv").hide();
-            $("#customerExtensionsDiv").hide();
+            $("#vehicleDiv").panel("close");
+            $("#addressDiv").panel("close");
+            $("#contactsDiv").panel("close");
+            $("#membersDiv").panel("close");
+            $("#customerExtensionsDiv").panel("close");
             $("#portraitDiv").panel("destroy");
         }
 
@@ -535,6 +535,11 @@
             } else {
                 document.onkeyup = getKey;
             }
+//            $('#addressGrid').datagrid('getPanel').removeClass('lines-both lines-no lines-right lines-bottom').addClass("lines-bottom");
+//            $('#contactsGrid').datagrid('getPanel').removeClass('lines-both lines-no lines-right lines-bottom').addClass("lines-bottom");
+//            $('#vehicleGrid').datagrid('getPanel').removeClass('lines-both lines-no lines-right lines-bottom').addClass("lines-bottom");
+//            $('#customerExtensionsGrid').datagrid('getPanel').removeClass('lines-both lines-no lines-right lines-bottom').addClass("lines-bottom");
+//            $('#membersGrid').datagrid('getPanel').removeClass('lines-both lines-no lines-right lines-bottom').addClass("lines-bottom");
             <% if(has(customer)){%>
                 openUpdate();
             <%}else{%>

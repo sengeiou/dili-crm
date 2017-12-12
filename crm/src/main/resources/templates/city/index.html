@@ -58,7 +58,7 @@
            <div class="easyui-panel" align="center" style="width:96%;height:100%;" border="false">
 	            <div style="width:100%;height:100%">
 	               <table class="easyui-treegrid" id="grid" fitColumns="true"  title="区域信息" noheader="true" style="height:auto;width: 100%;"
-	                   pagination="false" rownumbers="true" remoteSort="false"
+	                   pagination="false" rownumbers="false" remoteSort="false"
 	                   loadMsg="数据加载中..." singleSelect="true" method="post" multiSort="false" sortName="name"
 	                   align="center" fit="true" striped="true" toolbar="#toolbar" 
 	                   data-options="idField:'id',
@@ -126,7 +126,6 @@
     <!-- 隐藏编辑框 -->
     <div id="dlg" class="easyui-dialog" resizable="false" constrain="true" shadow="true" draggable="false" title="City信息" style="padding:20px" modal="true" border="thin" closed="true"
          data-options="
-				iconCls: 'icon-save',
 				height: 480,
 				buttons: [{
 					text:'Ok',
@@ -406,6 +405,7 @@
             } else {
                 document.onkeyup = getKey;
             }
+            $('#grid').treegrid('getPanel').removeClass('lines-both lines-no lines-right lines-bottom').addClass("lines-bottom");
             queryGrid();
         })
 

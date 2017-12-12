@@ -62,7 +62,7 @@
         <div region="center" style="width:100%;" height="auto" align="center" border="false">
             <div style="width: 96%;height: 100%;" align="center">
                 <!-- =========================================================表格========================================================= -->
-                <table class="easyui-datagrid" title="回访信息" id="grid" fitColumns="true" noheader="true" border="false"
+                <table class="easyui-datagrid" title="回访信息" id="grid" fitColumns="true" noheader="true" 
                        pagination="true" pageSize="30" pageNumber="1" pagePosition="top" rownumbers="true" remoteSort="true"
                        loadMsg="数据加载中..." singleSelect="true" method="post" multiSort="false" sortName="code" sortOrder="desc"
                        align="center" fit="true" striped="true"  idField="id" data-options="onDblClickRow:openUpdate, onHeaderContextMenu:headerContextMenu">
@@ -181,20 +181,13 @@
             if(!$('#form').form("validate")){
                 return;
             }
-            var param = bindMetadata("grid", true);
-            var formData = $("#form").serializeObject();
-            $.extend(param, formData);
-            $("#grid").datagrid("load", param);
+            $("#grid").datagrid("load", bindGridMeta2Form("grid", "form"));
         }
 
 
         //清空表单
         function clearForm() {
-            $(':input','#form')
-                .not(':button, :submit, :reset')
-                .val('')
-                .removeAttr('checked')
-                .removeAttr('selected');
+            clearEasyuiForm("form");
         }
 
         //表格表头右键菜单

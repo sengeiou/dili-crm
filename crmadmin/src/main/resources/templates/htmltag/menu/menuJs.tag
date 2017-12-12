@@ -213,6 +213,7 @@ function queryGrid(node) {
 								}
 							}]]
 				});
+			
 		inlineGrid.datagrid({
 					title : "内链菜单列表",
 					fitColumns : true,
@@ -311,6 +312,7 @@ function queryGrid(node) {
 								}
 							}]]
 				});
+				inlineGrid.datagrid('getPanel').removeClass('lines-both lines-no lines-right lines-bottom').addClass("lines-bottom");
 	} else if (gridType == 0) {
 		$('#p2').panel('close');
 		$('#p1').panel('open');
@@ -443,6 +445,7 @@ function queryGrid(node) {
 								}
 							}]]
 				});
+				menuGrid.datagrid('getPanel').removeClass('lines-both lines-no lines-right lines-bottom').addClass("lines-bottom");
 	}
 }
 
@@ -849,6 +852,7 @@ $(function() {
 	window.menuGrid = $('#grid');
 	window.inlineGrid = $('#inlineGrid');
 	window.menuTree = $('#menuTree');
+
 		// if (document.addEventListener) {
 		// document.addEventListener("keyup", getKey, false);
 		// } else if (document.attachEvent) {
