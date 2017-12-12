@@ -4,6 +4,10 @@ body {
     padding:20px;
     margin:0;
 }
+.panel-body {
+    font-size: 15px;
+}
+
 h2 {
     font-size:18px;
     font-weight:bold;
@@ -89,6 +93,7 @@ h2 {
 .datagrid-row {
     height: 38px;
 }
+
 
 
 
