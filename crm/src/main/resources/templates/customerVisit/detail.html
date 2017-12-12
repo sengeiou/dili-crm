@@ -2,6 +2,48 @@
 
     <style>
         input{height: 18px;}
+
+        /*回访进度条*/
+        #stateDiv {
+            width: 100%;
+            padding: 0;
+        }
+        #stateDiv .step {
+            display: inline-block;
+            width: 32%;
+            height:36px;
+            line-height: 36px;
+        }
+        #stateDiv .step.cur {
+            color: #fff;
+        }
+
+        #stateDiv .step:first-child {
+            background: url(${contextPath}/resources/images/visitCus/step1.png) no-repeat left center;
+            background-size: 100%;
+        }
+        #stateDiv .step:first-child.cur {
+            background: url(${contextPath}/resources/images/visitCus/step1-hv.png) no-repeat left center;
+            background-size: 100%;
+        }
+        #stateDiv .step:nth-child(2) {
+            background: url(${contextPath}/resources/images/visitCus/step2.png) no-repeat left center;
+            background-size: 100%;
+        }
+        #stateDiv .step:nth-child(2).cur {
+            background: url(${contextPath}/resources/images/visitCus/step2-hv.png) no-repeat left center;
+            background-size: 100%;
+        }
+        #stateDiv .step:last-child {
+            background: url(${contextPath}/resources/images/visitCus/step3.png) no-repeat left center;
+            background-size: 100%;
+        }
+        #stateDiv .step:last-child.cur {
+            background: url(${contextPath}/resources/images/visitCus/step3-hv.png) no-repeat left center;
+            background-size: 100%;
+
+        }
+
     </style>
     <div class="easyui-layout"  fit="true">
         <div region="center" style="width:100%;" minHeight="360" align="center" border="false">
@@ -16,54 +58,58 @@
                 </div>
             </div>
             <div align="center" style="margin-top:50px">
-                <div id="stateDiv" style="width:94%;display: none;">
-                    <input id="stateValue"  style="width: 100%;height: 30px; background-color: lightgrey;border: hidden;text-align: center;font-size: large" value="" disabled="disabled">
+                <ul id="stateDiv" style="width:97%;display: none;">
+                    <li id="step1" class="step">新建回访</li>
+                    <li id="step2" class="step">进行中</li>
+                    <li id="step3" class="step">已完成</li>
+                </ul>
+                <div  class="easyui-panel" style="width: 94%;" title="回访信息" border="false" >
+                    <form id="_form" class="easyui-form" method="post" fit="true">
+                        <input name="_id" id="_id" type="hidden">
+                        <table width="94%" align="center">
+                            <tr>
+                                <td style="padding-top:10px;" width="33%">
+                                    <input class="easyui-textbox" name="_createdName" id="_createdName" style="width: 80%;" data-options="labelAlign:'right',cls:'noborder', readonly:true, label:'回访创建者:'"  editable="true"/>
+                                </td>
+                                <td style="padding-top:10px;padding-left:10px;"  width="33%">
+                                    <input class="easyui-textbox" name="_subject" id="_subject" style="width: 80%;" data-options="labelAlign:'right',cls:'noborder', readonly:true, editable:false,label:'主题:', validType:'length[0,40]'"  />
+                                </td>
+                                <td style="padding-top:10px;padding-left:10px;" width="33%">
+                                    <input class="easyui-textbox" name="userId" id="userId" panelWidth="auto" panelHeight="auto" label="回访人:" style="width: 80%;"
+                                           data-options="labelAlign:'right',cls:'noborder', readonly:true, editable:false, hasDownArrow:false" />
+                                </td>
+                            </tr>
+                            <tr>
+                                <td style="padding-top:10px;">
+                                    <input class="easyui-textbox" name="customerId" id="customerId" panelWidth="auto" panelHeight="auto" label="回访客户:" style="width: 80%;"
+                                           data-options="labelAlign:'right',cls:'noborder', readonly:true, editable:false" />
+                                </td>
+                                <td style="padding-top:10px;padding-left:10px;">
+                                    <input name="_mode" class="easyui-combobox" id="_mode" style="width:80%;" panelWidth="auto" panelHeight="auto" label="回访方式:" data-options="labelAlign:'right',cls:'noborder', readonly:true, editable:false, hasDownArrow:false"/>
+                                    <#comboProvider _id="_mode" _provider='dataDictionaryValueProvider' _queryParams='{dd_id:"11"}'/>
+                                </td>
+                                <td style="padding-top:10px;padding-left:10px;">
+                                    <input class="easyui-combobox" name="_priority" id="_priority" style="width:80%;" data-options="labelAlign:'right',cls:'noborder', readonly:true, editable:false, hasDownArrow:false" panelWidth="auto" panelHeight="auto" label="优先级:" />
+                                    <#comboProvider _id="_priority" _provider='dataDictionaryValueProvider' _queryParams='{dd_id:"10"}'/>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td style="padding-top:10px;">
+                                    <input class="easyui-datetimebox" name="_finishTime" id="_finishTime" style="width:80%" data-options="labelAlign:'right',label:'完成时间:',cls:'noborder', readonly:true, editable:false, hasDownArrow:false"/>
+                                </td>
+                                <td style="padding-top:10px;padding-left:10px;" >
+                                    <input class="easyui-textbox" name="_code" id="_code" style="width:80%"  data-options="labelAlign:'right',label:'回访编号:',cls:'noborder',readonly:true, editable:false" />
+                                </td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td style="padding-top:10px;" colspan="2">
+                                    <input class="easyui-textbox" name="_notes" id="_notes" style="width:90%" multiline="true" data-options="labelAlign:'right',cls:'noborder',label:'描述:',readonly:true, editable:false" />
+                                </td>
+                            </tr>
+                        </table>
+                    </form>
                 </div>
-                <form id="_form" class="easyui-form" method="post" fit="true">
-                    <input name="_id" id="_id" type="hidden">
-                    <table width="94%" align="center">
-                        <tr>
-                            <td style="padding-top:10px;" width="33%">
-                                <input class="easyui-textbox" name="_createdName" id="_createdName" style="width: 80%;" data-options="labelAlign:'right',cls:'noborder', readonly:true, label:'回访创建者:'"  editable="true"/>
-                            </td>
-                            <td style="padding-top:10px;padding-left:10px;"  width="33%">
-                                <input class="easyui-textbox" name="_subject" id="_subject" style="width: 80%;" data-options="labelAlign:'right',cls:'noborder', readonly:true, editable:false,label:'主题:', validType:'length[0,40]'"  />
-                            </td>
-                            <td style="padding-top:10px;padding-left:10px;" width="33%">
-                                <input class="easyui-textbox" name="userId" id="userId" panelWidth="auto" panelHeight="auto" label="回访人:" style="width: 80%;"
-                                       data-options="labelAlign:'right',cls:'noborder', readonly:true, editable:false, hasDownArrow:false" />
-                            </td>
-                        </tr>
-                        <tr>
-                            <td style="padding-top:10px;">
-                                <input class="easyui-textbox" name="customerId" id="customerId" panelWidth="auto" panelHeight="auto" label="回访客户:" style="width: 80%;"
-                                       data-options="labelAlign:'right',cls:'noborder', readonly:true, editable:false" />
-                            </td>
-                            <td style="padding-top:10px;padding-left:10px;">
-                                <input name="_mode" class="easyui-combobox" id="_mode" style="width:80%;" panelWidth="auto" panelHeight="auto" label="回访方式:" data-options="labelAlign:'right',cls:'noborder', readonly:true, editable:false, hasDownArrow:false"/>
-                                <#comboProvider _id="_mode" _provider='dataDictionaryValueProvider' _queryParams='{dd_id:"11"}'/>
-                            </td>
-                            <td style="padding-top:10px;padding-left:10px;">
-                                <input class="easyui-combobox" name="_priority" id="_priority" style="width:80%;" data-options="labelAlign:'right',cls:'noborder', readonly:true, editable:false, hasDownArrow:false" panelWidth="auto" panelHeight="auto" label="优先级:" />
-                                <#comboProvider _id="_priority" _provider='dataDictionaryValueProvider' _queryParams='{dd_id:"10"}'/>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td style="padding-top:10px;">
-                                <input class="easyui-datetimebox" name="_finishTime" id="_finishTime" style="width:80%" data-options="labelAlign:'right',label:'完成时间:',cls:'noborder', readonly:true, editable:false, hasDownArrow:false"/>
-                            </td>
-                            <td style="padding-top:10px;padding-left:10px;" >
-                                <input class="easyui-textbox" name="_code" id="_code" style="width:80%"  data-options="labelAlign:'right',label:'回访编号:',cls:'noborder',readonly:true, editable:false" />
-                            </td>
-                            <td></td>
-                        </tr>
-                        <tr>
-                            <td style="padding-top:10px;" colspan="2">
-                                <input class="easyui-textbox" name="_notes" id="_notes" style="width:90%" multiline="true" data-options="labelAlign:'right',cls:'noborder',label:'描述:',readonly:true, editable:false" />
-                            </td>
-                        </tr>
-                    </table>
-                </form>
             </div>
             <p />
             <!--------------------事件信息------------------------>
@@ -129,7 +175,7 @@
                 $("#userId").textbox("setText", selected["createdId"]);
                 $("#eventDiv").show();
                 $("#stateDiv").show();  //状态div
-                $("#stateValue").val(selected["state"]);  //状态显示值
+                $('#step'+selected["$_state"]).addClass("cur");
                 listEvents();
             <%}else{%>
 
