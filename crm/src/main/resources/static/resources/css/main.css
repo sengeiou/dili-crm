@@ -1,6 +1,6 @@
 body {
-    font-family:verdana,helvetica,arial,sans-serif;
-    font-size: 12px;
+    /*font-family:verdana,helvetica,arial,sans-serif;*/
+    font-size: 15px;
     padding:20px;
     margin:0;
 }
@@ -89,3 +89,6 @@ h2 {
 .datagrid-row {
     height: 38px;
 }
+
+
+
