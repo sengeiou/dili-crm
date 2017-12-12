@@ -6,6 +6,48 @@
     <style>
         input{height: 18px;}
         .inputWidth{width: 20%;}
+
+        /*回访进度条*/
+        #stateDiv {
+            width: 100%;
+            padding: 0;
+        }
+        #stateDiv .step {
+            display: inline-block;
+            width: 32%;
+            height:36px;
+            line-height: 36px;
+        }
+        #stateDiv .step.cur {
+            color: #fff;
+        }
+
+        #stateDiv .step:first-child {
+            background: url(${contextPath}/resources/images/visitCus/step1.png) no-repeat left center;
+            background-size: cover;
+        }
+        #stateDiv .step:first-child.cur {
+            background: url(${contextPath}/resources/images/visitCus/step1-hv.png) no-repeat left center;
+            background-size: cover;
+        }
+        #stateDiv .step:nth-child(2) {
+            background: url(${contextPath}/resources/images/visitCus/step2.png) no-repeat left center;
+            background-size: cover;
+        }
+        #stateDiv .step:nth-child(2).cur {
+            background: url(${contextPath}/resources/images/visitCus/step2-hv.png) no-repeat left center;
+            background-size: cover;
+        }
+        #stateDiv .step:last-child {
+            background: url(${contextPath}/resources/images/visitCus/step3.png) no-repeat left center;
+            background-size: cover;
+        }
+        #stateDiv .step:last-child.cur {
+            background: url(${contextPath}/resources/images/visitCus/step3-hv.png) no-repeat left center;
+            background-size: cover;
+
+        }
+
     </style>
     <div class="easyui-layout"  fit="true">
         <div id="userSelectDialog" style="display: none;"></div>
@@ -31,6 +73,15 @@
                 <div id="stateDiv" style="width:94%;display: none;">
                     <input id="stateValue"  style="width: 100%;height: 30px; background-color: lightgrey;border: hidden;text-align: center;font-size: large" value="" disabled="disabled">
                 </div>
+
+
+                <ul id="stateDiv">
+                    <li class="step">新建回访</li>
+                    <li class="step cur">进行中</li>
+                    <li class="step">已完成</li>
+                </ul>
+
+
                 <p />
                 <div  class="easyui-panel" style="width: 94%;" title="回访信息" border="false" >
                     <form id="_form" class="easyui-form" method="post" fit="true">
