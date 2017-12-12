@@ -11,7 +11,7 @@
         }
     }
 </script>
-<div id="${headerId}" class="panel-title" style="height:24px;border: 1px solid #d4d4d4; line-height:24px; margin: 0; padding-left:10px;">
+<div id="${headerId}" class="panel-title" style="height:24px; line-height:24px; margin: 0; padding-left:10px;">
     <span id="${headerId}Title">${title}
      <%if(has(insertFun) && insertFun != ""){%>&nbsp;&nbsp;<a  href="#" class="easyui-linkbutton" id="${headerId}Insert" iconCls="icon-add" onclick="${insertFun}()"></a>&nbsp;&nbsp;<%}%>
     </span>

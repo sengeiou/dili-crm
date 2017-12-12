@@ -1,3 +1,4 @@
+<p />
 <div id="membersDiv" class="easyui-panel" style="width: 96%;" border="false" header="#membersHeader">
     <% var insertFunction = "";
     if(has(action) && action=="edit"){
@@ -5,7 +6,7 @@
     }%>
     <#controls_panelHeader panelId="membersDiv" headerId="membersHeader" title="成员客户" insertFun="${insertFunction}"></#controls_panelHeader>
     <!-- =========================================================成员客户表格========================================================= -->
-    <table class="easyui-datagrid" id="membersGrid" style="height:150px;padding:0px;width:100%;" title="成员客户" noheader="true" border="false"
+    <table class="easyui-datagrid" id="membersGrid" style="height:150px;padding:0px;width:100%;" title="成员客户" noheader="true" 
            pagination="false" rownumbers="false" remoteSort="false" data-options="loadMsg:0
            <%if(has(action) && action=="edit"){%>, onBeforeSelect:onBeforeSelectMembers,tools:[{iconCls:'icon-add',handler:_selectMembers}]<%}%>"
            singleSelect="true" method="post" multiSort="false"

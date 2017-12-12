@@ -21,7 +21,7 @@
             <!-- 上方导航栏 (锁定不滚动) -->
             <div id="nav" style="padding-left:15px;padding-top:10px;position:fixed;z-index:2008;width:100%;height:30px;background-color:white" align="left">
             <#nav/>
-                <div style="display: inline;float:right;padding-right: 300px;">
+                <div style="display: inline;float:right;padding-right: 60px;">
                     <#resource code="updateCustomer">
                     <a id="saveBtn" href="#" class="easyui-linkbutton" data-options="width:80" iconCls="icon-edit" onclick="Javascript:window.location.href='${contextPath}/customer/edit.html?id=${customerId}';">编辑</a>&nbsp;&nbsp;
                     </#resource>
@@ -29,148 +29,152 @@
                 </div>
             </div>
             <!-- 基本信息表单 -->
-            <div style="padding-top:40px" align="center">
-            <form id="_form" class="easyui-form" method="post" fit="true">
-                <input name="_id" id="_id" type="hidden">
-                <table width="98%">
-                    <tr>
-                        <td style="padding-top:10px;padding-left:15px;" width="33%">
-                            <input class="easyui-textbox" style="width:96%" id="_ownerName" name="_ownerName" data-options="cls:'noborder', editable:false, readonly:true, labelAlign:'right', label:'客户所有者:'" />
-                        </td>
-                        <td style="padding-top:10px;padding-left:15px;" width="33%">
-                            <input class="easyui-textbox" name="_parentName" id="_parentName" style="width:96%" label="父客户:" data-options="labelAlign:'right', cls:'noborder', editable:false, readonly:true"/>
-                            <input name="_parentId" type="hidden" id="_parentId" />
-                        </td>
-                        <td style="padding-top:10px;padding-left:15px;" width="33%">
-                            <input name="_type" id="_type" data-options="labelAlign:'right', cls:'noborder', readonly:true, editable:false, hasDownArrow:false" style="width:96%;" panelWidth="auto" panelHeight="auto" label="客户类型:" />
-                            <#comboProvider _id="_type" _provider='dataDictionaryValueProvider' _queryParams='{dd_id:"4"}'/>
-                        </td>
-                    </tr>
+            <div style="padding-top:50px" align="center">
+                <div  class="easyui-panel" style="width: 96%;" title="客户基本信息" border="false" >
+                    <form id="_form" class="easyui-form" method="post" fit="true">
+                        <input name="_id" id="_id" type="hidden">
+                        <table width="98%">
+                            <tr>
+                                <td style="padding-top:10px;padding-left:15px;" width="33%">
+                                    <input class="easyui-textbox" style="width:96%" id="_ownerName" name="_ownerName" data-options="cls:'noborder', editable:false, readonly:true, labelAlign:'right', label:'客户所有者:'" />
+                                </td>
+                                <td style="padding-top:10px;padding-left:15px;" width="33%">
+                                    <input class="easyui-textbox" name="_parentName" id="_parentName" style="width:96%" label="父客户:" data-options="labelAlign:'right', cls:'noborder', editable:false, readonly:true"/>
+                                    <input name="_parentId" type="hidden" id="_parentId" />
+                                </td>
+                                <td style="padding-top:10px;padding-left:15px;" width="33%">
+                                    <input name="_type" id="_type" data-options="labelAlign:'right', cls:'noborder', readonly:true, editable:false, hasDownArrow:false" style="width:96%;" panelWidth="auto" panelHeight="auto" label="客户类型:" />
+                                    <#comboProvider _id="_type" _provider='dataDictionaryValueProvider' _queryParams='{dd_id:"4"}'/>
+                                </td>
+                            </tr>
 
-                    <tr>
-                        <td style="padding-top:10px;padding-left:15px;">
-                            <input class="easyui-textbox" name="_name" id="_name" style="width:96%;"  data-options="labelAlign:'right', cls:'noborder', readonly:true, label:'客户名称:'" />
-                        </td>
-                        <td style="padding-top:10px;padding-left:15px;">
-                            <input class="easyui-textbox" name="_code" id="_code" style="width:96%;" data-options="labelAlign:'right', cls:'noborder', readonly:true, label:'客户编码:'" />
-                        </td>
-                        <td style="padding-top:10px;padding-left:15px;">
-                            <input name="_profession" id="_profession" data-options="labelAlign:'right', cls:'noborder', readonly:true, editable:false, hasDownArrow:false" style="width:96%;" panelWidth="auto" panelHeight="auto" label="客户行业:" />
-                            <#comboProvider _id="_profession" _provider='dataDictionaryValueProvider' _queryParams='{dd_id:"6"}'/>
-                        </td>
-                    </tr>
+                            <tr>
+                                <td style="padding-top:10px;padding-left:15px;">
+                                    <input class="easyui-textbox" name="_name" id="_name" style="width:96%;"  data-options="labelAlign:'right', cls:'noborder', readonly:true, label:'客户名称:'" />
+                                </td>
+                                <td style="padding-top:10px;padding-left:15px;">
+                                    <input class="easyui-textbox" name="_code" id="_code" style="width:96%;" data-options="labelAlign:'right', cls:'noborder', readonly:true, label:'客户编码:'" />
+                                </td>
+                                <td style="padding-top:10px;padding-left:15px;">
+                                    <input name="_profession" id="_profession" data-options="labelAlign:'right', cls:'noborder', readonly:true, editable:false, hasDownArrow:false" style="width:96%;" panelWidth="auto" panelHeight="auto" label="客户行业:" />
+                                    <#comboProvider _id="_profession" _provider='dataDictionaryValueProvider' _queryParams='{dd_id:"6"}'/>
+                                </td>
+                            </tr>
 
-                    <tr>
-                        <td style="padding-top:10px;padding-left:15px;">
-                            <input name="_organizationType" id="_organizationType" style="width:96%;" panelWidth="auto" panelHeight="auto" label="组织类型:" data-options="labelAlign:'right', cls:'noborder', readonly:true, editable:false, hasDownArrow:false"/>
-                            <#comboProvider _id="_organizationType" _provider='dataDictionaryValueProvider' _queryParams='{dd_id:"5"}'/>
-                        </td>
-                        <td style="padding-top:10px;padding-left:15px;">
-                            <input name="_market" id="_market" data-options="labelAlign:'right', cls:'noborder', readonly:true, editable:false, hasDownArrow:false" style="width:96%;" panelWidth="auto" panelHeight="auto" label="所属市场:" />
-                            <#comboProvider _id="_market" _provider='dataDictionaryValueProvider' _queryParams='{dd_id:"2"}'/>
-                        </td>
-                        <td style="padding-top:10px;padding-left:15px;">
-                            <input class="easyui-textbox" name="_mainCategory" id="_mainCategory" style="width:96%;" data-options="labelAlign:'right', label:'主营品类:', cls:'noborder', readonly:true, editable:false" />
-                        </td>
-                    </tr>
+                            <tr>
+                                <td style="padding-top:10px;padding-left:15px;">
+                                    <input name="_organizationType" id="_organizationType" style="width:96%;" panelWidth="auto" panelHeight="auto" label="组织类型:" data-options="labelAlign:'right', cls:'noborder', readonly:true, editable:false, hasDownArrow:false"/>
+                                    <#comboProvider _id="_organizationType" _provider='dataDictionaryValueProvider' _queryParams='{dd_id:"5"}'/>
+                                </td>
+                                <td style="padding-top:10px;padding-left:15px;">
+                                    <input name="_market" id="_market" data-options="labelAlign:'right', cls:'noborder', readonly:true, editable:false, hasDownArrow:false" style="width:96%;" panelWidth="auto" panelHeight="auto" label="所属市场:" />
+                                    <#comboProvider _id="_market" _provider='dataDictionaryValueProvider' _queryParams='{dd_id:"2"}'/>
+                                </td>
+                                <td style="padding-top:10px;padding-left:15px;">
+                                    <input class="easyui-textbox" name="_mainCategory" id="_mainCategory" style="width:96%;" data-options="labelAlign:'right', label:'主营品类:', cls:'noborder', readonly:true, editable:false" />
+                                </td>
+                            </tr>
 
-                    <tr>
-                        <td style="padding-top:10px;padding-left:15px;">
-                            <input name="_certificateType" id="_certificateType" data-options="labelAlign:'right', cls:'noborder', editable:false, readonly:true, hasDownArrow:false" style="width:96%;" panelWidth="auto" panelHeight="auto" label="证件类型:" />
+                            <tr>
+                                <td style="padding-top:10px;padding-left:15px;">
+                                    <input name="_certificateType" id="_certificateType" data-options="labelAlign:'right', cls:'noborder', editable:false, readonly:true, hasDownArrow:false" style="width:96%;" panelWidth="auto" panelHeight="auto" label="证件类型:" />
 
-                        </td>
-                        <td style="padding-top:10px;padding-left:15px;">
-                            <input class="easyui-textbox" name="_certificateNumber" id="_certificateNumber" style="width:96%;" data-options="label:'证件号:', labelAlign:'right', cls:'noborder', editable:false, readonly:true,hasDownArrow:false" />
-                        </td>
-                        <td style="padding-top:10px;padding-left:15px;">
-                            <input class="easyui-textbox" name="_certificateAddr" id="_certificateAddr" style="width:96%;" data-options="labelAlign:'right', label:'证件地址:', cls:'noborder', editable:false, readonly:true" />
-                        </td>
-                    </tr>
+                                </td>
+                                <td style="padding-top:10px;padding-left:15px;">
+                                    <input class="easyui-textbox" name="_certificateNumber" id="_certificateNumber" style="width:96%;" data-options="label:'证件号:', labelAlign:'right', cls:'noborder', editable:false, readonly:true,hasDownArrow:false" />
+                                </td>
+                                <td style="padding-top:10px;padding-left:15px;">
+                                    <input class="easyui-textbox" name="_certificateAddr" id="_certificateAddr" style="width:96%;" data-options="labelAlign:'right', label:'证件地址:', cls:'noborder', editable:false, readonly:true" />
+                                </td>
+                            </tr>
 
-                    <tr>
-                        <td style="padding-top:10px;padding-left:15px;">
-                            <div class="individuals">
-                            <input class="easyui-datebox" name="_certificateTime" id="_certificateTime" style="width:96%;" data-options="labelAlign:'right', label:'证件日期:', cls:'noborder', editable:false, readonly:true, hasDownArrow:false"/>
-                            </div>
-                            <div class="enterprise">
-                            <input class="easyui-textbox" name="_certificateRange" id="_certificateRange" style="width:96%;" data-options="labelAlign:'right', label:'证件日期:', cls:'noborder', editable:false, readonly:true"/>
-                            </div>
-                        </td>
-                        <td style="padding-top:10px;padding-left:15px;">
-                            <input name="_operatingArea" id="_operatingArea" style="width:96%;" panelWidth="auto" panelHeight="auto" label="经营地区:"  data-options="labelAlign:'right', cls:'noborder', editable:false, readonly:true, hasDownArrow:false"/>
-                            <#comboProvider _id="_operatingArea" _provider="cityProvider" _valueField="value" _textField="label" />
-                        </td>
-                        <td style="padding-top:10px;padding-left:15px;">
-                            <input class="easyui-textbox" name="_otherTitle" id="_otherTitle" style="width:96%;" data-options="label:'其它头衔:', labelAlign:'right', cls:'noborder', editable:false, readonly:true" />
-                        </td>
-                    </tr>
+                            <tr>
+                                <td style="padding-top:10px;padding-left:15px;">
+                                    <div class="individuals">
+                                    <input class="easyui-datebox" name="_certificateTime" id="_certificateTime" style="width:96%;" data-options="labelAlign:'right', label:'证件日期:', cls:'noborder', editable:false, readonly:true, hasDownArrow:false"/>
+                                    </div>
+                                    <div class="enterprise">
+                                    <input class="easyui-textbox" name="_certificateRange" id="_certificateRange" style="width:96%;" data-options="labelAlign:'right', label:'证件日期:', cls:'noborder', editable:false, readonly:true"/>
+                                    </div>
+                                </td>
+                                <td style="padding-top:10px;padding-left:15px;">
+                                    <input name="_operatingArea" id="_operatingArea" style="width:96%;" panelWidth="auto" panelHeight="auto" label="经营地区:"  data-options="labelAlign:'right', cls:'noborder', editable:false, readonly:true, hasDownArrow:false"/>
+                                    <#comboProvider _id="_operatingArea" _provider="cityProvider" _valueField="value" _textField="label" />
+                                </td>
+                                <td style="padding-top:10px;padding-left:15px;">
+                                    <input class="easyui-textbox" name="_otherTitle" id="_otherTitle" style="width:96%;" data-options="label:'其它头衔:', labelAlign:'right', cls:'noborder', editable:false, readonly:true" />
+                                </td>
+                            </tr>
 
-                    <tr>
-                        <td style="padding-top:10px;padding-left:15px;">
-                            <div class="individuals">
-                            <input name="_sex" id="_sex" style="width:96%;" data-options="labelAlign:'right', cls:'noborder', editable:false, readonly:true, hasDownArrow:false" panelWidth="auto" panelHeight="auto" label="性别:" />
-                            <#comboProvider _id="_sex" _provider='sexProvider'/>
-                            </div>
-                            <div class="enterprise">
-                            <input class="easyui-numberbox" name="_registeredCapital" id="_registeredCapital" style="width:96%;" data-options="labelAlign:'right', label:'注册资金:', cls:'noborder', editable:false, readonly:true, hasDownArrow:false" />
-                            </div>
-                        </td>
-                        <td style="padding-top:10px;padding-left:15px;">
-                            <div class="individuals">
-                            <input class="easyui-textbox" name="_nation" id="_nation" style="width:96%;" data-options="label:'民族:', labelAlign:'right', cls:'noborder', editable:false, readonly:true, hasDownArrow:false" />
-                            </div>
-                            <div class="enterprise">
-                            <input name="_employeeNumber" id="_employeeNumber" data-options="cls:'noborder', labelAlign:'right', editable:false, readonly:true, hasDownArrow:false" style="width:96%;" panelWidth="auto" panelHeight="auto" label="企业员工数:" />
-                            <#comboProvider _id="_employeeNumber" _provider='dataDictionaryValueProvider' _queryParams='{dd_id:"9"}'/>
-                            </div>
-                        </td>
-                        <td style="padding-top:10px;padding-left:15px;">
-                            <input class="easyui-textbox" name="_phone" id="_phone" style="width:96%;" data-options="label:'电话:', cls:'noborder', labelAlign:'right', editable:false, readonly:true, hasDownArrow:false" />
-                        </td>
-                    </tr>
-                    <tr>
-                        <td style="padding-top:10px;padding-left:15px;">
-                            <input name="_sourceSystem" id="_sourceSystem" style="width:96%;" data-options="label:'来源系统:', cls:'noborder', labelAlign:'right', editable:false, readonly:true, hasDownArrow:false" />
-                            <#comboProvider _id="_sourceSystem" _provider='dataDictionaryValueProvider' _queryParams='{dd_id:"8"}'/>
-                        </td>
-                        <td style="padding-top:10px;padding-left:15px;">
-                            <input name="_department" id="_department" style="width:96%;" data-options="label:'归属部门:', labelAlign:'right', cls:'noborder', editable:false, readonly:true, hasDownArrow:false" />
-                            <#comboProvider _id="_department" _provider='departmentProvider'/>
-                        </td>
-                        <td style="padding-top:10px;padding-left:15px;">
-                            <input name="_createdName" id="_createdName" style="width:96%;" class="easyui-textbox" data-options="label:'创建人:', labelAlign:'right', cls:'noborder', editable:false, readonly:true" />
-                        </td>
-                    </tr>
-                    <tr>
-                        <td style="padding-top:10px;padding-left:15px;" colspan="2">
-                            <input class="easyui-textbox" name="_notes" id="_notes" style="width:98%;height:80px" data-options="label:'备注信息:', labelAlign:'right', cls:'noborder', editable:false, readonly:true, multiline:true" />
-                        </td>
-                        <td valign="bottom">
+                            <tr>
+                                <td style="padding-top:10px;padding-left:15px;">
+                                    <div class="individuals">
+                                    <input name="_sex" id="_sex" style="width:96%;" data-options="labelAlign:'right', cls:'noborder', editable:false, readonly:true, hasDownArrow:false" panelWidth="auto" panelHeight="auto" label="性别:" />
+                                    <#comboProvider _id="_sex" _provider='sexProvider'/>
+                                    </div>
+                                    <div class="enterprise">
+                                    <input class="easyui-numberbox" name="_registeredCapital" id="_registeredCapital" style="width:96%;" data-options="labelAlign:'right', label:'注册资金:', cls:'noborder', editable:false, readonly:true, hasDownArrow:false" />
+                                    </div>
+                                </td>
+                                <td style="padding-top:10px;padding-left:15px;">
+                                    <div class="individuals">
+                                    <input class="easyui-textbox" name="_nation" id="_nation" style="width:96%;" data-options="label:'民族:', labelAlign:'right', cls:'noborder', editable:false, readonly:true, hasDownArrow:false" />
+                                    </div>
+                                    <div class="enterprise">
+                                    <input name="_employeeNumber" id="_employeeNumber" data-options="cls:'noborder', labelAlign:'right', editable:false, readonly:true, hasDownArrow:false" style="width:96%;" panelWidth="auto" panelHeight="auto" label="企业员工数:" />
+                                    <#comboProvider _id="_employeeNumber" _provider='dataDictionaryValueProvider' _queryParams='{dd_id:"9"}'/>
+                                    </div>
+                                </td>
+                                <td style="padding-top:10px;padding-left:15px;">
+                                    <input class="easyui-textbox" name="_phone" id="_phone" style="width:96%;" data-options="label:'电话:', cls:'noborder', labelAlign:'right', editable:false, readonly:true, hasDownArrow:false" />
+                                </td>
+                            </tr>
+                            <tr>
+                                <td style="padding-top:10px;padding-left:15px;">
+                                    <input name="_sourceSystem" id="_sourceSystem" style="width:96%;" data-options="label:'来源系统:', cls:'noborder', labelAlign:'right', editable:false, readonly:true, hasDownArrow:false" />
+                                    <#comboProvider _id="_sourceSystem" _provider='dataDictionaryValueProvider' _queryParams='{dd_id:"8"}'/>
+                                </td>
+                                <td style="padding-top:10px;padding-left:15px;">
+                                    <input name="_department" id="_department" style="width:96%;" data-options="label:'归属部门:', labelAlign:'right', cls:'noborder', editable:false, readonly:true, hasDownArrow:false" />
+                                    <#comboProvider _id="_department" _provider='departmentProvider'/>
+                                </td>
+                                <td style="padding-top:10px;padding-left:15px;">
+                                    <input name="_createdName" id="_createdName" style="width:96%;" class="easyui-textbox" data-options="label:'创建人:', labelAlign:'right', cls:'noborder', editable:false, readonly:true" />
+                                </td>
+                            </tr>
+                            <tr>
+                                <td style="padding-top:10px;padding-left:15px;" colspan="2">
+                                    <input class="easyui-textbox" name="_notes" id="_notes" style="width:98%;height:80px" data-options="label:'备注信息:', labelAlign:'right', cls:'noborder', editable:false, readonly:true, multiline:true" />
+                                </td>
+                                <td valign="bottom">
 
-                        </td>
-                    </tr>
-                </table>
-            </form>
+                                </td>
+                            </tr>
+                        </table>
+                    </form>
+                </div>
             </div>
             <div align="center">
-                <table width="96%">
-                    <tr>
-                        <td width="50%" valign="top">
-            <!--  =========================================================地址表格div=========================================================  -->
-            <#customer_addressGridHtml />
-                        </td>
-                        <td width="50%" valign="top">
-            <!--  =========================================================车辆表格div=========================================================  -->
-            <#customer_vehicleGridHtml />
-                        </td>
-                    </tr>
-                </table>
+
             <!--  =========================================================联系人表格div=========================================================  -->
             <#customer_contactsGridHtml />
             <!--  =========================================================成员客户表格div=========================================================  -->
             <#customer_membersGridHtml />
             <!--  =========================================================业务系统账号表格div=========================================================  -->
             <#customer_customerExtensionsGridHtml />
+                <!--  =========================================================地址、车辆div=========================================================  -->
+            <table width="96%" style="margin-top: 10px;">
+                <tr>
+                    <td width="50%" valign="top">
+                        <!--  =========================================================地址表格div=========================================================  -->
+                        <#customer_addressGridHtml />
+                    </td>
+                    <td width="50%" valign="top">
+                        <!--  =========================================================车辆表格div=========================================================  -->
+                        <#customer_vehicleGridHtml />
+                    </td>
+                </tr>
+            </table>
             <!--   =========================================================客户画像表格div========================================================= -->
             <#customer_portrait/>
             </div>

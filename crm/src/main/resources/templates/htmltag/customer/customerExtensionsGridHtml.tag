@@ -1,9 +1,10 @@
+  <p />
     <div id="customerExtensionsDiv" class="easyui-panel" style="width: 96%;" border="false" header="#customerExtensionsHeader">
         <#controls_panelHeader panelId="customerExtensionsDiv" headerId="customerExtensionsHeader" title="业务系统账号信息" ></#controls_panelHeader>
     <!-- =========================================================业务系统账号信息表格========================================================= -->
     <table class="easyui-datagrid" id="customerExtensionsGrid" style="height:150px;padding:0px;width:100%;" title="业务系统账号信息" noheader="true"
            pagination="false" rownumbers="false" remoteSort="false" data-options="loadMsg:0"
-           singleSelect="true" method="post" multiSort="false" border="false"
+           singleSelect="true" method="post" multiSort="false" 
            align="center"  striped="false" idField="id" >
         <thead>
         <tr>
