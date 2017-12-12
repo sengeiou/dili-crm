@@ -1,15 +1,17 @@
 <div class="easyui-layout" fit="true">
-	<div region="north" height="40" align="left">
+	<div region="north" height="40" align="left" border="false">
 <div style="margin: 5px 5px;">
 	<form class="easyui-form" id="searchUserForm">
 		<input id="searchUserTextbox" label="真实姓名:" labelAlign="right" name="searchUserTextbox" class="easyui-textbox" style="width: 300px">
 		<a class="easyui-linkbutton"  data-options="width:80" iconCls="icon-search" onclick="searchUser();">查询</a>
+		&nbsp;&nbsp;
+		<a class="easyui-linkbutton"  data-options="width:80" iconCls="icon-ok" onclick="javascript:confirmUserBtn('${textboxId}');">确认</a>
 	</form>
 </div>
 	</div>
-	<div region="center" align="center">
+	<div region="center" align="center" border="false">
 <table class="easyui-datagrid" id="selectUserGrid" sortName="userName" sortOrder="asc" fitColumns="true" remoteSort="false" loadMsg="数据加载中..." singleSelect="true" method="post" multiSort="true"
-	align="center" fit="true" striped="true" idField="id" data-options="onDblClickRow:dbClickUser">
+	align="center" fit="true" striped="true" idField="id" data-options="onDblClickRow:dbClickUser" >
 	<thead>
 		<tr>
 			<th data-options="field:'userName',width:50">用户名</th>

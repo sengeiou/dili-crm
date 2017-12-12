@@ -1,4 +1,4 @@
-<div id="vehicleDiv" class="easyui-panel" style="width: 100%;" header="#vehicleHeader">
+<div id="vehicleDiv" class="easyui-panel" style="width: 100%;" border="false" header="#vehicleHeader">
     <% var insertFunction = "";
     if(has(action) && action=="edit"){
         insertFunction = "openInsertVehicle";
@@ -7,7 +7,7 @@
 
     <!-- =========================================================车辆表格========================================================= -->
     <table class="easyui-datagrid" id="vehicleGrid" style="height:150px;padding:0px;width:100%;" title="车辆" noheader="true"
-           pageNumber="1" rownumbers="true" remoteSort="false"
+           pageNumber="1" rownumbers="false" remoteSort="false" border="false"
            singleSelect="true" method="post" multiSort="false" sortName="name"
            align="center" striped="false" idField="id" data-options="loadMsg:0
           <%if(has(action) && action=="edit"){%>,onDblClickRow:openUpdateVehicle, onBeforeSelect:onBeforeSelectVehicle,tools:[{iconCls:'icon-add',handler:openInsertVehicle}]<%}%>">

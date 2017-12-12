@@ -1,4 +1,4 @@
-<div id="addressDiv" class="easyui-panel" style="width: 100%;" header="#addressHeader">
+<div id="addressDiv" class="easyui-panel" style="width: 100%;" border="false" header="#addressHeader">
     <% var insertFunction = "";
     if(has(action) && action=="edit"){
         insertFunction = "openInsertAddress";
@@ -6,8 +6,8 @@
     <#controls_panelHeader panelId="addressDiv" headerId="addressHeader" title="地址" insertFun="${insertFunction}"></#controls_panelHeader>
 
     <!-- =========================================================地址表格========================================================= -->
-    <table class="easyui-datagrid" id="addressGrid" style="height:150px;padding:0px;width:100%;" title="地址" noheader="true"
-           pagination="false" rownumbers="true" remoteSort="false" data-options="loadMsg:0
+    <table class="easyui-datagrid" id="addressGrid" style="height:150px;padding:0px;width:100%;" title="地址" noheader="true" border="false"
+           pagination="false" rownumbers="false" remoteSort="false" data-options="loadMsg:0
           <%if(has(action) && action=="edit"){%>, onDblClickRow:openUpdateAddress, onBeforeSelect:onBeforeSelectAddress,tools:[{iconCls:'icon-add',  handler:openInsertAddress}]<%}%>"
            loadMsg="数据加载中..." singleSelect="true" method="post" multiSort="false"
            align="center"  striped="false" idField="id" >

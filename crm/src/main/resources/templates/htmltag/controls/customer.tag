@@ -9,6 +9,10 @@ function _selectCustomer(callback, args) {
 // 确认选择事件
 function confirmCustomerBtn(id) {
 	var selected = $('#selectCustomerGrid').datagrid('getSelected');
+	if (null == selected) {
+		$.messager.alert('警告','请选中一条数据');
+		return;
+	}
 	$('#' + id).textbox('initValue', selected.id);
 	$('#' + id).textbox('setText', selected.name);
 	var icon = $('#' + id).textbox('getIcon',0);
@@ -29,20 +33,7 @@ function showCustomerDlg(id) {
 					textboxId : id
 				},
 				href : '${contextPath!}/selectDialog/customer.html',
-				modal : true,
-				buttons : [{
-							text : '确定',
-							iconCls:"icon-ok",
-							handler : function() {
-								confirmCustomerBtn(id);
-							}
-						}, {
-							text : '取消',
-							iconCls:"icon-cancel",
-							handler : function() {
-								closeCustomerSelectDlg();
-							}
-						}]
+				modal : true
 			});
 }
 $(function() {

@@ -9,6 +9,10 @@ function _selectUser(callback, args) {
 // 确认选择事件
 function confirmUserBtn(id) {
 	var selected = $('#selectUserGrid').datagrid('getSelected');
+	if (null == selected) {
+		$.messager.alert('警告','请选中一条数据');
+		return;
+	}
 	$('#' + id).textbox('initValue', selected.id);
 	$('#' + id).textbox('setText', selected.realName);
 	var icon = $('#' + id).textbox('getIcon',0);
@@ -29,20 +33,7 @@ function showUserDlg(id) {
 					textboxId : id
 				},
 				href : '${contextPath!}/selectDialog/user.html',
-				modal : true,
-				buttons : [{
-							text : '确定',
-							iconCls:"icon-ok",
-							handler : function() {
-								confirmUserBtn(id);
-							}
-						}, {
-							text : '取消',
-							iconCls:"icon-cancel",
-							handler : function() {
-								closeUserSelectDlg();
-							}
-						}]
+				modal : true
 			});
 }
 
