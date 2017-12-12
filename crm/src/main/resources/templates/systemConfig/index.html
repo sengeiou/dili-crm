@@ -175,6 +175,7 @@
 
         //打开修改窗口
         function openUpdate() {
+            $('#_form').form('clear');
             var selected = $("#grid").datagrid("getSelected");
             if (null == selected) {
                 $.messager.alert('警告', '请选中一条数据');

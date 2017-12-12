@@ -383,10 +383,7 @@ function queryGrid() {
 	if (!$('#form').form("validate")) {
 		return;
 	}
-	var param = bindMetadata("roleGrid");
-	var formData = $("#form").serializeObject();
-	$.extend(formData, param);
-	roleGrid.datagrid("load", formData);
+	roleGrid.datagrid("load", bindGridMeta2Form("roleGrid", "form"));
 }
 
 // --------------------------------------------------------------------------------
