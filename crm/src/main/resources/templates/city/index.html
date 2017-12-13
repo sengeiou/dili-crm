@@ -206,9 +206,19 @@
             }
         }
         //加载完了必须要重设url，否则删除的时候可能会调用expand
-        var onLoadSuccess = function(){
+        var onLoadSuccess = function(row, data){
             $(this).treegrid("options").url="${contextPath}/city/listPage";
+//            $("#grid").treegrid("expandAll");
+//            alert("data:"+JSON.stringify(data));
+            if(data && data.rows){
+                for(var i in data.rows){
+                    if(data.rows[i]["levelType"] == 0){
+                        $("#grid").treegrid("expand", data.rows[i]["id"]);
+                    }
+                }
+            }
         }
+
 
         //表格查询
         function queryGrid() {
@@ -217,6 +227,7 @@
                 opts.url ="${contextPath}/city/listPage";
 //            }
             $("#grid").treegrid("load", bindGridMeta2Form("grid", "form"));
+
         }
 
         //打开新增窗口
