@@ -43,7 +43,7 @@ public class CustomerVisitServiceImpl extends BaseServiceImpl<CustomerVisit, Lon
         customerVisit.setModifiedId(userTicket.getId());
         customerVisit.setCode(bizNumberService.getCustomerVisitCode());
         super.insertSelective(customerVisit);
-        return BaseOutput.success("新增成功");
+        return BaseOutput.success("新增成功").setData(customerVisit);
     }
 
 	@Override
@@ -71,7 +71,7 @@ public class CustomerVisitServiceImpl extends BaseServiceImpl<CustomerVisit, Lon
         }else{
             super.updateSelective(customerVisit);
         }
-        return BaseOutput.success("更新成功");
+        return BaseOutput.success("更新成功").setData(customerVisit);
     }
 
     @Override
