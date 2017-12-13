@@ -273,7 +273,9 @@
            // formFocus("_form", "_created");
             var formData = $.extend({},selected);
             formData = addKeyStartWith(getOriginalData(formData),"_");
+
             $('#_form').form('load', formData);
+            $("#_yn").combobox("setValue", formData["_yn"]+"");
         }
 
         function saveOrUpdate(){

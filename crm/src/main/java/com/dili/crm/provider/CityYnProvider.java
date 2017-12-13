@@ -36,7 +36,7 @@ public class CityYnProvider implements ValueProvider {
             return null;
         }
         for(ValuePair<?> valuePair : BUFFER){
-            if(obj.toString().equals(valuePair.getValue())){
+            if(obj.equals(valuePair.getValue()) || obj.toString().equals(valuePair.getValue())){
                 return valuePair.getText();
             }
         }
