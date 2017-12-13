@@ -60,7 +60,6 @@
                     <span id="newPage" style="display: none;">
                             <a id="saveBtn" href="#" class="easyui-linkbutton" iconCls="icon-save" data-options="width:80" onclick="saveOrUpdate(1,'确定要保存吗？')">保存</a>&nbsp;&nbsp;
                             <a id="saveAndNewBtn" href="#" class="easyui-linkbutton" iconCls="icon-save" data-options="width:120" onclick="saveOrUpdate(2,'确定要保存并新建吗？')">保存并新建</a>&nbsp;&nbsp;
-                            <a id="saveAndFilishedBtn" href="#" class="easyui-linkbutton" iconCls="icon-save" data-options="width:120" onclick="saveOrUpdate(3,'确定要保存并完成吗？')">保存并完成</a>&nbsp;&nbsp;
                         </span>
                         <span id="modifyPage" style="display: none;">
                             <a id="modifyBtn" href="#" class="easyui-linkbutton" iconCls="icon-save" data-options="width:80" onclick="saveOrUpdate(1,'确定要更新吗？')">更新</a>&nbsp;&nbsp;
@@ -253,6 +252,12 @@
                 return;
             }
             if (type==3){
+                debugger;
+                var rows = $("#eventGrid").datagrid("getRows");
+                if (null == rows || rows.length < 1){
+                    $.messager.alert('警告','完成回访时,需至少添加一条事件信息','warning');
+                    return false;
+                }
                 var finishTime = $("#_finishTime").datetimebox("getValue");
                 if (null == finishTime || ""==finishTime){
                     $.messager.alert('警告','完成回访时,完成时间不能为空','warning');
