@@ -118,17 +118,12 @@
         </div>
     </div>
     <!-- 隐藏编辑框 -->
-    <div id="dlg" class="easyui-dialog" title="系统配置" style="padding:20px" modal="true" border="thin" closed="true"
+    <div id="dlg" class="easyui-dialog" title="系统配置" style="padding:20px 40px 20px 0px" modal="true" border="thin" closed="true"
          data-options="
 				buttons: [{
 					text:'确认',
 					iconCls:'icon-ok',
 					handler:saveOrUpdate
-				},{
-					text:'取消',
-					handler:function(){
-						$('#dlg').dialog('close');
-					}
 				}]
 			">
         <form id="_form" class="easyui-form" method="post" fit="true">

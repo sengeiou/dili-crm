@@ -63,12 +63,7 @@
 <!-- 隐藏编辑框 -->
 <div id="userListDlg" class="easyui-dialog" resizable="false" constrain="true" shadow="true" draggable="false" title="角色的用户列表" style="padding: 5px; height: 300px; width: 500px;" modal="true"
 	border="thin" closed="true" data-options="
-				buttons: [{
-					text:'返回',
-					handler:function(){
-						$('#userListDlg').dialog('close');
-					}
-				}]
+				buttons: []
 			">
 	<table class="easyui-datagrid" id="userListGrid" rownumbers="false" remoteSort="false" loadMsg="数据加载中..." singleSelect="true" method="post" multiSort="true" sortName="serialNumber" align="center"
 		fit="true" striped="true" idField="id" width="99%">

@@ -70,19 +70,7 @@
 </div>
 <!-- 隐藏编辑框 -->
 <div id="dlg" class="easyui-dialog" resizable="false" constrain="true" shadow="true" draggable="false" title="用户信息" style="padding: 20px" modal="true" border="thin" closed="true" height="100%"
-	data-options="
-				buttons: [{
-					text:'确认',
-					iconCls:'icon-ok',
-					handler:onSaveClicked
-				},{
-					text:'取消',
-					iconCls:'icon-cancel',
-					handler:function(){
-						$('#dlg').dialog('close');
-					}
-				}]
-			">
+	>
 	<form id="_form" class="easyui-form" method="post" fit="true" style="width:10px">
 		<input name="_id" id="_id" type="hidden">
 		<table>
@@ -146,7 +134,7 @@
 					</table>
 				</td>
 
-				<td style="padding: 5px;" id="existsRoleTd">
+				<td style="padding-top: 10px;vertical-align:top" id="existsRoleTd">
 					<div id="existsRole" class="easyui-datalist" title="已分配角色" style="width: 100px; height: 390px" valueField="id" textField="roleName"></div>
 				</td>
 			</tr>

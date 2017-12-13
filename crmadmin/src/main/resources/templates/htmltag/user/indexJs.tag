@@ -155,12 +155,6 @@ function onAddClicked() {
 							text : '确认',
 							iconCls : 'icon-ok',
 							handler : onSaveClicked
-						}, {
-							text : '取消',
-							iconCls : 'icon-cancel',
-							handler : function() {
-								$('#dlg').dialog('close');
-							}
 						}]
 			});
 
@@ -241,16 +235,11 @@ function onEditClicked(id) {
 	$('#roleForm').show();
 
 	$('#dlg').dialog({
+				height:'100%',
 				buttons : [{
 							text : '确认',
 							iconCls : 'icon-ok',
 							handler : onSaveClicked
-						}, {
-							text : '取消',
-							iconCls : 'icon-cancel',
-							handler : function() {
-								$('#dlg').dialog('close');
-							}
 						}]
 			});
 
@@ -345,13 +334,8 @@ function onUserDetailClicked(id) {
 	$('#roleForm').hide();
 
 	$('#dlg').dialog({
-				buttons : [{
-							text : '关闭',
-							iconCls : 'icon-cancel',
-							handler : function() {
-								$('#dlg').dialog('close');
-							}
-						}]
+				height:550,
+				buttons : []
 			});
 
 	var formData = $.extend({}, selected);
