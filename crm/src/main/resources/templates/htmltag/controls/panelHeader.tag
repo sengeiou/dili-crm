@@ -13,7 +13,7 @@
 </script>
 <div id="${headerId}" class="panel-title" style="height:24px; line-height:24px; margin: 0; padding-left:10px;">
     <span id="${headerId}Title">${title}
-     <%if(has(insertFun) && insertFun != ""){%>&nbsp;&nbsp;<a  href="#" class="easyui-linkbutton" id="${headerId}Insert" iconCls="icon-add" onclick="${insertFun}()"></a>&nbsp;&nbsp;<%}%>
+     <%if(has(insertFun) && insertFun != ""){%>&nbsp;&nbsp;<a  href="#"  id="${headerId}Insert" class="add-icon" onclick="${insertFun}()"></a>&nbsp;&nbsp;<%}%>
     </span>
     <div style="float:right; padding-right:10px;">
     <a  href="#" class="easyui-linkbutton" id="${headerId}Toggle"
@@ -25,3 +25,16 @@
         </a>
     </div>
 </div>
+
+<style>
+    .add-icon {
+        display: inline-block;
+        width: 18px;
+        height:18px;
+        background: url(${contextPath}/resources/images/icon/add-icon.png) no-repeat center center;
+        vertical-align: middle;
+    }
+    .add-icon:hover {
+        background: url(${contextPath}/resources/images/icon/add-hv-icon.png) no-repeat center center;
+    }
+</style>
