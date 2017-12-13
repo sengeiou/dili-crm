@@ -186,11 +186,11 @@
 		var changeStatusContext = "";
 		if (0 == row.$_status) {
 			// 0 是已停用，功能对应是 启用
-			changeStatusContext = getHyperlinkContext('启用',
+            content += getHyperlinkContext('启用',
 					'onChangeUserStatusClicked', row.id);
 		} else if (1 == row.$_status) {
 			// 1 是已启用，功能对应是 禁用
-			changeStatusContext = getHyperlinkContext('禁用',
+            content += getHyperlinkContext('禁用',
 					'onChangeUserStatusClicked', row.id);
 		}
 
