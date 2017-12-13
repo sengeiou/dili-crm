@@ -70,8 +70,7 @@ public class CustomerVisitController {
     public @ResponseBody BaseOutput insert(CustomerVisit customerVisit) {
         try {
             customerVisit.setState(1);
-            customerVisitService.insertSelectiveWithOutput(customerVisit);
-            return BaseOutput.success("新增成功");
+            return customerVisitService.insertSelectiveWithOutput(customerVisit);
         }catch (Exception e){
             logger.error(String.format("回访信息[%s] 新增失败[%s]",customerVisit,e.getMessage()),e);
             return BaseOutput.failure("新增失败，系统异常");
@@ -86,8 +85,7 @@ public class CustomerVisitController {
     public @ResponseBody BaseOutput insertAndFinished(CustomerVisit customerVisit) {
         try {
             customerVisit.setState(3);
-            customerVisitService.insertSelectiveWithOutput(customerVisit);
-            return BaseOutput.success("新增成功");
+            return customerVisitService.insertSelectiveWithOutput(customerVisit);
         }catch (Exception e){
             logger.error(String.format("回访信息[%s] 新增失败[%s]",customerVisit,e.getMessage()),e);
             return BaseOutput.failure("新增失败，系统异常");

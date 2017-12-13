@@ -69,20 +69,20 @@
                         <table width="94%" align="center">
                             <tr>
                                 <td style="padding-top:10px;" width="33%">
-                                    <input class="easyui-textbox" name="_createdName" id="_createdName" style="width: 80%;" data-options="labelAlign:'right',cls:'noborder', readonly:true, label:'回访创建者:'"  editable="true"/>
+                                    <input class="easyui-textbox" name="_code" id="_code" style="width:80%"  data-options="labelAlign:'right',label:'回访编号:',cls:'noborder',readonly:true, editable:false" />
                                 </td>
                                 <td style="padding-top:10px;padding-left:10px;"  width="33%">
                                     <input class="easyui-textbox" name="_subject" id="_subject" style="width: 80%;" data-options="labelAlign:'right',cls:'noborder', readonly:true, editable:false,label:'主题:', validType:'length[0,40]'"  />
                                 </td>
                                 <td style="padding-top:10px;padding-left:10px;" width="33%">
-                                    <input class="easyui-textbox" name="userId" id="userId" panelWidth="auto" panelHeight="auto" label="回访人:" style="width: 80%;"
-                                           data-options="labelAlign:'right',cls:'noborder', readonly:true, editable:false, hasDownArrow:false" />
+                                    <input class="easyui-textbox" name="customerId" id="customerId" panelWidth="auto" panelHeight="auto" label="回访客户:" style="width: 80%;"
+                                           data-options="labelAlign:'right',cls:'noborder', readonly:true, editable:false" />
                                 </td>
                             </tr>
                             <tr>
                                 <td style="padding-top:10px;">
-                                    <input class="easyui-textbox" name="customerId" id="customerId" panelWidth="auto" panelHeight="auto" label="回访客户:" style="width: 80%;"
-                                           data-options="labelAlign:'right',cls:'noborder', readonly:true, editable:false" />
+                                    <input class="easyui-textbox" name="userId" id="userId" panelWidth="auto" panelHeight="auto" label="回访人:" style="width: 80%;"
+                                           data-options="labelAlign:'right',cls:'noborder', readonly:true, editable:false, hasDownArrow:false" />
                                 </td>
                                 <td style="padding-top:10px;padding-left:10px;">
                                     <input name="_mode" class="easyui-combobox" id="_mode" style="width:80%;" panelWidth="auto" panelHeight="auto" label="回访方式:" data-options="labelAlign:'right',cls:'noborder', readonly:true, editable:false, hasDownArrow:false"/>
@@ -97,8 +97,8 @@
                                 <td style="padding-top:10px;">
                                     <input class="easyui-datetimebox" name="_finishTime" id="_finishTime" style="width:80%" data-options="labelAlign:'right',label:'完成时间:',cls:'noborder', readonly:true, editable:false, hasDownArrow:false"/>
                                 </td>
-                                <td style="padding-top:10px;padding-left:10px;" >
-                                    <input class="easyui-textbox" name="_code" id="_code" style="width:80%"  data-options="labelAlign:'right',label:'回访编号:',cls:'noborder',readonly:true, editable:false" />
+                                <td style="padding-top:10px;padding-left:10px;" width="33%">
+                                    <input class="easyui-textbox" name="_createdName" id="_createdName" style="width: 80%;" data-options="labelAlign:'right',cls:'noborder', readonly:true, label:'回访创建者:'"  editable="true"/>
                                 </td>
                                 <td></td>
                             </tr>

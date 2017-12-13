@@ -58,13 +58,13 @@
                 <#nav/>
                 <div style="display: inline;float:right;padding-right: 40px;">
                     <span id="newPage" style="display: none;">
-                            <a id="saveBtn" href="#" class="easyui-linkbutton" iconCls="icon-save" data-options="width:80" onclick="saveOrUpdate(1)">保存</a>&nbsp;&nbsp;
-                            <a id="saveAndNewBtn" href="#" class="easyui-linkbutton" iconCls="icon-save" data-options="width:120" onclick="saveOrUpdate(2)">保存并新建</a>&nbsp;&nbsp;
-                            <a id="saveAndFilishedBtn" href="#" class="easyui-linkbutton" iconCls="icon-save" data-options="width:120" onclick="saveOrUpdate(3)">保存并完成</a>&nbsp;&nbsp;
+                            <a id="saveBtn" href="#" class="easyui-linkbutton" iconCls="icon-save" data-options="width:80" onclick="saveOrUpdate(1,'确定要保存吗？')">保存</a>&nbsp;&nbsp;
+                            <a id="saveAndNewBtn" href="#" class="easyui-linkbutton" iconCls="icon-save" data-options="width:120" onclick="saveOrUpdate(2,'确定要保存并新建吗？')">保存并新建</a>&nbsp;&nbsp;
+                            <a id="saveAndFilishedBtn" href="#" class="easyui-linkbutton" iconCls="icon-save" data-options="width:120" onclick="saveOrUpdate(3,'确定要保存并完成吗？')">保存并完成</a>&nbsp;&nbsp;
                         </span>
                         <span id="modifyPage" style="display: none;">
-                            <a id="modifyBtn" href="#" class="easyui-linkbutton" iconCls="icon-save" data-options="width:80" onclick="saveOrUpdate(1)">更新</a>&nbsp;&nbsp;
-                            <a id="modifyAndFilishedBtn" href="#" class="easyui-linkbutton" iconCls="icon-save" data-options="width:100" onclick="saveOrUpdate(3)">完成回访</a>&nbsp;&nbsp;
+                            <a id="modifyBtn" href="#" class="easyui-linkbutton" iconCls="icon-save" data-options="width:80" onclick="saveOrUpdate(1,'确定要更新吗？')">更新</a>&nbsp;&nbsp;
+                            <a id="modifyAndFilishedBtn" href="#" class="easyui-linkbutton" iconCls="icon-save" data-options="width:100" onclick="saveOrUpdate(3,'确定要完成回访吗？')">完成回访</a>&nbsp;&nbsp;
                         </span>
                     <a id="cancelBtn" href="#" class="easyui-linkbutton" iconCls="icon-cancel" data-options="width:80" onclick="doBack()">取消</a>
                 </div>
@@ -75,67 +75,11 @@
                     <li id="step2" class="step">进行中</li>
                     <li id="step3" class="step">已完成</li>
                 </ul>
-                <div  class="easyui-panel" style="width: 94%;" title="回访信息" border="false" >
-                    <form id="_form" class="easyui-form" method="post" fit="true">
-                        <input name="_id" id="_id" type="hidden">
-                        <table align="center" width="94%">
-                            <tr>
-                                <td style="padding-top:10px;" width="33%">
-                                    <input class="easyui-textbox inputWidth" name="_createdName" id="_createdName" data-options="labelAlign:'right',label:'回访创建者:'"  editable="true"/>
-                                </td>
-                                <td style="padding-top:10px;padding-left:10px;" width="33%">
-                                    <input class="easyui-textbox inputWidth" name="_subject" id="_subject"  data-options="labelAlign:'right',label:'主题:', validType:'length[0,40]'" required="true" />
-                                </td>
-                                <td style="padding-top:10px;padding-left:10px;" width="34%">
-                                    <input class="easyui-textbox inputWidth" name="userId" id="userId" panelWidth="auto" panelHeight="auto" label="回访人:"  required="true"
-                                           data-options="labelAlign:'right',editable:false,buttonText:'选择',onClickButton:_selectUser,onChange:_changeTextboxShowClear" />
-                                </td>
-                            </tr>
-                            <tr>
-                                <td style="padding-top:10px;">
-                                    <input class="easyui-textbox inputWidth" name="customerId" id="customerId" panelWidth="auto" panelHeight="auto" label="回访客户:"  required="true"
-                                           data-options="labelAlign:'right',editable:false,
-                                        buttonText:'选择',
-                                        onClickButton:_selectCustomer,onChange:_changeTextboxShowClear" />
-                                </td>
-                                <td style="padding-top:10px;padding-left:10px;">
-                                    <input name="_mode" class="easyui-combobox inputWidth" id="_mode"  panelWidth="auto" panelHeight="auto" data-options="labelAlign:'right'" label="回访方式:" required="true" editable="false"/>
-                                    <#comboProvider _id="_mode" _provider='dataDictionaryValueProvider' _queryParams='{dd_id:"11"}'/>
-                                </td>
-                                <td style="padding-top:10px;padding-left:10px;">
-                                    <input class="easyui-combobox inputWidth" name="_priority" id="_priority"  data-options="labelAlign:'right',editable:false" panelWidth="auto" panelHeight="auto" label="优先级:" />
-                                    <#comboProvider _id="_priority" _provider='dataDictionaryValueProvider' _queryParams='{dd_id:"10"}'/>
-                                </td>
-                            </tr>
-                            <%if (has(customerVisit)){%>
-                                <tr>
-                                    <td style="padding-top:10px;">
-                                        <input class="easyui-datetimebox inputWidth" name="_finishTime" id="_finishTime" data-options="labelAlign:'right',label:'完成时间:',editable:false"/>
-                                    </td>
-                                    <td style="padding-top:10px;padding-left:10px;" >
-                                        <input class="easyui-textbox inputWidth" name="_code" id="_code"   data-options="labelAlign:'right',label:'回访编号:',disabled:true" />
-                                    </td>
-                                    <td></td>
-                                </tr>
-                                <tr>
-                                    <td style="padding-top:10px;" colspan="3">
-                                        <input class="easyui-textbox" name="_notes" id="_notes" style="width:90%" multiline="true" data-options="labelAlign:'right',label:'描述:', validType:'length[0,200]'" />
-                                    </td>
-                                </tr>
-                            <%}else{%>
-                                <tr>
-                                    <td style="padding-top:10px;">
-                                        <input class="easyui-datetimebox inputWidth" name="_finishTime" id="_finishTime" data-options="labelAlign:'right',label:'完成时间:',editable:false"/>
-                                    </td>
-                                    <td style="padding-top:10px;padding-left:10px;" colspan="2">
-                                        <input class="easyui-textbox" name="_notes" id="_notes" style="width:85%" multiline="true" data-options="labelAlign:'right',label:'描述:', validType:'length[0,200]'" />
-                                    </td>
-                                </tr>
-                            <%}%>
-
-                        </table>
-                    </form>
-                </div>
+                <%if (has(customerVisit)){%>
+                    <#customerVisit_editFormHtml/>
+                <%}else{%>
+                    <#customerVisit_addFormHtml/>
+                <%}%>
             </div>
             <!--------------------事件信息------------------------>
             <p />
@@ -310,7 +254,7 @@
          * 保存回访信息
          * @param type 操作类型 1-保存;2-保存并新建;3-保存并完成
          */
-        function saveOrUpdate(type){
+        function saveOrUpdate(type,msg){
             if(!$('#_form').form("validate")){
                 return;
             }
@@ -321,7 +265,7 @@
                     return false;
                 }
             }
-            $.messager.confirm('确认','您确认想要保存吗？',function(r) {
+            $.messager.confirm('确认',msg,function(r) {
                 if (r) {
                     diableBtn(true);
                     var _formData = removeKeyStartWith($("#_form").serializeObject(),"_");
@@ -349,8 +293,10 @@
                         async : true,
                         success: function (ret) {
                             if(ret.code=="200"){
-                                if (type==2){ //保存并新建
+                                if (type==2) { //保存并新建
                                     openInsert();
+                                }else if (type==1){
+                                    window.location.href = "${contextPath}/customerVisit/detail.html?id="+ret.data.id;
                                 }else{
                                     window.location.href="${contextPath}/customerVisit/index.html";
                                 }
