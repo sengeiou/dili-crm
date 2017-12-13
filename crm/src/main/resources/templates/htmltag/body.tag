@@ -5,6 +5,7 @@
     <meta charset="utf-8" />
     <title>地利CRM</title>
     <meta name="description" content="overview &amp; stats" />
+    <link rel="shortcut icon" href="${contextPath}/resources/images/icon/dili-logo.png" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0" />
     <#css/>
     <#js/>
