@@ -95,24 +95,24 @@
                         <table width="98%" style="border:0px;">
                             <tr>
                                 <td style="padding-top:10px;padding-left:15px;" width="33%">
-                                    <input class="easyui-textbox" style="width:70%" id="_ownerName" name="_ownerName" data-options="labelAlign:'right', label:'客户所有者:'" disabled="false" editable="false"/>
+                                    <input class="easyui-textbox" name="_name" id="_name" style="width:70%;" data-options="labelAlign:'right', label:'客户名称:', validType:'length[1,40]', required:true" />
                                 </td>
                                 <td style="padding-top:10px;padding-left:15px;" width="33%">
+                                    <input class="easyui-textbox" name="_code" id="_code" style="width:70%;" data-options="labelAlign:'right', label:'客户编码:', validType:'length[0,40]'" />
+                                </td>
+                                <td style="padding-top:10px;padding-left:15px;"  width="33%">
                                     <input class="easyui-textbox" name="_parentName" id="_parentName" data-options="labelAlign:'right'" readonly="true" disabled="false" style="width:70%" label="父客户:" />
                                     <input name="_parentId" type="hidden" id="_parentId" />
-                                </td>
-                                <td style="padding-top:10px;padding-left:15px;" width="33%">
-                                    <input name="_type" id="_type" data-options="labelAlign:'right', editable:false" style="width:70%;" panelWidth="auto" panelHeight="auto" label="客户类型:" />
-                                    <#comboProvider _id="_type" _provider='dataDictionaryValueProvider' _queryParams='{dd_id:"4"}'/>
                                 </td>
                             </tr>
 
                             <tr>
                                 <td style="padding-top:10px;padding-left:15px;">
-                                    <input class="easyui-textbox" name="_name" id="_name" style="width:70%;" data-options="labelAlign:'right', label:'客户名称:', validType:'length[1,40]', required:true" />
+                                    <input class="easyui-textbox" style="width:70%" id="_ownerName" name="_ownerName" data-options="labelAlign:'right', label:'客户所有者:'" disabled="false" editable="false"/>
                                 </td>
                                 <td style="padding-top:10px;padding-left:15px;">
-                                    <input class="easyui-textbox" name="_code" id="_code" style="width:70%;" data-options="labelAlign:'right', label:'客户编码:', validType:'length[0,40]'" />
+                                    <input name="_type" id="_type" data-options="labelAlign:'right', editable:false" style="width:70%;" panelWidth="auto" panelHeight="auto" label="客户类型:" />
+                                    <#comboProvider _id="_type" _provider='dataDictionaryValueProvider' _queryParams='{dd_id:"4"}'/>
                                 </td>
                                 <td style="padding-top:10px;padding-left:15px;">
                                     <input name="_profession" id="_profession" data-options="labelAlign:'right', editable:false" style="width:70%;" panelWidth="auto" panelHeight="auto" label="客户行业:" />
@@ -351,6 +351,13 @@
             if(!validateCertificateNumber($("#_certificateNumber").textbox("getValue"))){
                 return;
             }
+            if ($("#_operatingArea").combobox("getValue")){
+                if(manualInput){
+                    $.messager.alert('错误',"手动输入不合法，请选择经营区域");
+                    return;
+                }
+            }
+
             var msg = (!url || url == null || url === "") ? "您确认要保存并退出吗？" : "您确认想要保存吗？";
             $.messager.confirm('确认',msg,function(r) {
                 if (r) {
