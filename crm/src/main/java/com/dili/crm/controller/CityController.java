@@ -64,8 +64,8 @@ public class CityController {
 		    cityDto.setLevelTypes(Lists.newArrayList(0, 1));
 	    }
 	    //最多查100条，避免页面卡死
-	    city.setRows(100);
-    	city.setPage(1);
+//	    city.setRows(100);
+//    	city.setPage(1);
 	    EasyuiPageOutput easyuiPageOutput = cityService.listEasyuiPageByExample(cityDto, true);
 		for(Object rowObj : easyuiPageOutput.getRows()) {
 			if(DTOUtils.isDTOProxy(rowObj)){
