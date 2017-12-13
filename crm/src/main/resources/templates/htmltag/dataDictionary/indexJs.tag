@@ -398,6 +398,7 @@ function openDdValueWindow(ddId) {
 				width : 1200,
 				height : 500,
 				modal : true,
+				collapsible : false,
 				href : '${contextPath}/dataDictionaryValue/list?ddId=' + ddId,
 				onLoad : function() {
 					window.ddId = ddId;

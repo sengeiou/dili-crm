@@ -514,6 +514,7 @@ onTypeChange = function(newVal, oldVal) {
 
 $(function() {
 			window.saveRoleMenuResource = function() {
+
 				var tree = $.fn.zTree.getZTreeObj("tree");
 				var checkedNodes = tree.getCheckedNodes();
 				var submitData = {
@@ -536,15 +537,18 @@ $(function() {
 							dataType : "json",
 							success : function(data) {
 								if (data.code == 200) {
-									$.messager.alert('提示', '保存成功');
-								} else {
+									//$.messager.alert('提示', '保存成功');
+									
+										$('#win').window('close');
+										queryGrid();
+								}else {
 									$.messager.alert('提示', data.result);
 								}
 							},
 							error : function(message) {
 								$("#request-process-patent").html("提交数据失败！");
 							}
-						});
+						});//end ajax
 			};
 
 			window.editRoleMenuAndResource = function(roleId) {

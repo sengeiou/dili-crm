@@ -334,8 +334,7 @@ function onUserDetailClicked(id) {
 	$('#roleForm').hide();
 
 	$('#dlg').dialog({
-				height:550,
-				buttons : []
+				height:550
 			});
 
 	var formData = $.extend({}, selected);
