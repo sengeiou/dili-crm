@@ -1,6 +1,7 @@
 package com.dili.crm.controller;
 
 import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
 import com.dili.crm.domain.City;
 import com.dili.crm.domain.dto.CityDto;
 import com.dili.crm.service.CityService;
@@ -20,6 +21,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -88,6 +90,13 @@ public class CityController {
 	public @ResponseBody String expand(Long parentId) throws Exception {
 		City city = DTOUtils.newDTO(City.class);
 		city.setParentId(parentId);
+		Map<String, Object> metadata = new HashMap<>();
+		JSONObject cityYnProvider = new JSONObject();
+		cityYnProvider.put("provider", "cityYnProvider");
+		metadata.put("created", getDatetimeProvider());
+		metadata.put("modified", getDatetimeProvider());
+		metadata.put("yn", cityYnProvider);
+		city.mset(metadata);
 		EasyuiPageOutput easyuiPageOutput = cityService.listEasyuiPageByExample(city, true);
 		for(Object rowObj : easyuiPageOutput.getRows()) {
 			if(DTOUtils.isDTOProxy(rowObj)){
@@ -98,6 +107,13 @@ public class CityController {
 			}
 		}
 		return JSONArray.toJSONString(easyuiPageOutput.getRows());
+	}
+
+	//获取时间提供者
+	private JSONObject getDatetimeProvider(){
+		JSONObject datetimeProvider = new JSONObject();
+		datetimeProvider.put("provider", "datetimeProvider");
+		return datetimeProvider;
 	}
 
     @ApiOperation("新增City")
