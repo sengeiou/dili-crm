@@ -188,6 +188,8 @@
         //清空表单
         function clearForm() {
             clearEasyuiForm("form");
+            $("#customerId").textbox('getIcon',0).css('visibility','hidden');
+            $("#userId").textbox('getIcon',0).css('visibility','hidden');
         }
 
         //表格表头右键菜单
