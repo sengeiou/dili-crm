@@ -13,17 +13,23 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.dili.crm.dao.CustomerExtensionsMapper;
 import com.dili.crm.dao.CustomerMapper;
+import com.dili.crm.domain.Address;
 import com.dili.crm.domain.Customer;
 import com.dili.crm.domain.CustomerExtensions;
 import com.dili.crm.domain.IcardUserAccount;
 import com.dili.crm.domain.IcardUserCard;
+import com.dili.crm.domain.SystemConfig;
 import com.dili.crm.domain.dto.IcardUserCardDTO;
+import com.dili.crm.domain.toll.TollCustomer;
 import com.dili.crm.provider.YnProvider;
+import com.dili.crm.service.AddressService;
 import com.dili.crm.service.CustomerExtensionsService;
 import com.dili.crm.service.CustomerService;
 import com.dili.crm.service.ICardETLService;
 import com.dili.crm.service.IcardUserAccountService;
 import com.dili.crm.service.IcardUserCardService;
+import com.dili.crm.service.SystemConfigService;
+import com.dili.crm.service.toll.TollCustomerService;
 import com.dili.ss.domain.BasePage;
 import com.dili.ss.dto.DTOUtils;
 import com.mysql.fabric.xmlrpc.base.Array;
@@ -38,7 +44,9 @@ public class ICardETLServiceImpl implements ICardETLService{
 	@Autowired private IcardUserCardService icardUserCardService;
 	@Autowired private CustomerService customerService;
 	@Autowired private CustomerExtensionsService customerExtensionsService;
-	
+	@Autowired private AddressService addressService;
+	@Autowired private TollCustomerService tollCustomerService;
+	@Autowired private SystemConfigService systemConfigService;
 
 	/**
 	 * @param customer 要插入或者更新到crm的客户信息
@@ -46,8 +54,15 @@ public class ICardETLServiceImpl implements ICardETLService{
 	 * @return true保存成功,false 保存失败
 	 */
 	@Transactional
-	private boolean saveOrUpdate(Customer customer,List<CustomerExtensions> customerExtensionsList) {
+	private boolean saveOrUpdate(Customer customer,List<CustomerExtensions> customerExtensionsList,List<Address>address) {
 		Customer condtion=DTOUtils.newDTO(Customer.class);
+		
+		if("toll".equals(customer.getSourceSystem())) {
+			this.saveOrUpdateTollLatestTime(customer.getCreated());
+		}else {
+			this.saveOrUpdateSettlementLatestTime(customer.getCreated());
+		}
+		
 		condtion.setCertificateNumber(customer.getCertificateNumber());
 		//用身份证号在crm系统查询用户信息
 		List<Customer>list=this.customerService.list(condtion);
@@ -69,7 +84,7 @@ public class ICardETLServiceImpl implements ICardETLService{
 			CustomerExtensions customerExtensionsCondtion=DTOUtils.newDTO(CustomerExtensions.class);
 			
 			customerExtensionsCondtion.setAcctId(customerExtensions.getAcctId());
-			customerExtensions.setSystem("settlement");
+			customerExtensions.setSystem(customerExtensions.getSystem());
 			
 			List<CustomerExtensions>extensions=this.customerExtensionsService.list(customerExtensionsCondtion);
 			if(extensions==null||extensions.size()==0) {
@@ -80,72 +95,209 @@ public class ICardETLServiceImpl implements ICardETLService{
 		if(extensionList.size()>0) {
 			this.customerExtensionsService.batchInsert(customerExtensionsList);
 		}
+		
+		//对地址信息做插入或者更新的判断
+		List<Address>addrList=new ArrayList<>();
+		for(Address addr:address) {
+			Address addrCondtion=DTOUtils.newDTO(Address.class);
+			
+			addrCondtion.setAddress(addr.getAddress());
+			addrCondtion.setCustomerId(customer.getId());
+//					customerExtensions.setSystem(customerExtensions.getSystem());
+//					
+			List<Address>extensions=this.addressService.list(addrCondtion);
+			if(extensions==null||extensions.size()==0) {
+				addr.setCustomerId(customer.getId());
+				addrList.add(addr);
+			}
+		}
+		if(addrList.size()>0) {
+			this.addressService.batchInsert(addrList);
+		}
+		
 		return true;
+	}
+	
+
+	private void saveOrUpdateTollLatestTime(Date date) {
+		if(date==null) {
+			return;
+		}
+		SystemConfig systemConfig=DTOUtils.newDTO(SystemConfig.class);
+		systemConfig.setCode("toll_latest_time");
+		List<SystemConfig>list=this.systemConfigService.list(systemConfig);
+		if(list!=null&&list.size()==1) {
+			systemConfig=list.get(0);
+		}else {
+			systemConfig.setName("最后一个同步的神农客户信息的时间");
+			systemConfig.setNotes("单位:毫秒(请不要修改)");
+		}
+		systemConfig.setYn(1);
+		systemConfig.setValue(String.valueOf(date.getTime()));
+
+		this.systemConfigService.saveOrUpdate(systemConfig);
+		
+	}
+	private void saveOrUpdateSettlementLatestTime(Date date) {
+		if(date==null) {
+			return;
+		}
+		SystemConfig systemConfig=DTOUtils.newDTO(SystemConfig.class);
+		systemConfig.setCode("settlement_latest_time");
+		
+		List<SystemConfig>list=this.systemConfigService.list(systemConfig);
+		if(list!=null&&list.size()==1) {
+			systemConfig=list.get(0);
+		}else {
+			systemConfig.setName("最后一个同步的电子结算客户信息的时间");
+			systemConfig.setNotes("单位:毫秒(请不要修改)");
+		}
+		systemConfig.setYn(1);
+		systemConfig.setValue(String.valueOf(date.getTime()));
+		this.systemConfigService.saveOrUpdate(systemConfig);
+		
 	}
 	
 	/**
 	 * 查询最后一条用户信息，用来做为从电子结算查询的条件
 	 * @return 返回最后一条客户信息
 	 */
-	private Customer findLatestCustomer() {
-		Customer example=DTOUtils.newDTO(Customer.class);
-		//settlement:电子结算
-		example.setSourceSystem("settlement");
-		example.setPage(1);
-		example.setRows(1);
-		//时间降序获得第一条用户信息
-		example.setSort("created");
-		example.setOrder("DESC");
-		BasePage<Customer>page=this.customerService.listPageByExample(example);
-		List<Customer>data=page.getDatas();
-		if(data!=null&&data.size()==1) {
-			return data.get(0);
+	private Date findTollLatestTime() {
+		SystemConfig condtion=DTOUtils.newDTO(SystemConfig.class);
+		condtion.setCode("toll_latest_time");
+		List<SystemConfig>list=this.systemConfigService.list(condtion);
+		if(list!=null&&list.size()==1) {
+			String value=list.get(0).getValue();
+			try {
+				Date date=new Date(Long.valueOf(value));
+				return date;
+			}catch(Exception e) {
+				return null;
+			}
+		}
+		return null;
+	}
+	
+	
+	/**
+	 * 查询最后一条用户信息，用来做为从电子结算查询的条件
+	 * @return 返回最后一条客户信息
+	 */
+	private Date findSettlementLatestTime() {
+		SystemConfig condtion=DTOUtils.newDTO(SystemConfig.class);
+		condtion.setCode("settlement_latest_time");
+		List<SystemConfig>list=this.systemConfigService.list(condtion);
+		if(list!=null&&list.size()==1) {
+			String value=list.get(0).getValue();
+			try {
+				Date date=new Date(Long.valueOf(value));
+				return date;
+			}catch(Exception e) {
+				return null;
+			}
+			
 		}
 		return null;
 	}
 	
 	public boolean transIncrementData(Customer latestCustomer,int batchSize) {
-		if(latestCustomer==null) {
-			latestCustomer=this.findLatestCustomer();
-		}
-		//构造从电子结算查询的条件对象
-		IcardUserAccount example=DTOUtils.newDTO(IcardUserAccount.class);
-		example.setPage(1);
-		example.setRows(batchSize);
-		example.setSort("created_time");
-		example.setOrder("ASC");
-		if(latestCustomer!=null) {
-			example.setCreatedTime(latestCustomer.getCreated());
-		}
-		
-		
-		//从电子结算查询用户信息
-		BasePage<IcardUserAccount>page=icardUserAccountService.listPageByExample(example);
-		List<IcardUserAccount>data=page.getDatas();
-		if(data!=null&&data.size()>0) {
-			IcardUserCardDTO condtion=DTOUtils.newDTO(IcardUserCardDTO.class);
-			//4:已经退卡
-			condtion.setStatusNotIn(Arrays.asList(Byte.valueOf("4")));
-			for(IcardUserAccount icardUserAccount:data) {
-				//将电子结算用户转换为crm用户信息
-				Customer customer=this.transUserAccountAsCustomer(icardUserAccount);
-				if(customer==null) {
-					continue;
-				}
-				
-				condtion.setAccountId(icardUserAccount.getId());
-				//从电子结算查询用户对应的帐号信息
-				List<IcardUserCard> icardUserCardList=this.icardUserCardService.list(condtion);
-				//转换帐号信息
-				List<CustomerExtensions> customerExtensionsList=this.transIcardUserCardAsCustomerExtensions(icardUserCardList);
-				//保存数据到crm
-				this.saveOrUpdate(customer, customerExtensionsList);
-			}
+
+		if(this.transICardData(batchSize)||this.transTollData(batchSize)) {
 			return true;
 		}
-		
 		return false;
 	}
+	
+	/** 将神农的数据转移到CRM
+	 * @param batchSize
+	 * @return
+	 */
+	private boolean transTollData(int batchSize) {
+		
+		//构造从神农查询的条件对象
+		TollCustomer example=DTOUtils.newDTO(TollCustomer.class);
+				example.setPage(1);
+				example.setRows(batchSize);
+				example.setSort("created");
+				example.setOrder("ASC");
+				example.setYn(1);
+				Date latestTime=this.findTollLatestTime();
+				if(latestTime!=null) {
+					example.setCreated(latestTime);
+				}
+				
+				
+				//从神农查询用户信息
+				BasePage<TollCustomer>page=this.tollCustomerService.listPageByExample(example);
+				List<TollCustomer>data=page.getDatas();
+				if(data!=null&&data.size()>0) {
+					
+					for(TollCustomer tollCustomer:data) {
+						//将神农用户转换为crm用户信息
+						Customer customer=this.transTollCustomerAsCustomer(tollCustomer);
+						
+						List<Address>address=this.transTollCustomerAsAddress(tollCustomer);
+						
+						//转换扩展信息
+						List<CustomerExtensions> customerExtensionsList=this.transTollCustomerAsCustomerExtensions(tollCustomer);
+						//保存数据到crm
+						this.saveOrUpdate(customer, customerExtensionsList,address);
+					}
+					return true;
+				}
+				
+				return false;
+	}
+	
+	
+	/** 将电子结算的数据转移到CRM
+	 * @param batchSize
+	 * @return
+	 */
+	private boolean transICardData(int batchSize) {
+		
+		//构造从电子结算查询的条件对象
+				IcardUserAccount example=DTOUtils.newDTO(IcardUserAccount.class);
+				example.setPage(1);
+				example.setRows(batchSize);
+				example.setSort("created_time");
+				example.setOrder("ASC");
+				Date latestTime=this.findSettlementLatestTime();
+				if(latestTime!=null) {
+					example.setCreatedTime(latestTime);
+				}
+				
+				
+				//从电子结算查询用户信息
+				BasePage<IcardUserAccount>page=icardUserAccountService.listPageByExample(example);
+				List<IcardUserAccount>data=page.getDatas();
+				if(data!=null&&data.size()>0) {
+					IcardUserCardDTO condtion=DTOUtils.newDTO(IcardUserCardDTO.class);
+					//4:已经退卡
+					condtion.setStatusNotIn(Arrays.asList(Byte.valueOf("4")));
+					for(IcardUserAccount icardUserAccount:data) {
+						//将电子结算用户转换为crm用户信息
+						Customer customer=this.transUserAccountAsCustomer(icardUserAccount);
+						if(customer==null) {
+							continue;
+						}
+						List<Address>address=this.transICardUserAccountAsAddress(icardUserAccount);
+						condtion.setAccountId(icardUserAccount.getId());
+						//从电子结算查询用户对应的帐号信息
+						List<IcardUserCard> icardUserCardList=this.icardUserCardService.list(condtion);
+						//转换扩展信息
+						List<CustomerExtensions> customerExtensionsList=this.transIcardUserCardAsCustomerExtensions(icardUserCardList);
+						//保存数据到crm
+						this.saveOrUpdate(customer, customerExtensionsList,address);
+					}
+					return true;
+				}
+				
+				return false;
+	}
+	
+	
+	
 	
 	/**
 	 * @param icardUserAccount 电子结算系统的用户信息
@@ -183,6 +335,101 @@ public class ICardETLServiceImpl implements ICardETLService{
 		return customer;
 	}
 	
+	
+	/**
+	 * @param icardUserAccount 电子结算系统的用户信息
+	 * @return 返回crm用户信息对象
+	 */
+	private Customer transTollCustomerAsCustomer(TollCustomer tollCustomer) {
+		
+		
+		Customer customer=DTOUtils.newDTO(Customer.class);
+		customer.setCertificateType("id");
+		customer.setCertificateNumber(tollCustomer.getIdCard());
+		customer.setName(tollCustomer.getName());
+		customer.setCreated(tollCustomer.getCreated());
+		customer.setModified(tollCustomer.getModified());
+//		//1-男 2-女
+		if("1".equals(String.valueOf(tollCustomer.getSex()))) {
+			customer.setSex("male"); 
+		}else {
+			customer.setSex("female"); 
+		}
+//
+		if(StringUtils.isNotBlank(tollCustomer.getCellphone())) {
+			customer.setPhone(tollCustomer.getCellphone());
+		}else {
+			customer.setPhone(tollCustomer.getPhone());
+		}
+//		//toll:神农
+		customer.setSourceSystem("toll");
+		//individuals:个人
+		customer.setOrganizationType("individuals");
+		customer.setNotes(tollCustomer.getRemarks());
+		customer.setYn(1);
+		
+		return customer;
+	}
+	/**
+	 * @param icardUserAccount 电子结算系统的用户信息
+	 * @return 返回crm用户信息对象
+	 */
+	private List<Address> transTollCustomerAsAddress(TollCustomer tollCustomer) {
+		String homeAddr=StringUtils.trimToNull(tollCustomer.getHomeAddr());
+		String addr=StringUtils.trimToNull(tollCustomer.getAddr());
+		List<Address>resultList=new ArrayList<>();
+		if(homeAddr!=null) {
+			Address address=DTOUtils.newDTO(Address.class);
+			address.setAddress(homeAddr);
+			resultList.add(address);
+		}
+		
+
+		if(addr!=null) {
+			Address address=DTOUtils.newDTO(Address.class);
+			address.setAddress(addr);
+			resultList.add(address);
+		}
+		
+		
+		return resultList;
+	}
+	/**
+	 * @param icardUserCardList 电子结算系统帐号列表
+	 * @return 返回crm系统统帐号列表
+	 */
+	private List<CustomerExtensions> transTollCustomerAsCustomerExtensions(TollCustomer tollCustomer) {
+		List<CustomerExtensions>resultList=new ArrayList<>();
+			CustomerExtensions customerExtensions=DTOUtils.newDTO(CustomerExtensions.class);
+			
+			customerExtensions.setAcctId(String.valueOf(tollCustomer.getId()));
+//			customerExtensions.setNotes("卡号:"+icardUserCard.getCardNo());
+
+//			customerExtensions.setAcctType("bankCard");
+			
+			//toll:神农
+			customerExtensions.setSystem("toll");
+			resultList.add(customerExtensions);
+
+		return resultList;
+	}
+	/**
+	 * @param icardUserAccount 电子结算系统的用户信息
+	 * @return 返回crm用户信息对象
+	 */
+	private List<Address> transICardUserAccountAsAddress(IcardUserAccount icardUserAccount) {
+		
+		List<Address>resultList=new ArrayList<>();
+		String addr=StringUtils.trimToNull(icardUserAccount.getAddress());
+
+		if(addr!=null) {
+			Address address=DTOUtils.newDTO(Address.class);
+			address.setAddress(addr);
+			resultList.add(address);
+		}
+		
+		return resultList;
+	}
 	/**
 	 * @param icardUserCardList 电子结算系统帐号列表
 	 * @return 返回crm系统统帐号列表
@@ -192,7 +439,7 @@ public class ICardETLServiceImpl implements ICardETLService{
 		for(IcardUserCard icardUserCard:icardUserCardList) {
 			CustomerExtensions customerExtensions=DTOUtils.newDTO(CustomerExtensions.class);
 			
-			customerExtensions.setAcctId(String.valueOf(icardUserCard.getId()));
+			customerExtensions.setAcctId(String.valueOf(icardUserCard.getAccountId()));
 			customerExtensions.setNotes("卡号:"+icardUserCard.getCardNo());
 			//10-主卡 20-副卡 30-临时卡 40-联营卡（目前应该没这种卡）  50和60都是银行卡
 			if(Byte.valueOf("10").equals(icardUserCard.getCategory())) {
