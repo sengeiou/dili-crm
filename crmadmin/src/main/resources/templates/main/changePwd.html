@@ -36,8 +36,10 @@
 			async : true,
 			success : function(data) {
 				if (data.code == "200") {
-					parent.closeTab("修改密码");
-				} else {
+//					parent.closeTab("修改密码");
+                    $.messager.alert('提示','修改密码成功', 'info');
+					$('#changePwdForm').form("clear");
+                } else {
 					$.messager.alert('错误', data.result);
 				}
 			},
