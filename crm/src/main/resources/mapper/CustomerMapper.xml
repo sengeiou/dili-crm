@@ -166,4 +166,9 @@
   <select id="getChildCustomers" parameterType="java.lang.Long" resultMap="BaseResultMap">
     {call getChildCustomers(#{id})}
   </select>
+
+  <select id="getChildCustomerIds" parameterType="java.lang.Long" resultType="string">
+    select getChildCustomerIds(#{id})
+  </select>
+
 </mapper>

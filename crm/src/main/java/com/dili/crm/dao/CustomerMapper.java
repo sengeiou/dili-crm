@@ -12,14 +12,21 @@ public interface CustomerMapper extends MyMapper<Customer> {
 	List<CustomerChartDTO>selectCustomersGroupByProfession();
 
 	/**
-	 * 获取父客户id，以逗号分隔
+	 * 获取父客户id，以逗号分隔,包含自己
 	 * @param id
 	 * @return
 	 */
 	String getParentCustomers(Long id);
 
 	/**
-	 * 获取子客户，包括自己
+	 * 获取子客户id字符串，以逗号分隔,包含自己
+	 * @param id
+	 * @return
+	 */
+	String getChildCustomerIds(Long id);
+
+	/**
+	 * 获取子客户，包含自己
 	 * @param id
 	 * @return
 	 */
