@@ -159,7 +159,7 @@ public class ICardETLServiceImpl implements ICardETLService{
 	}
 	
 	/**
-	 * 查询最后一条用户信息，用来做为从电子结算查询的条件
+	 * 查询最后同步的用户信息创建时间，用来做为从神农查询的条件
 	 * @return 返回最后一条客户信息
 	 */
 	private Date findTollLatestTime() {
@@ -180,7 +180,7 @@ public class ICardETLServiceImpl implements ICardETLService{
 	
 	
 	/**
-	 * 查询最后一条用户信息，用来做为从电子结算查询的条件
+	 * 查询最后同步的用户信息创建时间，用来做为从电子结算查询的条件
 	 * @return 返回最后一条客户信息
 	 */
 	private Date findSettlementLatestTime() {
