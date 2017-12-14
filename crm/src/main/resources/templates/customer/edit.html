@@ -345,9 +345,12 @@
             if(!$('#_form').form("validate")){
                 return;
             }
-            if(!validateCertificateNumber($("#_certificateNumber").textbox("getValue"))){
-                return;
-            }
+            // 修改操作，则不验证证件信息
+            <%if(!has(customerId)) {%>
+                if(!validateCertificateNumber($("#_certificateNumber").textbox("getValue"))){
+                    return;
+                }
+             <%}%>
             if ($("#_operatingArea").combobox("getValue")){
                 if(manualInput){
                     $.messager.alert('错误',"手动输入不合法，请选择经营区域");
