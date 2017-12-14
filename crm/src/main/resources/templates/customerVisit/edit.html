@@ -133,12 +133,12 @@
             <table style="width: 90%;">
                 <tr>
                     <td style="padding-top:10px;padding-left:20px;width: 100%;">
-                        <input class="easyui-datetimebox" name="_event_time" id="_event_time" required="true" style="width:60%" data-options="labelAlign:'right',label:'时间:',editable:false" />
+                        <input class="easyui-datetimebox" name="_event_time" id="_event_time" required="true" style="width:60%" data-options="labelAlign:'right',label:'&lowast;时间:',editable:false" />
                     </td>
                 </tr>
                 <tr>
                     <td style="padding-top:10px;padding-left:20px;width: 100%;">
-                        <input class="easyui-combobox" name="_event_mode" id="_event_mode" style="width:60%" panelHeight="auto" label="方式:" data-options="labelAlign:'right'" required="true" editable="false"/>
+                        <input class="easyui-combobox" name="_event_mode" id="_event_mode" style="width:60%" panelHeight="auto" label="&lowast;方式:" data-options="labelAlign:'right'" required="true" editable="false"/>
                         <#comboProvider _id="_event_mode" _provider='dataDictionaryValueProvider' _queryParams='{dd_id:"11"}'/>
                     </td>
                 </tr>
@@ -252,7 +252,6 @@
                 return;
             }
             if (type==3){
-                debugger;
                 var rows = $("#eventGrid").datagrid("getRows");
                 if (null == rows || rows.length < 1){
                     $.messager.alert('警告','完成回访时,需至少添加一条事件信息','warning');

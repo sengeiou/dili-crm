@@ -8,10 +8,10 @@
                 </td>
 
                 <td style="padding-top:10px;padding-left:10px;" width="33%">
-                    <input class="easyui-textbox inputWidth" name="_subject" id="_subject"  data-options="labelAlign:'right',label:'主题:', validType:'length[0,40]'" required="true" />
+                    <input class="easyui-textbox inputWidth" name="_subject" id="_subject"  data-options="labelAlign:'right',label:'&lowast;主题:', validType:'length[0,40]'" required="true" />
                 </td>
                 <td style="padding-top:10px;padding-left:10px;" width="33%">
-                    <input class="easyui-textbox inputWidth" name="customerId" id="customerId" panelWidth="auto" panelHeight="auto" label="回访客户:"  required="true"
+                    <input class="easyui-textbox inputWidth" name="customerId" id="customerId" panelWidth="auto" panelHeight="auto" label="&lowast;回访客户:"  required="true"
                            data-options="labelAlign:'right',editable:false,
                                         buttonText:'选择',
                                         onClickButton:_selectCustomer,onChange:_changeTextboxShowClear" />
@@ -20,11 +20,11 @@
             </tr>
             <tr>
                 <td style="padding-top:10px;">
-                    <input class="easyui-textbox inputWidth" name="userId" id="userId" panelWidth="auto" panelHeight="auto" label="回访人:"  required="true"
+                    <input class="easyui-textbox inputWidth" name="userId" id="userId" panelWidth="auto" panelHeight="auto" label="&lowast;回访人:"  required="true"
                            data-options="labelAlign:'right',editable:false,buttonText:'选择',onClickButton:_selectUser,onChange:_changeTextboxShowClear" />
                 </td>
                 <td style="padding-top:10px;padding-left:10px;">
-                    <input name="_mode" class="easyui-combobox inputWidth" id="_mode"  panelWidth="auto" panelHeight="auto" data-options="labelAlign:'right'" label="回访方式:" required="true" editable="false"/>
+                    <input name="_mode" class="easyui-combobox inputWidth" id="_mode"  panelWidth="auto" panelHeight="auto" data-options="labelAlign:'right'" label="&lowast;回访方式:" required="true" editable="false"/>
                     <#comboProvider _id="_mode" _provider='dataDictionaryValueProvider' _queryParams='{dd_id:"11"}'/>
                 </td>
                 <td style="padding-top:10px;padding-left:10px;">
