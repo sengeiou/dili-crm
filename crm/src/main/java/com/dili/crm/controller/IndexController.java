@@ -1,6 +1,9 @@
 package com.dili.crm.controller;
 
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Collections;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -39,6 +42,10 @@ public class IndexController {
 	    @RequestMapping(value="/index.html", method = RequestMethod.GET)
 	    public String index(ModelMap modelMap) {
 			 int clientRefreshFrequency=this.getRefreshFrequency();
+
+			 modelMap.put("startDate",this.calStartDate());
+			 modelMap.put("endDate",this.calEndDate());
+			 
 			 modelMap.put("clientRefreshFrequency", clientRefreshFrequency);
 	        return "index";
 	    }
@@ -78,7 +85,31 @@ public class IndexController {
 			dataDictionaryValueProvider.put("queryParams", "{dd_id:"+ddId+"}");
 			return dataDictionaryValueProvider;
 		}
-	 private int getRefreshFrequency() {
+		
+		private String calStartDate() {
+
+			Calendar cal=Calendar.getInstance();
+			cal.add(Calendar.MONDAY, -1);
+			cal.set(Calendar.HOUR_OF_DAY, 0);
+			cal.set(Calendar.MINUTE, 0);
+			cal.set(Calendar.SECOND, 0);
+			
+			SimpleDateFormat dateFormat=new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+			return dateFormat.format(cal.getTime());
+		}
+		
+		private String calEndDate() {
+			Calendar cal=Calendar.getInstance();
+			cal.set(Calendar.HOUR_OF_DAY, 23);
+			cal.set(Calendar.MINUTE, 59);
+			cal.set(Calendar.SECOND, 59);
+			
+			SimpleDateFormat dateFormat=new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+			return dateFormat.format(cal.getTime());
+			
+		}
+		
+		private int getRefreshFrequency() {
 		 int default_frequency=5;//seconds
 		 
 		 SystemConfig condition=DTOUtils.newDTO(SystemConfig.class);
