@@ -163,4 +163,7 @@
     select getParentCustomers(#{id})
   </select>
 
+  <select id="getChildCustomers" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    {call getChildCustomers(#{id})}
+  </select>
 </mapper>

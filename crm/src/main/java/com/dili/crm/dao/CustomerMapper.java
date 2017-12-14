@@ -17,4 +17,12 @@ public interface CustomerMapper extends MyMapper<Customer> {
 	 * @return
 	 */
 	String getParentCustomers(Long id);
+
+	/**
+	 * 获取子客户，包括自己
+	 * @param id
+	 * @return
+	 */
+	List<Customer> getChildCustomers(Long id);
+
 }
