@@ -147,7 +147,7 @@
 						<div id="orderHeader"  class="panel-title" >
 							<span id="orderTitle">异常订单</span>
 						</div>
-		   		        <iframe id="orders" style="width:98%; height:98%" scrolling="no" frameborder="no" marginwidth="0" marginheight="0" border="0" src="http://10.28.1.16:8080/find/sZabnormal_orders2Z0tffftfff0.html" >
+		   		        <iframe id="abnormalOrdersIframe" style="width:98%; height:98%" scrolling="no" frameborder="no" marginwidth="0" marginheight="0" border="0" src="http://10.28.1.16:8080/find/sZabnormal_orders2Z0tffftfff0.html" >
 						</iframe>
 
 						<script type="text/javascript">
@@ -179,7 +179,7 @@
 						 <div id="sellHeader"  class="panel-title">
 							 <span id="sellTitle">近一月 销售top10</span>
 						 </div>
-		   		        <iframe id="orders" style="width:99%;height:98%" scrolling="no" frameborder="no" marginwidth="0" marginheight="0" border="0" src="http://ap.nong12.com/find/sZsales_top_10Z5tfffftff0.html?dt=${startDate} - ${endDate}">
+		   		        <iframe id="salesTopIframe" style="width:99%;height:98%" scrolling="no" frameborder="no" marginwidth="0" marginheight="0" border="0" src="http://ap.nong12.com/find/sZsales_top_10Z5tfffftff0.html?dt=${startDate} - ${endDate}">
 						</iframe>
 					</div>
 		        </div>
@@ -188,7 +188,7 @@
 					 <div id="buyHeader"  class="panel-title">
 						 <span id="buyTitle">近一月 采购top10</span>
 					 </div>
-		   		        <iframe id="orders" style="width:99%;height:98%" scrolling="no" frameborder="no" marginwidth="0" marginheight="0" border="0" src="http://ap.nong12.com/find/sZpurchasing_top_10Z5tfffftff0.html?dt=${startDate} - ${endDate}">
+		   		        <iframe id="purchasingTopIframe" style="width:99%;height:98%" scrolling="no" frameborder="no" marginwidth="0" marginheight="0" border="0" src="http://ap.nong12.com/find/sZpurchasing_top_10Z5tfffftff0.html?dt=${startDate} - ${endDate}">
 						</iframe>
 					</div>
 		        </div>
@@ -396,8 +396,20 @@
         $(document).ready(function(){
         	var clientRefreshFrequency=${clientRefreshFrequency};
         	queryGrid();
+        	function refreshAbnormalOrdersIframe(){
+        		$('#abnormalOrdersIframe').attr('src',$('#abnormalOrdersIframe').attr('src'))
+        	}
+			function refreshSalesTopIframe(){
+				$('#salesTopIframe').attr('src',$('#salesTopIframe').attr('src'))
+			        	}
+			function refreshPurchasingTopIframe(){
+				$('#purchasingTopIframe').attr('src',$('#purchasingTopIframe').attr('src'))
+				
+			}
         	setInterval(queryGrid,clientRefreshFrequency*1000);
-        		
+        	//setInterval(refreshAbnormalOrdersIframe,clientRefreshFrequency*1000);//abnormalOrdersIframe
+        	//setInterval(refreshSalesTopIframe,clientRefreshFrequency*1000);//salesTopIframe
+        	//setInterval(refreshPurchasingTopIframe,clientRefreshFrequency*1000);//purchasingTopIframe
         	
         });
     </script>
