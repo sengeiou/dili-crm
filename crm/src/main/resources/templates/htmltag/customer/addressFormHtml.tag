@@ -5,12 +5,6 @@
 					text:'确定',
 					iconCls:'icon-ok',
 					handler:saveOrUpdateAddress
-				},{
-					text:'取消',
-					iconCls:'icon-cancel',
-					handler:function(){
-						$('#addressDlg').dialog('close');
-					}
 				}]
 			">
     <form id="_addressForm" class="easyui-form" method="post" fit="true">
@@ -18,17 +12,17 @@
         <table width="360px">
             <tr>
                 <td style="padding-top:10px;padding-left:15px;">
-                    <input class="easyui-textbox" name="_address_name" id="_address_name" required="true" style="width:100%" data-options="label:'名称:', validType:'length[1,40]'" />
+                    <input class="easyui-textbox" name="_address_name" id="_address_name" required="true" style="width:100%" data-options="labelAlign:'right',label:'&lowast;名称:', validType:'length[1,40]'" />
                 </td>
             </tr>
             <tr>
                 <td style="padding-top:10px;padding-left:15px;">
-                    <input class="easyui-textbox" name="_address_address" id="_address_address" required="true" style="width:100%" data-options="label:'地址:', validType:'length[1,250]'" />
+                    <input class="easyui-textbox" name="_address_address" id="_address_address" required="true" style="width:100%" data-options="labelAlign:'right',label:'&lowast;地址:', validType:'length[1,250]'" />
                 </td>
             </tr>
             <tr>
                 <td style="padding-top:10px;padding-left:15px;">
-                    <input name="_address_cityId" id="_address_cityId" style="width:100%;" panelWidth="auto" required="true" panelHeight="auto" label="所在城市:"  data-options="validType:'length[1,20]', editable:true, hasDownArrow:false, onChange:changeName, onSelect:selectName, onLoadSuccess:onComboLoadSuccessSelectOne"/>
+                    <input name="_address_cityId" id="_address_cityId" style="width:100%;" panelWidth="auto" required="true" panelHeight="auto" label="&lowast;所在城市:"  data-options="labelAlign:'right',validType:'length[1,20]', editable:true, hasDownArrow:false, onChange:changeName, onSelect:selectName, onLoadSuccess:onComboLoadSuccessSelectOne"/>
                     <#comboProvider _id="_address_cityId" _provider="cityProvider" _valueField="value" _textField="label" />
                 </td>
             </tr>

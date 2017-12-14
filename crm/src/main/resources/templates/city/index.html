@@ -138,52 +138,52 @@
         <table width="360px">
             <tr>
                 <td style="padding:5px;">
-                    <input class="easyui-textbox" name="_name" id="_name" style="width:100%" required="true" data-options="label:'名称:', validType:'length[0,20]'" />
+                    <input class="easyui-textbox" name="_name" id="_name" style="width:100%" required="true" data-options="label:'*名称:', labelAlign:'right', validType:'length[0,20]'" />
                 </td>
             </tr>
             <tr>
                 <td style="padding:5px;">
-                    <input class="easyui-textbox" name="_shortName" id="_shortName" style="width:100%" required="true" data-options="label:'简称:', validType:'length[0,20]'" />
+                    <input class="easyui-textbox" name="_shortName" id="_shortName" style="width:100%" required="true" data-options="label:'*简称:', labelAlign:'right', validType:'length[0,20]'" />
                 </td>
             </tr>
             <tr>
                 <td style="padding:5px;">
-                    <input class="easyui-textbox" name="_levelType" id="_levelType" readonly="true" required="true"  style="width:100%" data-options="label:'级别:', validType:'length[0,3]'" />
+                    <input class="easyui-textbox" name="_levelType" id="_levelType" readonly="true" required="true"  style="width:100%" data-options="label:'*级别:', labelAlign:'right', validType:'length[0,3]'" />
                 </td>
             </tr>
             <tr>
                 <td style="padding:5px;">
-                    <input class="easyui-textbox" name="_cityCode" id="_cityCode" style="width:100%" data-options="label:'区号:', validType:'length[0,10]'" />
+                    <input class="easyui-textbox" name="_cityCode" id="_cityCode" style="width:100%" data-options="label:'区号:', labelAlign:'right', validType:'length[0,10]'" />
                 </td>
             </tr>
             <tr>
                 <td style="padding:5px;">
-                    <input class="easyui-textbox" name="_mergerName" id="_mergerName" style="width:100%" required="true" data-options="label:'合并名称:', validType:'length[0,50]'" />
+                    <input class="easyui-textbox" name="_mergerName" id="_mergerName" style="width:100%" required="true" data-options="label:'*合并名称:', labelAlign:'right', validType:'length[0,50]'" />
                 </td>
             </tr>
             <tr>
                 <td style="padding:5px;">
-                    <input class="easyui-textbox" name="_lng" id="_lng" style="width:100%" data-options="label:'经度:', validType:'length[0,20]'" />
+                    <input class="easyui-textbox" name="_lng" id="_lng" style="width:100%" data-options="label:'经度:', labelAlign:'right', validType:'length[0,20]'" />
                 </td>
             </tr>
             <tr>
                 <td style="padding:5px;">
-                    <input class="easyui-textbox" name="_lat" id="_lat" style="width:100%" data-options="label:'纬度:', validType:'length[0,20]'" />
+                    <input class="easyui-textbox" name="_lat" id="_lat" style="width:100%" data-options="label:'纬度:', labelAlign:'right', validType:'length[0,20]'" />
                 </td>
             </tr>
             <tr>
                 <td style="padding:5px;">
-                    <input class="easyui-textbox" name="_pinyin" id="_pinyin" style="width:100%" required="true" data-options="label:'拼音:', validType:'length[0,40]'" />
+                    <input class="easyui-textbox" name="_pinyin" id="_pinyin" style="width:100%" required="true" data-options="label:'*拼音:', labelAlign:'right', validType:'length[0,40]'" />
                 </td>
             </tr>
             <tr>
                 <td style="padding:5px;">
-                    <input class="easyui-textbox" name="_shortPy" id="_shortPy" style="width:100%" required="true" data-options="label:'拼音简写:', validType:'length[0,20]'" />
+                    <input class="easyui-textbox" name="_shortPy" id="_shortPy" style="width:100%" required="true" data-options="label:'*拼音简写:', labelAlign:'right', validType:'length[0,20]'" />
                 </td>
             </tr>
             <tr>
                 <td style="padding:5px;">
-                    <input name="_yn" id="_yn" style="width:100%" panelWidth="auto" panelHeight="auto" data-options="label:'是否有效:', editable:false"
+                    <input name="_yn" id="_yn" style="width:100%" panelWidth="auto" panelHeight="auto" data-options="label:'*是否有效:', labelAlign:'right', editable:false"
                         required="true" />
                     <#comboProvider _id="_yn" _provider='cityYnProvider' />
                 </td>

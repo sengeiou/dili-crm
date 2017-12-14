@@ -95,7 +95,7 @@
                         <table width="98%" style="border:0px;">
                             <tr>
                                 <td style="padding-top:10px;padding-left:15px;" width="33%">
-                                    <input class="easyui-textbox" name="_name" id="_name" style="width:70%;" data-options="labelAlign:'right', label:'客户名称:', validType:'length[1,40]', required:true" />
+                                    <input class="easyui-textbox" name="_name" id="_name" style="width:70%;" data-options="labelAlign:'right', label:'&lowast;客户名称:', validType:'length[1,40]', required:true" />
                                 </td>
                                 <td style="padding-top:10px;padding-left:15px;" width="33%">
                                     <input class="easyui-textbox" name="_code" id="_code" style="width:70%;" data-options="labelAlign:'right', label:'客户编码:', validType:'length[0,40]'" />
@@ -136,11 +136,11 @@
 
                             <tr>
                                 <td style="padding-top:10px;padding-left:15px;">
-                                    <input name="_certificateType" id="_certificateType" data-options="editable:false, labelAlign:'right', <%if(has(customer)){%>readonly:true,disabled:true,<%}%>required:true" style="width:70%;" panelWidth="auto" panelHeight="auto" label="证件类型:" />
+                                    <input name="_certificateType" id="_certificateType" data-options="editable:false, labelAlign:'right', <%if(has(customer)){%>readonly:true,disabled:true,<%}%>required:true" style="width:70%;" panelWidth="auto" panelHeight="auto" label="&lowast;证件类型:" />
 
                                 </td>
                                 <td style="padding-top:10px;padding-left:15px;">
-                                    <input class="easyui-textbox" name="_certificateNumber" id="_certificateNumber" style="width:70%;" data-options="labelAlign:'right', label:'证件号:', validType:'length[1,40]',<%if(has(customer)){%>readonly:true,disabled:true,<%}%> required:true, onChange:changeCertificateNumber" />
+                                    <input class="easyui-textbox" name="_certificateNumber" id="_certificateNumber" style="width:70%;" data-options="labelAlign:'right', label:'&lowast;证件号:', validType:'length[1,40]',<%if(has(customer)){%>readonly:true,disabled:true,<%}%> required:true, onChange:changeCertificateNumber" />
                                 </td>
                                 <td style="padding-top:10px;padding-left:15px;">
                                     <input class="easyui-textbox" name="_certificateAddr" id="_certificateAddr" style="width:70%;" data-options="labelAlign:'right', label:'证件地址:', validType:'length[0,100]'" />
@@ -302,7 +302,7 @@
             $("#contactsDiv").panel("close");
             $("#membersDiv").panel("close");
             $("#customerExtensionsDiv").panel("close");
-            $("#portraitDiv").panel("destroy");
+            $("#portraitDiv").hide();
         }
 
         //打开修改客户窗口

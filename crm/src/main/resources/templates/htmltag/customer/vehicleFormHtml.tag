@@ -6,12 +6,6 @@
 					text:'确认',
 					iconCls:'icon-ok',
 					handler:saveOrUpdateVehicle
-				},{
-					text:'取消',
-					iconCls:'icon-cancel',
-					handler:function(){
-						$('#vehicleDlg').dialog('close');
-					}
 				}]
 			">
     <form id="_vehicleForm" class="easyui-form" method="post" fit="true">
@@ -19,17 +13,17 @@
         <table width="360px">
             <tr>
                 <td style="padding:5px;">
-                    <input class="easyui-textbox" name="_vehicle_name" id="_vehicle_name" style="width:100%" required="true" data-options="label:'名称:', validType:'length[1,40]'" />
+                    <input class="easyui-textbox" name="_vehicle_name" id="_vehicle_name" style="width:100%" required="true" data-options="labelAlign:'right',label:'&lowast;名称:', validType:'length[1,40]'" />
                 </td>
             </tr>
             <tr>
                 <td style="padding:5px;">
-                    <input class="easyui-textbox" name="_vehicle_registrationNumber" id="_vehicle_registrationNumber" style="width:100%" data-options="label:'车牌号:', validType:'length[5,20]'" />
+                    <input class="easyui-textbox" name="_vehicle_registrationNumber" id="_vehicle_registrationNumber" style="width:100%" data-options="labelAlign:'right',label:'车牌号:', validType:'length[5,20]'" />
                 </td>
             </tr>
             <tr>
                 <td style="padding:5px;">
-                    <input  name="_vehicle_type" id="_vehicle_type" style="width:100%" data-options="label:'车型:', editable:false, validType:'length[0,20]'" />
+                    <input  name="_vehicle_type" id="_vehicle_type" style="width:100%" data-options="labelAlign:'right',label:'车型:', editable:false, validType:'length[0,20]'" />
                     <#comboProvider _id="_vehicle_type" _provider='dataDictionaryValueProvider' _queryParams='{dd_id:"14"}'/>
                 </td>
             </tr>
