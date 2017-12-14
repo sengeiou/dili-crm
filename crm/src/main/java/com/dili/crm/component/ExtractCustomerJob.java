@@ -1,7 +1,6 @@
 package com.dili.crm.component;
 
 import com.dili.crm.service.ICardETLService;
-import com.dili.ss.quartz.domain.ScheduleJob;
 import com.dili.ss.quartz.domain.ScheduleMessage;
 import com.dili.ss.quartz.service.ScheduleJobService;
 import com.dili.ss.service.CommonService;
@@ -11,8 +10,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationListener;
 import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.stereotype.Component;
-
-import java.util.List;
 
 /**
  * 客户抽取调度器
@@ -32,12 +29,12 @@ public class ExtractCustomerJob implements ApplicationListener<ContextRefreshedE
 
 	@Override
 	public void onApplicationEvent(ContextRefreshedEvent contextRefreshedEvent) {
-		if (contextRefreshedEvent.getApplicationContext().getParent() == null) {
-			List<ScheduleJob> scheduleJobs = scheduleJobService.list(null);
-			for (ScheduleJob job : scheduleJobs) {
-				scheduleJobService.addJob(job, true);
-			}
-		}
+//		if (contextRefreshedEvent.getApplicationContext().getParent() == null) {
+//			List<ScheduleJob> scheduleJobs = scheduleJobService.list(null);
+//			for (ScheduleJob job : scheduleJobs) {
+//				scheduleJobService.addJob(job, true);
+//			}
+//		}
 	}
 
 	/**
@@ -46,12 +43,12 @@ public class ExtractCustomerJob implements ApplicationListener<ContextRefreshedE
 	 * @param scheduleMessage
 	 */
 	public void scan(ScheduleMessage scheduleMessage) {
-//    	while(true) {
-//    		boolean v=service.transIncrementData(null, 1000);
-//    		if(!v) {
-//    			break;
-//    		}
-//    	}
+    	while(true) {
+    		boolean v=service.transIncrementData(null, 1000);
+    		if(!v) {
+    			break;
+    		}
+    	}
 	}
 
 }
