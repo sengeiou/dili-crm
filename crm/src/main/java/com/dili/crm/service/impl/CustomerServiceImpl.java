@@ -202,6 +202,19 @@ public class CustomerServiceImpl extends BaseServiceImpl<Customer, Long> impleme
 		return updateWithOutput(customer);
 	}
 
+
+	@Override
+	public String listParentCustomerPage(MembersDto membersDto) throws Exception {
+		String childIdsStr = getActualDao().getChildCustomerIds(membersDto.getId());
+		if(StringUtils.isBlank(childIdsStr)) {
+			return null;
+		}
+		List<String> childIds = Arrays.asList(childIdsStr.split(","));
+		membersDto.setIdNotIn(childIds);
+		membersDto.setId(null);
+		return listEasyuiPageByExample(membersDto, true).toString();
+	}
+
 	/**
 	 * 由于无法获取到表头上的meta信息，展示客户详情只有id参数，所以需要在后台构建
 	 * @return
@@ -214,6 +227,11 @@ public class CustomerServiceImpl extends BaseServiceImpl<Customer, Long> impleme
 		JSONObject cityProvider = new JSONObject();
 		cityProvider.put("provider", "cityProvider");
 		metadata.put("operatingArea", cityProvider);
+		//回访对象
+		JSONObject customerProvider = new JSONObject();
+		customerProvider.put("provider", "customerProvider");
+		metadata.put("parentId", customerProvider);
+		//字典
 		metadata.put("certificateType", getDDProvider(3L));
 		metadata.put("organizationType", getDDProvider(5L));
 		metadata.put("market", getDDProvider(2L));

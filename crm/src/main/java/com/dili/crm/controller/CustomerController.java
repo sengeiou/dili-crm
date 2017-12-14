@@ -160,4 +160,15 @@ public class CustomerController {
 		return customerService.deleteMembers(id);
 	}
 
+	@ApiOperation(value="分页查询父客户", notes = "分页查询父客户，返回easyui分页信息")
+	@ApiImplicitParams({
+			@ApiImplicitParam(name="MembersDto", paramType="form", value = "MembersDto的form信息", required = false, dataType = "string")
+	})
+	@RequestMapping(value="/listParentCustomerPage", method = {RequestMethod.GET, RequestMethod.POST})
+	public @ResponseBody String listParentCustomerPage(MembersDto membersDto) throws Exception {
+    	if (null == membersDto || null == membersDto.getId()){
+    		return customerService.listEasyuiPageByExample(membersDto, true).toString();
+		}
+		return customerService.listParentCustomerPage(membersDto).toString();
+	}
 }

@@ -171,8 +171,8 @@
                 formData = addKeyStartWith(getOriginalData(formData),"_");
                 $('#_form').form('load', formData);
                 $("#customerId").textbox("initValue", selected["customerId"]);
-                $("#userId").textbox("initValue", selected["$_createdId"]);
-                $("#userId").textbox("setText", selected["createdId"]);
+                $("#userId").textbox("initValue", selected["$_userId"]);
+                $("#userId").textbox("setText", selected["userId"]);
                 $("#eventDiv").show();
                 $("#stateDiv").show();  //状态div
                 $('#step'+selected["$_state"]).addClass("cur");

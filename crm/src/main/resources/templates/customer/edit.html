@@ -4,7 +4,13 @@
      <script type="text/javascript">
          //用户选择控件
          <#controls_user dlgId="userSelectDialog" controlId="user"/>
-
+         <%var _customerId = "";
+            if(has(customerId)) {
+                _customerId = customerId;
+            }
+         %>
+         //父客户选择控件
+         <#controls_customer dlgId="parentCustomerSelectDialog" customerId="${_customerId}" controlId="_parentId" dataUrl="${contextPath!}/customer/listParentCustomerPage"  />
          //修改组织类型
          function changeOrganizationType(newValue, oldValue) {
              switchByOrganizationType(newValue);
@@ -62,6 +68,7 @@
          </script>
     <div class="easyui-layout" fit="true">
         <div id="userSelectDialog" style="display: none;"></div>
+        <div id="parentCustomerSelectDialog" style="display: none;"></div>
         <!-- ====================================================================================================================== -->
         <!-- 上方布局 -->
         <!-- ====================================================================================================================== -->
@@ -101,8 +108,10 @@
                                     <input class="easyui-textbox" name="_code" id="_code" style="width:70%;" data-options="labelAlign:'right', label:'客户编码:', validType:'length[0,40]'" />
                                 </td>
                                 <td style="padding-top:10px;padding-left:15px;"  width="33%">
-                                    <input class="easyui-textbox" name="_parentName" id="_parentName" data-options="labelAlign:'right'" readonly="true" disabled="false" style="width:70%" label="父客户:" />
-                                    <input name="_parentId" type="hidden" id="_parentId" />
+                                    <input class="easyui-textbox" name="_parentId" id="_parentId"  panelHeight="auto" label="父客户:" style="width: 70%;"
+                                           data-options="labelAlign:'right',editable:false,
+									buttonText:'选择',
+									onClickButton:_selectCustomer,onChange:_changeTextboxShowClear" />
                                 </td>
                             </tr>
 
@@ -122,7 +131,7 @@
 
                             <tr>
                                 <td style="padding-top:10px;padding-left:15px;">
-                                    <input name="_organizationType" id="_organizationType" style="width:70%;" panelWidth="auto" panelHeight="auto" label="组织类型:" data-options="labelAlign:'right', validType:'length[1,20]', required:true, editable:false, <%if(has(customer)){%>readonly:true,disabled:true,<%}%> onChange:changeOrganizationType"/>
+                                    <input name="_organizationType" id="_organizationType" style="width:70%;" panelWidth="auto" panelHeight="auto" label="&lowast;组织类型:" required="true" data-options="labelAlign:'right', validType:'length[1,20]', required:true, editable:false, <%if(has(customer)){%>readonly:true,disabled:true,<%}%> onChange:changeOrganizationType"/>
                                     <#comboProvider _id="_organizationType" _provider='dataDictionaryValueProvider' _queryParams='{dd_id:"5"}'/>
                                 </td>
                                 <td style="padding-top:10px;padding-left:15px;">
@@ -198,7 +207,7 @@
                                     <#comboProvider _id="_department" _provider='departmentProvider'/>
                                 </td>
                                 <td style="padding-top:10px;padding-left:15px;">
-                                    <input name="_createdName" id="_createdName" style="width:70%;" class="easyui-textbox" data-options="label:'创建人:',labelAlign:'right', editable:false, readonly:true" />
+
                                 </td>
                             </tr>
                             <tr>
@@ -281,15 +290,6 @@
 //            $('#_form').form('clear');
             $("#_ownerName").textbox("setValue", "${user.realName}");
             var formData = {};
-            //设置上级客户名称
-            <%
-            if(has(parentCustomer) && parentCustomer!=null){
-            %>
-                //新增下级客户需要设置父id
-                formData["parentId"] = "${parentCustomer.id}";
-                formData["parentName"] = "${parentCustomer.name}";
-
-            <%}%>
             //组织类型默认选中"个人"
             formData["organizationType"] = "individuals";
             //根据组织类型加载证件类型、性别、民族、证件日期控件、注册资金和企业员工数f
@@ -314,21 +314,15 @@
 
             //设置客户所有者(这里表格中的提供者已经作了转义,只需要对应上字段即可)
             formData["ownerName"] = selected["ownerId"];
-            //设置上级客户名称
-            <%
-            if(has(parentCustomer) && parentCustomer!=null){
-            %>
-            formData["parentName"] = "${parentCustomer.name}";
-            <%
-            }
-            %>
-
             //根据组织类型加载证件类型、性别、民族、证件日期控件、注册资金和企业员工数
             loadByOrganizationType(formData);
             formData = addKeyStartWith(getOriginalData(formData),"_");
             //设置经营地区的显示值
             formData["_operatingArea"] = selected["operatingArea"];
             $('#_form').form('load', formData);
+            //设置父客户
+            $("#_parentId").textbox("initValue", selected["$_parentId"]);
+            $("#_parentId").textbox("setText", selected["parentId"]);
             formFocus("_form", "_name");
             listAddress();
             listVehicle();
@@ -340,7 +334,7 @@
 
         //保存客户
         function saveOrUpdate(){
-            saveAndExit("${contextPath}/customer/detail.html?id=");
+            saveAndExit();
         }
 
         //保存客户

@@ -79,4 +79,13 @@ public interface CustomerService extends BaseService<Customer, Long> {
 	 * @return
 	 */
 	BaseOutput deleteMembers(Long id);
+
+	/**
+	 *  根据客户名称(模糊)和客户ID查询可用添加的父客户
+	 *  过滤掉自己、所有的子id
+	 * @param membersDto
+	 * @return
+	 * @throws Exception
+	 */
+	String listParentCustomerPage(MembersDto membersDto) throws Exception;
 }

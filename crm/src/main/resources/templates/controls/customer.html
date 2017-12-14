@@ -6,10 +6,10 @@
     function searchCustomer() {
         var opts = $("#selectCustomerGrid").datagrid("options");
         if (null == opts.url || "" == opts.url) {
-            opts.url = '${contextPath!}/selectDialog/listCustomer';
+            opts.url = "${dataUrl}";
         }
         var text = $('#searchCustomerTextbox').textbox('getText');
-        $('#selectCustomerGrid').datagrid('load', bindGridMeta2Data("selectCustomerGrid",{name : text}));
+        $('#selectCustomerGrid').datagrid('load', bindGridMeta2Data("selectCustomerGrid",{name : text,id: "${customerId}"}));
     }
 
     $(function() {

@@ -5,6 +5,7 @@ import com.dili.crm.domain.User;
 import com.dili.crm.rpc.UserRpc;
 import com.dili.crm.service.CustomerService;
 import com.dili.ss.domain.BaseOutput;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
@@ -14,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
 /**
@@ -49,9 +51,23 @@ public class SelectDialogController {
 
 	// ================================  客户  ====================================
 
+	/**
+	 * 根据条件检索对应的客户信息
+	 * @param modelMap
+	 * @param request
+	 * @param textboxId 控件ID
+	 * @param dataUrl  检索数据的url
+	 * @param id  客户ID(视情况而定，如有，则可能会使用，如无，则可忽略)
+	 * @return
+	 */
 	@RequestMapping(value = "/customer.html", method = RequestMethod.GET)
-	public String customer(ModelMap modelMap, @RequestParam(name="textboxId", required = false) String textboxId) {
+	public String customer(ModelMap modelMap, HttpServletRequest request, @RequestParam(name="textboxId", required = false) String textboxId, @RequestParam(name="dataUrl", required = false) String dataUrl,@RequestParam(name="id", required = false) Long id) {
 		modelMap.put("textboxId", textboxId);
+		if (StringUtils.isBlank(dataUrl)){
+			dataUrl = request.getContextPath()+"/selectDialog/listCustomer";
+		}
+		modelMap.put("dataUrl",dataUrl);
+		modelMap.put("customerId",id);
 		return "controls/customer";
 	}
 

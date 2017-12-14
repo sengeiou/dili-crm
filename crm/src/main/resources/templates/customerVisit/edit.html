@@ -176,8 +176,8 @@
             formData = addKeyStartWith(getOriginalData(formData),"_");
             $('#_form').form('load', formData);
             $("#customerId").textbox("initValue", selected["customerId"]);
-            $("#userId").textbox("initValue", selected["$_createdId"]);
-            $("#userId").textbox("setText", selected["createdId"]);
+            $("#userId").textbox("initValue", selected["$_userId"]);
+            $("#userId").textbox("setText", selected["userId"]);
             $("#eventDiv").show();
             $("#stateDiv").show();  //状态div
             $('#step'+selected["$_state"]).addClass("cur");
@@ -268,6 +268,7 @@
                     diableBtn(true);
                     var _formData = removeKeyStartWith($("#_form").serializeObject(),"_");
                     var _url = null;
+                    var add = true;
                     //没有id就新增
                     if(_formData.id == null || _formData.id==""){
                         if (type==3){   //完成
@@ -276,6 +277,7 @@
                             _url = "${contextPath}/customerVisit/insert";
                         }
                     }else{//有id就修改
+                        add = false;
                         if (type==3){  //完成
                             _url = "${contextPath}/customerVisit/updateAndFinished";
                         }else{
@@ -294,7 +296,11 @@
                                 if (type==2) { //保存并新建
                                     openInsert();
                                 }else if (type==1){
-                                    window.location.href = "${contextPath}/customerVisit/detail.html?id="+ret.data.id;
+                                    if(add){
+                                        window.location.href="${contextPath}/customerVisit/index.html";
+                                    }else{
+                                        window.location.href = "${contextPath}/customerVisit/detail.html?id="+ret.data.id;
+                                    }
                                 }else{
                                     window.location.href="${contextPath}/customerVisit/index.html";
                                 }

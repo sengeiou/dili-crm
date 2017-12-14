@@ -31,6 +31,12 @@ function showCustomerDlg(id) {
 				height : 400,
 				queryParams : {
 					textboxId : id
+					<%if(has(dataUrl) && dataUrl != ""){%>
+						,dataUrl:'${dataUrl}'
+					<%}%>
+					<%if(has(customerId) && customerId != ""){%>
+						,id:'${customerId}'
+					<%}%>
 				},
 				href : '${contextPath!}/selectDialog/customer.html',
 				modal : true
