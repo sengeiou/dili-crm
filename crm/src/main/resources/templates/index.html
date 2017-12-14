@@ -4,7 +4,6 @@
 		 .easyui-layout {
 			 background: #e7e9eb;
 		 }
-
 		 #grid td {
 			 border-bottom: 1px dashed #ddd;
 			 line-height: 38px;
@@ -148,8 +147,22 @@
 						<div id="orderHeader"  class="panel-title" >
 							<span id="orderTitle">异常订单</span>
 						</div>
-		   		        <iframe id="orders" style="width:100%; height:auto" scrolling="no" frameborder="no" marginwidth="0" marginheight="0" border="0" src="http://ap.diligrp.com/find/sZ41Z1fttfttf0.html" >
+		   		        <iframe id="orders" style="width:98%; height:98%" scrolling="no" frameborder="no" marginwidth="0" marginheight="0" border="0" src="http://10.28.1.16:8080/find/sZabnormal_orders2Z0tffftfff0.html" >
 						</iframe>
+
+						<script type="text/javascript">
+                            let tt = document.getElementById("orders");
+                            if(tt != null){
+                                tt.onload = function(){
+                                    tt.contentWindow.postMessage("http://crm.diligrp.com/resources/css/report.css", "http://10.28.1.16:8080");
+                                }
+                            }
+						</script>
+
+
+
+
+
 					</div>
 		        </div>
 		    </div>
