@@ -292,10 +292,13 @@
             var formData = {};
             //组织类型默认选中"个人"
             formData["organizationType"] = "individuals";
+            formData["organizationType"] = "individuals";
+            formData["sourceSystem"] = "CRM";
             //根据组织类型加载证件类型、性别、民族、证件日期控件、注册资金和企业员工数f
             switchByOrganizationType("individuals");
             formData = addKeyStartWith(formData,"_");
             $('#_form').form('load', formData);
+            _sourceSystem
             formFocus("_form", "_name");
             $("#vehicleDiv").panel("close");
             $("#addressDiv").panel("close");
