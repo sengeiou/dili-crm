@@ -25,22 +25,17 @@
 }
 .ivu-table td {
     border-bottom: 1px dashed #ddd;
-    height: 42px;
+    height: 43px;
 }
 .ivu-table-header table tr:first-child th {
     color: #bbb;
 }
-
-.ivu-table-header tr th:first-child {
-    width: 150px;
-}
-
 
 
 .ivu-table-stripe .ivu-table-body tr.ivu-table-row-hover td,.ivu-table-stripe .ivu-table-fixed-body tr.ivu-table-row-hover td,tr.ivu-table-row-hover td {
     background-color: #fff;
 }
 
-colgroup col:first-child {
+colgroup col:last-child {
     width: 180px;
 }
