@@ -8,6 +8,7 @@ import com.dili.crm.domain.dto.CustomerChartDTO;
 import com.dili.crm.domain.dto.MembersDto;
 import com.dili.crm.rpc.UserRpc;
 import com.dili.crm.service.CacheService;
+import com.dili.crm.service.ChartService;
 import com.dili.crm.service.CustomerService;
 import com.dili.ss.base.BaseServiceImpl;
 import com.dili.ss.domain.BaseOutput;
@@ -45,6 +46,7 @@ public class CustomerServiceImpl extends BaseServiceImpl<Customer, Long> impleme
 
     @Autowired
     private CacheService cacheService;
+    @Autowired ChartService chartService;
 
 	@Autowired
 	private UserRpc userRpc;
@@ -165,6 +167,10 @@ public class CustomerServiceImpl extends BaseServiceImpl<Customer, Long> impleme
 		modelMap.put("customer", JSONObject.toJSONString(userMap));
 	    modelMap.put("startDate",this.calStartDate());
 	    modelMap.put("endDate",this.calEndDate());
+	    
+	    modelMap.put("clientPurchasingTopChartUrl",this.chartService.getClientPurchasingTopChartUrl());
+	    modelMap.put("clientSalesTopChartUrl",this.chartService.getClientSalesTopChartUrl());
+	    modelMap.put("clientUserContributionChartUrl",this.chartService.getClientUserContributionChartUrl());
 		if(customer.getParentId() != null){
 			Customer parent = get(customer.getParentId());
 			modelMap.put("parentCustomer", parent);
