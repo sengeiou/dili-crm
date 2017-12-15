@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.alibaba.fastjson.JSONObject;
 import com.dili.crm.domain.Customer;
 import com.dili.crm.domain.SystemConfig;
+import com.dili.crm.service.ChartService;
 import com.dili.crm.service.CustomerService;
 import com.dili.crm.service.DataDictionaryService;
 import com.dili.crm.service.DataDictionaryValueService;
@@ -37,6 +38,7 @@ public class IndexController {
     @Autowired DataDictionaryService dataDictionaryService;
     @Autowired DataDictionaryValueService dataDictionaryValueService;
     @Autowired SystemConfigService systemConfigService;
+    @Autowired ChartService chartService;
     
 	 @ApiOperation("跳转到index页面")
 	    @RequestMapping(value="/index.html", method = RequestMethod.GET)
@@ -45,6 +47,9 @@ public class IndexController {
 
 			 modelMap.put("startDate",this.calStartDate());
 			 modelMap.put("endDate",this.calEndDate());
+			 modelMap.put("indexAbnormalOrdersChartUrl",this.chartService.getIndexAbnormalOrdersChartUrl());
+			 modelMap.put("indexPurchasingTopChartUrl",this.chartService.getIndexPurchasingTopChartUrl());
+			 modelMap.put("indexSalesTopChartUrl",this.chartService.getIndexSalesTopChartUrl());
 			 
 			 modelMap.put("clientRefreshFrequency", clientRefreshFrequency);
 	        return "index";
