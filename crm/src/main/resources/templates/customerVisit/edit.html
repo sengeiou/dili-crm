@@ -375,7 +375,10 @@
                         async : true,
                         success: function (ret) {
                             if(ret.code=="200"){
-                                window.location.reload();//刷新当前页面
+                                $('.step').removeClass('cur');
+                                $('#step2').addClass("cur");
+                                $('#eventDlg').dialog('close');
+                                listEvents();
                             }else{
                                 $.messager.alert('错误',ret.result,'error');
                             }

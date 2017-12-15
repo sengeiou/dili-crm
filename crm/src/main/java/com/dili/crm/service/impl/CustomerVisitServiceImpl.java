@@ -1,6 +1,7 @@
 package com.dili.crm.service.impl;
 
 import com.dili.crm.dao.CustomerVisitMapper;
+import com.dili.crm.domain.Customer;
 import com.dili.crm.domain.CustomerVisit;
 import com.dili.crm.domain.dto.CustomerVisitChartDTO;
 import com.dili.crm.service.BizNumberService;
@@ -8,6 +9,7 @@ import com.dili.crm.service.CustomerVisitService;
 import com.dili.crm.service.VisitEventService;
 import com.dili.ss.base.BaseServiceImpl;
 import com.dili.ss.domain.BaseOutput;
+import com.dili.ss.dto.DTOUtils;
 import com.dili.sysadmin.sdk.domain.UserTicket;
 import com.dili.sysadmin.sdk.session.SessionContext;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -63,15 +65,22 @@ public class CustomerVisitServiceImpl extends BaseServiceImpl<CustomerVisit, Lon
         if(userTicket == null){
             return BaseOutput.failure("新增失败，登录超时");
         }
+        customerVisit.setModifiedId(userTicket.getId());
+        CustomerVisit old = get(customerVisit.getId());
+        customerVisit = DTOUtils.link(customerVisit, old, CustomerVisit.class);
+        Example example = new Example(CustomerVisit.class);
+        Example.Criteria criteria = example.createCriteria();
+        criteria.andEqualTo("id",customerVisit.getId());
         if (null != customerVisit.getModified()){
-            Example example = new Example(CustomerVisit.class);
-            Example.Criteria criteria = example.createCriteria();
             criteria.andEqualTo("modified",customerVisit.getModified());
-            getActualDao().updateByExampleSelective(customerVisit,example);
-        }else{
-            super.updateSelective(customerVisit);
         }
-        return BaseOutput.success("更新成功").setData(customerVisit);
+        //状态不能为3(已完成)
+        criteria.andNotEqualTo("state",3);
+        int i= getActualDao().updateByExample(customerVisit,example);
+        if(i > 0){
+            return BaseOutput.success("更新成功").setData(customerVisit);
+        }
+        return BaseOutput.failure("更新失败，数据已变更");
     }
 
     @Override

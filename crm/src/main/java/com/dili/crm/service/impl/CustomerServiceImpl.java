@@ -98,7 +98,12 @@ public class CustomerServiceImpl extends BaseServiceImpl<Customer, Long> impleme
             return BaseOutput.failure("修改失败，登录超时");
         }
         customer.setModifiedId(userTicket.getId());
-        super.updateSelective(customer);
+        boolean hasParent = customer.getParentId() == null;
+		customer = DTOUtils.link(customer, get(customer.getId()), Customer.class);
+        if(hasParent){
+			customer.setParentId(null);
+		}
+        super.update(customer);
         return BaseOutput.success("修改成功").setData(customer);
     }
 

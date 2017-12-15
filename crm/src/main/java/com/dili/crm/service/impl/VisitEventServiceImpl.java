@@ -46,16 +46,19 @@ public class VisitEventServiceImpl extends BaseServiceImpl<VisitEvent, Long> imp
         }
         CustomerVisit visit = customerVisitService.get(visitEvent.getCustomerVisitId());
         if (3==visit.getState()){
-            return BaseOutput.failure("更新失败，回访已完成");
+            return BaseOutput.failure("新增失败，回访已完成");
         }
         if (1==visit.getState()){
             //更新回访状态为进行中
             visit.setState(2);
             visit.setModifiedId(userTicket.getId());
-            customerVisitService.updateSelectiveWithOutput(visit);
+            BaseOutput baseOutput = customerVisitService.updateSelectiveWithOutput(visit);
+            if (!baseOutput.isSuccess()){
+                return BaseOutput.failure("新增失败 "+baseOutput.getResult());
+            }
         }
         visitEvent.setUserId(userTicket.getId());
         super.insertSelective(visitEvent);
-        return BaseOutput.success("插入成功");
+        return BaseOutput.success("新增成功");
     }
 }

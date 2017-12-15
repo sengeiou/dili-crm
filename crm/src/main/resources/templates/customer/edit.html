@@ -54,14 +54,14 @@
          }
          //修改证件号，如果证件类型为身份证，在输入18位-19位时，自动完成证件日期
          function changeCertificateNumber(newValue, oldValue) {
-             var birthStr = newValue.substr(6,8);
-             var month = birthStr.substr(4,2);
-             var day = birthStr.substr(6,2);
-             var year = birthStr.substr(0,4);
-             if(!validateCertificateNumber(newValue, year, month, day)){
-                return;
-             }
-             $('#_certificateTime').datebox('setValue', year+"-"+month+"-"+day);
+             // var birthStr = newValue.substr(6,8);
+             // var month = birthStr.substr(4,2);
+             // var day = birthStr.substr(6,2);
+             // var year = birthStr.substr(0,4);
+             // if(!validateCertificateNumber(newValue, year, month, day)){
+             //    return;
+             // }
+             // $('#_certificateTime').datebox('setValue', year+"-"+month+"-"+day);
          }
 
 
