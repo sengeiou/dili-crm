@@ -185,6 +185,92 @@
         </tr>
     </table>
 </div>
+
+
+    <!-- 隐藏查看框 -->
+    <div id="viewDlg" class="easyui-dialog" resizable="false" constrain="true" shadow="true" draggable="false" title="用户信息" style="padding: 20px;" modal="true" border="thin" closed="true">
+        <table style="padding: 0px; margin: 0px;">
+            <tr>
+                <td>
+                    <form id="v_form" class="easyui-form" method="post">
+                        <table width="340px">
+                            <tr>
+                                <td style="padding: 5px;"><input class="easyui-textbox" name="v_userName" id="v_userName" style="width: 100%" data-options="cls:'noborder', editable:false, readonly:true, labelAlign:'right',label:'*用户名:', validType:'length[0,50]'" required="true"
+                                                                 validateOnCreate="false" /></td>
+                                <td rowspan="13" style="padding-top: 5px;padding-left:10px;vertical-align:top" id="v_existsRoleTd">
+                                    <div id="v_existsRole" class="easyui-datalist" title="已分配角色" style="width: 100px;height:438px;" valueField="id" textField="roleName"></div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td style="padding: 5px;" id="v_passwordTd"><input class="easyui-textbox" name="_password" id="v_password" style="width: 100%" data-options="cls:'noborder', editable:false, readonly:true, labelAlign:'right',label:'*密码:', validType:'length[0,128]'"
+                                                                                  type="password" /></td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td style="padding: 5px;"><input class="easyui-textbox" name="v_realName" id="v_realName" style="width: 100%" data-options="cls:'noborder', editable:false, readonly:true, labelAlign:'right',label:'*真实姓名:', validType:'length[0,64]'" required="true"
+                                                                 validateOnCreate="false" /></td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td style="padding: 5px;"><input class="easyui-textbox" name="v_serialNumber" id="v_serialNumber" style="width: 100%" data-options="cls:'noborder', editable:false, readonly:true, labelAlign:'right',label:'*用户编号:', validType:'length[0,128]'" required="true"
+                                                                 validateOnCreate="false" /></td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td style="padding: 5px;"><input class="easyui-textbox" name="v_fixedLineTelephone" id="v_fixedLineTelephone" style="width: 100%" data-options="cls:'noborder', editable:false, readonly:true, labelAlign:'right',label:'固定电话:', validType:'length[0,24]'"
+                                                                 validateOnCreate="false" /></td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td style="padding: 5px;"><input class="easyui-textbox" name="v_cellphone" id="v_cellphone" style="width: 100%"
+                                                                 data-options="cls:'noborder', editable:false, readonly:true, labelAlign:'right',label:'*手机号码:', validType:'cellphone',validateOnCreate:false" /></td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td style="padding: 5px;"><input class="easyui-textbox" name="v_email" id="v_email" style="width: 100%" data-options="cls:'noborder', editable:false, readonly:true, labelAlign:'right',label:'*邮箱:', validType:'email',validateOnCreate:false,required:true" /></td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td style="padding: 5px;"><select class="easyui-combotree" name="v_department" id="v_department" style="width: 100%"
+                                                                  data-options="cls:'noborder', editable:false, readonly:true, labelAlign:'right',checkbox:true,cascadeCheck:true,multiple:true,loadFilter:treeLoadFilter, _idField:'id', hasDownArrow:false, _textField:'name', _parentIdField:'parentId',label:'*所属部门:', url:'${contextPath!}/department/listTree.json',editable:false,required:true,validateOnCreate:false"></select></td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td style="padding: 5px;" id="v_lastLoginIpTd"><input class="easyui-textbox" name="v_lastLoginIp" id="v_lastLoginIp" style="width: 100%"
+                                                                                     data-options="cls:'noborder', editable:false, readonly:true, labelAlign:'right',label:'最后登录ip:', validType:'length[0,20]'" /></td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td style="padding: 5px;" id="v_lastLoginTimeTd"><input class="easyui-datetimebox" name="v_lastLoginTime" id="v_lastLoginTime" style="width: 100%" data-options="cls:'noborder', editable:false, readonly:true, labelAlign:'right',label:'最后登录时间:',hasDownArrow:false" /></td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td style="padding: 5px;" id="v_createdTd"><input class="easyui-datetimebox" name="v_created" id="v_created" style="width: 100%" data-options="cls:'noborder', editable:false, readonly:true, labelAlign:'right',label:'创建时间:',hasDownArrow:false" /></td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td style="padding: 5px;" id="v_modifiedTd"><input class="easyui-datetimebox" name="v_modified" id="v_modified" style="width: 100%" data-options="cls:'noborder', editable:false, readonly:true, labelAlign:'right',label:'修改时间:',hasDownArrow:false" /></td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td style="padding: 5px;" id="v_statusTd"><input name="v_status" id="v_status" style="width: 100%;" panelWidth="auto" panelHeight="auto" label="状态:" data-options="cls:'noborder', editable:false, readonly:true, hasDownArrow:false, labelAlign:'right'"  /> <#comboProvider _id="v_status"
+                                        _data='[{"text":"-- 请选择 --"},{"text":"已启用","value":"1"},{"text":"已停用","value":"0"}]' /></td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td style="padding: 5px;" id="v_validTimeBeginTd"><input class="easyui-datetimebox" name="v_validTimeBegin" id="v_validTimeBegin" style="width: 100%" data-options="cls:'noborder', editable:false, readonly:true, label:'有效时间开始点:'" /></td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td style="padding: 5px;" id="v_validTimeEndTd"><input class="easyui-datetimebox" name="v_validTimeEnd" id="v_validTimeEnd" style="width: 100%" data-options="cls:'noborder', editable:false, readonly:true, label:'有效时间结束点:'" /></td>
+                                <td></td>
+                            </tr>
+                        </table>
+                    </form>
+                </td>
+            </tr>
+        </table>
+    </div>
 <!-- ====================================================================================================================== --> <!-- style & script 分隔线 --> <!-- ====================================================================================================================== -->
 <script type="text/javascript">
 	var dataAuth = {

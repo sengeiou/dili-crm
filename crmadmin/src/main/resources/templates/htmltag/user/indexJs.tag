@@ -152,7 +152,7 @@ function onAddClicked() {
 $('#editRoleDiv').css('display','block');
 	$('#dlg').dialog({
 				width:650,
-				height:430,
+				height:440,
 				buttons : [{
 							text : '确认',
 							iconCls : 'icon-ok',
@@ -238,7 +238,7 @@ function onEditClicked(id) {
 $('#editRoleDiv').css('display','block');
 	$('#dlg').dialog({
 				width:650,
-				height:430,
+				height:440,
 				buttons : [{
 							text : '确认',
 							iconCls : 'icon-ok',
@@ -279,85 +279,30 @@ function onUserDetailClicked(id) {
 		$.messager.alert('警告', '请选中一条数据');
 		return;
 	}
-
-	$('#_passwordTd').hide();
-	$('#_lastLoginIpTd').show();
-	$('#_lastLoginTimeTd').show();
-	$('#_createdTd').show();
-	$('#_modifiedTd').show();
-	$('#_statusTd').show();
-	$('#_validTimeBeginTd').hide();
-	$('#_validTimeEndTd').hide();
-	$('#existsRoleTd').show();
-	$('#_userName').textbox({
-				readonly : true
-			});
-	$('#_password').textbox({
-				readonly : true
-			});
-	$('#_realName').textbox({
-				readonly : true
-			});
-	$('#_serialNumber').textbox({
-				readonly : true
-			});
-	$('#_fixedLineTelephone').textbox({
-				readonly : true
-			});
-	$('#_user_cellphoneName').textbox({
-				readonly : true
-			});
-	$('#_email').textbox({
-				readonly : true
-			});
-	$('#_lastLoginIp').textbox({
-				readonly : true
-			});
-	$('#_lastLoginTime').textbox({
-				readonly : true
-			});
-	$('#_created').textbox({
-				readonly : true
-			});
-	$('#_modified').textbox({
-				readonly : true
-			});
-	$('#_validTimeBegin').textbox({
-				readonly : true
-			});
-	$('#_validTimeEnd').textbox({
-				readonly : true
-			});
-	$('#_status').textbox({
-				readonly : true
-			});
-	$('#_department').textbox({
-				readonly : true
-			});
-//查看设置编辑角色不可见
-$('#editRoleDiv').css('display','none');
-	$('#dlg').dialog({
+	$('#v_validTimeBeginTd').hide();
+	$('#v_validTimeEndTd').hide();
+	$('#viewDlg').dialog({
 				height:560,
 				width:405
 			});
 
 	var formData = $.extend({}, selected);
-	formData = addKeyStartWith(getOriginalData(formData), "_");
+	formData = addKeyStartWith(getOriginalData(formData), "v_");
 	var comboText = '';
-	$(formData._departments).each(function(index, item) {
+	$(formData.v_departments).each(function(index, item) {
 				comboText += item.name + ',';
 			});
 
 	comboText = comboText.substring(0, comboText.length - 1)
-	$('#_department').combotree('setText', comboText);
-	$('#_form').form('load', formData);
-	loadData4DataList("existsRole", "${contextPath!}/role/listByUserId", {
+	$('#v_form').form('load', formData);
+	$('#v_department').combotree('setText', comboText);
+	loadData4DataList("v_existsRole", "${contextPath!}/role/listByUserId", {
 				userid : selected.id
 			});
 
-	$('#dlg').dialog('open');
-	$('#dlg').dialog('center');
-	formFocus("_form", "_userName");
+	$('#viewDlg').dialog('open');
+	$('#viewDlg').dialog('center');
+	formFocus("v_form", "v_userName");
 }
 
 // 禁用/启用某一行的用户
