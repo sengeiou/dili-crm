@@ -5,8 +5,12 @@
 * @Last Modified time: 2017-12-14 16:56:13
 */
 
+#main {
+    height: auto;
+}
 .ivu-table-wrapper {
     margin-top: -25px;
+    margin-bottom: 0;
     border: none;
 }
 .ivu-table {
@@ -25,7 +29,7 @@
 }
 .ivu-table td {
     border-bottom: 1px dashed #ddd;
-    height: 43px;
+    height: 42px;
 }
 .ivu-table-header table tr:first-child th {
     color: #bbb;
