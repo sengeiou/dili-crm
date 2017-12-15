@@ -22,18 +22,18 @@
 									_data='[{"text":"-- 请选择 --"},{"text":"已启用","value":"1"},{"text":"已停用","value":"0"}]' /></td>
 							<td style="padding: 5px;"><input class="easyui-textbox" name="serialNumber" id="serialNumber" style="width: 100%" data-options="labelAlign:'right',label:'用户编号:', validType:'length[0,128]'" /></td>
 							<td style="padding: 5px;"><input class="easyui-textbox" name="cellphone" id="cellphone" style="width: 100%" data-options="labelAlign:'right',label:'手机号码:', validType:'length[0,11]'" /></td>
-							
-							
+
+
 							<td style="padding-left:28px;padding-top: 10px; padding-bottom: 10px;">&nbsp;&nbsp;
                               	<a href="#" class="easyui-linkbutton" iconCls="icon-search" id="queryBtn" onclick="queryGrid()">查询</a>&nbsp;&nbsp;
 					 			<a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-clear"  onclick="$('#userForm').form('clear');">清除</a>
                             </td>
-							
+
 						</tr>
 					</table>
 				</div>
 
-				
+
 			</form>
 		</div>
 	</div>
@@ -63,111 +63,127 @@
 			</table>
 			<!-- datagrid工具栏 -->
 			<div id="toolbar" style="padding: 2px 5px;">
-				
+
 			</div>
 		</div>
 	</div>
 </div>
 <!-- 隐藏编辑框 -->
-<div id="dlg" class="easyui-dialog" resizable="false" constrain="true" shadow="true" draggable="false" title="用户信息" style="padding: 20px" modal="true" border="thin" closed="true" height="100%"
-	>
-	<form id="_form" class="easyui-form" method="post" fit="true" style="width:10px">
-		<input name="_id" id="_id" type="hidden">
-		<table>
-			<tr>
-				<td>
-					<table width="270px">
-						<tr>
-							<td style="padding: 5px;"><input class="easyui-textbox" name="_userName" id="_userName" style="width: 100%" data-options="labelAlign:'right',label:'*用户名:', validType:'length[0,50]'" required="true"
-								validateOnCreate="false" /></td>
-						</tr>
-						<tr>
-							<td style="padding: 5px;" id="_passwordTd"><input class="easyui-textbox" name="_password" id="_password" style="width: 100%" data-options="labelAlign:'right',label:'*密码:', validType:'length[0,128]'"
-								type="password" /></td>
-						</tr>
-						<tr>
-							<td style="padding: 5px;"><input class="easyui-textbox" name="_realName" id="_realName" style="width: 100%" data-options="labelAlign:'right',label:'*真实姓名:', validType:'length[0,64]'" required="true"
-								validateOnCreate="false" /></td>
-						</tr>
-						<tr>
-							<td style="padding: 5px;"><input class="easyui-textbox" name="_serialNumber" id="_serialNumber" style="width: 100%" data-options="labelAlign:'right',label:'*用户编号:', validType:'length[0,128]'" required="true"
-								validateOnCreate="false" /></td>
-						</tr>
-						<tr>
-							<td style="padding: 5px;"><input class="easyui-textbox" name="_fixedLineTelephone" id="_fixedLineTelephone" style="width: 100%" data-options="labelAlign:'right',label:'固定电话:', validType:'length[0,24]'"
-								validateOnCreate="false" /></td>
-						</tr>
-						<tr>
-							<td style="padding: 5px;"><input class="easyui-textbox" name="_cellphone" id="_cellphone" style="width: 100%"
-								data-options="labelAlign:'right',label:'*手机号码:', validType:'cellphone',validateOnCreate:false,required:true" /></td>
-						</tr>
-						<tr>
-							<td style="padding: 5px;"><input class="easyui-textbox" name="_email" id="_email" style="width: 100%" data-options="labelAlign:'right',label:'*邮箱:', validType:'email',validateOnCreate:false,required:true" /></td>
-						</tr>
-						<tr>
-							<td style="padding: 5px;"><select class="easyui-combotree" name="_department" id="_department" style="width: 100%"
-								data-options="labelAlign:'right',checkbox:true,cascadeCheck:true,multiple:true,loadFilter:treeLoadFilter, _idField:'id', hasDownArrow:false, _textField:'name', _parentIdField:'parentId',label:'*所属部门:', url:'${contextPath!}/department/listTree.json',editable:false,required:true,validateOnCreate:false"></select></td>
-						</tr>
-						<tr>
-							<td style="padding: 5px;" id="_lastLoginIpTd"><input class="easyui-textbox" name="_lastLoginIp" id="_lastLoginIp" style="width: 100%"
-								data-options="labelAlign:'right',label:'最后登录ip:', validType:'length[0,20]'" /></td>
-						</tr>
-						<tr>
-							<td style="padding: 5px;" id="_lastLoginTimeTd"><input class="easyui-datetimebox" name="_lastLoginTime" id="_lastLoginTime" style="width: 100%" data-options="labelAlign:'right',label:'最后登录时间:',hasDownArrow:false" /></td>
-						</tr>
-						<tr>
-							<td style="padding: 5px;" id="_createdTd"><input class="easyui-datetimebox" name="_created" id="_created" style="width: 100%" data-options="labelAlign:'right',label:'创建时间:',hasDownArrow:false" /></td>
-						</tr>
-						<tr>
-							<td style="padding: 5px;" id="_modifiedTd"><input class="easyui-datetimebox" name="_modified" id="_modified" style="width: 100%" data-options="labelAlign:'right',label:'修改时间:',hasDownArrow:false" /></td>
-						</tr>
-						<tr>
-							<td style="padding: 5px;" id="_statusTd"><input name="_status" id="_status" style="width: 100%;" panelWidth="auto" panelHeight="auto" label="状态:" data-options="hasDownArrow:false, labelAlign:'right'"  /> <#comboProvider _id="_status"
-									_data='[{"text":"-- 请选择 --"},{"text":"已启用","value":"1"},{"text":"已停用","value":"0"}]' /></td>
-						</tr>
-						<tr>
-							<td style="padding: 5px;" id="_validTimeBeginTd"><input class="easyui-datetimebox" name="_validTimeBegin" id="_validTimeBegin" style="width: 100%" data-options="label:'有效时间开始点:'" /></td>
-						</tr>
-						<tr>
-							<td style="padding: 5px;" id="_validTimeEndTd"><input class="easyui-datetimebox" name="_validTimeEnd" id="_validTimeEnd" style="width: 100%" data-options="label:'有效时间结束点:'" /></td>
-						</tr>
-					</table>
-				</td>
-
-				<td style="padding-top: 10px;vertical-align:top" id="existsRoleTd">
-					<div id="existsRole" class="easyui-datalist" title="已分配角色" style="width: 100px; height: 410px" valueField="id" textField="roleName"></div>
-				</td>
-			</tr>
-		</table>
-	</form>
-
-	<form id="roleForm" class="easyui-form" method="post" fit="true">
-		<table width="360px">
-			<tr>
-				<td><label>用户角色:</label></td>
-				<td id="withoutRoleDatalistTd">
-					<div id="withoutRoleDatalist" class="easyui-datalist" title="未分配角色" style="width: 100px; height: 250px" data-options="onDblClickRow:addSelectedRole" valueField="id" textField="roleName"></div>
-				</td>
-				<td id="buttonsTd"><#resource code="grantRoleToUser">
-					<p>
-						<a href="javascript:void(0)" class="easyui-linkbutton" onclick="moveSelectedRow('withoutRoleDatalist', 'withRoleDatalist', false)">--&gt;</a>
-					</p>
-					<p>
-						<a href="javascript:void(0)" class="easyui-linkbutton" onclick="moveRowByIndex('withoutRoleDatalist', 'withRoleDatalist', -1)">--&gt;&gt;</a>
-					</p>
-					<p>
-						<a href="javascript:void(0)" class="easyui-linkbutton" onclick="moveSelectedRow('withRoleDatalist', 'withoutRoleDatalist', false)">&lt;--</a>
-					</p>
-					<p>
-						<a href="javascript:void(0)" class="easyui-linkbutton" onclick="moveRowByIndex('withRoleDatalist', 'withoutRoleDatalist', -1)">&lt;&lt;--</a>
-					</p>
-					</#resource></td>
-				<td>
-					<div id="withRoleDatalist" class="easyui-datalist" title="已分配角色" style="width: 100px; height: 250px" data-options="onDblClickRow:delSelectedRole" valueField="id" textField="roleName"></div>
-				</td>
-			</tr>
-		</table>
-	</form>
+<div id="dlg" class="easyui-dialog" resizable="false" constrain="true" shadow="true" draggable="false" title="用户信息" style="padding: 20px;" modal="true" border="thin" closed="true">
+	<table style="padding: 0px; margin: 0px;">
+		<tr>
+			<td>
+            <form id="_form" class="easyui-form" method="post">
+                <input name="_id" id="_id" type="hidden">
+                <table width="340px">
+                    <tr>
+                        <td style="padding: 5px;"><input class="easyui-textbox" name="_userName" id="_userName" style="width: 100%" data-options="labelAlign:'right',label:'*用户名:', validType:'length[0,50]'" required="true"
+                            validateOnCreate="false" /></td>
+                        <td rowspan="13" style="padding-top: 5px;padding-left:10px;vertical-align:top" id="existsRoleTd">
+                            <div id="existsRole" class="easyui-datalist" title="已分配角色" style="width: 100px;height:415px;" valueField="id" textField="roleName"></div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="padding: 5px;" id="_passwordTd"><input class="easyui-textbox" name="_password" id="_password" style="width: 100%" data-options="labelAlign:'right',label:'*密码:', validType:'length[0,128]'"
+                            type="password" /></td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td style="padding: 5px;"><input class="easyui-textbox" name="_realName" id="_realName" style="width: 100%" data-options="labelAlign:'right',label:'*真实姓名:', validType:'length[0,64]'" required="true"
+                            validateOnCreate="false" /></td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td style="padding: 5px;"><input class="easyui-textbox" name="_serialNumber" id="_serialNumber" style="width: 100%" data-options="labelAlign:'right',label:'*用户编号:', validType:'length[0,128]'" required="true"
+                            validateOnCreate="false" /></td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td style="padding: 5px;"><input class="easyui-textbox" name="_fixedLineTelephone" id="_fixedLineTelephone" style="width: 100%" data-options="labelAlign:'right',label:'固定电话:', validType:'length[0,24]'"
+                            validateOnCreate="false" /></td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td style="padding: 5px;"><input class="easyui-textbox" name="_cellphone" id="_cellphone" style="width: 100%"
+                            data-options="labelAlign:'right',label:'*手机号码:', validType:'cellphone',validateOnCreate:false,required:true" /></td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td style="padding: 5px;"><input class="easyui-textbox" name="_email" id="_email" style="width: 100%" data-options="labelAlign:'right',label:'*邮箱:', validType:'email',validateOnCreate:false,required:true" /></td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td style="padding: 5px;"><select class="easyui-combotree" name="_department" id="_department" style="width: 100%"
+                            data-options="labelAlign:'right',checkbox:true,cascadeCheck:true,multiple:true,loadFilter:treeLoadFilter, _idField:'id', hasDownArrow:false, _textField:'name', _parentIdField:'parentId',label:'*所属部门:', url:'${contextPath!}/department/listTree.json',editable:false,required:true,validateOnCreate:false"></select></td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td style="padding: 5px;" id="_lastLoginIpTd"><input class="easyui-textbox" name="_lastLoginIp" id="_lastLoginIp" style="width: 100%"
+                            data-options="labelAlign:'right',label:'最后登录ip:', validType:'length[0,20]'" /></td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td style="padding: 5px;" id="_lastLoginTimeTd"><input class="easyui-datetimebox" name="_lastLoginTime" id="_lastLoginTime" style="width: 100%" data-options="labelAlign:'right',label:'最后登录时间:',hasDownArrow:false" /></td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td style="padding: 5px;" id="_createdTd"><input class="easyui-datetimebox" name="_created" id="_created" style="width: 100%" data-options="labelAlign:'right',label:'创建时间:',hasDownArrow:false" /></td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td style="padding: 5px;" id="_modifiedTd"><input class="easyui-datetimebox" name="_modified" id="_modified" style="width: 100%" data-options="labelAlign:'right',label:'修改时间:',hasDownArrow:false" /></td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td style="padding: 5px;" id="_statusTd"><input name="_status" id="_status" style="width: 100%;" panelWidth="auto" panelHeight="auto" label="状态:" data-options="hasDownArrow:false, labelAlign:'right'"  /> <#comboProvider _id="_status"
+                                _data='[{"text":"-- 请选择 --"},{"text":"已启用","value":"1"},{"text":"已停用","value":"0"}]' /></td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td style="padding: 5px;" id="_validTimeBeginTd"><input class="easyui-datetimebox" name="_validTimeBegin" id="_validTimeBegin" style="width: 100%" data-options="label:'有效时间开始点:'" /></td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td style="padding: 5px;" id="_validTimeEndTd"><input class="easyui-datetimebox" name="_validTimeEnd" id="_validTimeEnd" style="width: 100%" data-options="label:'有效时间结束点:'" /></td>
+                        <td></td>
+                    </tr>
+                </table>
+            </form>
+            </td>
+            <td valign="top" >
+                <div id="editRoleDiv" style="width:100%; height:100%;padding-top: 5px;">
+                    <form id="roleForm" class="easyui-form" method="post" >
+                        <table style="padding: 0px; margin: 0px;">
+                            <tr>
+                                <td id="withoutRoleDatalistTd" >
+                                    <div id="withoutRoleDatalist" class="easyui-datalist" title="未分配角色" style="width: 100px;height:270px" data-options="onDblClickRow:addSelectedRole" valueField="id" textField="roleName"></div>
+                                </td>
+                                <td id="buttonsTd" width="80" align="center">
+                                    <#resource code="grantRoleToUser">
+                                    <p>
+                                        <a href="javascript:void(0)" class="easyui-linkbutton" onclick="moveSelectedRow('withoutRoleDatalist', 'withRoleDatalist', false)">--&gt;</a>
+                                    </p>
+                                    <p>
+                                        <a href="javascript:void(0)" class="easyui-linkbutton" onclick="moveRowByIndex('withoutRoleDatalist', 'withRoleDatalist', -1)">--&gt;&gt;</a>
+                                    </p>
+                                    <p>
+                                        <a href="javascript:void(0)" class="easyui-linkbutton" onclick="moveSelectedRow('withRoleDatalist', 'withoutRoleDatalist', false)">&lt;--</a>
+                                    </p>
+                                    <p>
+                                        <a href="javascript:void(0)" class="easyui-linkbutton" onclick="moveRowByIndex('withRoleDatalist', 'withoutRoleDatalist', -1)">&lt;&lt;--</a>
+                                    </p>
+                                    </#resource>
+                                </td>
+                                <td>
+                                    <div id="withRoleDatalist" class="easyui-datalist" title="已分配角色" style="width: 100px; height: 270px" data-options="onDblClickRow:delSelectedRole" valueField="id" textField="roleName"></div>
+                                </td>
+                            </tr>
+                        </table>
+                    </form>
+                </div>
+            </td>
+        </tr>
+    </table>
 </div>
 <!-- ====================================================================================================================== --> <!-- style & script 分隔线 --> <!-- ====================================================================================================================== -->
 <script type="text/javascript">
@@ -225,7 +241,7 @@
         }
         onEditClicked();
     }
-    
+
     $(function () {
 //        bindFormEvent("form", "customerId", queryGrid);
 //        if (document.addEventListener) {
@@ -279,5 +295,5 @@
         //表格仅显示下边框
         $('#userGrid').datagrid('getPanel').removeClass('lines-both lines-no lines-right lines-bottom').addClass("lines-bottom");
     })
-    
+
 </script> <#user_datalistButtonsJs /> </#body>

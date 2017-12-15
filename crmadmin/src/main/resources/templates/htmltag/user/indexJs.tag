@@ -148,9 +148,11 @@ function onAddClicked() {
 	$('#_status').textbox({
 				readonly : false
 			});
-	$('#roleForm').show();
-
+	//$('#roleForm').hide();
+$('#editRoleDiv').css('display','block');
 	$('#dlg').dialog({
+				width:650,
+				height:430,
 				buttons : [{
 							text : '确认',
 							iconCls : 'icon-ok',
@@ -166,7 +168,7 @@ function onAddClicked() {
 	$('#_form').form('clear');
 	$('#_form').form('resetValidation');
 }
-
+//打开修改窗口
 function onEditClicked(id) {
 	if (!dataAuth.editUser) {
 		return false;
@@ -232,10 +234,11 @@ function onEditClicked(id) {
 				readonly : false
 			});
 
-	$('#roleForm').show();
-
+//	$('#roleForm').show();
+$('#editRoleDiv').css('display','block');
 	$('#dlg').dialog({
-				height:'100%',
+				width:650,
+				height:430,
 				buttons : [{
 							text : '确认',
 							iconCls : 'icon-ok',
@@ -331,10 +334,11 @@ function onUserDetailClicked(id) {
 	$('#_department').textbox({
 				readonly : true
 			});
-	$('#roleForm').hide();
-
+//查看设置编辑角色不可见
+$('#editRoleDiv').css('display','none');
 	$('#dlg').dialog({
-				height:550
+				height:560,
+				width:405
 			});
 
 	var formData = $.extend({}, selected);
