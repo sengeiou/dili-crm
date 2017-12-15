@@ -7,25 +7,25 @@
                 <#nav/>
             </div>
  		</div>
-        <div region="center" style="width:100%;" minHeight="360" border="false">
-            <div style="width:100%;height:100%" border="false">
-                <div class="easyui-layout" fit="true" style="width:100%;height:100%;padding:0px;">
+        <div region="center" style="width:100%;" minHeight="360" border="false"  align="center">
+            <div style="width:96%;height:100%" border="false"  align="center">
+                <div class="easyui-layout" fit="true" style="width:96%;height:100%;padding:0px;"  align="center">
         
 			        <!-- ====================================================================================================================== -->
 			        <!-- 上方布局 -->
 			        <!-- ====================================================================================================================== -->
-			        <div region="north" height="auto" align="center" style="height:50%" border="false">
+			        <div region="north" align="center" style="height:50%" border="false">
 			            <!-- =========================================================表单========================================================= -->
 			            
 			            <div class="easyui-layout" fit="true">
 					        <div region="west" height="auto" align="center" style="width:50%">
-						        <div  class="easyui-panel"  style="width:100%;height:100%;">
+						        <div  class="easyui-panel"  style="width:100%;height:100%;"  border="false">
 						   		        <div id="customerTypeChart" style="width:98%;height:99.9%;" ></div>
 										<#echarts _id="customerTypeChart" _title="客户类型分布" _type="Pie"  _url="${contextPath}/chart/customerTypeChart" _nameField="type" _options="{legend:{selectedMode:false}}"  _valueField="count"></#echarts>
 								</div>
 					        </div>
 					        <div region="center" height="auto">
-						        <div  class="easyui-panel"   style="width:100%;height:100%;">
+						        <div  class="easyui-panel"   style="width:100%;height:100%;"  border="false">
 						   		        <div id="customerProfessionChart" style="width:98%;height:99.9%;" ></div>
 										<#echarts _id="customerProfessionChart" _title="客户行业分布" _type="Pie"  _url="${contextPath}/chart/customerProfessionChart"
 										 _nameField="profession" _options="{legend:{selectedMode:false}}"    _valueField="count" ></#echarts>
@@ -36,14 +36,15 @@
 			        <!-- ====================================================================================================================== -->
 			        <!-- 中央布局 -->
 			        <!-- ====================================================================================================================== -->
-			        <div region="center"  height="auto" align="center"  style="width:100%;width:100%" border="false">
-			        	<div  class="easyui-panel"   style="width:100%;height:100%;">
-				   		        <div id="customerMarketChart" style="width:98%;height:99.9%;" ></div>
+			        <div region="center"  height="auto" align="center"  style="width:100%;width:50%" border="false">
+			        	<div  class="easyui-panel"   style="width:100%;height:100%;" border="true">
+				   		        <div id="customerMarketChart" style="width:98%;height:99.9%; " ></div>
 								<#echarts _id="customerMarketChart" _title="客户市场分布" _type="Pie"  _url="${contextPath}/chart/customerMarketChart.json" _nameField="market" _options="{legend:{selectedMode:false}}"   _valueField="count" ></#echarts>
 						</div>
 			        </div>
 			        
-			        <div region="east" height="auto" align="center" style="width:50%;border:0px;">
+			        <div region="east" height="auto" align="center" style="width:50%;border:0px;"  border="false">
+
 			        </div>
     		   </div>
            
