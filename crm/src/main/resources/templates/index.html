@@ -4,13 +4,7 @@
 		 .easyui-layout {
 			 background: #e7e9eb;
 		 }
-		 #grid td {
-			 border-bottom: 1px dashed #ddd;
-			 line-height: 38px;
-		 }
-		 #grid tr:first-child th {
-			 color: #bbb;
-		 }
+
 		 .panel-title {
 			 font-size: 16px;
 		 }
@@ -26,7 +20,27 @@
 			 text-indent: 50px;
 			 line-height: 40px;
 		 }
+		 #grid  {
+			 margin-left: 20px;
+			 margin-right: 20px;
+			 border-collapse:collapse;
+			 border-spacing:0;
+		 }
+		 #grid tr {
+			 border-bottom: 1px dashed #ddd;
+			 line-height: 40px;
+			 box-sizing: border-box;
+		 }
+		 #grid thead tr {
+			 border-bottom: none;
+			 height: 22px;
+			 line-height: 22px;
+		 }
+		 #grid tr:first-child th {
+			 color: #bbb;
+		 }
 
+		 /*模块 title*/
 		 .linkmore {
 			 float: right;
 			 color: #999;
@@ -107,7 +121,7 @@
         <!-- 上方布局 -->
         <!-- ====================================================================================================================== -->
         <!--<div region="north" height="auto" align="center" style="height:520px;border:0px;  padding: 10px 25px 0; background: #e7e9eb ">-->
-        <div  align="center" style="height:520px;border:0px;  padding: 10px 25px 0; background: #e7e9eb ">
+        <div  align="center" style="height:520px;border:0px;  padding-left: 25px;  padding-right: 25px; background: #e7e9eb ">
             <!-- =========================================================表单========================================================= -->
 
             <div class="easyui-layout" fit="true">

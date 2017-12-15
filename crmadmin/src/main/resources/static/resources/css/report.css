@@ -9,7 +9,7 @@
     height: auto;
 }
 .ivu-table-wrapper {
-    margin-top: -25px;
+    margin-top: -27px;
     margin-bottom: 0;
     border: none;
 }
@@ -30,6 +30,7 @@
 .ivu-table td {
     border-bottom: 1px dashed #ddd;
     height: 42px;
+    line-height: 42px;
 }
 .ivu-table-header table tr:first-child th {
     color: #bbb;
@@ -40,6 +41,13 @@
     background-color: #fff;
 }
 
+colgroup col:first-child {
+    width: 100px;
+}
 colgroup col:last-child {
     width: 180px;
+}
+.ivu-table-cell {
+    padding-left: 6px;
+    padding-right: 6px;
 }
