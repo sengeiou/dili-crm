@@ -1,7 +1,7 @@
 <script type="text/javascript">
     // ============================   客户画像js st  =============================
     function loadSalePortrait() {
-        $("#salePortrait").attr("src", "http://ap.nong12.com/find/sZesc_order_details1Z0tftftfff0.htmldt=${startDate} - ${endDate}&customer_id=${customerId}");
+        $("#salePortrait").attr("src", "http://ap.nong12.com/find/sZesc_order_details1Z0tftftfff0.html?dt=${startDate} - ${endDate}&customer_id=${customerId}");
     }
     
     function loadPurchasePortrait() {
