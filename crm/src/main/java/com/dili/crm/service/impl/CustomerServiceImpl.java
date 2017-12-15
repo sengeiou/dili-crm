@@ -25,7 +25,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.ui.ModelMap;
 import tk.mybatis.mapper.entity.Example;
 
+import java.text.SimpleDateFormat;
 import java.util.Arrays;
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -161,6 +163,8 @@ public class CustomerServiceImpl extends BaseServiceImpl<Customer, Long> impleme
 		}
 		modelMap.put("customerId", userMap.get("id"));
 		modelMap.put("customer", JSONObject.toJSONString(userMap));
+	    modelMap.put("startDate",this.calStartDate());
+	    modelMap.put("endDate",this.calEndDate());
 		if(customer.getParentId() != null){
 			Customer parent = get(customer.getParentId());
 			modelMap.put("parentCustomer", parent);
@@ -254,6 +258,28 @@ public class CustomerServiceImpl extends BaseServiceImpl<Customer, Long> impleme
 		dataDictionaryValueProvider.put("provider", "dataDictionaryValueProvider");
 		dataDictionaryValueProvider.put("queryParams", "{dd_id:"+ddId+"}");
 		return dataDictionaryValueProvider;
+	}
+	private String calStartDate() {
+
+		Calendar cal=Calendar.getInstance();
+		cal.add(Calendar.MONDAY, -1);
+		cal.set(Calendar.HOUR_OF_DAY, 0);
+		cal.set(Calendar.MINUTE, 0);
+		cal.set(Calendar.SECOND, 0);
+		
+		SimpleDateFormat dateFormat=new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		return dateFormat.format(cal.getTime());
+	}
+	
+	private String calEndDate() {
+		Calendar cal=Calendar.getInstance();
+		cal.set(Calendar.HOUR_OF_DAY, 23);
+		cal.set(Calendar.MINUTE, 59);
+		cal.set(Calendar.SECOND, 59);
+		
+		SimpleDateFormat dateFormat=new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		return dateFormat.format(cal.getTime());
+		
 	}
 
 }

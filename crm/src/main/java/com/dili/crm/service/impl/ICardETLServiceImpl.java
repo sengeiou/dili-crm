@@ -1,5 +1,7 @@
 package com.dili.crm.service.impl;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
@@ -118,7 +120,14 @@ public class ICardETLServiceImpl implements ICardETLService{
 		return true;
 	}
 	
-
+	private String formatLatestTime(Date date) {
+		SimpleDateFormat format=new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		return format.format(date);
+	}
+	private Date parseLatestTime(String str) throws ParseException {
+		SimpleDateFormat format=new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		return format.parse(str);
+	}
 	private void saveOrUpdateTollLatestTime(Date date) {
 		if(date==null) {
 			return;
@@ -130,10 +139,10 @@ public class ICardETLServiceImpl implements ICardETLService{
 			systemConfig=list.get(0);
 		}else {
 			systemConfig.setName("最后一个同步的神农客户信息的时间");
-			systemConfig.setNotes("单位:毫秒(请不要修改)");
+			systemConfig.setNotes("请不要修改");
 		}
 		systemConfig.setYn(1);
-		systemConfig.setValue(String.valueOf(date.getTime()));
+		systemConfig.setValue(this.formatLatestTime(date));
 
 		this.systemConfigService.saveOrUpdate(systemConfig);
 		
@@ -150,10 +159,10 @@ public class ICardETLServiceImpl implements ICardETLService{
 			systemConfig=list.get(0);
 		}else {
 			systemConfig.setName("最后一个同步的电子结算客户信息的时间");
-			systemConfig.setNotes("单位:毫秒(请不要修改)");
+			systemConfig.setNotes("请不要修改");
 		}
 		systemConfig.setYn(1);
-		systemConfig.setValue(String.valueOf(date.getTime()));
+		systemConfig.setValue(this.formatLatestTime(date));
 		this.systemConfigService.saveOrUpdate(systemConfig);
 		
 	}
@@ -169,7 +178,7 @@ public class ICardETLServiceImpl implements ICardETLService{
 		if(list!=null&&list.size()==1) {
 			String value=list.get(0).getValue();
 			try {
-				Date date=new Date(Long.valueOf(value));
+				Date date=this.parseLatestTime(value);
 				return date;
 			}catch(Exception e) {
 				return null;
@@ -190,7 +199,7 @@ public class ICardETLServiceImpl implements ICardETLService{
 		if(list!=null&&list.size()==1) {
 			String value=list.get(0).getValue();
 			try {
-				Date date=new Date(Long.valueOf(value));
+				Date date=this.parseLatestTime(value);
 				return date;
 			}catch(Exception e) {
 				return null;
