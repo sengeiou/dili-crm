@@ -15,6 +15,7 @@
 }
 .ivu-table {
     font-size: 15px;
+    text-align: center;
 }
 .ivu-table:before,
 .ivu-table:after {
@@ -26,6 +27,7 @@
     background: none;
     border: none;
     height: 22px;
+    text-align: center;
 }
 .ivu-table td {
     border-bottom: 1px dashed #ddd;
@@ -42,12 +44,16 @@
 }
 
 colgroup col:first-child {
-    width: 100px;
+    min-width: 80px;
+}
+colgroup col:nth-child(5) {
+    min-width: 90px;
 }
 colgroup col:last-child {
-    width: 180px;
+    width: 140px;
 }
 .ivu-table-cell {
-    padding-left: 6px;
-    padding-right: 6px;
+    padding-left: 0;
+    padding-right: 0;
+    text-align: center;
 }
