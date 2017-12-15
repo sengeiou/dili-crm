@@ -24,11 +24,11 @@ public class ChartServiceImpl implements ChartService{
 		DataDictionary dataDictionary=this.findChartDictionary();
 		DataDictionaryValue condtion=DTOUtils.newDTO(DataDictionaryValue.class);
 		condtion.setDdId(dataDictionary.getId());
-		condtion.setValue(key);
+		condtion.setCode(key);
 		condtion.setYn(1);
 		List<DataDictionaryValue>list=this.dataDictionaryValueService.list(condtion);
 		if(list!=null&&list.size()==1) {
-			return list.get(0).getCode();
+			return list.get(0).getValue();
 		}
 		return "";
 	}
