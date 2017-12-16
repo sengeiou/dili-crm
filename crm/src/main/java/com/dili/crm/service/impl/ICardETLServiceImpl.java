@@ -106,7 +106,7 @@ public class ICardETLServiceImpl implements ICardETLService{
 			CustomerExtensions customerExtensionsCondtion=DTOUtils.newDTO(CustomerExtensions.class);
 			
 			customerExtensionsCondtion.setAcctId(customerExtensions.getAcctId());
-			customerExtensions.setSystem(customerExtensions.getSystem());
+			customerExtensionsCondtion.setSystem(customerExtensions.getSystem());
 			
 			List<CustomerExtensions>extensions=this.customerExtensionsService.list(customerExtensionsCondtion);
 			if(extensions==null||extensions.size()==0) {
