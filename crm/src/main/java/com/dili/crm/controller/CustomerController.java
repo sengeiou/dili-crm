@@ -8,11 +8,13 @@ import com.dili.crm.service.CustomerService;
 import com.dili.ss.domain.BaseOutput;
 import com.dili.ss.metadata.ValueProviderUtils;
 import com.dili.sysadmin.sdk.domain.UserTicket;
+import com.dili.sysadmin.sdk.session.SessionConstants;
 import com.dili.sysadmin.sdk.session.SessionContext;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
@@ -21,6 +23,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -108,8 +111,13 @@ public class CustomerController {
 		@ApiImplicitParam(name="Customer", paramType="form", value = "Customer的form信息", required = false, dataType = "string")
 	})
     @RequestMapping(value="/listPage", method = {RequestMethod.GET, RequestMethod.POST})
-    public @ResponseBody String listPage(Customer customer) throws Exception {
-        return customerService.listEasyuiPageByExample(customer, true).toString();
+    public @ResponseBody String listPage(Customer customer, HttpServletRequest req) throws Exception {
+    	//判断导出时全查所有客户
+	    String sessionId = req.getHeader(SessionConstants.SESSION_ID);
+	    if(StringUtils.isNotBlank(sessionId)){
+		    customer.setYn(1);
+	    }
+	    return customerService.listEasyuiPageByExample(customer, true).toString();
     }
 
     @ApiOperation("新增Customer")
