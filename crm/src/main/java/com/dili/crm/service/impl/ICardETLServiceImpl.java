@@ -66,6 +66,7 @@ public class ICardETLServiceImpl implements ICardETLService{
 		}
 		
 		condtion.setCertificateNumber(customer.getCertificateNumber());
+		condtion.setCertificateType(customer.getCertificateType());
 		//用身份证号在crm系统查询用户信息
 		List<Customer>list=this.customerService.list(condtion);
 		if(list!=null&&list.size()==1) {
