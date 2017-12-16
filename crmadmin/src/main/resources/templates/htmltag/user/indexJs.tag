@@ -247,6 +247,8 @@ $('#editRoleDiv').css('display','block');
 			});
 
 	var formData = $.extend({}, selected);
+$('#_department').combotree("setValue", selected.departments);
+/** 注解掉多选部门
 	$('#_department').combotree({
 				readonly : false,
 				validateOnCreate : false,
@@ -257,6 +259,7 @@ $('#editRoleDiv').css('display','block');
 							});
 				}
 			});
+*/
 
 	formData = addKeyStartWith(getOriginalData(formData), "_");
 	formData._password = "";
@@ -402,18 +405,21 @@ function onPageDownClicked() {
 	var index = userGrid.datagrid("getRowIndex", selected) + 1;
 	userGrid.datagrid("selectRow", index > maxRowIndex ? 0 : index);
 }
-
+//保存用户
 function onSaveClicked() {
 	if (!$('#_form').form("validate")) {
 		return;
 	}
-
 	var _formData = removeKeyStartWith($("#_form").serializeObject(), "_");
+//注解掉多选部门，改为单选
+/**
 	var nodes = $('#_department').combotree('tree').tree('getChecked', 'checked');
 	_formData.department = new Array();
 	$(nodes).each(function(index, item) {
 				_formData.department.push(item.id)
 			});
+*/
+
 	var _url = null;
 
 	var isAdd = false;
