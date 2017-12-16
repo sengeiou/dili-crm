@@ -276,10 +276,14 @@ public class CustomerServiceImpl extends BaseServiceImpl<Customer, Long> impleme
 		Map<String, Object> metadata = new HashMap<>();
 		JSONObject ownerProvider = new JSONObject();
 		ownerProvider.put("provider", "ownerProvider");
+		metadata.put("ownerId", ownerProvider);
 		metadata.put("created", getDatetimeProvider());
 		metadata.put("modified", getDatetimeProvider());
 		metadata.put("certificateType", getDDProvider(3L));
 		metadata.put("organizationType", getDDProvider(5L));
+		JSONObject cityProvider = new JSONObject();
+		cityProvider.put("provider", "cityProvider");
+		metadata.put("operatingArea", cityProvider);
 		metadata.put("sourceSystem", getDDProvider(8L));
 		metadata.put("market", getDDProvider(2L));
 		metadata.put("type", getDDProvider(4L));
