@@ -440,6 +440,8 @@ public class ICardETLServiceImpl implements ICardETLService{
 			CustomerExtensions customerExtensions=DTOUtils.newDTO(CustomerExtensions.class);
 			
 			customerExtensions.setAcctId(String.valueOf(tollCustomer.getId()));
+			//account:帐号
+			customerExtensions.setAcctType("account");
 //			customerExtensions.setNotes("卡号:"+icardUserCard.getCardNo());
 
 //			customerExtensions.setAcctType("bankCard");
