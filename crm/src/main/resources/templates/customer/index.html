@@ -69,6 +69,7 @@
                    onHeaderContextMenu:headerContextMenu,
                    onBeforeExpand:onBeforeExpand,
                    autoRowHeight:false,
+                   onLoadSuccess:onLoadSuccess,
                    idField:'id',
                    treeField: 'name',
                     _parentIdField:'parentId',
@@ -208,6 +209,11 @@
                     });
                 }
             });
+        }
+
+        //加载完了必须要重设url，否则删除的时候可能会调用expand
+        var onLoadSuccess = function(row, data) {
+            $(this).treegrid("options").url = "${contextPath}/customer/listPage";
         }
         //客户表格查询
         function queryGrid() {
