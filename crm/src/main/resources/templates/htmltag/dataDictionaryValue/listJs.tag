@@ -67,7 +67,7 @@ function onCancelEditDdValue(index, row) {
 					}]);
 	hideDdValueOptButtons(index);
 	ddValueGrid.datagrid('hideColumn', 'opt');
-	ddValueGrid.datagrid('removeEditor', 'code');
+	ddValueGrid.datagrid('removeEditor', 'value');
 }
 
 // 打开新增窗口
@@ -77,7 +77,7 @@ function openInsertDdValue() {
 	}
 
 	ddValueGrid.datagrid('addEditor', [{
-						field : 'code',
+						field : 'value',
 						editor : {
 							type : 'textbox',
 							options : {
