@@ -144,7 +144,7 @@ public class ChartController {
 			Map<Object, Object> metadata =this.getCustomerMetadata();
 			try {
 				List<Map> list = ValueProviderUtils.buildDataByProvider(metadata, data);
-				return this.addOthers(list, "makret");
+				return this.addOthers(list, "market");
 			} catch (Exception e) {
 				return Collections.emptyList();
 			}
