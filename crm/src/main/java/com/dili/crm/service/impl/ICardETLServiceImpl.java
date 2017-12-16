@@ -72,13 +72,13 @@ public class ICardETLServiceImpl implements ICardETLService{
 		if(list!=null&&list.size()==1) {
 			Customer customerItem=list.get(0);
 			//更新用户信息对应的创建时间(电子结算系统里面,相同身份证号的用户信息有多条)
-			if(customer.getCreated()!=null) {
-				if(customerItem.getCreated()==null) {
-					customerItem.setCreated(customer.getCreated());
-				}else if(customer.getCreated().after(customerItem.getCreated())) {
-					customerItem.setCreated(customer.getCreated());
-				}
-			}
+//			if(customer.getCreated()!=null) {
+//				if(customerItem.getCreated()==null) {
+//					customerItem.setCreated(customer.getCreated());
+//				}else if(customer.getCreated().after(customerItem.getCreated())) {
+//					customerItem.setCreated(customer.getCreated());
+//				}
+//			}
 			String name=StringUtils.trimToEmpty(customer.getName());
 			String phone=StringUtils.trimToEmpty(customer.getPhone());
 			String sex=StringUtils.trimToEmpty(customer.getSex());
