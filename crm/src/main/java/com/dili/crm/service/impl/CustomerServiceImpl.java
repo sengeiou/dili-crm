@@ -1,18 +1,23 @@
 package com.dili.crm.service.impl;
 
+import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.dili.crm.dao.CustomerMapper;
 import com.dili.crm.domain.Customer;
 import com.dili.crm.domain.User;
+import com.dili.crm.domain.dto.CityDto;
 import com.dili.crm.domain.dto.CustomerChartDTO;
+import com.dili.crm.domain.dto.CustomerTreeDto;
 import com.dili.crm.domain.dto.MembersDto;
 import com.dili.crm.rpc.UserRpc;
 import com.dili.crm.service.CacheService;
 import com.dili.crm.service.ChartService;
 import com.dili.crm.service.CustomerService;
 import com.dili.ss.base.BaseServiceImpl;
+import com.dili.ss.constant.SsConstants;
 import com.dili.ss.domain.BaseOutput;
 import com.dili.ss.domain.EasyuiPageOutput;
+import com.dili.ss.dto.DTO;
 import com.dili.ss.dto.DTOUtils;
 import com.dili.ss.metadata.ValueProviderUtils;
 import com.dili.sysadmin.sdk.domain.UserTicket;
@@ -27,11 +32,7 @@ import org.springframework.ui.ModelMap;
 import tk.mybatis.mapper.entity.Example;
 
 import java.text.SimpleDateFormat;
-import java.util.Arrays;
-import java.util.Calendar;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * 由MyBatis Generator工具自动生成
@@ -53,15 +54,53 @@ public class CustomerServiceImpl extends BaseServiceImpl<Customer, Long> impleme
 
     @Override
     public List<Customer> list(Customer condtion) {
-        condtion.setYn(1);
-        return super.list(condtion);
+	    condtion.setYn(1);
+	    return super.list(condtion);
+    }
+
+	/**
+	 * 获取实体的默认参数长度
+	 * @param domain
+	 * @return
+	 */
+	private int getDefaultParamSize(Customer domain){
+    	int size = 0;
+    	if(domain.getPage() != null){
+    		size ++;
+	    }
+	    if(domain.getRows() != null){
+    		size ++;
+	    }
+	    if(domain.getOrder() != null){
+	    	size++;
+	    }
+	    if(domain.getSort() != null){
+	    	size++;
+	    }
+    	return size;
     }
 
     @Override
     public EasyuiPageOutput listEasyuiPageByExample(Customer domain, boolean useProvider) throws Exception {
         cacheService.refreshDepartment();
-        domain.setYn(1);
-        return super.listEasyuiPageByExample(domain, useProvider);
+	    DTO queryDto = DTOUtils.go(domain);
+	    CustomerTreeDto customerTreeDto= DTOUtils.as(domain, CustomerTreeDto.class);
+	    //如果只有sort和order字段,即没有查询条件的情况下，就只查parentId为空的
+	    if(queryDto.size() <= getDefaultParamSize(domain)){
+		    //全查时查顶级
+		    customerTreeDto.mset(SsConstants.NULL_VALUE_FIELD, "parent_id");
+	    }
+	    domain.setYn(1);
+	    EasyuiPageOutput easyuiPageOutput = super.listEasyuiPageByExample(customerTreeDto, useProvider);
+	    for(Object rowObj : easyuiPageOutput.getRows()) {
+		    if(DTOUtils.isDTOProxy(rowObj)){
+			    DTOUtils.as(rowObj, CityDto.class).setState("closed");
+		    }else {
+			    Map rowMap = (Map) rowObj;
+			    rowMap.put("state", "closed");
+		    }
+	    }
+	    return easyuiPageOutput;
     }
 
     @Override
@@ -230,6 +269,34 @@ public class CustomerServiceImpl extends BaseServiceImpl<Customer, Long> impleme
 		return listEasyuiPageByExample(membersDto, true).toString();
 	}
 
+	@Override
+	public String expandEasyuiPageByParentId(Long parentId) throws Exception {
+		Customer customer = DTOUtils.newDTO(Customer.class);
+		customer.setParentId(parentId);
+		Map<String, Object> metadata = new HashMap<>();
+		JSONObject ownerProvider = new JSONObject();
+		ownerProvider.put("provider", "ownerProvider");
+		metadata.put("created", getDatetimeProvider());
+		metadata.put("modified", getDatetimeProvider());
+		metadata.put("certificateType", getDDProvider(3L));
+		metadata.put("organizationType", getDDProvider(5L));
+		metadata.put("sourceSystem", getDDProvider(8L));
+		metadata.put("market", getDDProvider(2L));
+		metadata.put("type", getDDProvider(4L));
+		metadata.put("profession", getDDProvider(6L));
+		customer.mset(metadata);
+		EasyuiPageOutput easyuiPageOutput = this.listEasyuiPageByExample(customer, true);
+		for(Object rowObj : easyuiPageOutput.getRows()) {
+			if(DTOUtils.isDTOProxy(rowObj)){
+				DTOUtils.as(rowObj, CustomerTreeDto.class).setState("closed");
+			}else {
+				Map rowMap = (Map) rowObj;
+				rowMap.put("state", "closed");
+			}
+		}
+		return JSONArray.toJSONString(easyuiPageOutput.getRows());
+	}
+
 	/**
 	 * 由于无法获取到表头上的meta信息，展示客户详情只有id参数，所以需要在后台构建
 	 * @return
@@ -290,7 +357,6 @@ public class CustomerServiceImpl extends BaseServiceImpl<Customer, Long> impleme
 		
 		SimpleDateFormat dateFormat=new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 		return dateFormat.format(cal.getTime());
-		
 	}
 
 }

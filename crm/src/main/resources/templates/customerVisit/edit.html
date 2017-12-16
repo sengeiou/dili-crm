@@ -266,7 +266,7 @@
             $.messager.confirm('确认',msg,function(r) {
                 if (r) {
                     diableBtn(true);
-                    var _formData = removeKeyStartWith($("#_form").serializeObject(),"_");
+                    var _formData = removeKeyStartWith($("#_form").serializeObject(true),"_");
                     var _url = null;
                     var add = true;
                     //没有id就新增

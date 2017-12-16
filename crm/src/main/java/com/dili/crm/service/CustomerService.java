@@ -88,4 +88,12 @@ public interface CustomerService extends BaseService<Customer, Long> {
 	 * @throws Exception
 	 */
 	String listParentCustomerPage(MembersDto membersDto) throws Exception;
+
+	/**
+	 * 根据客户父id展开客户
+	 * @param parentId
+	 * @return
+	 */
+	String expandEasyuiPageByParentId(Long parentId) throws Exception;
+
 }
