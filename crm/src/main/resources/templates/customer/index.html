@@ -135,6 +135,10 @@
 
         // ============================   客户相关js st  ==============================
 
+        //加载完了必须要重设url，否则删除的时候可能会调用expand
+//        var onLoadSuccess = function(row, data) {
+//            $(this).treegrid("options").url = "${contextPath}/customer/listPage";
+//        }
         var onBeforeExpand = function(row,param){
             $("#grid").treegrid("options").url ="${contextPath}/customer/expand?parentId="+row.id;
         };
@@ -207,10 +211,7 @@
         }
         //客户表格查询
         function queryGrid() {
-            var opts = $("#grid").treegrid("options");
-            if (null == opts.url || "" == opts.url) {
-                opts.url = "${contextPath}/customer/listPage";
-            }
+            var opts = $("#grid").treegrid("options").url = "${contextPath}/customer/listPage";
             if(!$('#form').form("validate")){
                 return;
             }

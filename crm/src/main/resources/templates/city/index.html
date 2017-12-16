@@ -209,7 +209,7 @@
         var onLoadSuccess = function(row, data){
             $(this).treegrid("options").url="${contextPath}/city/listPage";
 //            $("#grid").treegrid("expandAll");
-//            alert("data:"+JSON.stringify(data));
+//          展开第一级
             if(data && data.rows){
                 for(var i in data.rows){
                     if(data.rows[i]["levelType"] == 0){
