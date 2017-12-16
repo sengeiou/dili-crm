@@ -8,6 +8,8 @@ import java.util.Date;
 import java.util.List;
 
 import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
@@ -42,6 +44,7 @@ import com.mysql.fabric.xmlrpc.base.Array;
  */
 @Component
 public class ICardETLServiceImpl implements ICardETLService{
+	private static final Logger logger=LoggerFactory.getLogger(ICardETLServiceImpl.class);
 	@Autowired private IcardUserAccountService icardUserAccountService;
 	@Autowired private IcardUserCardService icardUserCardService;
 	@Autowired private CustomerService customerService;
@@ -57,7 +60,7 @@ public class ICardETLServiceImpl implements ICardETLService{
 	 */
 	@Transactional
 	private boolean saveOrUpdate(Customer customer,List<CustomerExtensions> customerExtensionsList,List<Address>address) {
-		Customer condtion=DTOUtils.newDTO(Customer.class);
+		Customer customerQueryCondition=DTOUtils.newDTO(Customer.class);
 		
 		if("toll".equals(customer.getSourceSystem())) {
 			this.saveOrUpdateTollLatestTime(customer.getCreated());
@@ -65,10 +68,10 @@ public class ICardETLServiceImpl implements ICardETLService{
 			this.saveOrUpdateSettlementLatestTime(customer.getCreated());
 		}
 		
-		condtion.setCertificateNumber(customer.getCertificateNumber());
-		condtion.setCertificateType(customer.getCertificateType());
+		customerQueryCondition.setCertificateNumber(customer.getCertificateNumber());
+		customerQueryCondition.setCertificateType(customer.getCertificateType());
 		//用身份证号在crm系统查询用户信息
-		List<Customer>list=this.customerService.list(condtion);
+		List<Customer>list=this.customerService.list(customerQueryCondition);
 		if(list!=null&&list.size()==1) {
 			Customer customerItem=list.get(0);
 			//更新用户信息对应的创建时间(电子结算系统里面,相同身份证号的用户信息有多条)
@@ -95,34 +98,37 @@ public class ICardETLServiceImpl implements ICardETLService{
 			
 			
 		}
+		logger.info("customer id:{},name:{},certificateNumber:{},system:{}",customer.getId(),customer.getName(),customer.getCertificateNumber(),customer.getSourceSystem());
 		this.customerService.saveOrUpdate(customer);
 		
 		//对账号信息做插入或者更新的判断
 		List<CustomerExtensions>insertExtensionList=new ArrayList<>();
 		
 		List<CustomerExtensions>updateExtensionList=new ArrayList<>();
-		
+		logger.info("customerExtensionsList size:{}",customerExtensionsList.size());
 		for(CustomerExtensions customerExtensions:customerExtensionsList) {
-			CustomerExtensions customerExtensionsCondtion=DTOUtils.newDTO(CustomerExtensions.class);
+			CustomerExtensions extensionsQueryCondition=DTOUtils.newDTO(CustomerExtensions.class);
 			
-			customerExtensionsCondtion.setAcctId(customerExtensions.getAcctId());
-			customerExtensionsCondtion.setSystem(customerExtensions.getSystem());
-			
-			List<CustomerExtensions>extensions=this.customerExtensionsService.list(customerExtensionsCondtion);
+			extensionsQueryCondition.setAcctId(customerExtensions.getAcctId());
+			extensionsQueryCondition.setSystem(customerExtensions.getSystem());
+			extensionsQueryCondition.setAcctType(customerExtensions.getAcctType());
+			List<CustomerExtensions>extensions=this.customerExtensionsService.list(extensionsQueryCondition);
 			if(extensions==null||extensions.size()==0) {
 				customerExtensions.setCustomerId(customer.getId());
 				insertExtensionList.add(customerExtensions);
 			}else if(extensions.size()==1) {
-				CustomerExtensions extension=extensions.get(0);
-				if(!StringUtils.trimToEmpty(extension.getNotes()).equals(StringUtils.trimToEmpty(customerExtensions.getNotes()))) {
-					extension.setNotes(StringUtils.trimToEmpty(customerExtensions.getNotes()));
-					updateExtensionList.add(extension);
+				CustomerExtensions extensionItem=extensions.get(0);
+				if(!StringUtils.trimToEmpty(extensionItem.getNotes()).equals(StringUtils.trimToEmpty(customerExtensions.getNotes()))) {
+					extensionItem.setNotes(StringUtils.trimToEmpty(customerExtensions.getNotes()));
+					updateExtensionList.add(extensionItem);
 				}
 			}
 		}
+		logger.info("insertExtensionList size:{}",insertExtensionList.size());
 		if(insertExtensionList.size()>0) {
 			this.customerExtensionsService.batchInsert(insertExtensionList);
 		}
+		logger.info("updateExtensionList size:{}",updateExtensionList.size());
 		if(updateExtensionList.size()>0) {
 			this.customerExtensionsService.batchUpdate(updateExtensionList);
 		}
@@ -132,12 +138,12 @@ public class ICardETLServiceImpl implements ICardETLService{
 			Address addrCondtion=DTOUtils.newDTO(Address.class);
 			
 			addrCondtion.setAddress(addr.getAddress());
-			addrCondtion.setCustomerId(customer.getId());
+			addrCondtion.setCustomerId(customerQueryCondition.getId());
 //					customerExtensions.setSystem(customerExtensions.getSystem());
 //					
 			List<Address>extensions=this.addressService.list(addrCondtion);
 			if(extensions==null||extensions.size()==0) {
-				addr.setCustomerId(customer.getId());
+				addr.setCustomerId(customerQueryCondition.getId());
 				addrList.add(addr);
 			}
 		}
