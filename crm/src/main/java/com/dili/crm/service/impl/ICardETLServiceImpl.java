@@ -62,7 +62,7 @@ public class ICardETLServiceImpl implements ICardETLService{
 	private boolean saveOrUpdate(Customer customer,List<CustomerExtensions> customerExtensionsList,List<Address>address) {
 		Customer customerQueryCondition=DTOUtils.newDTO(Customer.class);
 		
-		if("toll".equals(customerQueryCondition.getSourceSystem())) {
+		if("toll".equals(customer.getSourceSystem())) {
 			this.saveOrUpdateTollLatestTime(customer.getCreated());
 		}else {
 			this.saveOrUpdateSettlementLatestTime(customer.getCreated());
