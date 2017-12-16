@@ -72,16 +72,35 @@ public class ICardETLServiceImpl implements ICardETLService{
 			Customer customerItem=list.get(0);
 			//更新用户信息对应的创建时间(电子结算系统里面,相同身份证号的用户信息有多条)
 			if(customer.getCreated()!=null) {
-				if(customer.getCreated().after(customerItem.getCreated())) {
+				if(customerItem.getCreated()==null) {
+					customerItem.setCreated(customer.getCreated());
+				}else if(customer.getCreated().after(customerItem.getCreated())) {
 					customerItem.setCreated(customer.getCreated());
 				}
 			}
+			String name=StringUtils.trimToEmpty(customer.getName());
+			String phone=StringUtils.trimToEmpty(customer.getPhone());
+			String sex=StringUtils.trimToEmpty(customer.getSex());
+			if(StringUtils.isNotBlank(name)&&!name.equals(customerItem.getName())) {
+				customerItem.setName(name);	
+			}
+			if(StringUtils.isNotBlank(phone)&&!phone.equals(customerItem.getPhone())) {
+				customerItem.setPhone(phone);	
+			}
+			if(StringUtils.isNotBlank(sex)&&!sex.equals(customerItem.getSex())) {
+				customerItem.setSex(sex);	
+			}
 			customer=customerItem;
+			
+			
 		}
 		this.customerService.saveOrUpdate(customer);
 		
 		//对账号信息做插入或者更新的判断
-		List<CustomerExtensions>extensionList=new ArrayList<>();
+		List<CustomerExtensions>insertExtensionList=new ArrayList<>();
+		
+		List<CustomerExtensions>updateExtensionList=new ArrayList<>();
+		
 		for(CustomerExtensions customerExtensions:customerExtensionsList) {
 			CustomerExtensions customerExtensionsCondtion=DTOUtils.newDTO(CustomerExtensions.class);
 			
@@ -91,13 +110,21 @@ public class ICardETLServiceImpl implements ICardETLService{
 			List<CustomerExtensions>extensions=this.customerExtensionsService.list(customerExtensionsCondtion);
 			if(extensions==null||extensions.size()==0) {
 				customerExtensions.setCustomerId(customer.getId());
-				extensionList.add(customerExtensions);
+				insertExtensionList.add(customerExtensions);
+			}else if(extensions.size()==1) {
+				CustomerExtensions extension=extensions.get(0);
+				if(!StringUtils.trimToEmpty(extension.getNotes()).equals(StringUtils.trimToEmpty(customerExtensions.getNotes()))) {
+					extension.setNotes(StringUtils.trimToEmpty(customerExtensions.getNotes()));
+					updateExtensionList.add(extension);
+				}
 			}
 		}
-		if(extensionList.size()>0) {
+		if(updateExtensionList.size()>0) {
 			this.customerExtensionsService.batchInsert(customerExtensionsList);
 		}
-		
+		if(updateExtensionList.size()>0) {
+			this.customerExtensionsService.batchUpdate(updateExtensionList);
+		}
 		//对地址信息做插入或者更新的判断
 		List<Address>addrList=new ArrayList<>();
 		for(Address addr:address) {
