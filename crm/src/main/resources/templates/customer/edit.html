@@ -368,12 +368,10 @@
                     $("#saveAndExitBtn").linkbutton("disable");
                     var _formData = removeKeyStartWith($("#_form").serializeObject(true),"_");
                     var _url = null;
-                    var add = true;
                     //没有id就新增
                     if(_formData.id == null || _formData.id==""){
                         _url = "${contextPath}/customer/insert";
                     }else{//有id就修改
-                        add = false;
                         _url = "${contextPath}/customer/update";
                     }
                     $.ajax({
@@ -386,27 +384,23 @@
                         success: function (data) {
                             if(data.code=="200"){
                                 if(url){
-                                    if(add){
-                                        url = "${contextPath}/customer/index.html";
-                                    }else{
-                                        url += data.data.id;
-                                    }
+                                    url += data.data.id;
                                 }else{
                                     url = "${contextPath}/customer/index.html";
                                 }
                                 window.location.href = url;
-                                }else{
-                                    $("#saveBtn").linkbutton("enable");
-                                    $("#saveAndExitBtn").linkbutton("enable");
-                                    $.messager.alert('错误',data.result);
-                                }
-                            },
-                            error: function(){
+                             }else{
                                 $("#saveBtn").linkbutton("enable");
                                 $("#saveAndExitBtn").linkbutton("enable");
-                                $.messager.alert('错误','远程访问失败');
-                            }
-                       });
+                                $.messager.alert('错误',data.result);
+                             }
+                         },
+                         error: function(){
+                            $("#saveBtn").linkbutton("enable");
+                            $("#saveAndExitBtn").linkbutton("enable");
+                            $.messager.alert('错误','远程访问失败');
+                        }
+                    });
                 }
             });
 
