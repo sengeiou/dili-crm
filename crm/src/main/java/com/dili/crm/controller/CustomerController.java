@@ -1,6 +1,7 @@
 package com.dili.crm.controller;
 
 import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
 import com.dili.crm.domain.Customer;
 import com.dili.crm.domain.dto.MembersDto;
 import com.dili.crm.service.CustomerService;
@@ -81,13 +82,24 @@ public class CustomerController {
 		return "customer/edit";
 	}
 
+	/**
+	 * 展开客户树
+	 * @param parentId
+	 * @return
+	 * @throws Exception
+	 */
+	@RequestMapping(value="/expand", method = {RequestMethod.GET, RequestMethod.POST})
+	public @ResponseBody String expand(Long parentId) throws Exception {
+		return customerService.expandEasyuiPageByParentId(parentId);
+	}
 
     @ApiOperation(value="查询Customer", notes = "查询Customer，返回列表信息")
     @ApiImplicitParams({
 		@ApiImplicitParam(name="Customer", paramType="form", value = "Customer的form信息", required = false, dataType = "string")
 	})
     @RequestMapping(value="/list", method = {RequestMethod.GET, RequestMethod.POST})
-    public @ResponseBody List<Customer> list(Customer customer) {
+    public @ResponseBody
+    List<Customer> list(Customer customer){
         return customerService.list(customer);
     }
 
@@ -170,5 +182,20 @@ public class CustomerController {
     		return customerService.listEasyuiPageByExample(membersDto, true).toString();
 		}
 		return customerService.listParentCustomerPage(membersDto).toString();
+	}
+
+	//获取时间提供者
+	private JSONObject getDatetimeProvider(){
+		JSONObject datetimeProvider = new JSONObject();
+		datetimeProvider.put("provider", "datetimeProvider");
+		return datetimeProvider;
+	}
+
+	//获取数据字典提供者
+	private JSONObject getDDProvider(Long ddId){
+		JSONObject dataDictionaryValueProvider = new JSONObject();
+		dataDictionaryValueProvider.put("provider", "dataDictionaryValueProvider");
+		dataDictionaryValueProvider.put("queryParams", "{dd_id:"+ddId+"}");
+		return dataDictionaryValueProvider;
 	}
 }

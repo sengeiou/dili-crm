@@ -67,6 +67,7 @@
                    align="center" fit="true" striped="true"
                    data-options="onDblClickRow:<%if(hasResource("updateCustomer")) {%>openUpdate,<%}else{%>openDetail,<%}%>
                    onHeaderContextMenu:headerContextMenu,
+                   onBeforeExpand:onBeforeExpand,
                    autoRowHeight:false,
                    idField:'id',
                    treeField: 'name',
@@ -133,6 +134,10 @@
     <script type="text/javascript">
 
         // ============================   客户相关js st  ==============================
+
+        var onBeforeExpand = function(row,param){
+            $("#grid").treegrid("options").url ="${contextPath}/customer/expand?parentId="+row.id;
+        };
 
         //打开新增子级客户窗口
         function openChildInsert(){
