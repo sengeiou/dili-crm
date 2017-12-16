@@ -4,11 +4,13 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.dili.crm.dao.CustomerMapper;
 import com.dili.crm.domain.Customer;
+import com.dili.crm.domain.Department;
 import com.dili.crm.domain.User;
 import com.dili.crm.domain.dto.CityDto;
 import com.dili.crm.domain.dto.CustomerChartDTO;
 import com.dili.crm.domain.dto.CustomerTreeDto;
 import com.dili.crm.domain.dto.MembersDto;
+import com.dili.crm.provider.DepartmentProvider;
 import com.dili.crm.rpc.UserRpc;
 import com.dili.crm.service.CacheService;
 import com.dili.crm.service.ChartService;
@@ -25,6 +27,7 @@ import com.dili.sysadmin.sdk.session.SessionContext;
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
 import com.google.common.collect.Lists;
+import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -119,13 +122,14 @@ public class CustomerServiceImpl extends BaseServiceImpl<Customer, Long> impleme
         }
         //本系统新增的，写死为crm，对应数据字典
 	    customer.setSourceSystem("crm");
-        Long depId = userTicket.getDepId();
-        //设置归属部门
-        if(depId != null) {
-	        customer.setDepartment(depId.toString());
-        }
         customer.setCreatedId(userTicket.getId());
         customer.setOwnerId(userTicket.getId());
+        //查询当前用户所属的部门
+		BaseOutput<List<Department>> listBaseOutput = userRpc.listUserDepartmentByUserId(userTicket.getId());
+		List<Department> departments = listBaseOutput.getData();
+		if (CollectionUtils.isNotEmpty(departments)){
+			customer.setDepartment(String.valueOf(departments.get(0).getId()));
+		}
         super.insertSelective(customer);
         return BaseOutput.success("新增成功").setData(customer);
     }
@@ -317,6 +321,10 @@ public class CustomerServiceImpl extends BaseServiceImpl<Customer, Long> impleme
 		JSONObject customerProvider = new JSONObject();
 		customerProvider.put("provider", "customerProvider");
 		metadata.put("parentId", customerProvider);
+		//部门信息
+		JSONObject departmentProvider = new JSONObject();
+		departmentProvider.put("provider", "departmentProvider");
+		metadata.put("department", departmentProvider);
 		//字典
 		metadata.put("certificateType", getDDProvider(3L));
 		metadata.put("organizationType", getDDProvider(5L));

@@ -1,6 +1,7 @@
 package com.dili.sysadmin.api;
 
 import com.dili.ss.domain.BaseOutput;
+import com.dili.sysadmin.domain.Department;
 import com.dili.sysadmin.domain.User;
 import com.dili.sysadmin.service.UserService;
 import io.swagger.annotations.Api;
@@ -44,5 +45,11 @@ public class UserApi {
 	@RequestMapping(value = "/listByExample", method = { RequestMethod.GET, RequestMethod.POST })
 	public BaseOutput<User> listByExample(@RequestBody(required = false) User user) {
 		return BaseOutput.success().setData(this.userService.listByExample(user));
+	}
+
+	@ResponseBody
+	@RequestMapping(value = "/listUserDepartmentByUserId", method = { RequestMethod.GET, RequestMethod.POST })
+	public BaseOutput<List<Department>> listUserDepartmentByUserId(@RequestBody Long userId) {
+		return BaseOutput.success().setData(this.userService.listUserDepartmentByUserId(userId));
 	}
 }

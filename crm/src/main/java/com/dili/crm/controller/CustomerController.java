@@ -3,7 +3,9 @@ package com.dili.crm.controller;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.dili.crm.domain.Customer;
+import com.dili.crm.domain.Department;
 import com.dili.crm.domain.dto.MembersDto;
+import com.dili.crm.rpc.UserRpc;
 import com.dili.crm.service.CustomerService;
 import com.dili.ss.domain.BaseOutput;
 import com.dili.ss.metadata.ValueProviderUtils;
@@ -14,6 +16,7 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
+import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -41,6 +44,9 @@ public class CustomerController {
     CustomerService customerService;
 	@Autowired
 	private ValueProviderUtils valueProviderUtils;
+
+	@Autowired
+	private UserRpc userRpc;
 
     @ApiOperation("跳转到Customer管理页面")
     @RequestMapping(value="/index.html", method = RequestMethod.GET)
@@ -78,9 +84,11 @@ public class CustomerController {
 		}
 		//页面上用于展示拥有者和新增时获取拥有者id
 		modelMap.put("user", userTicket);
-		if(id != null){
-			Customer parent = customerService.get(id);
-			modelMap.put("parentCustomer", parent);
+		BaseOutput<List<Department>> listBaseOutput = userRpc.listUserDepartmentByUserId(userTicket.getId());
+		List<Department> departments = listBaseOutput.getData();
+		if (CollectionUtils.isNotEmpty(departments)){
+			//页面上用于展示拥有者和新增时获取拥有者id
+			modelMap.put("department", departments.get(0));
 		}
 		return "customer/edit";
 	}

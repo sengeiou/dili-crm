@@ -1,5 +1,6 @@
 package com.dili.crm.rpc;
 
+import com.dili.crm.domain.Department;
 import com.dili.crm.domain.User;
 import com.dili.ss.domain.BaseOutput;
 import com.dili.ss.retrofitful.annotation.POST;
@@ -23,4 +24,7 @@ public interface UserRpc {
 
 	@POST("/userApi/listByExample")
 	BaseOutput<List<User>> listByExample(@VOBody User user);
+
+	@POST("/userApi/listUserDepartmentByUserId")
+	BaseOutput<List<Department>> listUserDepartmentByUserId(@VOSingleParameter Long userId);
 }

@@ -480,6 +480,11 @@ public class UserServiceImpl extends BaseServiceImpl<User, Long> implements User
 		}
 	}
 
+	@Override
+	public List<Department> listUserDepartmentByUserId(Long userId) {
+        return departmentMapper.findByUserId(userId);
+    }
+
 	private List<UserDepartmentDto> parseToUserDepartmentDto(List<User> results) {
 		List<UserDepartmentDto> target = new ArrayList<>(results.size());
 		for (User user : results) {

@@ -144,15 +144,15 @@
             $("#grid").treegrid("options").url ="${contextPath}/customer/expand?parentId="+row.id;
         };
 
-        //打开新增子级客户窗口
-        function openChildInsert(){
-            var selected = $("#grid").treegrid("getSelected");
-            if (null == selected) {
-                $.messager.alert('警告','请选中一条数据');
-                return;
-            }
-            window.location.href="${contextPath}/customer/add.html?id="+selected["id"];
-        }
+        // //打开新增子级客户窗口
+        // function openChildInsert(){
+        //     var selected = $("#grid").treegrid("getSelected");
+        //     if (null == selected) {
+        //         $.messager.alert('警告','请选中一条数据');
+        //         return;
+        //     }
+        //     window.location.href="${contextPath}/customer/add.html?id="+selected["id"];
+        // }
 
         //打开新增客户窗口
         function openInsert(){
