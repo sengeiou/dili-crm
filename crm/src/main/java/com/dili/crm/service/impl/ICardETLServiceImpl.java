@@ -120,8 +120,8 @@ public class ICardETLServiceImpl implements ICardETLService{
 				}
 			}
 		}
-		if(updateExtensionList.size()>0) {
-			this.customerExtensionsService.batchInsert(customerExtensionsList);
+		if(insertExtensionList.size()>0) {
+			this.customerExtensionsService.batchInsert(insertExtensionList);
 		}
 		if(updateExtensionList.size()>0) {
 			this.customerExtensionsService.batchUpdate(updateExtensionList);
