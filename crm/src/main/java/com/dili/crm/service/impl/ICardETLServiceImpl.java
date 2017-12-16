@@ -60,7 +60,7 @@ public class ICardETLServiceImpl implements ICardETLService{
 	 */
 	@Transactional
 	private boolean saveOrUpdate(Customer customer,List<CustomerExtensions> customerExtensionsList,List<Address>address) {
-		Customer customerQueryCondition=DTOUtils.newDTO(Customer.class);
+		
 		
 		if("toll".equals(customer.getSourceSystem())) {
 			this.saveOrUpdateTollLatestTime(customer.getCreated());
@@ -68,6 +68,7 @@ public class ICardETLServiceImpl implements ICardETLService{
 			this.saveOrUpdateSettlementLatestTime(customer.getCreated());
 		}
 		
+		Customer customerQueryCondition=DTOUtils.newDTO(Customer.class);
 		customerQueryCondition.setCertificateNumber(customer.getCertificateNumber());
 		customerQueryCondition.setCertificateType(customer.getCertificateType());
 		//用身份证号在crm系统查询用户信息
@@ -138,12 +139,12 @@ public class ICardETLServiceImpl implements ICardETLService{
 			Address addrCondtion=DTOUtils.newDTO(Address.class);
 			
 			addrCondtion.setAddress(addr.getAddress());
-			addrCondtion.setCustomerId(customerQueryCondition.getId());
+			addrCondtion.setCustomerId(customer.getId());
 //					customerExtensions.setSystem(customerExtensions.getSystem());
 //					
 			List<Address>extensions=this.addressService.list(addrCondtion);
 			if(extensions==null||extensions.size()==0) {
-				addr.setCustomerId(customerQueryCondition.getId());
+				addr.setCustomerId(customer.getId());
 				addrList.add(addr);
 			}
 		}
