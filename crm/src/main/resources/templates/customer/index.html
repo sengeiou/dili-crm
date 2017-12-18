@@ -171,12 +171,15 @@
 
         //打开修改客户窗口
         function openDetail(){
+
+            <#resource url="http://crmweb.diligrp.com:8085/customer/detail.html">
             var selected = $("#grid").treegrid("getSelected");
             if (null == selected) {
                 $.messager.alert('警告','请选中一条数据');
                 return;
             }
             window.location.href="${contextPath}/customer/detail.html?id="+selected["id"];
+            </#resource>
         }
 
         //根据主键删除客户

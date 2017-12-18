@@ -2,7 +2,9 @@ package com.dili.sysadmin.sdk.component.beetl;
 
 import com.dili.sysadmin.sdk.domain.UserTicket;
 import com.dili.sysadmin.sdk.redis.UserResourceRedis;
+import com.dili.sysadmin.sdk.redis.UserUrlRedis;
 import com.dili.sysadmin.sdk.session.SessionContext;
+import org.apache.commons.lang3.StringUtils;
 import org.beetl.core.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -19,13 +21,18 @@ public class resourceTag extends Tag {
 
 	@Autowired
 	UserResourceRedis userResourceRedis;
+
+	@Autowired
+	UserUrlRedis userUrlRedis;
 	//标签自定义属性
 	private final String CODE_FIELD = "code";
+	private final String URL_FIELD = "url";
 
 	@Override
 	public void render() {
 		Map<String, Object> argsMap = (Map)this.args[1];
 		String code = (String) argsMap.get(CODE_FIELD);
+		String url = (String) argsMap.get(URL_FIELD);
 		UserTicket userTicket = SessionContext.getSessionContext().getUserTicket();
 		if(userTicket == null) {
 			try {
@@ -35,7 +42,13 @@ public class resourceTag extends Tag {
 			}
 			return;
 		}
-		if(userResourceRedis.checkUserResourceRight(userTicket.getId(), code)){
+		if(StringUtils.isNotBlank(code) && userResourceRedis.checkUserResourceRight(userTicket.getId(), code)){
+			try {
+				ctx.byteWriter.write(getBodyContent());
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}else if(StringUtils.isNotBlank(url) && userUrlRedis.checkUserMenuUrlRight(userTicket.getId(), url)){
 			try {
 				ctx.byteWriter.write(getBodyContent());
 			} catch (IOException e) {
