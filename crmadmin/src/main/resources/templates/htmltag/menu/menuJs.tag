@@ -71,11 +71,18 @@ function del(gridId) {
 		$.messager.alert('警告', '请选中一条数据');
 		return;
 	}
+	
+	var url="";
+	if(hasMenuUrlCol(gridId)){
+		url='${contextPath!}/menu/delete';
+	}else{
+		url='${contextPath!}/resource/delete';
+	}
 	$.messager.confirm('确认', '您确认想要删除记录吗？', function(r) {
 				if (r) {
 					$.ajax({
 								type : "POST",
-								url : ( typeof(selected.type) == "undefined" ? '${contextPath!}/resource/' : '${contextPath!}/menu/') + '/delete',
+								url : url,
 								data : {
 									id : selected.id
 								},
@@ -675,6 +682,7 @@ function insertOrUpdateResource(gridId, node, index, row, changes) {
 				if (!row.id) {
 					row.id = data.data.id;
 				}
+				console.info(row.id)
 				grid.datagrid('updateRow', {
 							index : index,
 							row : row

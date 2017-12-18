@@ -76,29 +76,28 @@ public class ICardETLServiceImpl implements ICardETLService{
 		List<Customer>list=this.customerService.list(customerQueryCondition);
 		if(list!=null&&list.size()==1) {
 			Customer customerItem=list.get(0);
-			//更新用户信息对应的创建时间(电子结算系统里面,相同身份证号的用户信息有多条)
-//			if(customer.getCreated()!=null) {
-//				if(customerItem.getCreated()==null) {
-//					customerItem.setCreated(customer.getCreated());
-//				}else if(customer.getCreated().after(customerItem.getCreated())) {
-//					customerItem.setCreated(customer.getCreated());
-//				}
-//			}
-			String name=StringUtils.trimToEmpty(customer.getName());
-			String phone=StringUtils.trimToEmpty(customer.getPhone());
-			String sex=StringUtils.trimToEmpty(customer.getSex());
-			if(StringUtils.isNotBlank(name)&&!name.equals(customerItem.getName())) {
-				customerItem.setName(name);	
+			//更新用户信息
+			if(customerItem.getSyncTime()==null) {
+				customerItem.setSyncTime(customerItem.getCreated());
 			}
-			if(StringUtils.isNotBlank(phone)&&!phone.equals(customerItem.getPhone())) {
-				customerItem.setPhone(phone);	
+			
+			if(customerItem.getSyncTime()!=null&&customerItem.getSyncTime().before(customer.getSyncTime())) {
+				String name=StringUtils.trimToEmpty(customer.getName());
+				String phone=StringUtils.trimToEmpty(customer.getPhone());
+				String sex=StringUtils.trimToEmpty(customer.getSex());
+				if(StringUtils.isNotBlank(name)&&!name.equals(customerItem.getName())) {
+					customerItem.setName(name);	
+				}
+				if(StringUtils.isNotBlank(phone)&&!phone.equals(customerItem.getPhone())) {
+					customerItem.setPhone(phone);	
+				}
+				if(StringUtils.isNotBlank(sex)&&!sex.equals(customerItem.getSex())) {
+					customerItem.setSex(sex);	
+				}
+				
 			}
-			if(StringUtils.isNotBlank(sex)&&!sex.equals(customerItem.getSex())) {
-				customerItem.setSex(sex);	
-			}
+			customerItem.setSyncTime(customer.getSyncTime());
 			customer=customerItem;
-			
-			
 		}
 		logger.info("customer id:{},name:{},certificateNumber:{},system:{}",customer.getId(),customer.getName(),customer.getCertificateNumber(),customer.getSourceSystem());
 		this.customerService.saveOrUpdate(customer);
@@ -379,6 +378,7 @@ public class ICardETLServiceImpl implements ICardETLService{
 		
 		customer.setCreated(icardUserAccount.getCreatedTime());
 		customer.setModified(icardUserAccount.getCreatedTime());
+		customer.setSyncTime(customer.getCreated());
 		//1-男 2-女
 		if(Byte.valueOf("1").equals(icardUserAccount.getGender())) {
 			customer.setSex("male"); 
@@ -412,6 +412,7 @@ public class ICardETLServiceImpl implements ICardETLService{
 		customer.setCertificateNumber(tollCustomer.getIdCard());
 		customer.setName(tollCustomer.getName());
 		customer.setCreated(tollCustomer.getCreated());
+		customer.setSyncTime(customer.getCreated());
 		customer.setModified(tollCustomer.getModified());
 //		//1-男 2-女
 		if("1".equals(String.valueOf(tollCustomer.getSex()))) {

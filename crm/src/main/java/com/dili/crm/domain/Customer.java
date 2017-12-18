@@ -224,4 +224,11 @@ public interface Customer extends IBaseDomain {
     @EditMode(editor = FieldEditor.Text, required = false)
     String getEmployeeNumber();
     void setEmployeeNumber(String employeeNumber);
+    
+    @Column(name = "`sync_time`")
+    @FieldDef(label="同步时间")
+    @EditMode(editor = FieldEditor.Datetime, required = true)
+    Date getSyncTime();
+
+    void setSyncTime(Date syncTime);
 }
