@@ -281,6 +281,9 @@ public class CustomerServiceImpl extends BaseServiceImpl<Customer, Long> impleme
 		JSONObject ownerProvider = new JSONObject();
 		ownerProvider.put("provider", "ownerProvider");
 		metadata.put("ownerId", ownerProvider);
+		JSONObject departmentProvider = new JSONObject();
+		departmentProvider.put("provider", "departmentProvider");
+		metadata.put("department", departmentProvider);
 		metadata.put("created", getDatetimeProvider());
 		metadata.put("modified", getDatetimeProvider());
 		metadata.put("certificateType", getDDProvider(3L));
@@ -292,6 +295,7 @@ public class CustomerServiceImpl extends BaseServiceImpl<Customer, Long> impleme
 		metadata.put("market", getDDProvider(2L));
 		metadata.put("type", getDDProvider(4L));
 		metadata.put("profession", getDDProvider(6L));
+
 		customer.mset(metadata);
 		EasyuiPageOutput easyuiPageOutput = this.listEasyuiPageByExample(customer, true);
 		for(Object rowObj : easyuiPageOutput.getRows()) {
