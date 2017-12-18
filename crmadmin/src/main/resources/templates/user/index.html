@@ -75,7 +75,7 @@
 			<td>
             <form id="_form" class="easyui-form" method="post">
                 <input name="_id" id="_id" type="hidden">
-                <table width="340px">
+                <table width="300px">
                     <tr>
                         <td style="padding: 5px;"><input class="easyui-textbox" name="_userName" id="_userName" style="width: 100%" data-options="labelAlign:'right',label:'*用户名:', validType:'length[0,50]'" required="true"
                             validateOnCreate="false" /></td>
@@ -158,7 +158,7 @@
                                 <td id="withoutRoleDatalistTd" >
                                     <div id="withoutRoleDatalist" class="easyui-datalist" title="未分配角色" style="width: 100px;height:270px" data-options="onDblClickRow:addSelectedRole" valueField="id" textField="roleName"></div>
                                 </td>
-                                <td id="buttonsTd" width="80" align="center">
+                                <td id="buttonsTd" width="120" align="center">
                                     <#resource code="grantRoleToUser">
                                     <p>
                                         <a href="javascript:void(0)" class="easyui-linkbutton" onclick="moveSelectedRow('withoutRoleDatalist', 'withRoleDatalist', false)">--&gt;</a>
