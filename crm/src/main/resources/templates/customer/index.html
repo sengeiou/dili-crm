@@ -161,24 +161,25 @@
 
         //打开修改客户窗口
         function openUpdate(){
-            var selected = $("#grid").treegrid("getSelected");
-            if (null == selected) {
-                $.messager.alert('警告','请选中一条数据');
-                return;
-            }
-            window.location.href="${contextPath}/customer/edit.html?id="+selected["id"];
+            <#resource code="updateCustomer">
+                var selected = $("#grid").treegrid("getSelected");
+                if (null == selected) {
+                    $.messager.alert('警告','请选中一条数据');
+                    return;
+                }
+                window.location.href="${contextPath}/customer/edit.html?id="+selected["id"];
+            </#resource>
         }
 
         //打开修改客户窗口
         function openDetail(){
-
-            <#resource url="http://crmweb.diligrp.com:8085/customer/detail.html">
-            var selected = $("#grid").treegrid("getSelected");
-            if (null == selected) {
-                $.messager.alert('警告','请选中一条数据');
-                return;
-            }
-            window.location.href="${contextPath}/customer/detail.html?id="+selected["id"];
+            <#resource code="viewCustomer">
+                var selected = $("#grid").treegrid("getSelected");
+                if (null == selected) {
+                    $.messager.alert('警告','请选中一条数据');
+                    return;
+                }
+                window.location.href="${contextPath}/customer/detail.html?id="+selected["id"];
             </#resource>
         }
 
@@ -291,50 +292,52 @@
             pager.pagination({
                 <#controls_paginationOpts/>
                 ,buttons:[
-                {
-                    iconCls:'icon-detail',
-                    text:'详情',
-                        handler:function(){
-                        openDetail();
-                    }
-                }
+                <#resource code="viewCustomer">
+                    {
+                        iconCls:'icon-detail',
+                        text:'详情',
+                            handler:function(){
+                            openDetail();
+                        }
+                    },
+                </#resource>
                 <#resource code="insertCustomer">
-            ,{
-                    iconCls:'icon-add',
-                    text:'新增',
-                    handler:function(){
-                        openInsert();
-                    }
-                }
-            </#resource>
-            <#resource code="updateCustomer">
-                ,{
-                    iconCls:'icon-edit',
-                    text:'修改',
-                    handler:function(){
-                        openUpdate();
-                    }
-                }
-            </#resource>
-            <#resource code="deleteCustomer">
-            ,{
-                    iconCls:'icon-remove',
-                    text:'删除',
-                    handler:function(){
-                        del();
-                    }
-                }
-            </#resource>
-            <#resource code="exportCustomer">
-            ,{
-                    iconCls:'icon-export',
-                    text:'导出',
-                    handler:function(){
-                        doExport('grid', true);
-                    }
-                }
-            </#resource>
-            ]
+                    {
+                        iconCls:'icon-add',
+                        text:'新增',
+                        handler:function(){
+                            openInsert();
+                        }
+                    },
+                </#resource>
+                <#resource code="updateCustomer">
+                    {
+                        iconCls:'icon-edit',
+                        text:'修改',
+                        handler:function(){
+                            openUpdate();
+                        }
+                    },
+                </#resource>
+                <#resource code="deleteCustomer">
+                    {
+                        iconCls:'icon-remove',
+                        text:'删除',
+                        handler:function(){
+                            del();
+                        }
+                    },
+                </#resource>
+                <#resource code="exportCustomer">
+                    {
+                        iconCls:'icon-export',
+                        text:'导出',
+                        handler:function(){
+                            doExport('grid', true);
+                        }
+                    },
+                </#resource>
+                ]
             });
             //表格仅显示下边框
             $('#grid').datagrid('getPanel').removeClass('lines-both lines-no lines-right lines-bottom').addClass("lines-bottom");
