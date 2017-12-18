@@ -492,6 +492,22 @@ function hideOptButtons(gridId, index) {
 function onBeginEdit(index, row) {
 	var grid = $('#' + this.id);
 	showOptButtons(this.id, index);
+	if(hasMenuUrlCol(this.id)){
+		grid.datagrid('resizeColumn', [{
+							field : 'menuUrl',
+							width : '35%'
+						}, {
+							field : 'description',
+							width : '40%'
+						}]);
+			
+	}else{
+		grid.datagrid('resizeColumn', [{
+							field : 'description',
+							width : '60%'
+						}]);
+	}
+	/*
 	if (typeof(row.type) == "undefined" ) {
 		grid.datagrid('resizeColumn', {
 					field : 'description',
@@ -506,6 +522,7 @@ function onBeginEdit(index, row) {
 							width : '35%'
 						}]);
 	}
+	*/
 
 	grid.datagrid('showColumn', 'opt');
 	var editors = grid.datagrid('getEditors', index);
@@ -530,11 +547,18 @@ function onAfterEdit(index, row, changes) {
 	}
 	hideOptButtons(this.id, index);
 	var selectedTreeNode = menuTree.tree('getSelected');
+	if(hasMenuUrlCol(this.id)){
+		insertOrUpdateMenu(this.id, selectedTreeNode, index, row, changes);
+	}else{
+		insertOrUpdateResource(this.id, selectedTreeNode, index, row, changes);
+	}
+	/*
 	if (typeof(row.type) == "undefined" ) {
 		insertOrUpdateResource(this.id, selectedTreeNode, index, row, changes);
 	} else {
 		insertOrUpdateMenu(this.id, selectedTreeNode, index, row, changes);
 	}
+	*/
 }
 
 /**
@@ -726,6 +750,22 @@ function onCancelEdit(index, row) {
 		grid.datagrid('deleteRow', index);
 	}
 	hideOptButtons(this.id, index);
+	if(hasMenuUrlCol(this.id)){
+		grid.datagrid('resizeColumn', [{
+							field : 'menuUrl',
+							width : '35%'
+						}, {
+							field : 'description',
+							width : '40%'
+						}]);
+			
+	}else{
+		grid.datagrid('resizeColumn', [{
+							field : 'description',
+							width : '60%'
+						}]);
+	}
+	/*
 	if (typeof(row.type) == "undefined" ) {
 		grid.datagrid('resizeColumn', [{
 							field : 'description',
@@ -740,9 +780,19 @@ function onCancelEdit(index, row) {
 							width : '40%'
 						}]);
 	}
+	*/
 	grid.datagrid('hideColumn', 'opt');
 }
 
+function hasMenuUrlCol(gridId){
+	var grid = $('#' + gridId);
+	var colmenuUrl=grid.datagrid('getColumnOption','menuUrl');
+	if(colmenuUrl){
+		return true;
+	}else{
+		return false;
+	}
+}
 /**
  * 结束编辑回调方法
  * 
@@ -754,12 +804,8 @@ function onCancelEdit(index, row) {
 function onEndEdit(index, row) {
 	var grid = $('#' + this.id);
 	hideOptButtons(this.id, index);
-	if (typeof(row.type) == "undefined" ) {
-		grid.datagrid('resizeColumn', [{
-							field : 'description',
-							width : '60%'
-						}]);
-	} else {
+
+	if(hasMenuUrlCol(this.id)){
 		grid.datagrid('resizeColumn', [{
 							field : 'menuUrl',
 							width : '35%'
@@ -767,7 +813,29 @@ function onEndEdit(index, row) {
 							field : 'description',
 							width : '40%'
 						}]);
+			
+	}else{
+		grid.datagrid('resizeColumn', [{
+							field : 'description',
+							width : '60%'
+						}]);
 	}
+	
+	/*if (typeof(row.type) == "undefined" ) {
+		grid.datagrid('resizeColumn', [{
+							field : 'description',
+							width : '60%'
+						}]);
+	} else {
+				grid.datagrid('resizeColumn', [{
+							field : 'menuUrl',
+							width : '35%'
+						}, {
+							field : 'description',
+							width : '40%'
+						}]);
+						
+	}*/
 	grid.datagrid('hideColumn', 'opt');
 }
 
