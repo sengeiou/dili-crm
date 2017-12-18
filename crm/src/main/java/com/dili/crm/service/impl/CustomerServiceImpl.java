@@ -10,7 +10,6 @@ import com.dili.crm.domain.dto.CityDto;
 import com.dili.crm.domain.dto.CustomerChartDTO;
 import com.dili.crm.domain.dto.CustomerTreeDto;
 import com.dili.crm.domain.dto.MembersDto;
-import com.dili.crm.provider.DepartmentProvider;
 import com.dili.crm.rpc.UserRpc;
 import com.dili.crm.service.CacheService;
 import com.dili.crm.service.ChartService;
@@ -141,6 +140,7 @@ public class CustomerServiceImpl extends BaseServiceImpl<Customer, Long> impleme
             return BaseOutput.failure("修改失败，登录超时");
         }
         customer.setModifiedId(userTicket.getId());
+		customer.setModified(new Date());
         boolean hasParent = customer.getParentId() == null;
 		customer = DTOUtils.link(customer, get(customer.getId()), Customer.class);
         if(hasParent){

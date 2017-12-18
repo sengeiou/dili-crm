@@ -18,6 +18,7 @@ import org.springframework.transaction.annotation.Transactional;
 import tk.mybatis.mapper.entity.Example;
 
 import javax.annotation.Resource;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -66,6 +67,7 @@ public class CustomerVisitServiceImpl extends BaseServiceImpl<CustomerVisit, Lon
             return BaseOutput.failure("新增失败，登录超时");
         }
         customerVisit.setModifiedId(userTicket.getId());
+        customerVisit.setModified(new Date());
         CustomerVisit old = get(customerVisit.getId());
         customerVisit = DTOUtils.link(customerVisit, old, CustomerVisit.class);
         Example example = new Example(CustomerVisit.class);
