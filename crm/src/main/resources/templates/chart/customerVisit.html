@@ -16,13 +16,13 @@
 			        <div region="west" height="auto" align="center" style="width:50%" border="false">
 				        <div  class="easyui-panel"   style="height:100%;">
 				   		        <div id="customerTypeChart" style="width:99.9%;height:50%;" ></div>
-								<#echarts _id="customerTypeChart" _title="回访状态分布" _type="Pie"  _url="${contextPath}/chart/customerVisitModeChart" _nameField="mode" _options="{legend:{selectedMode:false}}"   _valueField="count"></#echarts>
+								<#echarts _id="customerTypeChart" _title="回访方式分布" _type="Pie"  _url="${contextPath}/chart/customerVisitModeChart" _nameField="mode" _options="{legend:{selectedMode:false}}"   _valueField="count"></#echarts>
 						</div>
 			        </div>
 			        <div region="center" height="auto">
 				        <div  class="easyui-panel"   style="height:100%;" border="false">
 				   		        <div id="customerProfessionChart" style="width:50%;height:50%;" ></div>
-								<#echarts _id="customerProfessionChart" _title="回访方式分布" _type="Pie"  _url="${contextPath}/chart/customerVisitStateChart" _nameField="state" _options="{legend:{selectedMode:false}}"   _valueField="count" ></#echarts>
+								<#echarts _id="customerProfessionChart" _title="回访状态分布"  _type="Pie"  _url="${contextPath}/chart/customerVisitStateChart" _nameField="state" _options="{legend:{selectedMode:false}}"   _valueField="count" ></#echarts>
 						</div>
 			        </div>
     			</div>
