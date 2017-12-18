@@ -67,7 +67,6 @@ public class CustomerVisitServiceImpl extends BaseServiceImpl<CustomerVisit, Lon
             return BaseOutput.failure("新增失败，登录超时");
         }
         customerVisit.setModifiedId(userTicket.getId());
-        customerVisit.setModified(new Date());
         CustomerVisit old = get(customerVisit.getId());
         customerVisit = DTOUtils.link(customerVisit, old, CustomerVisit.class);
         Example example = new Example(CustomerVisit.class);
@@ -78,6 +77,7 @@ public class CustomerVisitServiceImpl extends BaseServiceImpl<CustomerVisit, Lon
         }
         //状态不能为3(已完成)
         criteria.andNotEqualTo("state",3);
+        customerVisit.setModified(new Date());
         int i= getActualDao().updateByExample(customerVisit,example);
         if(i > 0){
             return BaseOutput.success("更新成功").setData(customerVisit);
