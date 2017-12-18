@@ -104,6 +104,13 @@ public class ChartController {
 		return "chart/report";
 	}
 	
+	@ApiOperation("跳转到异常订单报表")
+	@RequestMapping(value = "/abnormalOrdersChart.html", method = RequestMethod.GET)
+	public String abnormalOrdersChart(ModelMap modelMap) {
+		modelMap.put("url", this.chartService.getChartUrl("AbnormalOrdersChartUrl"));
+		return "chart/report";
+	}
+	
 	@ApiOperation("跳转到其他报表")
 	@RequestMapping(value = "/otherChart.html", method = RequestMethod.GET)
 	public String otherChart(ModelMap modelMap,String key) {

@@ -71,6 +71,7 @@ public class ICardETLServiceImpl implements ICardETLService{
 		Customer customerQueryCondition=DTOUtils.newDTO(Customer.class);
 		customerQueryCondition.setCertificateNumber(customer.getCertificateNumber());
 		customerQueryCondition.setCertificateType(customer.getCertificateType());
+		customerQueryCondition.setOrganizationType(customer.getOrganizationType());
 		//用身份证号在crm系统查询用户信息
 		List<Customer>list=this.customerService.list(customerQueryCondition);
 		if(list!=null&&list.size()==1) {
@@ -348,14 +349,34 @@ public class ICardETLServiceImpl implements ICardETLService{
 	 * @return 返回crm用户信息对象
 	 */
 	private Customer transUserAccountAsCustomer(IcardUserAccount icardUserAccount) {
-		if(StringUtils.trimToEmpty(icardUserAccount.getName()).equals("不记名")||StringUtils.trimToNull(icardUserAccount.getIdCode())==null) {
+
+		 //个人账户", 10/对公账户", 20/不记名 30
+		
+		Byte accountType=icardUserAccount.getType();
+		
+		if(new Byte((byte)30).equals(accountType)||StringUtils.trimToEmpty(icardUserAccount.getName()).equals("不记名")||StringUtils.trimToNull(icardUserAccount.getIdCode())==null) {
 			return null;
 		}
 		
+		
 		Customer customer=DTOUtils.newDTO(Customer.class);
-		customer.setCertificateType("id");
-		customer.setCertificateNumber(icardUserAccount.getIdCode());
-		customer.setName(icardUserAccount.getName());
+		if(new Byte((byte)10).equals(accountType)) {
+			customer.setCertificateType("id");
+			customer.setCertificateNumber(icardUserAccount.getIdCode());
+			customer.setName(icardUserAccount.getName());
+			//individuals:个人
+			customer.setOrganizationType("individuals");
+		}else if(new Byte((byte)20).equals(accountType)) {
+			customer.setCertificateType("businessLicense");
+			customer.setCertificateNumber(icardUserAccount.getIdCode());
+			customer.setName(icardUserAccount.getName());
+			//enterprise:企业
+			customer.setOrganizationType("enterprise");
+		}else {
+			return null;
+		}
+		
+		
 		customer.setCreated(icardUserAccount.getCreatedTime());
 		customer.setModified(icardUserAccount.getCreatedTime());
 		//1-男 2-女
@@ -372,8 +393,7 @@ public class ICardETLServiceImpl implements ICardETLService{
 		}
 		//settlement:电子结算
 		customer.setSourceSystem("settlement");
-		//individuals:个人
-		customer.setOrganizationType("individuals");
+	
 		customer.setYn(1);
 		
 		return customer;
