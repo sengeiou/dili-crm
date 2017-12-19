@@ -279,6 +279,10 @@ public class ICardETLServiceImpl implements ICardETLService{
 					for(TollCustomer tollCustomer:data) {
 						//将神农用户转换为crm用户信息
 						Customer customer=this.transTollCustomerAsCustomer(tollCustomer);
+						if(customer==null) {
+							this.saveOrUpdateTollLatestTime(tollCustomer.getCreated());
+							continue;
+						}
 						
 						List<Address>address=this.transTollCustomerAsAddress(tollCustomer);
 						
@@ -323,6 +327,7 @@ public class ICardETLServiceImpl implements ICardETLService{
 						//将电子结算用户转换为crm用户信息
 						Customer customer=this.transUserAccountAsCustomer(icardUserAccount);
 						if(customer==null) {
+							this.saveOrUpdateSettlementLatestTime(icardUserAccount.getCreatedTime());
 							continue;
 						}
 						List<Address>address=this.transICardUserAccountAsAddress(icardUserAccount);

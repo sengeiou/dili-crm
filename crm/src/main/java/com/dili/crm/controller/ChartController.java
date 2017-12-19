@@ -9,6 +9,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -112,8 +113,8 @@ public class ChartController {
 	}
 	
 	@ApiOperation("跳转到其他报表")
-	@RequestMapping(value = "/otherChart.html", method = RequestMethod.GET)
-	public String otherChart(ModelMap modelMap,String key) {
+	@RequestMapping(value = "/others/{key}/chart.html", method = RequestMethod.GET)
+	public String otherChart(ModelMap modelMap,@PathVariable(value="key")String key) {
 		modelMap.put("url", this.chartService.getChartUrl(key));
 		return "chart/report";
 	}
