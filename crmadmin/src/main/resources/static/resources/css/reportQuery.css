@@ -29,3 +29,8 @@ body,
 .ivu-page-options-elevator input{
     font-size: 15px!important;
 }
+
+/*日期input */
+.ivu-date-picker {
+    width: 335px!important;
+}
