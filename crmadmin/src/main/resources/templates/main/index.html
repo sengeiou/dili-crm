@@ -126,6 +126,18 @@
     <!-- style & script 分隔线 -->
     <!-- ====================================================================================================================== -->
     <script type="text/javascript">
+        //返回登录页面，供子页面调用
+        function toLogin() {
+            window.location.href="${contextPath}/login/index.html";
+        }
+        //监听子页面的toLogin事件消息
+        window.addEventListener('message',function(e){
+            var cmd=e.data;
+            if(cmd=="toLogin"){
+                toLogin();
+            }
+        },false);
+
         function menuClickHandler(item) {
             //如果没有子菜单，当前调用者则是easyui-linkbutton，回调事件没有item参数，只能从options中获取
             if(item == null){

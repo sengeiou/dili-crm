@@ -1,13 +1,15 @@
 package com.dili.crm.controller;
 
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.Collections;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
+import com.alibaba.fastjson.JSONObject;
+import com.dili.crm.domain.Customer;
+import com.dili.crm.domain.SystemConfig;
+import com.dili.crm.service.*;
+import com.dili.ss.dto.DTOUtils;
+import com.dili.ss.metadata.ValueProviderUtils;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiImplicitParam;
+import io.swagger.annotations.ApiImplicitParams;
+import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
@@ -15,21 +17,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.alibaba.fastjson.JSONObject;
-import com.dili.crm.domain.Customer;
-import com.dili.crm.domain.SystemConfig;
-import com.dili.crm.service.ChartService;
-import com.dili.crm.service.CustomerService;
-import com.dili.crm.service.DataDictionaryService;
-import com.dili.crm.service.DataDictionaryValueService;
-import com.dili.crm.service.SystemConfigService;
-import com.dili.ss.dto.DTOUtils;
-import com.dili.ss.metadata.ValueProviderUtils;
-
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiImplicitParam;
-import io.swagger.annotations.ApiImplicitParams;
-import io.swagger.annotations.ApiOperation;
+import java.text.SimpleDateFormat;
+import java.util.*;
 
 @Api
 @Controller
@@ -54,6 +43,12 @@ public class IndexController {
 			 modelMap.put("clientRefreshFrequency", clientRefreshFrequency);
 	        return "index";
 	    }
+
+	@ApiOperation("跳转到登录页面")
+	@RequestMapping(value="/toLogin.html", method = RequestMethod.GET)
+	public String toLogin(ModelMap modelMap) {
+		return "toLogin";
+	}
 	 
 	    @ApiOperation(value="分页查询Customer", notes = "分页查询Customer")
 	    @ApiImplicitParams({
