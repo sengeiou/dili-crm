@@ -169,11 +169,10 @@
 						</iframe>
 
 						<script type="text/javascript">
-                            let tt = document.getElementById("abnormalOrdersIframe");
-                            if(tt != null){
-                                tt.onload = function(){
-                                    console.log("test")
-                                    tt.contentWindow.postMessage("http://crm.diligrp.com/resources/css/report.css", "http://ap.nong12.com");
+                            let ttIframe = document.getElementById("abnormalOrdersIframe");
+                            if(ttIframe != null){
+                                ttIframe.onload = function(){
+                                    ttIframe.contentWindow.postMessage("http://crm.diligrp.com/resources/css/report.css", "http://ap.nong12.com");
                                 }
                             }
 						</script>
