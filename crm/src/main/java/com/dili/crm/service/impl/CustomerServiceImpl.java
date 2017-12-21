@@ -270,7 +270,8 @@ public class CustomerServiceImpl extends BaseServiceImpl<Customer, Long> impleme
 		List<String> childIds = Arrays.asList(childIdsStr.split(","));
 		membersDto.setIdNotIn(childIds);
 		membersDto.setId(null);
-		return listEasyuiPageByExample(membersDto, true).toString();
+		membersDto.setYn(1);
+		return super.listEasyuiPageByExample(membersDto, true).toString();
 	}
 
 	@Override
