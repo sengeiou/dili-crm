@@ -6,6 +6,7 @@
 */
 
 #main {
+    height: 482px;
     height: auto;
 }
 .ivu-table-wrapper {
@@ -32,7 +33,8 @@
 .ivu-table td {
     border-bottom: 1px dashed #ddd;
     height: 42px;
-    line-height: 42px;
+    vertical-align: middle;
+    /*line-height: 42px;*/
 }
 .ivu-table-header table tr:first-child th {
     color: #bbb;
