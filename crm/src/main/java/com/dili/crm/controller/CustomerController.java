@@ -152,7 +152,12 @@ public class CustomerController {
 	})
     @RequestMapping(value="/delete", method = {RequestMethod.GET, RequestMethod.POST})
     public @ResponseBody BaseOutput delete(Long id) {
-	    return customerService.deleteWithOutput(id);
+		try {
+			return customerService.deleteWithOutput(id);
+		} catch (Exception e){
+			return BaseOutput.failure("删除失败，系统异常");
+		}
+
     }
 
     //根据机构类型加载证件类型数据

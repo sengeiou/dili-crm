@@ -41,7 +41,7 @@ public interface CustomerService extends BaseService<Customer, Long> {
 	 * @param aLong
 	 * @return
 	 */
-	BaseOutput deleteWithOutput(Long aLong);
+	BaseOutput deleteWithOutput(Long aLong) throws Exception;
 	
 	/**基于用户类型分组查询统计数据
 	 * @return 用户数量,用户类型数据列表

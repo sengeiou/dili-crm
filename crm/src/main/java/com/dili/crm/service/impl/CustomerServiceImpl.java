@@ -162,12 +162,19 @@ public class CustomerServiceImpl extends BaseServiceImpl<Customer, Long> impleme
 	}
 
     @Override
-    public BaseOutput deleteWithOutput(Long id) {
+    public BaseOutput deleteWithOutput(Long id) throws Exception {
         UserTicket userTicket = SessionContext.getSessionContext().getUserTicket();
         if(userTicket == null){
             return BaseOutput.failure("删除失败，登录超时");
         }
-        Customer condtion = DTOUtils.newDTO(Customer.class);
+		Customer query = DTOUtils.newDTO(Customer.class);
+        query.setParentId(id);
+        query.setYn(1);
+		EasyuiPageOutput pageOutput = super.listEasyuiPageByExample(query, false);
+		if (pageOutput.getTotal() > 0){
+			return BaseOutput.failure("删除失败，该客户存在子客户");
+		}
+		Customer condtion = DTOUtils.newDTO(Customer.class);
         condtion.setModifiedId(userTicket.getId());
         condtion.setYn(0);
         condtion.setId(id);
@@ -240,6 +247,7 @@ public class CustomerServiceImpl extends BaseServiceImpl<Customer, Long> impleme
 	    //这里构建name和id not in的等条件部分
 	    buildExampleByGetterMethods(membersDto, example);
 	    Example.Criteria criteria = example.getOredCriteria().get(0);
+		criteria.andEqualTo("yn",1);
 	    criteria.andCondition("(`parent_id` != '"+id+"' or `parent_id` is null)");
 	    //设置分页信息
 	    Integer page = membersDto.getPage();
