@@ -24,6 +24,9 @@
     height: 0;
     background: #fff;
 }
+.ivu-table  tr:first-child {
+    height: 22px;
+}
 .ivu-table th {
     background: none;
     border: none;
@@ -32,9 +35,9 @@
 }
 .ivu-table td {
     border-bottom: 1px dashed #ddd;
-    height: 42px;
+    height: 43px;
     vertical-align: middle;
-    /*line-height: 42px;*/
+    /*line-height: 43px;*/
 }
 .ivu-table-header table tr:first-child th {
     color: #bbb;
