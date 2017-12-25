@@ -1,4 +1,4 @@
-APP_NAME=crm-0.0.1-SNAPSHOT
+APP_NAME=crm-1.0.0.RELEASE
 pid=`ps -ef|grep $APP_NAME|grep -v grep|grep -v kill|awk '{print $2}'`
 if [ $pid ]; then
     echo "Stop Process..."
