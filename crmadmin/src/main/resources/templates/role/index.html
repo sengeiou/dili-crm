@@ -115,18 +115,8 @@
 		}
 	}
 
-	$.messager.progress({
-		title : "提示",
-		msg : "加载中,请稍候...",
-		value : '10',
-		text : '{value}%',
-		interval : 200
-	});
+    <#loadingProgress/>
 
-	$.parser.onComplete = function() {
-		$.messager.progress("close");
-	}
-	
 	 $(function () {
 	        bindFormEvent("form", "customerId", queryGrid);
 //	        if (document.addEventListener) {

@@ -119,17 +119,7 @@
 		$("#userOnlineGrid").datagrid("load", formData);
 	}
 
-	$.messager.progress({
-		title : "提示",
-		msg : "加载中,请稍候...",
-		value : '10',
-		text : '{value}%',
-		interval : 200
-	});
-
-	$.parser.onComplete = function() {
-		$.messager.progress("close");
-	}
+    <#loadingProgress/>
 
 	//表格表头右键菜单
 	function headerContextMenu(e, field) {

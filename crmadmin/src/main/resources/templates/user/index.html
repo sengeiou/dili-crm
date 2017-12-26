@@ -306,17 +306,7 @@
 		return content;
 	}
 
-	$.messager.progress({
-		title : "提示",
-		msg : "加载中,请稍候...",
-		value : '10',
-		text : '{value}%',
-		interval : 200
-	});
-
-	$.parser.onComplete = function() {
-		$.messager.progress("close");
-	}
+	<#loadingProgress/>
 
     //打开修改窗口
     function openUpdate() {

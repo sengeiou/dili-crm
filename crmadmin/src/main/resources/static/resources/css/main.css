@@ -95,7 +95,7 @@ h2 {
 }
 
 /*遮照样式*/
-.window-mask {
+.window-mask-opaque {
     background-color: #FFF;
     position: absolute;
     left: 0;
