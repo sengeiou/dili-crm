@@ -145,17 +145,20 @@
   <select id="selectCustomersGroupByType" parameterType="java.lang.Long" resultMap="CustomerChartResultMap">
     select type,count(1) AS `count`
     from customer
+    where yn=1
     group by type
  </select>
   
    <select id="selectCustomersGroupByMarket" parameterType="java.lang.Long" resultMap="CustomerChartResultMap">
     select market,count(1) AS `count`
     from customer
+    where yn=1
     group by market
  </select>
   <select id="selectCustomersGroupByProfession" parameterType="java.lang.Long" resultMap="CustomerChartResultMap">
     select profession,count(1) AS `count`
     from customer
+    where yn=1
     group by profession
  </select>
 
