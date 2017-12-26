@@ -379,8 +379,8 @@ public class ICardETLServiceImpl implements ICardETLService{
 		}else {
 			return null;
 		}
-		
-		
+		//HD 哈达
+		customer.setMarket("HD");
 		customer.setCreated(icardUserAccount.getCreatedTime());
 		customer.setModified(icardUserAccount.getCreatedTime());
 		customer.setSyncTime(customer.getCreated());
@@ -431,6 +431,8 @@ public class ICardETLServiceImpl implements ICardETLService{
 		}else {
 			customer.setPhone(tollCustomer.getPhone());
 		}
+		//HD 哈达
+		customer.setMarket("HD");
 //		//toll:神农
 		customer.setSourceSystem("toll");
 		//individuals:个人
