@@ -58,6 +58,7 @@ public class IndexController {
 	    public  @ResponseBody Object listCustomers(Customer customer) throws Exception {
 	    	customer.setPage(1);
 	    	customer.setRows(10);
+	    	customer.setYn(1);
 	    	customer.setSort("created");
 	    	customer.setOrder("DESC");
 	    	List<Customer>data=this.customerService.listByExample(customer);
