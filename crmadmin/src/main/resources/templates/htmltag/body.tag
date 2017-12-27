@@ -24,9 +24,10 @@
     <script type="text/javascript">
         var contextPath = '${contextPath}';
     </script>
-    <#loadingProgress/>
+
 </head>
 <body>
+<#loadingProgress/>
 ${tag.body}
 </body>
 </html>
