@@ -33,7 +33,8 @@ function showUserDlg(id) {
 					textboxId : id
 				},
 				href : '${contextPath!}/selectDialog/user.html',
-				modal : true
+				modal : true,
+				shadow:true
 			});
 }
 

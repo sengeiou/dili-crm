@@ -39,7 +39,8 @@ function showCustomerDlg(id) {
 					<%}%>
 				},
 				href : '${contextPath!}/selectDialog/customer.html',
-				modal : true
+				modal : true,
+				shadow:true
 			});
 }
 $(function() {
