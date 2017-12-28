@@ -1,50 +1,54 @@
 package com.dili.crm.provider;
 
-import com.dili.crm.domain.Customer;
-import com.dili.crm.domain.CustomerVisit;
-import com.dili.crm.service.CustomerService;
-import com.dili.ss.metadata.FieldMeta;
-import com.dili.ss.metadata.ValuePair;
-import com.dili.ss.metadata.ValueProvider;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.dili.ss.metadata.provider.BatchDisplayTextProviderAdaptor;
 import org.springframework.stereotype.Component;
-import org.springframework.util.CollectionUtils;
 
-import java.util.List;
+import java.util.HashMap;
 import java.util.Map;
 
 /**
  * 客户提供者
  */
 @Component
-public class VisitCustomerProvider implements ValueProvider {
+public class VisitCustomerProvider extends BatchDisplayTextProviderAdaptor {
 
-    @Autowired
-    private CustomerService customerService;
-
-    //不提供下拉数据
+    /**
+     * 返回主DTO和关联DTO需要转义的字段名
+     * Map中key为主DTO在页面(datagrid)渲染时需要的字段名， value为关联DTO中对应的字段名
+     * @return
+     */
     @Override
-    public List<ValuePair<?>> getLookupList(Object val, Map metaMap, FieldMeta fieldMeta) {
-        return null;
+    protected Map<String, String> getEscapeFileds(){
+        Map<String, String> excapeFields = new HashMap<>();
+        excapeFields.put("customerName", "name");
+        excapeFields.put("customerPhone", "phone");
+        return excapeFields;
     }
 
+    /**
+     * 主DTO与关联DTO的关联属性
+     * @return
+     */
     @Override
-    public String getDisplayText(Object obj, Map metaMap, FieldMeta fieldMeta) {
-        if (CollectionUtils.isEmpty(metaMap)) {
-            return null;
-        }
-        if (metaMap.containsKey("field")){
-            CustomerVisit cv = (CustomerVisit)metaMap.get("_rowData");
-            Customer customer = customerService.get(cv.getCustomerId());
-            if(customer == null) return null;
-            String field = (String)metaMap.get("field");
-            if ("customerName".equalsIgnoreCase(field)){
-                 return customer.getName();
-            }else if ("customerPhone".equalsIgnoreCase(field)){
-                return customer.getPhone();
-            }
-        }
+    protected String getRelationField(){
+        return "customerId";
+    }
 
-        return null;
+    /**
+     * 关联表名
+     * @return
+     */
+    @Override
+    protected String getRelationTable(){
+        return "customer";
+    }
+
+    /**
+     * 关联表的主键名
+     * @return
+     */
+    @Override
+    protected String getRelationTablePKField(){
+        return "id";
     }
 }
