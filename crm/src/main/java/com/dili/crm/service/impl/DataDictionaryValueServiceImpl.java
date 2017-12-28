@@ -4,7 +4,9 @@ import com.dili.crm.dao.DataDictionaryMapper;
 import com.dili.crm.dao.DataDictionaryValueMapper;
 import com.dili.crm.domain.DataDictionary;
 import com.dili.crm.domain.DataDictionaryValue;
+import com.dili.crm.domain.dto.DataDictionaryDto;
 import com.dili.crm.domain.dto.DataDictionaryValueTreeView;
+import com.dili.crm.service.DataDictionaryService;
 import com.dili.crm.service.DataDictionaryValueService;
 import com.dili.ss.base.BaseServiceImpl;
 import com.dili.ss.domain.BaseOutput;
@@ -25,6 +27,7 @@ public class DataDictionaryValueServiceImpl extends BaseServiceImpl<DataDictiona
 
 	@Autowired
 	private DataDictionaryMapper dataDictionaryMapper;
+	@Autowired DataDictionaryService dataDictionaryService;
 
 	public DataDictionaryValueMapper getActualDao() {
 		return (DataDictionaryValueMapper) getDao();
@@ -83,6 +86,23 @@ public class DataDictionaryValueServiceImpl extends BaseServiceImpl<DataDictiona
 	public int insertSelective(DataDictionaryValue t) {
 		t.setYn(1);
 		return super.insertSelective(t);
+	}
+	@Override
+	public String findChartServer() {
+		String code="thirdparty.servers";
+		DataDictionaryDto  dto=dataDictionaryService.findByCode(code);
+		if(dto!=null) {
+			Long ddId=dto.getId();
+			DataDictionaryValue condition=DTOUtils.newDTO(DataDictionaryValue.class);
+			condition.setDdId(ddId);
+			condition.setCode("chartserver");
+			condition.setYn(1);
+			List<DataDictionaryValue>list=this.listByExample(condition);
+			if(list!=null&&list.size()>0) {
+				return list.get(0).getValue();
+			}
+		}
+		return null;
 	}
 
 }

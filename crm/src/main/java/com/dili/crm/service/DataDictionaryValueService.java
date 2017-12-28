@@ -8,7 +8,7 @@ import com.dili.ss.base.BaseService;
 import com.dili.ss.domain.BaseOutput;
 
 /**
- * ï¿½ï¿½MyBatis Generatorï¿½ï¿½ï¿½ï¿½ï¿½Ô¶ï¿½ï¿½ï¿½ï¿½ï¿½
+ * ÓÉMyBatis Generator¹¤¾ß×Ô¶¯Éú³É
  * This file was generated on 2017-07-12 10:41:19.
  */
 public interface DataDictionaryValueService extends BaseService<DataDictionaryValue, Long> {
@@ -16,4 +16,6 @@ public interface DataDictionaryValueService extends BaseService<DataDictionaryVa
 	BaseOutput<Object> insertAndGet(DataDictionaryValue dataDictionaryValue);
 
 	List<DataDictionaryValueTreeView> listTree(Long ddId);
+	
+	String findChartServer();
 }

@@ -36,6 +36,7 @@ import com.dili.crm.service.SystemConfigService;
 import com.dili.crm.service.toll.TollCustomerService;
 import com.dili.ss.domain.BasePage;
 import com.dili.ss.dto.DTOUtils;
+import com.dili.ss.util.SystemConfigUtils;
 import com.mysql.fabric.xmlrpc.base.Array;
 
 /**
@@ -346,7 +347,9 @@ public class ICardETLServiceImpl implements ICardETLService{
 	}
 	
 	
-	
+	private String getMarket() {
+		return SystemConfigUtils.getProperty("customer.market", "HD");
+	}
 	
 	/**
 	 * @param icardUserAccount 电子结算系统的用户信息
@@ -380,7 +383,7 @@ public class ICardETLServiceImpl implements ICardETLService{
 			return null;
 		}
 		//HD 哈达
-		customer.setMarket("HD");
+		customer.setMarket(this.getMarket());
 		customer.setCreated(icardUserAccount.getCreatedTime());
 		customer.setModified(icardUserAccount.getCreatedTime());
 		customer.setSyncTime(customer.getCreated());
@@ -432,7 +435,7 @@ public class ICardETLServiceImpl implements ICardETLService{
 			customer.setPhone(tollCustomer.getPhone());
 		}
 		//HD 哈达
-		customer.setMarket("HD");
+		customer.setMarket(this.getMarket());
 //		//toll:神农
 		customer.setSourceSystem("toll");
 		//individuals:个人

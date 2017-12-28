@@ -40,6 +40,8 @@ public class IndexController {
 			 modelMap.put("indexPurchasingTopChartUrl",this.chartService.getIndexPurchasingTopChartUrl());
 			 modelMap.put("indexSalesTopChartUrl",this.chartService.getIndexSalesTopChartUrl());
 			 
+			 modelMap.put("chartServer",dataDictionaryValueService.findChartServer());
+			 
 			 modelMap.put("clientRefreshFrequency", clientRefreshFrequency);
 	        return "index";
 	    }
