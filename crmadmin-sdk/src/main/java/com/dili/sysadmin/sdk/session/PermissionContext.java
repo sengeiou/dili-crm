@@ -167,10 +167,10 @@ public class PermissionContext {
     public void noAccess() throws IOException {
         String requestType = req.getHeader("X-Requested-With");
         if (requestType == null) {
-            sendRedirect("/noAccess.do");
+            sendRedirect("/error/noAccess.do");
             return;
         }
-        String path = makePath("/noAccess.do");
+        String path = makePath("/error/noAccess.do");
         resp.addHeader("noAccess", path);
         resp.setStatus(401);
         resp.getWriter().write("noAccess");
