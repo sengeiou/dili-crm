@@ -16,7 +16,8 @@
     <parent>
         <artifactId>dili-crm</artifactId>
         <groupId>com.dili</groupId>
-        <version>1.0.0.RELEASE</version>
+        <!--<version>1.0.0.RELEASE</version>-->
+        <version>1.0.1-SNAPSHOT</version>
     </parent>
 
     <dependencies>

@@ -1,0 +1,431 @@
+ <#resource code="viewIndexPage">
+ <#body>
+	 <style>
+		 html,
+		 .easyui-layout {
+			 background: #e7e9eb;
+		 }
+
+		 .panel-title {
+			 font-size: 16px;
+		 }
+
+		 /*top-left 板块*/
+		 #header,
+		 #orderHeader,
+		 #sellHeader,
+		 #buyHeader {
+			 height: 40px;
+			 margin: 0;
+			 padding-right: 30px;
+			 text-indent: 50px;
+			 line-height: 40px;
+		 }
+		 #grid  {
+			 margin-left: 20px;
+			 margin-right: 20px;
+			 border-collapse:collapse;
+			 border-spacing:0;
+		 }
+		 #grid tr {
+			 border-bottom: 1px dashed #ddd;
+			 line-height: 40px;
+			 box-sizing: border-box;
+		 }
+		 #grid thead tr {
+			 border-bottom: none;
+			 height: 22px;
+			 line-height: 22px;
+		 }
+		 #grid tr:first-child th {
+			 color: #bbb;
+		 }
+
+		 /*模块 title*/
+		 .linkmore {
+			 float: right;
+			 color: #999;
+			 text-decoration: none;
+		 }
+		 #header  {
+			 background: url(${contextPath}/resources/images/icon/add-cus-icon.png) no-repeat 20px center ;
+		 }
+		 #orderHeader  {
+			 background: url(${contextPath}/resources/images/icon/Q-icon.png) no-repeat 20px center ;
+		 }
+		 #sellHeader  {
+			 background: url(${contextPath}/resources/images/icon/money-icon.png) no-repeat 20px center ;
+		 }
+		 #buyHeader  {
+			 background: url(${contextPath}/resources/images/icon/buy-icon.png) no-repeat 20px center ;
+		 }
+
+		 .layout-panel-center {
+			 margin-left: 10px;
+		 }
+		 .layout-panel-center:nth-child(4) {
+			 margin-left: 0;
+		 }
+
+	 </style>
+     <script type="text/javascript">
+         <#controls_user dlgId="userSelectDialog" controlId="user"/>
+         <#controls_customer dlgId="customerSelectDialog" controlId="customer"/>
+         //弹出框的高度(减去的230是菜单和tab的高度)
+        var dlgHeight = window.screen.height-230;
+         //-----------------------------  城市控件js st  -----------------------------
+         //标识键盘选择的时候不进行后台联想
+         var isSelect = false;
+         //标识城市控件是否为手工输入状态(手工输入不合法)
+         var manualInput = true;
+         //联想输入框演示
+         function changeName(newValue, oldValue){
+             //值改变时，判断如果是选择输入，不联想
+             if(isSelect) {
+                 isSelect = false;
+                 return;
+             }else{//不是选择输入，则标识当前为人工输入(不合法)
+                 manualInput = true;
+             }
+             if(newValue && newValue.length >= 1){
+                 var opts = $(this).combobox("options");
+                 opts.queryParams.value = $(this).combobox("getValue");
+                 $(this).combobox("reload");
+             }
+         }
+         //键盘下键选择的时候设置isSelect标识为true,在onchange事件时判断isSelect标识为true不联想
+         function selectName(record){
+             isSelect = true;
+             //标识当前为选择输入(合法)
+             manualInput = false;
+         }
+         //-----------------------------  城市控件js end  -----------------------------
+         //修改组织类型
+         function changeOrganizationType(newValue, oldValue) {
+
+         }
+         </script>
+    <!--<div class="easyui-layout" fit="true" >-->
+    <div class="maincontain" >
+        <div id="userSelectDialog" style="display: none;" ></div>
+        <div id="customerSelectDialog" style="display: none;"></div>
+        <div id="header" class="panel-title" header="addcusHeader" style=" margin: 0; ">
+			<div id="addcusHeader" >
+				<span id="addcusTitle">近期新增客户</span>
+				<a class="linkmore" href="${contextPath}/customer/index.html">查看更多&gt;</a>
+			</div>
+		</div>
+
+
+
+        <!-- ====================================================================================================================== -->
+        <!-- 上方布局 -->
+        <!-- ====================================================================================================================== -->
+        <!--<div region="north" height="auto" align="center" style="height:520px;border:0px;  padding: 10px 25px 0; background: #e7e9eb ">-->
+        <div  align="center" style="height:520px;border:0px;  padding-left: 25px;  padding-right: 25px; background: #e7e9eb ">
+            <!-- =========================================================表单========================================================= -->
+
+            <div class="easyui-layout" fit="true">
+		        <div region="west" height="auto" align="center" border="false" style="width:50%;">
+		        
+		        	<div  class="easyui-panel" border="false" title="近期新增客户" header="#header"  style="width:100%;height:100%;">
+		   		        <table  id="grid"  style="padding-left: 20px;padding-right: 20px; text-align: center">
+		                <thead>
+		                    <tr>
+		                        <th width="20%" data-options="field:'name',   sortable:false, order:'asc', align:'left', resizable:'true', fixed:'false',formatter:clientFormatterFun">
+		                            	客户名称
+		                        </th>
+								<th width="20%" data-options="field:'phone',   sortable:false, order:'asc', align:'center', resizable:'true', fixed:'false'">
+		                            	电话
+		                        </th>
+		                         <th width="20%"  data-options="field:'market', _provider:'dataDictionaryValueProvider', _queryParams:{'dd_id':'2'},  sortable:false, order:'asc', align:'center', resizable:'true', fixed:'false'">
+		                            	所属市场
+		                        </th>
+		                        
+		                        <th width="20%" data-options="field:'sourceSystem', _provider:'dataDictionaryValueProvider', _queryParams:{'dd_id':'8'},  sortable:false, order:'asc', align:'center', resizable:'true', fixed:'false'">
+		                            	来源系统
+		                        </th>     
+		                        
+		                          <th width="20%" data-options="field:'created', _provider:'datetimeProvider',  sortable:false, order:'asc', align:'center', resizable:'true', fixed:'false'">
+		                            	创建时间
+		                        </th>
+		                        
+		                    </tr>
+		                </thead>
+		                <tbody style="white-space: nowrap;"></tbody>
+            </table>
+					</div>
+					
+					
+		  			
+		        </div>
+		        <div region="center" style="width:100%;border:0px;" height="auto" border="false">
+			        <div  class="easyui-panel" header="#orderHeader" border="false"  title="异常订单"  style="width:100%;height:100%;" >
+						<div id="orderHeader"  class="panel-title" >
+							<span id="orderTitle">异常订单</span>
+							<a class="linkmore" href="${contextPath}/chart/abnormalOrdersChart.html">查看更多&gt;</a>
+						</div>
+		   		        <iframe id="abnormalOrdersIframe" style="width:98%; height:98%" scrolling="no" frameborder="no" marginwidth="0" marginheight="0" border="0" src="${indexAbnormalOrdersChartUrl}?dt=${startDate} - ${endDate}" >
+						</iframe>
+
+						<script type="text/javascript">
+                            let ttIframe = document.getElementById("abnormalOrdersIframe");
+                            if(ttIframe != null){
+                                ttIframe.onload = function(){
+                                    ttIframe.contentWindow.postMessage("http://crm.diligrp.com/resources/css/report.css", "${chartServer}");
+                                }
+                            }
+						</script>
+
+
+
+
+
+					</div>
+		        </div>
+		    </div>
+	<!--</div>-->
+	</div>
+        <!-- ====================================================================================================================== -->
+        <!-- 中央布局 -->
+
+		<!-- ====================================================================================================================== -->
+        <!-- 表格 -->
+        <!--<div region="center"  style="height: 450px; border:0px; padding: 10px 25px 0; background: #e7e9eb "  height="auto" border="false">-->
+        <div style="height: 480px; border:0px; padding: 10px 25px 0; background: #e7e9eb ">
+        <div class="easyui-layout" fit="true" border="false" >
+		        <div region="west" height="auto" align="center" style="width:50%;" border="false">
+		  			 <div  class="easyui-panel" header="#sellHeader" border="false"  title="近一月 销售top10"  style="width:100%;height:100%;">
+						 <div id="sellHeader"  class="panel-title">
+							 <span id="sellTitle">近一月 销售top10</span>
+							 <a class="linkmore" href="${contextPath}/chart/salestopAmount.html">查看更多&gt;</a>
+						 </div>
+		   		        <iframe id="salesTopIframe" style="width:99%;height:100%; margin-top: -30px;" scrolling="no" frameborder="no" marginwidth="0" marginheight="0" border="0" src="${indexSalesTopChartUrl}?dt=${startDate} - ${endDate}">
+						</iframe>
+					</div>
+		        </div>
+		        <div region="center"  height="auto" align="center"  style="width:50%; " border="false">
+		         <div  class="easyui-panel" id="abc" data-options="headerCls:'asdsad'" header="#buyHeader" border="false" title="近一月 采购top10"  style="width:100%;height:100%;">
+					 <div id="buyHeader"  class="panel-title">
+						 <span id="buyTitle">近一月 采购top10</span>
+						 <a class="linkmore" href="${contextPath}/chart/consumptionAmount.html">查看更多&gt;</a>
+					 </div>
+		   		        <iframe id="purchasingTopIframe" style="width:99%;height:100%; margin-top: -30px;" scrolling="no" frameborder="no" marginwidth="0" marginheight="0" border="0" src="${indexPurchasingTopChartUrl}?dt=${startDate} - ${endDate}">
+						</iframe>
+					</div>
+		        </div>
+		    </div>
+		    
+            <!-- =========================================================表格========================================================= -->
+            
+
+        <!--</div>-->
+        </div>
+    </div>
+
+
+    <!-- ====================================================================================================================== -->
+    <!-- style & script 分隔线 -->
+    <!-- ====================================================================================================================== -->
+    <script type="text/javascript">
+
+        // ============================   客户相关js st  ==============================
+		function clientFormatterFun(value, row, index){
+        	var clientId=row['id'];
+        	return "<a href='${contextPath}/customer/detail.html?id="+clientId+"'>"+value+"</a>"
+        }
+        //打开修改客户窗口
+        function openUpdate(){
+            var selected = $("#grid").treegrid("getSelected");
+            if (null == selected) {
+                $.messager.alert('警告','请选中一条数据');
+                return;
+            }
+            window.location.href="${contextPath}/customer/detail.html?id="+selected["id"];
+            return;
+        }
+
+        //根据主键删除客户
+        function del() {
+            var selected = $("#grid").treegrid("getSelected");
+            if (null == selected) {
+                $.messager.alert('警告','请选中一条数据');
+                return;
+            }
+            $.messager.confirm('确认','您确认想要删除记录吗？',function(r){
+                if (r){
+                    $.ajax({
+                        type: "POST",
+                        url: "${contextPath}/customer/delete",
+                        data: {id:selected.id},
+                        processData:true,
+                        dataType: "json",
+                        async : true,
+                        success: function (data) {
+                            if(data.code=="200"){
+                                $("#grid").treegrid("reload");
+                                $('#dlg').dialog('close');
+                            }else{
+                                $.messager.alert('错误',data.result);
+                            }
+                        },
+                        error: function(){
+                            $.messager.alert('错误','远程访问失败');
+                        }
+                    });
+                }
+            });
+        }
+        //客户表格查询
+        function queryGrid() {
+            $.ajax({
+                type: "POST",
+                url: "${contextPath}/listCustomers",
+                data: {},
+                processData:true,
+                dataType: "json",
+                async : true,
+                success: function (rows) {
+                       //console.info(JSON.stringify(data.rows));
+                       var tbody=$('<tbody></tbody>');
+                       $.each(rows,function(k,v){
+                    	   var name=v.name?v.name:'';
+                    	   var link= "<a href='${contextPath}/customer/detail.html?id="+v.id+"'>"+name+"</a>";
+                    	   
+                    	   var phone=v.phone?v.phone:'';
+                    	   var market=v.market?v.market:'';
+                    	   var sourceSystem=v.sourceSystem?v.sourceSystem:'';
+                    	   var created="";
+                    	   if(v.created){
+                    		   var date=new Date();
+                    		   date.setTime(v.created);
+                    		   created=datetimeFormatter(date);
+                    	   }else{
+                    		   created="";
+                    	   }
+                    	   
+                    	   var tr="<tr><td  >"+link+"</td><td >"+phone+"</td><td>"+market+"</td><td>"+sourceSystem+"</td><td>"+created+"</td></tr>";
+                    	   tbody.append(tr);
+                    	   
+                       });
+                       
+                       $('#grid tbody').html(tbody.html())
+                       
+                },
+                error: function(){
+                   // alert('error')
+                }
+            });
+
+        }
+
+
+        //清空客户表单
+        function clearForm() {
+            $('#form').form('clear');
+        }
+
+        //表格表头右键菜单
+        function headerContextMenu(e, field){
+            e.preventDefault();
+            if (!cmenu){
+                createColumnMenu("grid");
+            }
+            cmenu.menu('show', {
+                left:e.pageX,
+                top:e.pageY
+            });
+        }
+
+        // ============================   客户相关js end  ==============================
+
+
+        //全局按键事件
+        function getKey(e){
+            e = e || window.event;
+            var keycode = e.which ? e.which : e.keyCode;
+            if(keycode == 46){ //如果按下删除键
+                var selected = $("#grid").treegrid("getSelected");
+                if(selected && selected!= null){
+                    del();
+                }
+            }
+        }
+
+        /**
+         * 绑定页面回车事件，以及初始化页面时的光标定位
+         * @formId
+         *          表单ID
+         * @elementName
+         *          光标定位在指点表单元素的name属性的值
+         * @submitFun
+         *          表单提交需执行的任务
+         */
+        $(function () {
+/*             bindFormEvent("form", "name", queryGrid);
+            if (document.addEventListener) {
+                document.addEventListener("keyup",getKey,false);
+            } else if (document.attachEvent) {
+                document.attachEvent("onkeyup",getKey);
+            } else {
+                document.onkeyup = getKey;
+            }
+            var pager = $('#grid').treegrid('getPager');    // get the pager of treegrid
+            pager.pagination({
+                layout:['list','sep','first','prev','links','next','last','sep','refresh','info'],
+                links:3,
+                buttons:[{
+                    iconCls:'icon-add',
+                    handler:function(){
+                        openInsert();
+                    }
+                },{
+                    iconCls:'icon-add-child',
+                    handler:function(){
+                        openChildInsert();
+                    }
+                },{
+                    iconCls:'icon-edit',
+                    handler:function(){
+                        openUpdate();
+                    }
+                },{
+                    iconCls:'icon-remove',
+                    handler:function(){
+                        del();
+                    }
+                },{
+                    iconCls:'icon-export',
+                    handler:function(){
+                        doExport('grid', true);
+                    }
+                }]
+            }); */
+            //表格仅显示下边框
+           // $('#grid').datagrid('getPanel').removeClass('lines-both lines-no lines-right lines-bottom').addClass("lines-bottom");
+
+
+
+        })
+        $(document).ready(function(){
+        	var clientRefreshFrequency=${clientRefreshFrequency};
+        	queryGrid();
+        	function refreshAbnormalOrdersIframe(){
+        		$('#abnormalOrdersIframe').attr('src',$('#abnormalOrdersIframe').attr('src'))
+        	}
+			function refreshSalesTopIframe(){
+				$('#salesTopIframe').attr('src',$('#salesTopIframe').attr('src'))
+			        	}
+			function refreshPurchasingTopIframe(){
+				$('#purchasingTopIframe').attr('src',$('#purchasingTopIframe').attr('src'))
+				
+			}
+        	setInterval(queryGrid,clientRefreshFrequency*1000);
+        	//setInterval(refreshAbnormalOrdersIframe,clientRefreshFrequency*1000);//abnormalOrdersIframe
+        	//setInterval(refreshSalesTopIframe,clientRefreshFrequency*1000);//salesTopIframe
+        	//setInterval(refreshPurchasingTopIframe,clientRefreshFrequency*1000);//purchasingTopIframe
+        	
+        });
+    </script>
+</#body>
+</#resource>
