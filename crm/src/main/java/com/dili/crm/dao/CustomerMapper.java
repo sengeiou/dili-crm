@@ -1,6 +1,7 @@
 package com.dili.crm.dao;
 
 import com.dili.crm.domain.Customer;
+import com.dili.crm.domain.dto.CustomerAddressDto;
 import com.dili.crm.domain.dto.CustomerChartDTO;
 import com.dili.ss.base.MyMapper;
 
@@ -31,5 +32,11 @@ public interface CustomerMapper extends MyMapper<Customer> {
 	 * @return
 	 */
 	List<Customer> getChildCustomers(Long id);
+
+	/**
+	 * 查询客户及地址信息
+	 * @return
+	 */
+	List<CustomerAddressDto> selectCustomerAddress();
 
 }

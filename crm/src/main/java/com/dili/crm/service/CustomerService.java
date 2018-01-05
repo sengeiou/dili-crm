@@ -1,6 +1,7 @@
 package com.dili.crm.service;
 
 import com.dili.crm.domain.Customer;
+import com.dili.crm.domain.dto.CustomerAddressDto;
 import com.dili.crm.domain.dto.CustomerChartDTO;
 import com.dili.crm.domain.dto.MembersDto;
 import com.dili.ss.base.BaseService;
@@ -96,4 +97,9 @@ public interface CustomerService extends BaseService<Customer, Long> {
 	 */
 	String expandEasyuiPageByParentId(Long parentId) throws Exception;
 
+	/**
+	 * 获取客户坐标
+	 * @return
+	 */
+	List<CustomerAddressDto> getCustomerAddress();
 }

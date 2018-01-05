@@ -6,10 +6,7 @@ import com.dili.crm.dao.CustomerMapper;
 import com.dili.crm.domain.Customer;
 import com.dili.crm.domain.Department;
 import com.dili.crm.domain.User;
-import com.dili.crm.domain.dto.CityDto;
-import com.dili.crm.domain.dto.CustomerChartDTO;
-import com.dili.crm.domain.dto.CustomerTreeDto;
-import com.dili.crm.domain.dto.MembersDto;
+import com.dili.crm.domain.dto.*;
 import com.dili.crm.rpc.UserRpc;
 import com.dili.crm.service.CacheService;
 import com.dili.crm.service.ChartService;
@@ -296,6 +293,10 @@ public class CustomerServiceImpl extends BaseServiceImpl<Customer, Long> impleme
 		return JSONArray.toJSONString(easyuiPageOutput.getRows());
 	}
 
+    @Override
+    public List<CustomerAddressDto> getCustomerAddress(){
+        return getActualDao().selectCustomerAddress();
+    }
 
 
 	// ========================================== 私有方法 ==========================================

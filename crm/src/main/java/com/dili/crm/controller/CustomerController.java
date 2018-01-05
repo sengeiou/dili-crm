@@ -5,6 +5,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.dili.crm.domain.Customer;
 import com.dili.crm.domain.Department;
 import com.dili.crm.domain.dto.MembersDto;
+import com.dili.crm.rpc.MapRpc;
 import com.dili.crm.rpc.UserRpc;
 import com.dili.crm.service.CustomerService;
 import com.dili.ss.domain.BaseOutput;
@@ -27,6 +28,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpServletRequest;
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -48,6 +50,8 @@ public class CustomerController {
 	@Autowired
 	private UserRpc userRpc;
 
+	@Autowired
+	MapRpc mapRpc;
     @ApiOperation("跳转到Customer管理页面")
     @RequestMapping(value="/index.html", method = RequestMethod.GET)
     public String index(ModelMap modelMap) {
@@ -55,9 +59,24 @@ public class CustomerController {
 	    if(userTicket == null){
 		    throw new RuntimeException("未登录");
 	    }
-	    modelMap.put("realName", userTicket.getRealName());
+		modelMap.put("realName", userTicket.getRealName());
         return "customer/index";
     }
+
+	@ApiOperation("地图打开Customer信息页面")
+	@RequestMapping(value="/info.html", method = {RequestMethod.GET, RequestMethod.POST})
+	public String info(ModelMap modelMap, @RequestParam(name="id", required = true) Long id) throws Exception {
+		customerService.handleDetail(modelMap, id);
+		modelMap.put("action", "info");
+		return "customer/info";
+	}
+
+	@ApiOperation("客户分布页面")
+	@RequestMapping(value="/locations.html", method = {RequestMethod.GET, RequestMethod.POST})
+	public String locations(ModelMap modelMap) throws Exception {
+		modelMap.put("customerAddress", JSONArray.toJSONString(customerService.getCustomerAddress()));
+		return "customer/locations";
+	}
 
 	@ApiOperation("跳转到Customer详情页面")
 	@RequestMapping(value="/detail.html", method = {RequestMethod.GET, RequestMethod.POST})

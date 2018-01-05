@@ -70,8 +70,6 @@
 			}
 		</style>
 		<div class="maincontain" >
-			<div id="userSelectDialog" style="display: none;" ></div>
-			<div id="customerSelectDialog" style="display: none;"></div>
 			<div id="header" class="panel-title" header="addcusHeader" style=" margin: 0; ">
 				<div id="addcusHeader" >
 					<span id="addcusTitle">近期新增客户</span>
@@ -116,10 +114,10 @@
 						</div>
 					</div>
 					<div region="center" style="width:100%;border:0px;" height="auto" border="false">
-						<div  class="easyui-panel" header="#locationHeader" border="false"  title="异常订单"  style="width:100%;height:100%;" >
+						<div  class="easyui-panel" header="#locationHeader" border="false"  title="客户分布"  style="width:100%;height:100%;" >
 							<div id="locationHeader"  class="panel-title" >
 								<span id="locationTitle">客户分布</span>
-								<a class="linkmore" href="${contextPath}/chart/abnormalOrdersChart.html">查看更多&gt;</a>
+								<a class="linkmore" href="${contextPath}/customer/locations.html">查看更多&gt;</a>
 							</div>
 							<div id="mapDiv" style="width:99%;height:99%;"></div>
 						</div>
@@ -180,37 +178,6 @@
                 return;
             }
 
-            //根据主键删除客户
-            function del() {
-                var selected = $("#grid").treegrid("getSelected");
-                if (null == selected) {
-                    $.messager.alert('警告','请选中一条数据');
-                    return;
-                }
-                $.messager.confirm('确认','您确认想要删除记录吗？',function(r){
-                    if (r){
-                        $.ajax({
-                            type: "POST",
-                            url: "${contextPath}/customer/delete",
-                            data: {id:selected.id},
-                            processData:true,
-                            dataType: "json",
-                            async : true,
-                            success: function (data) {
-                                if(data.code=="200"){
-                                    $("#grid").treegrid("reload");
-                                    $('#dlg').dialog('close');
-                                }else{
-                                    $.messager.alert('错误',data.result);
-                                }
-                            },
-                            error: function(){
-                                $.messager.alert('错误','远程访问失败');
-                            }
-                        });
-                    }
-                });
-            }
             //客户表格查询
             function queryGrid() {
                 $.ajax({
@@ -249,22 +216,6 @@
                 });
             }
 
-            //清空客户表单
-            function clearForm() {
-                $('#form').form('clear');
-            }
-
-            //表格表头右键菜单
-            function headerContextMenu(e, field){
-                e.preventDefault();
-                if (!cmenu){
-                    createColumnMenu("grid");
-                }
-                cmenu.menu('show', {
-                    left:e.pageX,
-                    top:e.pageY
-                });
-            }
 
             // ============================   客户相关js end  ==============================
             //全局按键事件
@@ -307,14 +258,17 @@
                     // 角各偏移7像素和20像素。
                     anchor: new BMap.Size(7, 20)
                 });
-                for (var i = 0; i < MAX; i++) {
-                    var pt = new BMap.Point(Math.random()/5+lat-0.1, Math.random()/5+lng-0.1);
+                //所有客户地址信息
+                var customerAddresses = ${customerAddress};
+                for (var i = 0; i < customerAddresses.length; i++) {
+                    var customerAddress = customerAddresses[i];
+                    var pt = new BMap.Point(customerAddress.lat, customerAddress.lng);
                     var marker = new BMap.Marker(pt, {icon: myIcon});
                     //绑定自定义属性
-                    marker.meta={id:i, name:"客户"+i};
+                    marker.meta={id:customerAddress.id, name:customerAddress.name};
                     map.addOverlay(marker);
                     //标签显示在图标下方
-                    var label = new window.BMap.Label("客户", { offset: new window.BMap.Size(-10, 25) });
+                    var label = new window.BMap.Label(customerAddress.name, { offset: new window.BMap.Size(-10, 25) });
                     label.setStyle({border:'0px',background: "transparent none repeat"});
                     marker.setLabel(label);
                     //鼠标悬停时显示
@@ -326,19 +280,20 @@
                         }
                         var content = [
                             '<iframe scrolling="auto" frameborder="0" src="'
-                            ,'http://crmweb.diligrp.com:8085/customerVisit/index.html'
+                            ,'http://crmweb.diligrp.com:8085/customer/info.html?id='+this.meta.id
                             ,'" onLoad="" style="width:100%; height: 99.2%;"></iframe>'
                         ];
                         var infoBox = new BMapLib.InfoBox(map, content.join(""), {
                             boxStyle:{
                                 background: "white none repeat scroll 0% 0%",
+                        		border:"1px solid #118bde",
                                 // background:"url('${contextPath}/resources/images/bg.png') no-repeat center top",
-                                width: "270px"
-                                ,height: "300px"
+                                width: "380px"
+                                ,height: "140px"
                             }
                             ,closeIconMargin: "1px 1px 0 0"
                             ,offset: new BMap.Size(0, 18)
-                            ,closeIconUrl:"${contextPath}/resources/images/login-user.png"
+                            ,closeIconUrl:"${contextPath}/resources/images/close24.png"
                             ,enableAutoPan: true
                             ,align: INFOBOX_AT_TOP
                         });

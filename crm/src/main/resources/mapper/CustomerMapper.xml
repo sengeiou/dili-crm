@@ -174,4 +174,8 @@
     select getChildCustomerIds(#{id})
   </select>
 
+  <select id="selectCustomerAddress" resultType="com.dili.crm.domain.dto.CustomerAddressDto">
+    select c.id, c.name, a.lat, a.lng from customer c, address a where c.id = a.customer_id and a.is_default = 1 and c.yn = 1 and a.lat is not null and a.lng is not null
+  </select>
+
 </mapper>

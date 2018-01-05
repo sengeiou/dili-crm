@@ -1,5 +1,6 @@
 package com.dili.crm.controller;
 
+import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.dili.crm.domain.Customer;
 import com.dili.crm.domain.SystemConfig;
@@ -39,9 +40,8 @@ public class IndexController {
 			 modelMap.put("indexAbnormalOrdersChartUrl",this.chartService.getIndexAbnormalOrdersChartUrl());
 			 modelMap.put("indexPurchasingTopChartUrl",this.chartService.getIndexPurchasingTopChartUrl());
 			 modelMap.put("indexSalesTopChartUrl",this.chartService.getIndexSalesTopChartUrl());
-			 
 			 modelMap.put("chartServer",dataDictionaryValueService.findChartServer());
-			 
+		     modelMap.put("customerAddress", JSONArray.toJSONString(customerService.getCustomerAddress()));
 			 modelMap.put("clientRefreshFrequency", clientRefreshFrequency);
 	        return "index";
 	    }
