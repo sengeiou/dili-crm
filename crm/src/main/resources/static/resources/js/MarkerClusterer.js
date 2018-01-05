@@ -202,7 +202,9 @@ var BMapLib = window.BMapLib = BMapLib || {};
 				var distance = 4000000;
 				var clusterToAddTo = null;
 				//console.count();
+                var tmplabel = this._markers[i].getLabel();
 				marker.getMap() && this._map.removeOverlay(marker);
+                this._markers[i].setLabel(tmplabel);
 				position = marker.getPosition();
 				for(var t = 0, cluster; cluster = this._clusters[t]; t++){
 					center = cluster.getCenter();
@@ -243,7 +245,9 @@ var BMapLib = window.BMapLib = BMapLib || {};
 			{
 				for (var f = 0; f < len; f++)
 				{
-					cluster._markers[f].getMap() && cluster._map.removeOverlay(cluster._markers[f]);
+                    var tmplabel = cluster._markers[f].getLabel();
+                    cluster._markers[f].getMap() && cluster._map.removeOverlay(cluster._markers[f]);
+                    cluster._markers[f].setLabel(tmplabel);
 				}
 				this._map.addOverlay(cluster._clusterMarker);
 				cluster.updateClusterMarker();
@@ -310,7 +314,9 @@ var BMapLib = window.BMapLib = BMapLib || {};
     MarkerClusterer.prototype._removeMarkersFromMap = function(){
         for(var i = 0, marker; marker = this._markers[i]; i++){
             marker.isInCluster = false;
-            this._map.removeOverlay(marker);       
+            var tmplabel = marker.getLabel();
+            this._map.removeOverlay(marker);
+            marker.setLabel(tmplabel);
         }
     };
 
@@ -325,7 +331,9 @@ var BMapLib = window.BMapLib = BMapLib || {};
         if (index === -1) {
             return false;
         }
+        var tmplabel = marker.getLabel();
         this._map.removeOverlay(marker);
+        marker.setLabel(tmplabel);
         this._markers.splice(index, 1);
         return true;
     };
@@ -546,7 +554,9 @@ var BMapLib = window.BMapLib = BMapLib || {};
             return true;
         } else if (len === this._minClusterSize) {
             for (var i = 0; i < len; i++) {
+                var tmplabel = this._markers[i].getLabel();
                 this._markers[i].getMap() && this._map.removeOverlay(this._markers[i]);
+                this._markers[i].setLabel(tmplabel);
             }
 			
         } 
@@ -623,7 +633,6 @@ var BMapLib = window.BMapLib = BMapLib || {};
         this._clusterMarker.addEventListener("click", function(event){
             thatMap.setViewport(thatBounds);
         });
-
     };
 
     /**
@@ -632,7 +641,9 @@ var BMapLib = window.BMapLib = BMapLib || {};
      */
     Cluster.prototype.remove = function(){
         for (var i = 0, m; m = this._markers[i]; i++) {
-                this._markers[i].getMap() && this._map.removeOverlay(this._markers[i]);
+            var tmplabel = this._markers[i].getLabel();
+            this._markers[i].getMap() && this._map.removeOverlay(this._markers[i]);
+            this._markers[i].setLabel(tmplabel);
         }//清除散的标记点
         this._map.removeOverlay(this._clusterMarker);
         this._markers.length = 0;

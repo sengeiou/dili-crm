@@ -60,28 +60,6 @@ public class CustomerServiceImpl extends BaseServiceImpl<Customer, Long> impleme
 	    return super.list(condtion);
     }
 
-	/**
-	 * 获取实体的默认参数长度
-	 * @param domain
-	 * @return
-	 */
-	private int getDefaultParamSize(Customer domain){
-    	int size = 0;
-    	if(domain.getPage() != null){
-    		size ++;
-	    }
-	    if(domain.getRows() != null){
-    		size ++;
-	    }
-	    if(domain.getOrder() != null){
-	    	size++;
-	    }
-	    if(domain.getSort() != null){
-	    	size++;
-	    }
-    	return size;
-    }
-
     @Override
     public EasyuiPageOutput listEasyuiPageByExample(Customer domain, boolean useProvider) throws Exception {
         cacheService.refreshDepartment();
@@ -316,6 +294,32 @@ public class CustomerServiceImpl extends BaseServiceImpl<Customer, Long> impleme
 			}
 		}
 		return JSONArray.toJSONString(easyuiPageOutput.getRows());
+	}
+
+
+
+	// ========================================== 私有方法 ==========================================
+
+	/**
+	 * 获取实体的默认参数长度
+	 * @param domain
+	 * @return
+	 */
+	private int getDefaultParamSize(Customer domain){
+		int size = 0;
+		if(domain.getPage() != null){
+			size ++;
+		}
+		if(domain.getRows() != null){
+			size ++;
+		}
+		if(domain.getOrder() != null){
+			size++;
+		}
+		if(domain.getSort() != null){
+			size++;
+		}
+		return size;
 	}
 
 	/**
