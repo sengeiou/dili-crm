@@ -82,4 +82,25 @@ public interface Address extends IBaseDomain {
     Long getModifiedId();
 
     void setModifiedId(Long modifiedId);
+
+    @Column(name = "`lat`")
+    @FieldDef(label="纬度")
+    @EditMode(editor = FieldEditor.Text, required = false)
+    String getLat();
+
+    void  setLat(String lat);
+
+    @Column(name = "`lng`")
+    @FieldDef(label="经度")
+    @EditMode(editor = FieldEditor.Text, required = false)
+    String getLng();
+
+    void  setLng(String lng);
+
+    @Column(name = "`is_default`")
+    @FieldDef(label="是否默认地址")
+    @EditMode(editor = FieldEditor.Number, required = false)
+    Integer getIsDefault();
+
+    void setIsDefault(Integer isDefault);
 }
