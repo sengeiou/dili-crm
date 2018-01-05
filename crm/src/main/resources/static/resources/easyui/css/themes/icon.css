@@ -182,3 +182,6 @@
 .l-btn:hover .icon-add-child{
 	background-image:url('icons/edit_add_child-on.png');
 }
+.icon-pos{
+	background:url('icons/pos-icon.png') no-repeat center center;
+}
