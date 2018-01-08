@@ -19,8 +19,11 @@
             <th width="<%if(has(action) && action=="edit"){%>31%<%}else{%>52%<%}%>" data-options="field:'address',   sortable:'true', order:'asc', align:'center', resizable:'true', fixed:'false'">
                 地址
             </th>
-            <th width="30%" data-options="field:'cityId', _provider:'cityProvider', sortable:'true', order:'asc', align:'center', resizable:'true', fixed:'false'">
+            <th width="15%" data-options="field:'cityId', _provider:'cityProvider', sortable:'true', order:'asc', align:'center', resizable:'true', fixed:'false'">
                 城市
+            </th>
+            <th width="15%" data-options="field:'isDefault', _provider:'isDefaultProvider', sortable:'true', order:'asc', align:'center', resizable:'true', fixed:'false'">
+                是否默认
             </th>
             <%if(has(action) && action=="edit"){%>
             <th width="21%" data-options="field:'addressOpt', formatter:addressOptFmt, sortable:'true', order:'asc', align:'center', resizable:'true', fixed:'false'">

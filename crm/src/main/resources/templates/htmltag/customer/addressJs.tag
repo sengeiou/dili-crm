@@ -46,11 +46,20 @@
         }
         $('#addressDlg').dialog('open');
         $('#addressDlg').dialog('center');
+        $('#_addressForm').form('clear');
         formFocus("_addressForm", "_address_name");
         var formData = $.extend({},selected);
         formData = addKeyStartWith(getOriginalData(formData),"_address_");
-        formData["_address_cityId"] = selected["cityId"];
+        formData["_address_city"] = selected["cityId"];
         $('#_addressForm').form('load', formData);
+        window.setTimeout(function(){
+            map.clearOverlays();    //清除地图上所有覆盖物
+            var p =  new BMap.Point(selected["lng"], selected["lat"]);
+            map.panTo(p);
+            var marker = new BMap.Marker(p);  // 创建标注
+            map.addOverlay(marker);               // 将标注添加到地图中
+            marker.setAnimation(BMAP_ANIMATION_BOUNCE); //跳动的动画
+        }, 5);
     }
 
     //保存地址
@@ -59,10 +68,10 @@
         if(!$('#_addressForm').form("validate")){
             return;
         }
-        if(manualInput){
-            $.messager.alert('错误',"手动输入不合法，请选择城市");
-            return;
-        }
+        // if(manualInput){
+        //     $.messager.alert('错误',"手动输入不合法，请选择城市");
+        //     return;
+        // }
         var _formData = removeKeyStartWith($("#_addressForm").serializeObject(),"_address_");
         var _url = null;
         //没有id就新增

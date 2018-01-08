@@ -55,9 +55,8 @@ public class AddressController {
 		@ApiImplicitParam(name="Address", paramType="form", value = "Address的form信息", required = true, dataType = "string")
 	})
     @RequestMapping(value="/insert", method = {RequestMethod.GET, RequestMethod.POST})
-    public @ResponseBody BaseOutput insert(Address address) {
-        addressService.insertSelective(address);
-        return BaseOutput.success("新增成功");
+    public @ResponseBody BaseOutput insert(Address address) throws Exception{
+        return addressService.insertSelectiveWithOutput(address);
     }
 
     @ApiOperation("修改Address")
@@ -65,9 +64,8 @@ public class AddressController {
 		@ApiImplicitParam(name="Address", paramType="form", value = "Address的form信息", required = true, dataType = "string")
 	})
     @RequestMapping(value="/update", method = {RequestMethod.GET, RequestMethod.POST})
-    public @ResponseBody BaseOutput update(Address address) {
-        addressService.updateSelective(address);
-        return BaseOutput.success("修改成功");
+    public @ResponseBody BaseOutput update(Address address) throws Exception{
+        return addressService.updateSelectiveWithOutput(address);
     }
 
     @ApiOperation("删除Address")
