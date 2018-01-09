@@ -132,9 +132,9 @@
             </div>
         </div> <!-- end of region="center" -->
     </div>
-<div id="dd" class="easyui-dialog" title="客户定位 <a id='nextLocationLink' href='javascript:void(0);'>下一个位置</a>" style="width:800px;height:400px;"   
-        data-options="resizable:true,modal:true,closed:true">   
-  <div id="mapDiv" style="width:100%;height:100%;" ></div>   
+<div id="dd" class="easyui-dialog" title="客户定位 <a id='nextLocationLink' href='javascript:void(0);' onclick='nextLocation()'>下一个位置</a>" style="width:800px;height:400px;"   
+        data-options="resizable:true,modal:true,closed:true,onClose:function(){clientLocationMap.customer=null;}">   
+  <div id="clientAddressMapDiv" style="width:100%;height:100%;" ></div>   
 </div> 
     <!-- ====================================================================================================================== -->
     <!-- style & script 分隔线 -->
@@ -222,12 +222,12 @@
             });
         }
         // var markerClusterer=null;
-        var clientLocationMap={map:null,markers:[],clusterer:null};
+        var clientLocationMap={map:null,markers:[],clusterer:null,customer:null};
         function initOrGetClientLocationMap(){
         	if(clientLocationMap.map==null){
         		var lat =126.608858;
                 var lng =45.709509;
-           	    var map=new BMap.Map("mapDiv");
+           	    var map=new BMap.Map("clientAddressMapDiv");
            	    map.centerAndZoom(new BMap.Point(lat,lng), 13);
            	    map.enableScrollWheelZoom();
            	    var markers=[];
@@ -238,14 +238,11 @@
         	}
         	return clientLocationMap;
         }
-        
-        function showMapDialog(customer) {
-        	addresses=customer.addresses;
-        	centerAddress=addresses[customer.centerIndex];
-        	
-        	//绑定下一个位置事件
-			$("#nextLocationLink").one("click",function(){
-				//使customer.centerIndex指向下一下位置索引
+
+		function nextLocation() {
+			var customer=clientLocationMap.customer;
+			//使customer.centerIndex指向下一下位置索引
+			 if(customer!=null){
 			    if(customer.addresses.length>0){
 			      	var currentCenterIndex=customer.centerIndex;
 			      	if(currentCenterIndex>=customer.addresses.length-1){
@@ -255,9 +252,19 @@
 			      }
 				//调用方法显示位置信息
 				showMapDialog(customer);
-			}); 
-               
+			 }
+		}
+
+        function showMapDialog(customer) {
+        	
+        	addresses=customer.addresses;
+        	centerAddress=addresses[customer.centerIndex];
+        	
+        	//绑定下一个位置事件
+
+              clientLocationMap.customer=customer;
               var map=clientLocationMap.map;
+              map.setZoom(13);
               var markerClusterer=clientLocationMap.clusterer;
               //移除聚合点(保留图层)
               for (var i = 0; i < clientLocationMap.markers.length; i++) {

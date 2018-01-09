@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.dili.crm.domain.Address;
 import com.dili.crm.domain.dto.CustomerChartDTO;
@@ -43,6 +44,7 @@ public class ChartController {
 	@ApiOperation("跳转到报表页面")
 	@RequestMapping(value = "/index.html", method = RequestMethod.GET)
 	public String index(ModelMap modelMap) {
+		
 		return "chart/index";
 	}
 	private ModelMap addData(ModelMap modelMap,String url) {
@@ -126,6 +128,7 @@ public class ChartController {
 	@ApiOperation("跳转到客户报表页面")
 	@RequestMapping(value = "/customer.html", method = RequestMethod.GET)
 	public String customerChart(ModelMap modelMap) {
+		modelMap.put("customerAddress", JSONArray.toJSONString(customerService.getCustomerAddress()));
 		return "chart/customer";
 	}
 	@ApiOperation("跳转到客户回访报表页面")

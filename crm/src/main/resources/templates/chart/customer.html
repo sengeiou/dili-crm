@@ -1,4 +1,8 @@
  <#body>
+<script type="text/javascript" src="http://api.map.baidu.com/api?v=3.0&ak=<#config name='map.ak'/>"></script>
+<script type="text/javascript" src="http://api.map.baidu.com/library/InfoBox/1.2/src/InfoBox_min.js"></script>
+<script type="text/javascript" src="${contextPath}/resources/js/TextIconOverlay_min.js"></script>
+<script type="text/javascript" src="${contextPath}/resources/js/MarkerClusterer.min.js"></script>
  <#impEcharts/>
  <div class="easyui-layout" style="margin-left: 0px;" fit="true">
  		<div region="north" style="width:100%;" minHeight="40" border="false">
@@ -44,7 +48,12 @@
 			        </div>
 			        
 			        <div region="east" height="auto" align="center" style="width:50%;border:0px;"  border="false">
-
+						<div  class="easyui-panel" header="#locationHeader" border="false"  title="客户分布"  style="width:100%;height:100%;" >
+							<div id="locationHeader"  class="panel-title" >
+								<span id="locationTitle">客户分布</span>
+							</div>
+							<div id="customerChartMapDiv" style="width:99%;height:99%;"></div>
+						</div>
 			        </div>
     		   </div>
            
@@ -76,7 +85,71 @@
 
         
         $(function () {
-        	
-        })
+        	// ============================  地图相关js  ============================
+               // 百度地图API功能
+               var map = new BMap.Map("customerChartMapDiv");
+               //哈尔滨
+               var lat = 126.608858;
+               var lng = 45.709509;
+               map.centerAndZoom(new BMap.Point(lat,lng), 13);
+               map.enableScrollWheelZoom();
+               var MAX = 100;
+               var markers = [];
+               var myIcon = new BMap.Icon("${contextPath}/resources/images/icon/pos-icon.png", new BMap.Size(23, 25), {
+                   // 指定定位位置。
+                   // 当标注显示在地图上时，其所指向的地理位置距离图标左上
+                   // 角各偏移7像素和20像素。
+                   anchor: new BMap.Size(7, 20)
+               });
+               map.addEventListener("click", function(e){
+            	   window.location.href="${contextPath}/customer/locations.html";
+               });
+               //所有客户地址信息
+               var customerAddresses = ${customerAddress};
+               for (var i = 0; i < customerAddresses.length; i++) {
+                   var customerAddress = customerAddresses[i];
+                   var pt = new BMap.Point(customerAddress.lat, customerAddress.lng);
+                   var marker = new BMap.Marker(pt, {icon: myIcon});
+                   //绑定自定义属性
+                   marker.meta={id:customerAddress.id, name:customerAddress.name};
+                   map.addOverlay(marker);
+                   //标签显示在图标下方
+                   var label = new window.BMap.Label(customerAddress.name, { offset: new window.BMap.Size(-10, 25) });
+                   label.setStyle({border:'0px',background: "transparent none repeat"});
+                   marker.setLabel(label);
+                   //鼠标悬停时显示
+                   marker.setTitle(marker.meta.name);
+                   marker.addEventListener("click", function(e){
+                       //第三方InfoBox
+                       if (infoBoxTemp) {
+                           infoBoxTemp.close();
+                       }
+                       var content = [
+                           '<iframe scrolling="auto" frameborder="0" src="'
+                           ,'http://crmweb.diligrp.com:8085/customer/info.html?id='+this.meta.id
+                           ,'" onLoad="" style="width:100%; height: 99.2%;"></iframe>'
+                       ];
+                       var infoBox = new BMapLib.InfoBox(map, content.join(""), {
+                           boxStyle:{
+                               background: "white none repeat scroll 0% 0%",
+                       		border:"1px solid #118bde",
+                               // background:"url('${contextPath}/resources/images/bg.png') no-repeat center top",
+                               width: "380px"
+                               ,height: "140px"
+                           }
+                           ,closeIconMargin: "1px 1px 0 0"
+                           ,offset: new BMap.Size(0, 18)
+                           ,closeIconUrl:"${contextPath}/resources/images/close24.png"
+                           ,enableAutoPan: true
+                           ,align: INFOBOX_AT_TOP
+                       });
+                       infoBoxTemp = infoBox;
+                       infoBox.open(this);
+                   });
+                   markers.push(marker);
+               }
+               //最简单的用法，生成一个marker数组，然后调用markerClusterer类即可。
+               var markerClusterer = new BMapLib.MarkerClusterer(map, {markers:markers});
+           })
     </script>
 </#body>
