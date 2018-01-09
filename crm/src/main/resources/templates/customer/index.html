@@ -225,10 +225,11 @@
         var clientLocationMap={map:null,markers:[],clusterer:null,customer:null};
         function initOrGetClientLocationMap(){
         	if(clientLocationMap.map==null){
-        		var lat =126.608858;
-                var lng =45.709509;
+        		var lat =39.913702;//126.608858;
+        		//116.398051,39.913702
+                var lng =116.398051;//45.709509;
            	    var map=new BMap.Map("clientAddressMapDiv");
-           	    map.centerAndZoom(new BMap.Point(lat,lng), 13);
+           	    map.centerAndZoom(new BMap.Point(lng,lat), 13);
            	    map.enableScrollWheelZoom();
            	    var markers=[];
                  var clusterer=new BMapLib.MarkerClusterer(map, {markers:markers});
@@ -276,7 +277,7 @@
               //设置中心位置
               var lat = parseFloat(centerAddress['lat']);//126.608858;
               var lng = parseFloat(centerAddress['lng']);//45.709509;
-           	  map.setCenter(new BMap.Point(lat,lng));
+           	  map.setCenter(new BMap.Point(lng,lat));
            	  
            	  
               var markers = [];
@@ -291,7 +292,7 @@
                 for(var i=0;i<addresses.length;i++){
                 	 var address=addresses[i];
                 	 
-                	 var pt = new BMap.Point( parseFloat(address['lat']), parseFloat(address['lng']));
+                	 var pt = new BMap.Point(lng, lat);
                      var marker = new BMap.Marker(pt, {icon: myIcon});
                      //绑定自定义属性
                      marker.meta={id:address.id, name:customer.name};
@@ -340,8 +341,8 @@
                 //保存聚合点到全局对象,用以下一次清空
                clientLocationMap.markers=markers;
                window.setTimeout(function(){  
-                	map.panTo(new BMap.Point(lat,lng)); 
-                }, 50);
+                	map.panTo(new BMap.Point(lng,lat)); 
+                }, 100);
                
                 $('#dd').dialog('open',true);  
         

@@ -246,9 +246,9 @@
                 // 百度地图API功能
                 var map = new BMap.Map("mapDiv");
                 //哈尔滨
-                var lat = 126.608858;
-                var lng = 45.709509;
-                map.centerAndZoom(new BMap.Point(lat,lng), 13);
+                var lat =45.709509;
+                var lng =  126.608858;
+                map.centerAndZoom(new BMap.Point(lng,lat), 13);
                 map.enableScrollWheelZoom();
                 var MAX = 100;
                 var markers = [];
@@ -262,7 +262,7 @@
                 var customerAddresses = ${customerAddress};
                 for (var i = 0; i < customerAddresses.length; i++) {
                     var customerAddress = customerAddresses[i];
-                    var pt = new BMap.Point(customerAddress.lat, customerAddress.lng);
+                    var pt = new BMap.Point(customerAddress.lng,customerAddress.lat);
                     var marker = new BMap.Marker(pt, {icon: myIcon});
                     //绑定自定义属性
                     marker.meta={id:customerAddress.id, name:customerAddress.name};
