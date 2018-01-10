@@ -3,6 +3,7 @@ package com.dili.crm.rpc;
 import com.alibaba.fastjson.JSONObject;
 import com.dili.http.okhttp.OkHttpUtils;
 import com.dili.ss.util.ExportUtils;
+import com.dili.ss.util.SystemConfigUtils;
 import okhttp3.MediaType;
 import okhttp3.Response;
 import org.apache.log4j.Logger;
@@ -33,6 +34,9 @@ public class MapRpc {
      * @throws IOException
      */
     public String geocoder(Map param) throws IOException {
+        if(!param.containsKey("ak")) {
+            param.put("ak", SystemConfigUtils.getProperty("map.ak"));
+        }
         Response resp = OkHttpUtils
                 .post()
                 .url("http://api.map.baidu.com/geocoder/v2/")
