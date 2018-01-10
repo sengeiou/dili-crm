@@ -8,8 +8,8 @@
                 <td style="padding-top:5px;" width="20%" height="20%">
                     <input class="easyui-textbox" name="_address_name" id="_address_name" required="true" style="width: 100%;" data-options="labelWidth:'50',labelAlign:'right',label:'&lowast;名称:', validType:'length[1,40]'<%if(has(action) && action!="edit"){%>,disabled:true<%}%>" />
                 </td>
-                <td style="padding-top:5px;padding-left:10px;" width="15%">
-                    <input class="easyui-textbox" name="_address_isDefault" id="_address_isDefault" panelWidth="auto" style="width: 100%;" required="true" panelHeight="auto" label="&lowast;是否默认:"  data-options="labelAlign:'right',validType:'length[1,20]', editable:false<%if(has(action) && action!="edit"){%>,disabled:true,hasDownArrow:false<%}%>"/>
+                <td style="padding-top:5px;padding-left:5px;" width="15%">
+                    <input class="easyui-textbox" name="_address_isDefault" id="_address_isDefault" panelWidth="auto" style="width: 90%;" required="true" panelHeight="auto" label="&lowast;是否默认:"  data-options="labelAlign:'right',validType:'length[1,20]', editable:false<%if(has(action) && action!="edit"){%>,disabled:true,hasDownArrow:false<%}%>"/>
                     <#comboProvider _id="_address_isDefault" _provider='isDefaultProvider' />
                 </td>
                 <td style="padding-top:5px;padding-left:10px;" width="20%">
