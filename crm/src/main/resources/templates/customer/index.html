@@ -377,8 +377,16 @@
                     		}
                     	});
                     	if(defaultAddress==null){
-                    		 $.messager.alert('错误','选中客户没有地址信息');
+                    		//如果没有默认地址,就选择第一个地址做为首地址
+                    		if(data.length>0){
+                    			selected.addresses=data;
+                    			selected.centerIndex=0;
+                            	showMapDialog(selected);
+                    		}else{
+                       		 $.messager.alert('错误','选中客户没有地址信息');
                     		 return
+                    		}
+
                     	}
                     	
                         //if(data.code=="200"){
