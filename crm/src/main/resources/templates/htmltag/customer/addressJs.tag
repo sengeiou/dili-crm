@@ -52,14 +52,24 @@
         formData = addKeyStartWith(getOriginalData(formData),"_address_");
         formData["_address_city"] = selected["cityId"];
         $('#_addressForm').form('load', formData);
-        window.setTimeout(function(){
-            map.clearOverlays();    //清除地图上所有覆盖物
-            var p =  new BMap.Point(selected["lng"], selected["lat"]);
-            map.panTo(p);
-            var marker = new BMap.Marker(p);  // 创建标注
-            map.addOverlay(marker);               // 将标注添加到地图中
-            marker.setAnimation(BMAP_ANIMATION_BOUNCE); //跳动的动画
-        }, 5);
+        var c_lng = selected["lng"];
+        var c_lat = selected["lat"];
+        map.clearOverlays();    //清除地图上所有覆盖物
+        if (null != c_lng && ''!=c_lng && null != c_lat && ''!=c_lat){
+            window.setTimeout(function(){
+                var p =  new BMap.Point(c_lng, c_lat);
+                map.panTo(p);
+                var marker = new BMap.Marker(p);  // 创建标注
+                map.addOverlay(marker);               // 将标注添加到地图中
+                marker.setAnimation(BMAP_ANIMATION_BOUNCE); //跳动的动画
+            }, 50);
+        }else{
+            window.setTimeout(function(){
+                map.panTo(point);
+            }, 50);
+
+        }
+
     }
 
     //保存地址

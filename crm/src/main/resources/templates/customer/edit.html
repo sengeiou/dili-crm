@@ -67,9 +67,65 @@
              // $('#_certificateTime').datebox('setValue', year+"-"+month+"-"+day);
          }
 
+         var operatingAreaMap=null;
+         function initOperatingAreaMap(city){
+             if(operatingAreaMap==null){
+                 var lng =104.06792346;
+                 var lat =30.67994285;
+                 operatingAreaMap=new BMap.Map("operatingAreaMapDiv",{minZoom:8,maxZoom:11});
+                 operatingAreaMap.centerAndZoom(new BMap.Point(lng, lat), 10);
+                 operatingAreaMap.enableScrollWheelZoom();
+                 //单击获取点击的经纬度
+                 operatingAreaMap.addEventListener("click",mapClick);
+             }
+             if(null != city) {
+                 operatingAreaMap.centerAndZoom(city, 10);
+             }
+             return operatingAreaMap;
+         }
+
+         function mapClick(e) {
+             var pt = e.point;
+             addOverlay(pt);
+             geoc.getLocation(pt, function(rs){
+                 var addComp = rs.addressComponents;
+                 $('#selectOperatingArea').textbox("setValue",addComp.province+addComp.city+addComp.district);
+             });
+         }
+
+         function addOverlay(point) {
+             operatingAreaMap.clearOverlays();    //清除地图上所有覆盖物
+             var marker = new BMap.Marker(point);  // 创建标注
+             operatingAreaMap.addOverlay(marker);               // 将标注添加到地图中
+             // marker.setAnimation(BMAP_ANIMATION_BOUNCE); //跳动的动画
+         }
+
+         /**
+          * 打开地图
+          */
+         function openMaps() {
+             $('#operatingAreaDialog').dialog('open',true);
+             initOperatingAreaMap('北京海淀区');
+         }
+         /**
+          * 根据选择的数据进行位置搜索
+          */
+         function setPlace(city){
+             function areaSearch(){
+                 var poi = local.getResults().getPoi(0);
+                 $('#_address_city').textbox("setValue", poi.province +','+  poi.city);
+                 $('#_address_address').textbox("setValue", poi.address);
+                 var pp = poi.point;    //获取第一个智能搜索的结果
+                 operatingAreaMap.centerAndZoom(pp, 18);
+                 addOverlay(pp);
+             }
+             var local = new BMap.LocalSearch(map, { //智能搜索
+                 onSearchComplete: areaSearch
+             });
+             local.search(city);
+         }
 
          </script>
-
     <div class="easyui-layout" fit="true">
         <div id="userSelectDialog" style="display: none;"></div>
         <div id="parentCustomerSelectDialog" style="display: none;"></div>
@@ -170,7 +226,8 @@
                                     </div>
                                 </td>
                                 <td style="padding-top:10px;padding-left:15px;">
-                                    <input name="_operatingArea" id="_operatingArea" style="width:70%;" panelWidth="auto" panelHeight="auto" label="经营地区:"  data-options="labelAlign:'right', validType:'length[0,100]', editable:true, hasDownArrow:false, onChange:changeName, onSelect:selectName, onLoadSuccess:onComboLoadSuccessSelectOne"/>
+                                    <input class="easyui-textbox" name="_operatingArea" id="_operatingArea" style="width:70%;" panelWidth="auto" panelHeight="auto" label="经营地区:"  data-options="labelAlign:'right', validType:'length[0,100]', editable:true, hasDownArrow:false, onChange:changeName, onSelect:selectName, onLoadSuccess:onComboLoadSuccessSelectOne,buttonText:'选择',
+									onClickButton:openMaps,buttonIcon:'icon-map'"/>
                                     <#comboProvider _id="_operatingArea" _provider="cityProvider" _valueField="value" _textField="label" />
                                 </td>
                                 <td style="padding-top:10px;padding-left:15px;">
@@ -287,6 +344,23 @@
      <!-- 客户画像js -->
      <#customer_portraitJs/>
      <%}%>
+
+ <div align="center" id="operatingAreaDialog" class="easyui-dialog" title="经营地区" style="width:80%;height:90%;"
+      resizable="false" constrain="true" shadow="true" draggable="false" modal="true" border="thin" closed="true">
+     <table width="99%" align="center">
+         <tr>
+             <td style="padding-top:5px;" width="20%" height="20%">
+                 <input class="easyui-textbox"  id="selectOperatingArea" style="width: 50%;"  data-options="labelWidth:'100',labelAlign:'right',label:'经营区域地址:'" />
+             </td>
+         </tr>
+         <tr>
+             <td style="padding-top:5px;padding-left:10px;" width="99%" height="75%">
+                 <div  id="operatingAreaMapDiv" style="width: 95%;height: 75%; position: absolute;" ></div>
+             </td>
+         </tr>
+     </table>
+
+ </div>
     <script type="text/javascript">
 
 
@@ -549,6 +623,7 @@
 //            $('#vehicleGrid').datagrid('getPanel').removeClass('lines-both lines-no lines-right lines-bottom').addClass("lines-bottom");
 //            $('#customerExtensionsGrid').datagrid('getPanel').removeClass('lines-both lines-no lines-right lines-bottom').addClass("lines-bottom");
 //            $('#membersGrid').datagrid('getPanel').removeClass('lines-both lines-no lines-right lines-bottom').addClass("lines-bottom");
+//             initOperatingAreaMap();
             <% if(has(customer)){%>
                 openUpdate();
             <%}else{%>
@@ -556,5 +631,6 @@
             <%}%>
 
         })
+
     </script>
 </#body>
