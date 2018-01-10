@@ -24,4 +24,10 @@ public interface AddressService extends BaseService<Address, Long> {
      * @return
      */
     BaseOutput updateSelectiveWithOutput(Address address) throws Exception;
+    /**
+     * 获取逆地理编码
+     * @param lat,lng
+     * @return
+     */
+    BaseOutput locationReverse(String lat,String lng) throws Exception;
 }

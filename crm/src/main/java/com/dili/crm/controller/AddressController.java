@@ -1,13 +1,25 @@
 package com.dili.crm.controller;
 
+import com.alibaba.fastjson.JSONObject;
 import com.dili.crm.domain.Address;
+import com.dili.crm.domain.City;
+import com.dili.crm.rpc.MapRpc;
 import com.dili.crm.service.AddressService;
+import com.dili.crm.service.CityService;
 import com.dili.ss.domain.BaseOutput;
+import com.google.common.collect.Maps;
+
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
+
+import java.io.IOException;
 import java.util.List;
+import java.util.Map;
+
+import javax.annotation.Resource;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
@@ -25,7 +37,9 @@ import org.springframework.web.bind.annotation.ResponseBody;
 public class AddressController {
     @Autowired
     AddressService addressService;
+    @Autowired CityService cityService;
 
+    @Resource MapRpc mapRpc;
     @ApiOperation("跳转到Address页面")
     @RequestMapping(value="/index.html", method = RequestMethod.GET)
     public String index(ModelMap modelMap) {
@@ -76,5 +90,15 @@ public class AddressController {
     public @ResponseBody BaseOutput delete(Long id) {
         addressService.delete(id);
         return BaseOutput.success("删除成功");
+    }
+    
+    @ApiOperation("获取逆地理编码")
+    @ApiImplicitParams({
+		@ApiImplicitParam(name="lat", paramType="form", value = "纬度", required = true, dataType = "String"),
+		@ApiImplicitParam(name="lng", paramType="form", value = "经度", required = true, dataType = "String")
+	})
+    @RequestMapping(value="/locationReverse", method = {RequestMethod.GET, RequestMethod.POST})
+    public @ResponseBody BaseOutput locationReverse(String lat,String lng) throws Exception{
+        return this.addressService.locationReverse(lat, lng);
     }
 }

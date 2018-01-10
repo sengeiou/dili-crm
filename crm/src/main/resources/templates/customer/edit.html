@@ -90,6 +90,8 @@
              geoc.getLocation(pt, function(rs){
                  var addComp = rs.addressComponents;
                  $('#selectOperatingArea').textbox("setValue",addComp.province+addComp.city+addComp.district);
+                 $('#selectedAreaLat').val(pt.lat);
+                 $('#selectedAreaLng').val(pt.lng);
              });
          }
 
@@ -105,6 +107,10 @@
           */
          function openMaps() {
              $('#operatingAreaDialog').dialog('open',true);
+             //清空数据
+        	 $('#selectedAreaLat').val('');
+             $('#selectedAreaLng').val('');
+             $('#selectOperatingArea').textbox("setValue","");
              initOperatingAreaMap('北京海淀区');
          }
          /**
@@ -124,7 +130,37 @@
              });
              local.search(city);
          }
-
+		function confirmSelectedArea(){
+			var selectOperatingArea=$('#selectOperatingArea').textbox("getValue");
+			var lat=$('#selectedAreaLat').val();
+			var lng=$('#selectedAreaLng').val();
+			
+			//发送ajax请求查询adcode
+        	$.ajax({
+	            type: "POST",
+	            url:"${contextPath}/address/locationReverse.json",
+	            data: {"lat":lat,"lng":lng},
+	            processData:true,
+	            dataType: "json",
+	            async : true,
+	            success: function (data) {
+	                if(data.code=="200"){
+	                	var adcode=data.data.adcode;
+	                	$('#operatingAreaDialog').dialog('close',true);
+	                	$("#_operatingArea").combobox('initValue',adcode);
+	                	$("#_operatingArea").combobox('setText',selectOperatingArea);
+	                	//设置不是手工输入
+	                	selectName();
+	                 }else{
+	                    $.messager.alert('错误',data.result);
+	                 }
+	             },
+	             error: function(){
+	                $.messager.alert('错误','远程访问失败');
+	            }
+        	});
+			
+		}
          </script>
     <div class="easyui-layout" fit="true">
         <div id="userSelectDialog" style="display: none;"></div>
@@ -350,7 +386,12 @@
      <table width="99%" align="center">
          <tr>
              <td style="padding-top:5px;" width="20%" height="20%">
-                 <input class="easyui-textbox"  id="selectOperatingArea" style="width: 50%;"  data-options="labelWidth:'100',labelAlign:'right',label:'经营区域地址:'" />
+                 <input class="easyui-textbox"  id="selectOperatingArea" style="width: 50%;"  data-options="labelWidth:'100',labelAlign:'right',label:'经营区域地址:',readonly:true" />
+                 <input type="hidden" id="selectedAreaLng" name="selectedAreaLng"/>
+                  <input type="hidden" id="selectedAreaLat" name="selectedAreaLat"/>
+             </td>
+              <td style="padding-top:5px;" width="20%" height="20%">
+                 <a href="#" class="easyui-linkbutton"  data-options="width:80" iconCls="icon-ok" onclick="confirmSelectedArea()">确定</a>
              </td>
          </tr>
          <tr>
