@@ -257,7 +257,22 @@
 				showMapDialog(customer);
 			 }
 		}
-
+		function previousLocation() {
+			var customer=clientLocationMap.customer;
+			//使customer.centerIndex指向下一下位置索引
+			 if(customer!=null){
+			    if(customer.addresses.length>0){
+			      	var currentCenterIndex=customer.centerIndex;
+			      	if(currentCenterIndex<=0){
+			      		currentCenterIndex=customer.addresses.length;
+			      	}
+			      	customer.centerIndex=currentCenterIndex-1;
+			      }
+				//调用方法显示位置信息
+				showMapDialog(customer);
+			 }
+		}
+		
         function showMapDialog(customer) {
         	
         	addresses=customer.addresses;
@@ -292,12 +307,11 @@
                
               //遍历地址,添加聚合点
                 for(var i=0;i<addresses.length;i++){
-                	 var address=addresses[i];
-                	 
-                	 var pt = new BMap.Point(lng, lat);
+                	 var addr=addresses[i];
+                	 var pt = new BMap.Point(addr.lng, addr.lat);
                      var marker = new BMap.Marker(pt, {icon: myIcon});
                      //绑定自定义属性
-                     marker.meta={id:address.id, name:customer.name};
+                     marker.meta={id:addr.id, name:customer.name};
                      //对地图添加聚合点
                      map.addOverlay(marker);
       
@@ -315,19 +329,18 @@
                              //由于在getLocation函数返回信息之前，首先执行它下面的代码的，所以要把重新拖动后的代码放到它里面
                             //获取并显示地址信息
                              var addComp = rs.addressComponents;
-                             var province = addComp.province;//获取省份
+                           //  var province = addComp.province;//获取省份
                              var city = addComp.city;//获取城市
-                             var district = addComp.district;//区
-                             var street = addComp.street;//街
-                             var addr=province+city+district+street;
-
+                            // var district = addComp.district;//区
+                            // var street = addComp.street;//街
+                            // var addr=province+city+district+street;
+                             
+                             
+                             
                              var content = "<table>";  
-                             content = content + "<tr><td> 姓名："+customer.name+"</td></tr>";  
-                             content = content + "<tr><td> 地点："+addr+"</td></tr>"; 
-                             //content = content + "<tr><td> 时间：2014-09-26</td></tr>";  
-                             content = content + "<tr><td> 经度坐标："+e.point.lng+"</td></tr>";  
-                             content = content + "<tr><td> 纬度坐标："+e.point.lat+"</td></tr>";  
-
+                             content = content + "<tr><td> 名称："+(typeof(addr['name'])=='undefined'?'':addr['name'])+"</td></tr>";  
+                             content = content + "<tr><td> 城市："+city+"</td></tr>";
+                             content = content + "<tr><td> 地址："+(typeof(addr['address'])=='undefined'?'':addr['address'])+"</td></tr>"; 
                              content += "</table>";
                          	 var infowindow = new BMap.InfoWindow(content,{offset:new BMap.Size(0, -10)});
                          	 m.openInfoWindow(infowindow);
@@ -367,26 +380,32 @@
                     async : true,
                     success: function (data) {
                     	var defaultAddress=null;
+                    	var addresses=[];
                     	$.each(data,function(k,v){
-                    		if(v.isDefault==1){
+                    	  //判断地址经纬度是否存在
+                    	  if(typeof(v.lat)=='string'&&typeof(v.lat)=='string'){
+                   			 addresses.push(v);
+                   			if(v.isDefault==1&&defaultAddress==null){
                     			defaultAddress=v;
-                    			selected.addresses=data;
-                    			selected.centerIndex=k;
-                            	showMapDialog(selected);
-                            	return false;
+                    			//基于合法地址来定位默认地址(data的长度和addresses不一致)
+                    			selected.centerIndex=addresses.length-1;
                     		}
+                       	  }
                     	});
+                    	//设置所有可用地址
+                    	selected.addresses=addresses;
+                    	
                     	if(defaultAddress==null){
                     		//如果没有默认地址,就选择第一个地址做为首地址
-                    		if(data.length>0){
-                    			selected.addresses=data;
+                    		if(selected.addresses.length>0){
                     			selected.centerIndex=0;
                             	showMapDialog(selected);
                     		}else{
-                       		 $.messager.alert('错误','选中客户没有地址信息');
-                    		 return
+                       		 	$.messager.alert('错误','选中客户没有地址信息');
+                    		 	return
                     		}
-
+                    	}else{
+                    		showMapDialog(selected);
                     	}
                     	
                         //if(data.code=="200"){
