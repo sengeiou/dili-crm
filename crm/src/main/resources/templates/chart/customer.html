@@ -46,15 +46,19 @@
 								<#echarts _id="customerMarketChart" _title="客户市场分布" _type="Pie"  _url="${contextPath}/chart/customerMarketChart.json" _nameField="market" _options="{legend:{selectedMode:false}}"   _valueField="count" ></#echarts>
 						</div>
 			        </div>
-			        
-			        <div region="east" height="auto" align="center" style="width:50%;border:0px;"  border="false">
-						<div  class="easyui-panel" header="#locationHeader" border="false"  title="客户分布"  style="width:100%;height:100%;" >
-							<div id="locationHeader"  class="panel-title" >
+
+					<div region="east" height="auto" align="center" style="width:50%;border: 1px solid #ddd" >
+						<div  class="easyui-panel" header="#locationHeader" border="false"  title="客户分布"  style="width:100%;height:95%;" >
+							<div id="locationHeader"  class="panel-title"  style="margin: 0;margin-bottom: 20px; background:#fff;padding-right: 30px;border:none;text-align: center;font-size: 18px;">
 								<span id="locationTitle">客户分布</span>
 							</div>
 							<div id="customerChartMapDiv" style="width:99%;height:99%;"></div>
 						</div>
-			        </div>
+					</div>
+
+
+
+
     		   </div>
            
             </div>
