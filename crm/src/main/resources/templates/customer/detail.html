@@ -1,7 +1,7 @@
  <#body>
      <!-- 城市控件js -->
      <#customer_cityComboJs/>
-
+    <script type="text/javascript" src="http://api.map.baidu.com/api?v=3.0&ak=<#config name='map.ak'/>"></script>
     <div class="easyui-layout" fit="true">
         <div id="userSelectDialog" style="display: none;"></div>
         <!-- ====================================================================================================================== -->
@@ -196,6 +196,8 @@
     <!-- ====================================================================================================================== -->
      <!-- 地址js -->
      <#customer_addressJs />
+     <!-- 地址隐藏框 -->
+     <#customer_addressFormHtml/>
      <!-- 车辆js -->
      <#customer_vehicleJs />
      <!-- 联系人js -->
