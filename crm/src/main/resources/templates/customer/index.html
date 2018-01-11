@@ -227,11 +227,13 @@
         var clientLocationMap={map:null,markers:[],clusterer:null,customer:null};
         function initOrGetClientLocationMap(){
         	if(clientLocationMap.map==null){
-        		var lat =39.913702;//126.608858;
-        		//116.398051,39.913702
-                var lng =116.398051;//45.709509;
+                var lat ="<#config name='map.lat' />";
+                
+                var lng ="<#config name='map.lng' />";
+                
            	    var map=new BMap.Map("clientAddressMapDiv");
            	    map.centerAndZoom(new BMap.Point(lng,lat), 13);
+           	    //map.centerAndZoom("哈尔滨市", 13);
            	    map.enableScrollWheelZoom();
            	    var markers=[];
                  var clusterer=new BMapLib.MarkerClusterer(map, {markers:markers});
@@ -309,12 +311,17 @@
                 for(var i=0;i<addresses.length;i++){
                 	 var addr=addresses[i];
                 	 var pt = new BMap.Point(addr.lng, addr.lat);
-                     var marker = new BMap.Marker(pt, {icon: myIcon});
+                     var marker =null;
+                     if(i==customer.centerIndex){
+                   	  	marker = new BMap.Marker(pt);//当前位置使用默认红色图标
+                      }else{
+                   	  	marker = new BMap.Marker(pt, {icon: myIcon});//其他位置使用自定义图标
+                      }
                      //绑定自定义属性
                      marker.meta={id:addr.id, name:customer.name};
                      //对地图添加聚合点
                      map.addOverlay(marker);
-                     if(i==customer.centerIndex){
+                     if(i==customer.centerIndex){//当前位置使用动画特效
                       	marker.setAnimation(BMAP_ANIMATION_BOUNCE);	
                       }
                      var label = new window.BMap.Label('', { offset: new window.BMap.Size(-7, 20) });

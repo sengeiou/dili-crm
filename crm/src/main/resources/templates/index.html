@@ -68,6 +68,7 @@
 			.layout-panel-center:nth-child(4) {
 				margin-left: 0;
 			}
+			
 		</style>
 		<div class="maincontain" >
 			<div id="header" class="panel-title" header="addcusHeader" style=" margin: 0; ">
@@ -246,9 +247,14 @@
                 // 百度地图API功能
                 var map = new BMap.Map("mapDiv");
                 //哈尔滨
-                var lat =45.709509;
-                var lng =  126.608858;
-                map.centerAndZoom(new BMap.Point(lng,lat), 13);
+        		//var lat =45.766474;//126.608858;
+                //var lng =126.641694;//45.709509;
+                var lat ="<#config name='map.lat' />";
+                
+                var lng ="<#config name='map.lng' />";
+                
+                map.centerAndZoom(new BMap.Point(lng,lat), 12);
+                //map.centerAndZoom("哈尔滨市", 12);
                 map.enableScrollWheelZoom();
                 var MAX = 100;
                 var markers = [];
