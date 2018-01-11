@@ -1,10 +1,10 @@
-<div id="addressDlg" class="easyui-dialog" resizable="false" constrain="true" shadow="true" draggable="false" title="地址信息" style="padding:5px;width: 80%;height: 90%;" modal="true" border="thin" closed="true">
+<div id="addressDlg" class="easyui-dialog" resizable="false" constrain="true" shadow="true" draggable="false" title="地址信息" style="padding-top:5px;width: 80%;height: 90%;" modal="true" border="thin" closed="true">
     <form id="_addressForm" class="easyui-form" method="post" fit="true">
         <input name="_address_id" id="_address_id" type="hidden">
         <input name="_address_lng" id="_address_lng" type="hidden">
         <input name="_address_lat" id="_address_lat" type="hidden">
-        <table style="width: 95%;height: 99%;" align="center">
-            <tr style="height: 20%;width: 90%;">
+        <table style="width: 100%;height: 99%;" align="center">
+            <tr style="height: 20%;width: 100%;">
                 <td style="width:20%;">
                     <input class="easyui-textbox" name="_address_name" id="_address_name" required="true" style="width: 100%;" data-options="labelWidth:'50',labelAlign:'right',label:'&lowast;名称:', validType:'length[1,40]'<%if(has(action) && action!="edit"){%>,disabled:true<%}%>" />
                 </td>
@@ -25,11 +25,11 @@
                     <%}%>
                 </td>
             </tr>
-            <tr style="height: 70%;width: 90%;">
+            <tr style="height: 70%;width: 100%;">
                 <td style="height: 100%;width: 100%;" colspan="4" align="center" >
-                    <div id="mapContainer" style="width: 94%;height: 85%; position: absolute;" align="center"></div>
-                    <div style="padding-top:5px;position: fixed;width: 30%;<%if(has(action) && action!="edit"){%>display: none;<%}%>">
-                        <div id="r-result">&nbsp;&nbsp;&nbsp;<input type="text" id="suggestId" placeholder="地址搜索" value="" style="width:60%; height: 20px; line-height: 20px;border: 1px solid #d4d4d4; "/><a href="#" class="easyui-linkbutton" id="queryAddress" data-options="width:24,height:24" iconCls="icon-search" onclick="queryAddress()"></a></div>
+                    <div id="mapContainer" style="width: 100%;height: 86%; position: absolute;" align="center"></div>
+                    <div style="padding-top:1px;position: fixed;width: 30%;<%if(has(action) && action!="edit"){%>display: none;<%}%>">
+                        <div id="r-result"><input type="text" id="suggestId" placeholder="地址搜索" value="" style="width:60%; height: 20px; line-height: 20px;border: 1px solid #d4d4d4; "/><a href="#" class="easyui-linkbutton" id="queryAddress" data-options="width:24,height:24" iconCls="icon-search" onclick="queryAddress()"></a></div>
                         <div id="searchResultPanel" style="border:1px solid #C0C0C0;width:150px;height:auto; display:none;"></div>
                     </div>
                 </td>
