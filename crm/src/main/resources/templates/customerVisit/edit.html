@@ -166,7 +166,7 @@
                 var selected = null;
             <%}%>
             if (null == selected) {
-                $.messager.alert('警告','请选中一条数据','warning');
+                $.messager.alert('警告','请选中一条数据');
                 return;
             }
             $('#_form').form('clear');
@@ -254,12 +254,12 @@
             if (type==3){
                 var rows = $("#eventGrid").datagrid("getRows");
                 if (null == rows || rows.length < 1){
-                    $.messager.alert('警告','完成回访时,需至少添加一条事件信息','warning');
+                    $.messager.alert('警告','完成回访时,需至少添加一条事件信息');
                     return false;
                 }
                 var finishTime = $("#_finishTime").datetimebox("getValue");
                 if (null == finishTime || ""==finishTime){
-                    $.messager.alert('警告','完成回访时,完成时间不能为空','warning');
+                    $.messager.alert('警告','完成回访时,完成时间不能为空');
                     return false;
                 }
             }
@@ -299,11 +299,11 @@
                                     window.location.href="${contextPath}/customerVisit/index.html";
                                 }
                             }else{
-                                $.messager.alert('错误',ret.result,'error');
+                                $.messager.alert('错误',ret.result);
                             }
                         },
                         error: function(){
-                            $.messager.alert('错误','远程访问失败','error');
+                            $.messager.alert('错误','远程访问失败');
                         }
                     });
                 }
@@ -356,7 +356,7 @@
                     //设置当前选择的回访id
                     var visitId = $("#_id").val();
                     if (typeof(visitId)=="undefined" || null == visitId || ""==visitId){
-                        $.messager.alert('错误','回访ID丢失，请返回列表后，重新操作！','error');
+                        $.messager.alert('错误','回访ID丢失，请返回列表后，重新操作！');
                         return;
                     }
                     _formData["customerVisitId"] = visitId;
@@ -374,11 +374,11 @@
                                 $('#eventDlg').dialog('close');
                                 listEvents();
                             }else{
-                                $.messager.alert('错误',ret.result,'error');
+                                $.messager.alert('错误',ret.result);
                             }
                         },
                         error: function(){
-                            $.messager.alert('错误','远程访问失败','error');
+                            $.messager.alert('错误','远程访问失败');
                         }
                     });
                 }
@@ -440,7 +440,7 @@
             //设置当前选择的回访id
             var visitId = $("#_id").val();
             if (typeof(visitId)=="undefined" || null == visitId || ""==visitId){
-                $.messager.alert('错误','回访ID丢失，请返回列表后，重新操作！','error');
+                $.messager.alert('错误','回访ID丢失，请返回列表后，重新操作！');
                 return;
             }
             var param = bindMetadata("eventGrid", true);

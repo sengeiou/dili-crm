@@ -135,7 +135,7 @@
         function openDetail(){
             var selected = $("#grid").treegrid("getSelected");
             if (null == selected) {
-                $.messager.alert('警告','请选中一条数据','warning');
+                $.messager.alert('警告','请选中一条数据');
                 return;
             }
             window.location.href="${contextPath}/customerVisit/detail.html?id="+selected["id"];
@@ -161,11 +161,11 @@
                             if(data.code=="200"){
                                 $("#grid").datagrid("reload");
                             }else{
-                                $.messager.alert('错误',data.result,"error");
+                                $.messager.alert('错误',data.result);
                             }
                         },
                         error: function(){
-                            $.messager.alert('错误','远程访问失败',"error");
+                            $.messager.alert('错误','远程访问失败');
                         }
                     });
                 }

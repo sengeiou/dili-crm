@@ -76,6 +76,12 @@
             $('#addressDlg').dialog('center');
             $('#_addressForm').form('clear');
             formFocus("_addressForm", "_address_name");
+            //默认 是  默认地址
+            $('#_address_isDefault').combobox("setValue",1);
+            //重新定位到初始地址
+            window.setTimeout(function(){
+                map.panTo(point);
+            }, 50);
         }
 
         //保存地址

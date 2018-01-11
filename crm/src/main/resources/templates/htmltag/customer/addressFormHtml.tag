@@ -123,7 +123,7 @@
             map.clearOverlays();    //清除地图上所有覆盖物
             var marker = new BMap.Marker(pt);  // 创建标注
             map.addOverlay(marker);               // 将标注添加到地图中
-            // marker.setAnimation(BMAP_ANIMATION_BOUNCE); //跳动的动画
+            marker.setAnimation(BMAP_ANIMATION_BOUNCE); //跳动的动画
             geoc.getLocation(pt, function(rs){
                 var addComp = rs.addressComponents;
                 $('#_address_city').textbox("setValue",addComp.province+','+addComp.city);
@@ -142,7 +142,4 @@
 </script>
 <style>
     .tangram-suggestion-main {z-index: 9999}
-    .BMap_pop,.BMap_shadow{
-        display:none;
-    }
 </style>
