@@ -132,8 +132,8 @@
             </div>
         </div> <!-- end of region="center" -->
     </div>
-<div id="dd" class="easyui-dialog" title="客户定位 <a id='nextLocationLink' href='javascript:void(0);' style='padding: 2px 5px; margin-left: 20px; border:1px solid #ccc;
-    border-radius: 3px;color: #333;text-decoration: none;' onclick='nextLocation();'>下一个位置</a>" style="width:800px;height:400px;"
+<div id="dd" class="easyui-dialog" title="客户定位 <a id='nextLocationLink' href='javascript:void(0);'  onclick='previousLocation();'><img src='${contextPath}/resources/images/icon/previous.png'/></a>
+<a id='nextLocationLink' href='javascript:void(0);' onclick='nextLocation();'><img src='${contextPath}/resources/images/icon/next.png'/></a>" style="width:800px;height:400px;"
         data-options="resizable:true,modal:true,closed:true,onClose:function(){clientLocationMap.customer=null;}">
 
   <div id="clientAddressMapDiv" style="width:100%;height:100%;" ></div>   
@@ -314,7 +314,9 @@
                      marker.meta={id:addr.id, name:customer.name};
                      //对地图添加聚合点
                      map.addOverlay(marker);
-      
+                     if(i==customer.centerIndex){
+                      	marker.setAnimation(BMAP_ANIMATION_BOUNCE);	
+                      }
                      var label = new window.BMap.Label('', { offset: new window.BMap.Size(-7, 20) });
                      label.setStyle({border:'0px',background: "transparent none repeat"});
                      marker.setLabel(label);
@@ -329,17 +331,17 @@
                              //由于在getLocation函数返回信息之前，首先执行它下面的代码的，所以要把重新拖动后的代码放到它里面
                             //获取并显示地址信息
                              var addComp = rs.addressComponents;
-                           //  var province = addComp.province;//获取省份
+                             var province = addComp.province;//获取省份
                              var city = addComp.city;//获取城市
-                            // var district = addComp.district;//区
+                             var district = addComp.district;//区
                             // var street = addComp.street;//街
-                            // var addr=province+city+district+street;
+                             var ad=province+city+district;
                              
                              
                              
                              var content = "<table>";  
                              content = content + "<tr><td> 名称："+(typeof(addr['name'])=='undefined'?'':addr['name'])+"</td></tr>";  
-                             content = content + "<tr><td> 城市："+city+"</td></tr>";
+                             content = content + "<tr><td> 城市："+ad+"</td></tr>";
                              content = content + "<tr><td> 地址："+(typeof(addr['address'])=='undefined'?'':addr['address'])+"</td></tr>"; 
                              content += "</table>";
                          	 var infowindow = new BMap.InfoWindow(content,{offset:new BMap.Size(0, -10)});
@@ -348,10 +350,13 @@
                      	});
                        
                      });
+   
+                     
                    //添加聚合点到数组
                      markers.push(marker);	
                    //添加聚合点到图层
-                     markerClusterer.addMarker(marker);
+                     //markerClusterer.addMarker(marker);
+                    
                 }
                 //保存聚合点到全局对象,用以下一次清空
                clientLocationMap.markers=markers;
