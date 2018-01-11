@@ -29,7 +29,6 @@
                                 let ttIframe = document.getElementById("orders");
                                 if(ttIframe != null){
                                     ttIframe.onload = function(){
-//                                        console.log("test postMessage")
                                         ttIframe.contentWindow.postMessage("http://crm.diligrp.com/resources/css/reportQuery.css", "${chartServer}");
                                     }
                                 }
