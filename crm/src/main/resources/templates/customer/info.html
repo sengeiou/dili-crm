@@ -23,7 +23,12 @@
         /* 无边框文本框 */
         .noborder{
             border:none;
+           
         }
+        .noborder .textbox-text {
+        	color: #118bde!important;
+        }
+        
     </style>
     <script type="text/javascript" src="/resources/easyui/js/jquery-3.2.1.min.js"></script>
     <!-- easyui -->
@@ -180,13 +185,13 @@
 
     <form id="_form" class="easyui-form" method="post" >
         <input name="_id" id="_id" type="hidden">
-        <table style="width: 100%;padding-top: 10px; margin: 0px;">
+        <table style="width: 100%;padding-top: 10px; margin: 0px; color: #118bde">
             <tr>
                 <td >
                     <input class="easyui-textbox" name="_name" id="_name"  data-options="labelAlign:'right', cls:'noborder', readonly:true, label:'客户名称:'" />
                 </td>
                 <td >
-                    <input class="easyui-textbox" name="_type" id="_type"  data-options="labelAlign:'right', cls:'noborder', editable:false, readonly:true, hasDownArrow:false, label:'客户类型:'" />
+                    <input class="easyui-textbox"  name="_type" id="_type"  data-options="labelAlign:'right', cls:'noborder', editable:false, readonly:true, hasDownArrow:false, label:'客户类型:'" />
                     <#comboProvider _id="_type" _provider='dataDictionaryValueProvider' _queryParams='{dd_id:"4"}'/>
                 </td>
             </tr>

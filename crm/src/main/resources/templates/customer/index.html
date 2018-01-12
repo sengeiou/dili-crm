@@ -336,22 +336,42 @@
                      	var gc = new BMap.Geocoder();  
                      	var m=this;
                      	gc.getLocation(p, function (rs) {
-                             //由于在getLocation函数返回信息之前，首先执行它下面的代码的，所以要把重新拖动后的代码放到它里面
-                            //获取并显示地址信息
-                             var addComp = rs.addressComponents;
-                             var province = addComp.province;//获取省份
-                             var city = addComp.city;//获取城市
-                             var district = addComp.district;//区
-                            // var street = addComp.street;//街
-                             var ad=province+city+district;
-                             
-                             var content = "<table>";  
-                             content = content + "<tr><td> 名称："+(typeof(addr['name'])=='undefined'?'':addr['name'])+"</td></tr>";  
-                             content = content + "<tr><td> 城市："+ad+"</td></tr>";
-                             content = content + "<tr><td> 地址："+(typeof(addr['address'])=='undefined'?'':addr['address'])+"</td></tr>"; 
-                             content += "</table>";
-                         	 var infowindow = new BMap.InfoWindow(content,{offset:new BMap.Size(0, -10)});
-                         	 m.openInfoWindow(infowindow);
+
+                            //由于在getLocation函数返回信息之前，首先执行它下面的代码的，所以要把重新拖动后的代码放到它里面
+                           //获取并显示地址信息
+                            var addComp = rs.addressComponents;
+                            var province = addComp.province;//获取省份
+                            var city = addComp.city;//获取城市
+                            var district = addComp.district;//区
+                           // var street = addComp.street;//街
+                            var ad=province+city+district;
+                           
+                            
+                            //第三方InfoBox
+                            if (typeof(infoBoxTemp)!='undefined') {
+                                infoBoxTemp.close();
+                            }
+                            var content = "<table style='margin-top: 20px;color:#118bde;'>";  
+                            content = content + "<tr><td> <strong>名称：</strong>"+(typeof(addr['name'])=='undefined'?'':addr['name'])+"</td></tr>";  
+                            content = content + "<tr><td> <strong>城市：</strong>"+ad+"</td></tr>";
+                            content = content + "<tr><td> <strong>地址：</strong>"+(typeof(addr['address'])=='undefined'?'':addr['address'])+"</td></tr>"; 
+                            content += "</table>";
+                            var infoBox = new BMapLib.InfoBox(map, content, {
+                                boxStyle:{
+                                    background: "white none repeat scroll 0% 0%"
+                            		,border:"1px solid #118bde"
+                                    // background:"url('${contextPath}/resources/images/bg.png') no-repeat center top",
+                                   , width: "480px"
+                                    ,height: "140px"
+                                }
+                                ,closeIconMargin: "1px 1px 0 0"
+                                ,offset: new BMap.Size(0, 18)
+                                ,closeIconUrl:"${contextPath}/resources/images/close24.png"
+                                ,enableAutoPan: true
+                                ,align: INFOBOX_AT_TOP
+                            });
+                            infoBoxTemp = infoBox;
+                            infoBox.open(m);
                          	
                      	});
                        
