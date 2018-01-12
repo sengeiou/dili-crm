@@ -66,8 +66,10 @@
              // }
              // $('#_certificateTime').datebox('setValue', year+"-"+month+"-"+day);
          }
-
+         //经营区域地图对象
          var operatingAreaMap=null;
+         //经营区域的地图搜索自动完成对象
+         var areaAc =null;
         // var markes=[];
          function initOperatingAreaMap(city){
         	 var lat ="<#config name='map.lat' />";
@@ -152,7 +154,46 @@
             	
             	 initOperatingAreaMap(city);
              };
-             
+             initAreaAc();
+         }
+
+         function initAreaAc() {
+             if (areaAc == null){
+                 //建立一个自动完成的对象
+                 areaAc = new BMap.Autocomplete(
+                     {"input" : "suggestArea"
+                         ,"location" : operatingAreaMap
+                     });
+                 /**
+                  * 鼠标放在下拉列表上的事件
+                  */
+                 areaAc.addEventListener("onhighlight", function(e) {
+                     var str = "";
+                     var _value = e.fromitem.value;
+                     var value = "";
+                     if (e.fromitem.index > -1) {
+                         value = _value.province +  _value.city +  _value.district +  _value.street +  _value.business;
+                     }
+                     str = "FromItem<br />index = " + e.fromitem.index + "<br />value = " + value;
+                     value = "";
+                     if (e.toitem.index > -1) {
+                         _value = e.toitem.value;
+                         value = _value.province +  _value.city +  _value.district +  _value.street +  _value.business;
+                     }
+                     str += "<br />ToItem<br />index = " + e.toitem.index + "<br />value = " + value;
+                     G("areaSearchResultPanel").innerHTML = str;
+                 });
+
+                 /**
+                  * 点击确认下拉中的某项
+                  */
+                 areaAc.addEventListener("onconfirm", function(e) {    //鼠标点击下拉列表后的事件
+                     var _value = e.item.value;
+                     var myArea = _value.province +  _value.city +  _value.district +  _value.street +  _value.business;
+                     G("searchResultPanel").innerHTML ="onconfirm<br />index = " + e.item.index + "<br />myValue = " + myValue;
+                     setPlace(myArea);
+                 });
+             }
          }
          /**
           * 根据选择的数据进行位置搜索
@@ -160,17 +201,36 @@
          function setPlace(city){
              function areaSearch(){
                  var poi = local.getResults().getPoi(0);
-                 $('#_address_city').textbox("setValue", poi.province +','+  poi.city);
-                 $('#_address_address').textbox("setValue", poi.address);
-                 var pp = poi.point;    //获取第一个智能搜索的结果
-                 operatingAreaMap.centerAndZoom(pp, 18);
-                 addOverlay(pp);
+                 var pt = poi.point;    //获取第一个智能搜索的结果
+                 geoc.getLocation(pt, function(rs){
+                     var addComp = rs.addressComponents;
+                     $('#selectOperatingArea').textbox("setValue",addComp.province+addComp.city+addComp.district);
+                     $('#selectedAreaLat').val(pt.lat);
+                     $('#selectedAreaLng').val(pt.lng);
+                 });
+                 operatingAreaMap.centerAndZoom(pt, 18);
+                 addOverlay(pt);
              }
              var local = new BMap.LocalSearch(map, { //智能搜索
                  onSearchComplete: areaSearch
              });
              local.search(city);
          }
+
+
+
+         function queryArea() {
+             areaAc.search($('#suggestId').val());
+         }
+
+         /**
+          * 地图加载完成之后的监听事件，把当前所展示的位置的中心区域坐标赋值给地图坐标
+          */
+         // operatingAreaMap.addEventListener("tilesloaded",function(e){
+         //     var pt = operatingAreaMap.getBounds().getCenter();
+         //     ac.setLocation(pt);
+         // });
+
 		function confirmSelectedArea(){
 			var selectOperatingArea=$('#selectOperatingArea').textbox("getValue");
 			var lat=$('#selectedAreaLat').val();
@@ -446,6 +506,10 @@
          <tr>
              <td width="100%" height="75%" style="width: 100%;height: 88%;">
                  <div  id="operatingAreaMapDiv" style="width: 100%;height: 88%; position: absolute;" ></div>
+                 <div style="padding-top:5px;padding-left:10px;position: fixed;width: 30%;">
+                     <div id="a-result" style="text-align: left"><input type="text" id="suggestArea" placeholder="地址搜索" value="" style="width:60%; height: 20px; line-height: 20px;border: 1px solid #d4d4d4; "/><a href="#" class="easyui-linkbutton" id="queryAddress" data-options="width:24,height:24" iconCls="icon-search" onclick="queryArea()"></a></div>
+                     <div id="areaSearchResultPanel" style="border:1px solid #C0C0C0;width:150px;height:auto; display:none;"></div>
+                 </div>
              </td>
          </tr>
      </table>

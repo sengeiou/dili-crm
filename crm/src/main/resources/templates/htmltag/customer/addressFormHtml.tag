@@ -84,7 +84,7 @@
             var _value = e.item.value;
             myValue = _value.province +  _value.city +  _value.district +  _value.street +  _value.business;
             G("searchResultPanel").innerHTML ="onconfirm<br />index = " + e.item.index + "<br />myValue = " + myValue;
-            setPlace();
+            setAddress();
         });
 
         function queryAddress() {
@@ -94,7 +94,7 @@
         /**
          * 根据选择的数据进行位置搜索
          */
-        function setPlace(){
+        function setAddress(){
             map.clearOverlays();    //清除地图上所有覆盖物
             function addressSearch(){
                 var poi = local.getResults().getPoi(0);
@@ -104,7 +104,7 @@
                 $('#_address_lng').val(pp.lng);
                 $('#_address_lat').val(pp.lat);
                 map.centerAndZoom(pp, 12);
-                addOverlay(map,pp);
+                addOverlayForAddress(map,pp);
             }
             var local = new BMap.LocalSearch(map, { //智能搜索
                 onSearchComplete: addressSearch
@@ -120,7 +120,7 @@
             var pt = e.point;
             $('#_address_lng').val(pt.lng);
             $('#_address_lat').val(pt.lat);
-            addOverlay(map,pt);
+            addOverlayForAddress(map,pt);
             geoc.getLocation(pt, function(rs){
                 var addComp = rs.addressComponents;
                 $('#_address_city').textbox("setValue",addComp.province+','+addComp.city);
@@ -136,7 +136,7 @@
             ac.setLocation(pt);
         });
 
-        function addOverlay(map,point) {
+        function addOverlayForAddress(map,point) {
             map.clearOverlays();    //清除地图上所有覆盖物
             var marker = new BMap.Marker(point);  // 创建标注
             map.addOverlay(marker);               // 将标注添加到地图中
