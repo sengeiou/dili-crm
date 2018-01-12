@@ -1,4 +1,7 @@
  <#body>
+ <style>
+     .tangram-suggestion-main {z-index: 9999}
+ </style>
      <!-- 城市控件js -->
      <#customer_cityComboJs/>
 
@@ -158,31 +161,32 @@
          }
 
          function initAreaAc() {
+             $('#suggestArea').val('');
              if (areaAc == null){
                  //建立一个自动完成的对象
                  areaAc = new BMap.Autocomplete(
                      {"input" : "suggestArea"
                          ,"location" : operatingAreaMap
                      });
-                 /**
-                  * 鼠标放在下拉列表上的事件
-                  */
-                 areaAc.addEventListener("onhighlight", function(e) {
-                     var str = "";
-                     var _value = e.fromitem.value;
-                     var value = "";
-                     if (e.fromitem.index > -1) {
-                         value = _value.province +  _value.city +  _value.district +  _value.street +  _value.business;
-                     }
-                     str = "FromItem<br />index = " + e.fromitem.index + "<br />value = " + value;
-                     value = "";
-                     if (e.toitem.index > -1) {
-                         _value = e.toitem.value;
-                         value = _value.province +  _value.city +  _value.district +  _value.street +  _value.business;
-                     }
-                     str += "<br />ToItem<br />index = " + e.toitem.index + "<br />value = " + value;
-                     G("areaSearchResultPanel").innerHTML = str;
-                 });
+                 // /**
+                 //  * 鼠标放在下拉列表上的事件
+                 //  */
+                 // areaAc.addEventListener("onhighlight", function(e) {
+                 //     var str = "";
+                 //     var _value = e.fromitem.value;
+                 //     var value = "";
+                 //     if (e.fromitem.index > -1) {
+                 //         value = _value.province +  _value.city +  _value.district +  _value.street +  _value.business;
+                 //     }
+                 //     str = "FromItem<br />index = " + e.fromitem.index + "<br />value = " + value;
+                 //     value = "";
+                 //     if (e.toitem.index > -1) {
+                 //         _value = e.toitem.value;
+                 //         value = _value.province +  _value.city +  _value.district +  _value.street +  _value.business;
+                 //     }
+                 //     str += "<br />ToItem<br />index = " + e.toitem.index + "<br />value = " + value;
+                 //     $("#areaSearchResultPanel").innerHTML = str;
+                 // });
 
                  /**
                   * 点击确认下拉中的某项
@@ -190,11 +194,15 @@
                  areaAc.addEventListener("onconfirm", function(e) {    //鼠标点击下拉列表后的事件
                      var _value = e.item.value;
                      var myArea = _value.province +  _value.city +  _value.district +  _value.street +  _value.business;
-                     G("searchResultPanel").innerHTML ="onconfirm<br />index = " + e.item.index + "<br />myValue = " + myValue;
+                     // $("#areaSearchResultPanel").innerHTML ="onconfirm<br />index = " + e.item.index + "<br />myArea = " + myArea;
                      setPlace(myArea);
                  });
              }
          }
+         /**
+          * 地图上的点击事件
+          */
+         var geoco = new BMap.Geocoder();
          /**
           * 根据选择的数据进行位置搜索
           */
@@ -202,7 +210,7 @@
              function areaSearch(){
                  var poi = local.getResults().getPoi(0);
                  var pt = poi.point;    //获取第一个智能搜索的结果
-                 geoc.getLocation(pt, function(rs){
+                 geoco.getLocation(pt, function(rs){
                      var addComp = rs.addressComponents;
                      $('#selectOperatingArea').textbox("setValue",addComp.province+addComp.city+addComp.district);
                      $('#selectedAreaLat').val(pt.lat);
@@ -211,7 +219,7 @@
                  operatingAreaMap.centerAndZoom(pt, 11);
                  addOverlay(pt);
              }
-             var local = new BMap.LocalSearch(map, { //智能搜索
+             var local = new BMap.LocalSearch(operatingAreaMap, { //智能搜索
                  onSearchComplete: areaSearch
              });
              local.search(city);
