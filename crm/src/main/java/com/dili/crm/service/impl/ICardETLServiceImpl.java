@@ -1,11 +1,16 @@
 package com.dili.crm.service.impl;
 
+import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+
+import javax.annotation.Resource;
 
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -15,9 +20,12 @@ import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.alibaba.fastjson.JSONObject;
+import com.dili.crm.dao.CityMapper;
 import com.dili.crm.dao.CustomerExtensionsMapper;
 import com.dili.crm.dao.CustomerMapper;
 import com.dili.crm.domain.Address;
+import com.dili.crm.domain.City;
 import com.dili.crm.domain.Customer;
 import com.dili.crm.domain.CustomerExtensions;
 import com.dili.crm.domain.IcardUserAccount;
@@ -26,6 +34,7 @@ import com.dili.crm.domain.SystemConfig;
 import com.dili.crm.domain.dto.IcardUserCardDTO;
 import com.dili.crm.domain.toll.TollCustomer;
 import com.dili.crm.provider.YnProvider;
+import com.dili.crm.rpc.MapRpc;
 import com.dili.crm.service.AddressService;
 import com.dili.crm.service.CustomerExtensionsService;
 import com.dili.crm.service.CustomerService;
@@ -34,6 +43,7 @@ import com.dili.crm.service.IcardUserAccountService;
 import com.dili.crm.service.IcardUserCardService;
 import com.dili.crm.service.SystemConfigService;
 import com.dili.crm.service.toll.TollCustomerService;
+import com.dili.ss.domain.BaseOutput;
 import com.dili.ss.domain.BasePage;
 import com.dili.ss.dto.DTOUtils;
 import com.dili.ss.util.SystemConfigUtils;
@@ -53,7 +63,6 @@ public class ICardETLServiceImpl implements ICardETLService{
 	@Autowired private AddressService addressService;
 	@Autowired private TollCustomerService tollCustomerService;
 	@Autowired private SystemConfigService systemConfigService;
-
 	/**
 	 * @param customer 要插入或者更新到crm的客户信息
 	 * @param customerExtensionsList 要插入到或者更新到cmr的帐户信息
@@ -134,6 +143,12 @@ public class ICardETLServiceImpl implements ICardETLService{
 		if(updateExtensionList.size()>0) {
 			this.customerExtensionsService.batchUpdate(updateExtensionList);
 		}
+		
+		Address defaultAddrCondtion=DTOUtils.newDTO(Address.class);
+		defaultAddrCondtion.setIsDefault(1);
+		defaultAddrCondtion.setCustomerId(customer.getId());
+		int defaultAddrListSize=this.addressService.list(defaultAddrCondtion).size();
+		
 		//对地址信息做插入或者更新的判断
 		List<Address>addrList=new ArrayList<>();
 		for(Address addr:address) {
@@ -148,7 +163,14 @@ public class ICardETLServiceImpl implements ICardETLService{
 				addr.setCustomerId(customer.getId());
 				addrList.add(addr);
 			}
+			//如果当前客户没有默认地址,将第一个设置为默认地址
+			if(defaultAddrListSize==0) {
+				if(StringUtils.isNotBlank(addr.getCityId())) {
+					addr.setIsDefault(1);
+				}
+			}
 		}
+
 		if(addrList.size()>0) {
 			this.addressService.batchInsert(addrList);
 		}
@@ -463,12 +485,42 @@ public class ICardETLServiceImpl implements ICardETLService{
 		if(addr!=null) {
 			Address address=DTOUtils.newDTO(Address.class);
 			address.setAddress(addr);
-			resultList.add(address);
+			resultList.add(this.setLocationToAddress(address));
 		}
 		
 		
 		return resultList;
 	}
+	
+	@SuppressWarnings("unchecked")
+	private Address setLocationToAddress(Address address) {
+		String addr=address.getAddress();
+		try {
+			//根据地址查询经纬度
+			BaseOutput<Map<String,Object>> baseOut = addressService.locationAddress(addr);
+			if(baseOut.isSuccess()) {
+				Map<String,Object> cityJson=baseOut.getData();
+				String lat=cityJson.get("lat").toString();
+				String lng=cityJson.get("lng").toString();
+				//根据经纬度查询行政区划代码
+				baseOut=addressService.locationReverse(lat, lng);
+				if(baseOut.isSuccess()){
+					Map<String,Object> addressComponent=baseOut.getData();
+					//行政区划代码即为CityId
+					 String cityId= addressComponent.get("adcode").toString();
+					 //设置经纬度,城市
+					 address.setCityId(cityId);
+	        		 address.setLat(lat);
+	        		 address.setLng(lng);
+				}
+			}
+		} catch (Exception e) {
+			logger.error(e.getMessage(), e);
+		}
+		
+		return address;
+	}
+	
 	/**
 	 * @param icardUserCardList 电子结算系统帐号列表
 	 * @return 返回crm系统统帐号列表
@@ -502,7 +554,7 @@ public class ICardETLServiceImpl implements ICardETLService{
 		if(addr!=null) {
 			Address address=DTOUtils.newDTO(Address.class);
 			address.setAddress(addr);
-			resultList.add(address);
+			resultList.add(this.setLocationToAddress(address));
 		}
 		
 		return resultList;

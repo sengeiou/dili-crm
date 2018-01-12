@@ -77,6 +77,26 @@ public class AddressServiceImpl extends BaseServiceImpl<Address, Long> implement
         return BaseOutput.success("修改成功");
     }
     /**
+     * 获取地理编码
+     *
+     * @param address
+     * @return
+     */
+    @Override
+    public BaseOutput locationAddress(String address) throws Exception {
+    	Map<String,String> params = Maps.newHashMap();
+        params.put("address",address);
+        params.put("output", "json");
+        String geocoder = mapRpc.geocoder(params);
+        JSONObject object = JSONObject.parseObject(geocoder);
+        if (0==object.getIntValue("status")){
+            JSONObject location = object.getJSONObject("result").getJSONObject("location");
+            return BaseOutput.success().setData(location);
+            
+        }
+        return BaseOutput.failure("访问出错");
+    }
+    /**
      * 获取逆地理编码
      *
      * @param address

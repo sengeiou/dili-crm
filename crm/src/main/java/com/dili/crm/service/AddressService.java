@@ -30,4 +30,10 @@ public interface AddressService extends BaseService<Address, Long> {
      * @return
      */
     BaseOutput locationReverse(String lat,String lng) throws Exception;
+    /**
+     * 获取地理编码
+     * @param lat,lng
+     * @return
+     */
+     BaseOutput locationAddress(String address) throws Exception;
 }

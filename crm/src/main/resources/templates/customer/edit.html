@@ -68,6 +68,7 @@
          }
 
          var operatingAreaMap=null;
+        // var markes=[];
          function initOperatingAreaMap(city){
         	 var lat ="<#config name='map.lat' />";
              var lng ="<#config name='map.lng' />";
@@ -82,18 +83,26 @@
                  //单击获取点击的经纬度
                  operatingAreaMap.addEventListener("click",mapClick);
              }
+            // $.each(markes,function(k,v){
+            	// operatingAreaMap.removeOverlay(v);
+            // });
+            // operatingAreaMap.reset();
+            // markes=[];
+            // console.info(city)
              if(null != city) {
             	 var myGeo = new BMap.Geocoder();
          		// 将地址解析结果显示在地图上,并调整地图视野
          		myGeo.getPoint(city, function(point){
          			if (point) {
+         				
          				operatingAreaMap.centerAndZoom(point, 11);
          				 $('#selectOperatingArea').textbox("setValue",city);
                          $('#selectedAreaLat').val(point.lat);
                          $('#selectedAreaLng').val(point.lng);
-                         operatingAreaMap.clearOverlays(); 
-         				var marker = new BMap.Marker(point);  // 创建标注
-         	             operatingAreaMap.addOverlay(marker);               // 将标注添加到地图中
+                        // operatingAreaMap.clearOverlays(); 
+         				//var marker = new BMap.Marker(point);  // 创建标注
+         	            // operatingAreaMap.addOverlay(marker);               // 将标注添加到地图中
+                         addOverlay(point);
          			}else{
          				operatingAreaMap.centerAndZoom(new BMap.Point(lng, lat), 11);
          			}
@@ -120,6 +129,7 @@
              var marker = new BMap.Marker(point);  // 创建标注
              operatingAreaMap.addOverlay(marker);               // 将标注添加到地图中
              // marker.setAnimation(BMAP_ANIMATION_BOUNCE); //跳动的动画
+             //markes.push(marker);
          }
 
          /**
@@ -138,7 +148,7 @@
              }else{
             	 var reg=/,/g;
             	 var city=$('#_operatingArea').combobox('getText').replace(reg,'');
-            	 console.info(city)//黑龙江省哈尔滨市南岗区
+            	 //console.info(city)//黑龙江省哈尔滨市南岗区
             	
             	 initOperatingAreaMap(city);
              };
@@ -187,6 +197,8 @@
 	                	$("#_operatingArea").combobox('setText',selectOperatingArea);
 	                	//设置不是手工输入
 	                	selectName();
+	                	
+	                	$('#selectOperatingArea').textbox("setValue","");
 	                 }else{
 	                    $.messager.alert('错误',data.result);
 	                 }
