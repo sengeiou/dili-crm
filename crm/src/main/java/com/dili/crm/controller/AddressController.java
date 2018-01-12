@@ -2,30 +2,25 @@ package com.dili.crm.controller;
 
 import com.alibaba.fastjson.JSONObject;
 import com.dili.crm.domain.Address;
-import com.dili.crm.domain.City;
 import com.dili.crm.rpc.MapRpc;
 import com.dili.crm.service.AddressService;
 import com.dili.crm.service.CityService;
 import com.dili.ss.domain.BaseOutput;
-import com.google.common.collect.Maps;
-
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
-
-import java.io.IOException;
-import java.util.List;
-import java.util.Map;
-
-import javax.annotation.Resource;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
+
+import javax.annotation.Resource;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * 由MyBatis Generator工具自动生成
@@ -61,6 +56,11 @@ public class AddressController {
 	})
     @RequestMapping(value="/listPage", method = {RequestMethod.GET, RequestMethod.POST})
     public @ResponseBody String listPage(Address address) throws Exception {
+        Map<String, Object> metadata = new HashMap<>();
+        JSONObject cityProvider = new JSONObject();
+        cityProvider.put("provider", "cityProvider");
+        metadata.put("cityId", cityProvider);
+        address.mset(metadata);
         return addressService.listEasyuiPageByExample(address, true).toString();
     }
 

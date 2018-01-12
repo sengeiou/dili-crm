@@ -132,7 +132,7 @@
             </div>
         </div> <!-- end of region="center" -->
     </div>
-<div id="dd" class="easyui-dialog" title="客户定位 <a id='nextLocationLink' style='vertical-align: sub;' href='javascript:void(0); '  onclick='previousLocation();'><img src='${contextPath}/resources/images/icon/previous.png'/></a>
+<div id="dd" class="easyui-dialog" title="&nbsp;&nbsp;客户:&nbsp;<span id='c_name'></span> <span id='c_address'>&nbsp;&nbsp;所在城市:&nbsp;<input type='text' id='address_city' style='width:20%; height: 20px; line-height: 20px;border: 1px solid #d4d4d4;'/></span> <a id='nextLocationLink' style='vertical-align: sub;' href='javascript:void(0); '  onclick='previousLocation();'><img src='${contextPath}/resources/images/icon/previous.png'/></a>
 <a id='nextLocationLink' style='vertical-align: sub;' href='javascript:void(0);' onclick='nextLocation();'><img src='${contextPath}/resources/images/icon/next.png'/></a>" style="width:800px;height:400px;"
         data-options="resizable:true,modal:true,closed:true,onClose:function(){clientLocationMap.customer=null;}">
 
@@ -276,10 +276,11 @@
 		}
 		
         function showMapDialog(customer) {
-        	
+        	debugger;
         	addresses=customer.addresses;
         	centerAddress=addresses[customer.centerIndex];
-        	
+        	$('#c_name').html(customer.name);
+            $('#address_city').val(centerAddress['cityId']);
         	//绑定下一个位置事件
 
               clientLocationMap.customer=customer;
@@ -344,8 +345,6 @@
                             // var street = addComp.street;//街
                              var ad=province+city+district;
                              
-                             
-                             
                              var content = "<table>";  
                              content = content + "<tr><td> 名称："+(typeof(addr['name'])=='undefined'?'':addr['name'])+"</td></tr>";  
                              content = content + "<tr><td> 城市："+ad+"</td></tr>";
@@ -385,15 +384,16 @@
             }else{
                 $.ajax({
                     type: "POST",
-                    url: "${contextPath}/address/list",
+                    url: "${contextPath}/address/listPage",
                     data: {customerId:selected.id},
                     processData:true,
                     dataType: "json",
                     async : true,
                     success: function (data) {
+                        debugger;
                     	var defaultAddress=null;
                     	var addresses=[];
-                    	$.each(data,function(k,v){
+                    	$.each(data.rows,function(k,v){
                     	  //判断地址经纬度是否存在
                     	  if(typeof(v.lat)=='string'&&typeof(v.lat)=='string'){
                    			 addresses.push(v);

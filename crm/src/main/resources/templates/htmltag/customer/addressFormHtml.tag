@@ -28,8 +28,8 @@
             <tr style="height: 70%;width: 100%;">
                 <td style="height: 100%;width: 100%;" colspan="4" align="center" >
                     <div id="mapContainer" style="width: 100%;height: 86%; position: absolute;" align="center"></div>
-                    <div style="padding-top:1px;position: fixed;width: 30%;<%if(has(action) && action!="edit"){%>display: none;<%}%>">
-                        <div id="r-result"><input type="text" id="suggestId" placeholder="地址搜索" value="" style="width:60%; height: 20px; line-height: 20px;border: 1px solid #d4d4d4; "/><a href="#" class="easyui-linkbutton" id="queryAddress" data-options="width:24,height:24" iconCls="icon-search" onclick="queryAddress()"></a></div>
+                    <div style="padding-top:5px;padding-left:10px;position: fixed;width: 30%;<%if(has(action) && action!="edit"){%>display: none;<%}%>">
+                        <div id="r-result" style="text-align: left"><input type="text" id="suggestId" placeholder="地址搜索" value="" style="width:60%; height: 20px; line-height: 20px;border: 1px solid #d4d4d4; "/><a href="#" class="easyui-linkbutton" id="queryAddress" data-options="width:24,height:24" iconCls="icon-search" onclick="queryAddress()"></a></div>
                         <div id="searchResultPanel" style="border:1px solid #C0C0C0;width:150px;height:auto; display:none;"></div>
                     </div>
                 </td>
@@ -104,7 +104,7 @@
                 $('#_address_lng').val(pp.lng);
                 $('#_address_lat').val(pp.lat);
                 map.centerAndZoom(pp, 12);
-                map.addOverlay(new BMap.Marker(pp));    //添加标注
+                addOverlay(map,pp);
             }
             var local = new BMap.LocalSearch(map, { //智能搜索
                 onSearchComplete: addressSearch
@@ -120,10 +120,7 @@
             var pt = e.point;
             $('#_address_lng').val(pt.lng);
             $('#_address_lat').val(pt.lat);
-            map.clearOverlays();    //清除地图上所有覆盖物
-            var marker = new BMap.Marker(pt);  // 创建标注
-            map.addOverlay(marker);               // 将标注添加到地图中
-            marker.setAnimation(BMAP_ANIMATION_BOUNCE); //跳动的动画
+            addOverlay(map,pt);
             geoc.getLocation(pt, function(rs){
                 var addComp = rs.addressComponents;
                 $('#_address_city').textbox("setValue",addComp.province+','+addComp.city);
@@ -138,6 +135,13 @@
             var pt = map.getBounds().getCenter();
             ac.setLocation(pt);
         });
+
+        function addOverlay(map,point) {
+            map.clearOverlays();    //清除地图上所有覆盖物
+            var marker = new BMap.Marker(point);  // 创建标注
+            map.addOverlay(marker);               // 将标注添加到地图中
+            marker.setAnimation(BMAP_ANIMATION_BOUNCE); //跳动的动画
+        }
     <%}%>
 </script>
 <style>
