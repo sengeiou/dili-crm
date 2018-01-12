@@ -135,7 +135,7 @@ public class AddressServiceImpl extends BaseServiceImpl<Address, Long> implement
         Map params = Maps.newHashMap();
         params.put("location", lat+","+lng);
         params.put("output", "json");
-//        params.put("latest_admin","1");
+        params.put("latest_admin","1");
         String geocoder = mapRpc.geocoder(params);
         JSONObject object = JSONObject.parseObject(geocoder);
         if (0==object.getIntValue("status")){
