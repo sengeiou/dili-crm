@@ -201,8 +201,8 @@ public class CustomerServiceImpl extends BaseServiceImpl<Customer, Long> impleme
 	    modelMap.put("clientPurchasingTopChartUrl",this.chartService.getClientPurchasingTopChartUrl());
 	    modelMap.put("clientSalesTopChartUrl",this.chartService.getClientSalesTopChartUrl());
 	    modelMap.put("clientUserContributionChartUrl",this.chartService.getClientUserContributionChartUrl());
-		if(customer.getParentId() != null){
-			Customer parent = get(customer.getParentId());
+		if(customer.aget(ValueProviderUtils.ORIGINAL_KEY_PREFIX+"parentId") != null){
+			Customer parent = get(Long.parseLong(customer.aget(ValueProviderUtils.ORIGINAL_KEY_PREFIX+"parentId").toString()));
 			modelMap.put("parentCustomer", parent);
 		}
 	}
