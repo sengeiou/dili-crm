@@ -36,6 +36,7 @@ import com.dili.crm.domain.toll.TollCustomer;
 import com.dili.crm.provider.YnProvider;
 import com.dili.crm.rpc.MapRpc;
 import com.dili.crm.service.AddressService;
+import com.dili.crm.service.CityService;
 import com.dili.crm.service.CustomerExtensionsService;
 import com.dili.crm.service.CustomerService;
 import com.dili.crm.service.ICardETLService;
@@ -63,6 +64,7 @@ public class ICardETLServiceImpl implements ICardETLService{
 	@Autowired private AddressService addressService;
 	@Autowired private TollCustomerService tollCustomerService;
 	@Autowired private SystemConfigService systemConfigService;
+	@Autowired private CityService cityService;
 	/**
 	 * @param customer 要插入或者更新到crm的客户信息
 	 * @param customerExtensionsList 要插入到或者更新到cmr的帐户信息
@@ -476,22 +478,16 @@ public class ICardETLServiceImpl implements ICardETLService{
 	 * @return 返回crm用户信息对象
 	 */
 	private List<Address> transTollCustomerAsAddress(TollCustomer tollCustomer) {
-		String homeAddr=StringUtils.trimToNull(tollCustomer.getHomeAddr());
-		String addr=StringUtils.trimToNull(tollCustomer.getAddr());
+		String[] addressArray=new String[] {StringUtils.trimToNull(tollCustomer.getHomeAddr()),StringUtils.trimToNull(tollCustomer.getAddr())};
 		List<Address>resultList=new ArrayList<>();
-		if(homeAddr!=null) {
-			Address address=DTOUtils.newDTO(Address.class);
-			address.setAddress(homeAddr);
-			resultList.add(address);
-		}
 		
-
-		if(addr!=null) {
-			Address address=DTOUtils.newDTO(Address.class);
-			address.setAddress(addr);
-			resultList.add(this.setLocationToAddress(address));
+		for(String addr:addressArray) {
+			if(addr!=null) {
+				Address address=DTOUtils.newDTO(Address.class);
+				address.setAddress(addr);
+				resultList.add(this.setLocationToAddress(address));
+			}
 		}
-		
 		
 		return resultList;
 	}
@@ -509,13 +505,17 @@ public class ICardETLServiceImpl implements ICardETLService{
 				//根据经纬度查询行政区划代码
 				BaseOutput<City>cityBaseOut=addressService.locationReverse(lat, lng);
 				if(cityBaseOut.isSuccess()){
-					City city=cityBaseOut.getData();
-					//行政区划代码即为CityId
-					 String cityId=String.valueOf(city.getId());
-					 //设置经纬度,城市
-					 address.setCityId(cityId);
-	        		 address.setLat(lat);
+					City addressCity=cityBaseOut.getData();
+					City city=this.findParentCity(addressCity, 2);
+					if(city!=null) {
+						 //行政区划代码即为CityId [level_type:2]
+						 String cityId=String.valueOf(city.getId());
+						 //设置经纬度,城市
+						 address.setCityId(cityId);
+					}
+					 address.setLat(lat);
 	        		 address.setLng(lng);
+
 				}else {
 					logger.info("根据经纬度未能查询到行政区划代码");
 				}
@@ -528,7 +528,27 @@ public class ICardETLServiceImpl implements ICardETLService{
 		
 		return address;
 	}
-	
+	private City findParentCity(City city,Integer levelType) {
+		if(city==null||levelType==null) {
+			return null;
+		}
+		int compareValue=levelType.compareTo(city.getLevelType());
+		if(compareValue==0) {
+			return city;
+		}else if(compareValue<0){
+			return null;
+		}else {
+			Long parentId=city.getParentId();
+			if(parentId!=null) {
+				City parentCity=this.cityService.get(parentId);
+				if(parentCity!=null) {
+					return this.findParentCity(parentCity, levelType);	
+				}
+			}
+			return null;
+		}
+		
+	}
 	/**
 	 * @param icardUserCardList 电子结算系统帐号列表
 	 * @return 返回crm系统统帐号列表
