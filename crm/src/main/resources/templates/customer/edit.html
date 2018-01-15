@@ -225,6 +225,10 @@
              local.search(city);
          }
 
+         /**
+          * 查询图标的单击事件
+          * 手动触发 Autocomplete 的search事假
+          */
          function queryArea() {
              areaAc.search($('#suggestArea').val());
          }
@@ -236,7 +240,10 @@
          //     var pt = operatingAreaMap.getBounds().getCenter();
          //     ac.setLocation(pt);
          // });
-
+         
+         /**
+          * 确认按钮的点击事件
+          */
 		function confirmSelectedArea(){
 		    disableEasyUiControl('confirmSelectedArea',true);
             var selectOperatingArea=$('#selectOperatingArea').textbox("getValue");
@@ -268,9 +275,9 @@
 	                	selectName();
 	                	$('#selectOperatingArea').textbox("setValue","");
 	                 }else{
-                        disableEasyUiControl('confirmSelectedArea',false);
 	                    $.messager.alert('错误',data.result);
 	                 }
+                    disableEasyUiControl('confirmSelectedArea',false);
 	             },
 	             error: function(){
 	                 $.messager.alert('错误','远程访问失败');

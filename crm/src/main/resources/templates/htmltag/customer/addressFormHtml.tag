@@ -87,6 +87,10 @@
             setAddress();
         });
 
+        /**
+         * 查询图标的单击事件
+         * 手动触发 Autocomplete 的search事假
+         */
         function queryAddress() {
             ac.search($('#suggestId').val());
         }
@@ -98,13 +102,23 @@
             map.clearOverlays();    //清除地图上所有覆盖物
             function addressSearch(){
                 var poi = local.getResults().getPoi(0);
-                $('#_address_city').textbox("setValue", poi.province +','+  poi.city);
-                $('#_address_address').textbox("setValue", poi.address);
-                var pp = poi.point;    //获取第一个智能搜索的结果
-                $('#_address_lng').val(pp.lng);
-                $('#_address_lat').val(pp.lat);
-                map.centerAndZoom(pp, 12);
-                addOverlayForAddress(map,pp);
+                //如果检索出来的省市为空，则再根据经纬度重新检索
+                /**
+                 * 目前遇到为空的情况，为调整省市结构导致，如果页面(Autocomplete)搜索提示"资阳市简阳市",根据这个检索出来的就是空值，
+                 *
+                 */
+                if (typeof(poi.province)=='undefined' || typeof(poi.city)=='undefined'){
+                    geocoderByPoint(poi.point);
+                }else{
+                    $('#_address_city').textbox("setValue", poi.province +','+  poi.city);
+                    $('#_address_address').textbox("setValue", poi.address);
+                    var pp = poi.point;    //获取第一个智能搜索的结果
+                    $('#_address_lng').val(pp.lng);
+                    $('#_address_lat').val(pp.lat);
+                    map.centerAndZoom(pp, 12);
+                    addOverlayForAddress(map,pp);
+                }
+
             }
             var local = new BMap.LocalSearch(map, { //智能搜索
                 onSearchComplete: addressSearch
@@ -112,21 +126,29 @@
             local.search(myValue);
         }
 
-        /**
-         * 地图上的点击事件
-         */
-        var geoc = new BMap.Geocoder();
+
         map.addEventListener("click", function(e){
             var pt = e.point;
             $('#_address_lng').val(pt.lng);
             $('#_address_lat').val(pt.lat);
             addOverlayForAddress(map,pt);
+            geocoderByPoint(pt);
+        });
+
+        /**
+         * 地图上的点击事件
+         */
+        var geoc = new BMap.Geocoder();
+        /**
+         * 根据经纬度获取城市信息
+         */
+        function geocoderByPoint(pt) {
             geoc.getLocation(pt, function(rs){
                 var addComp = rs.addressComponents;
                 $('#_address_city').textbox("setValue",addComp.province+','+addComp.city);
                 $('#_address_address').textbox("setValue", addComp.district  + addComp.street +  addComp.streetNumber);
             });
-        });
+        }
 
         /**
          * 地图加载完成之后的监听事件，把当前所展示的位置的中心区域坐标赋值给地图坐标
