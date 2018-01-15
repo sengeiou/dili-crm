@@ -94,6 +94,12 @@
             //     $.messager.alert('错误',"手动输入不合法，请选择城市");
             //     return;
             // }
+            debugger;
+            var city  = $('#_address_city').textbox("getValue");
+            if (null == city || ''==city){
+                $.messager.alert('错误',"输入不合法，请先在地图上选择城市");
+                return;
+            }
             var _formData = removeKeyStartWith($("#_addressForm").serializeObject(),"_address_");
             var _url = null;
             //没有id就新增
