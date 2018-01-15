@@ -158,17 +158,21 @@ public class ICardETLServiceImpl implements ICardETLService{
 			addrCondtion.setCustomerId(customer.getId());
 //					customerExtensions.setSystem(customerExtensions.getSystem());
 //					
-			List<Address>extensions=this.addressService.list(addrCondtion);
-			if(extensions==null||extensions.size()==0) {
+			List<Address>existedAddress=this.addressService.list(addrCondtion);
+			if(existedAddress==null||existedAddress.size()==0) {
 				addr.setCustomerId(customer.getId());
-				addrList.add(addr);
-			}
-			//如果当前客户没有默认地址,将第一个设置为默认地址
-			if(defaultAddrListSize==0) {
-				if(StringUtils.isNotBlank(addr.getCityId())) {
-					addr.setIsDefault(1);
+				addr.setIsDefault(0);
+				//如果当前客户没有默认地址,将第一个设置为默认地址
+				if(defaultAddrListSize==0) {
+					if(StringUtils.isNotBlank(addr.getCityId())) {
+						addr.setIsDefault(1);
+					}
 				}
+				
+				addrList.add(addr);
+	
 			}
+
 		}
 
 		if(addrList.size()>0) {
@@ -512,10 +516,14 @@ public class ICardETLServiceImpl implements ICardETLService{
 					 address.setCityId(cityId);
 	        		 address.setLat(lat);
 	        		 address.setLng(lng);
+				}else {
+					logger.info("根据经纬度未能查询到行政区划代码");
 				}
+			}else {
+				logger.info("根据地址未能查询到经纬度");
 			}
 		} catch (Exception e) {
-			logger.error(e.getMessage(), e);
+			logger.error("同步地址信息,查询地址信息异常"+e.getMessage(), e);
 		}
 		
 		return address;
