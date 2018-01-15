@@ -42,12 +42,22 @@ public class CacheServiceImpl implements CacheService {
 		CrmCache.lastRefreshDepartmentMapTime = System.currentTimeMillis();
 	}
 
+	@Override
 	public void refreshCity() {
 		//300秒以内不刷新城市缓存
 		if (System.currentTimeMillis() - CrmCache.lastRefreshCityMapTime <= 300000) {
 			CrmCache.lastRefreshCityMapTime = System.currentTimeMillis();
 			return;
 		}
+		List<City> output = cityService.listByExample(DTOUtils.newDTO(City.class));
+		for (City city : output) {
+			CrmCache.CITY_MAP.put(city.getId(), city);
+		}
+		CrmCache.lastRefreshCityMapTime = System.currentTimeMillis();
+	}
+
+	@Override
+	public void forceRefreshCity() {
 		List<City> output = cityService.listByExample(DTOUtils.newDTO(City.class));
 		for (City city : output) {
 			CrmCache.CITY_MAP.put(city.getId(), city);

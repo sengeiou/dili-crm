@@ -16,4 +16,8 @@ public interface CacheService {
 	 */
 	void refreshCity();
 
+	/**
+	 * 强制刷新城市缓存
+	 */
+	void forceRefreshCity();
 }
