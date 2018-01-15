@@ -7,7 +7,7 @@ import com.dili.crm.domain.Address;
 import com.dili.crm.domain.City;
 import com.dili.crm.rpc.MapRpc;
 import com.dili.crm.service.AddressService;
-import com.dili.crm.service.CacheService;
+import com.dili.crm.service.CityService;
 import com.dili.crm.utils.PinYinUtil;
 import com.dili.ss.base.BaseServiceImpl;
 import com.dili.ss.domain.BaseOutput;
@@ -15,7 +15,6 @@ import com.dili.ss.dto.DTOUtils;
 import com.google.common.collect.Maps;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -42,8 +41,8 @@ public class AddressServiceImpl extends BaseServiceImpl<Address, Long> implement
     @Resource
     private CityMapper cityMapper;
 
-    @Autowired
-    private CacheService cacheService;
+    @Resource
+    private CityService cityService;
 
     /**
      * 新增地址信息
@@ -200,8 +199,7 @@ public class AddressServiceImpl extends BaseServiceImpl<Address, Long> implement
                 data.setPinyin(PinYinUtil.getFullPinYin(d_temp,"",true));
                 data.setShortPy(PinYinUtil.getSimplePinYin(d_temp).toUpperCase());
                 data.setYn(true);
-                cityMapper.insert(data);
-                cacheService.forceRefreshCity();
+                cityService.insert(data);
             }
         }
         return data;

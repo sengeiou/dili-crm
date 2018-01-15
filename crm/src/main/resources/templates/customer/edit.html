@@ -133,7 +133,7 @@
              operatingAreaMap.clearOverlays();    //清除地图上所有覆盖物
              var marker = new BMap.Marker(point);  // 创建标注
              operatingAreaMap.addOverlay(marker);               // 将标注添加到地图中
-             // marker.setAnimation(BMAP_ANIMATION_BOUNCE); //跳动的动画
+             marker.setAnimation(BMAP_ANIMATION_BOUNCE); //跳动的动画
              //markes.push(marker);
          }
 
@@ -238,12 +238,14 @@
          // });
 
 		function confirmSelectedArea(){
-			var selectOperatingArea=$('#selectOperatingArea').textbox("getValue");
+		    disableEasyUiControl('confirmSelectedArea',true);
+            var selectOperatingArea=$('#selectOperatingArea').textbox("getValue");
 			var lat=$('#selectedAreaLat').val();
 			var lng=$('#selectedAreaLng').val();
 			
 			if(selectOperatingArea==''){
 				 $.messager.alert('提示','请选择经营区域');
+                 disableEasyUiControl('confirmSelectedArea',false);
 				 return ;
 			}
 			
@@ -264,14 +266,15 @@
 	                	$("#_operatingArea").combobox('setText',selectOperatingArea);
 	                	//设置不是手工输入
 	                	selectName();
-	                	
 	                	$('#selectOperatingArea').textbox("setValue","");
 	                 }else{
+                        disableEasyUiControl('confirmSelectedArea',false);
 	                    $.messager.alert('错误',data.result);
 	                 }
 	             },
 	             error: function(){
-	                $.messager.alert('错误','远程访问失败');
+	                 $.messager.alert('错误','远程访问失败');
+                     disableEasyUiControl('confirmSelectedArea',false);
 	            }
         	});
 			
@@ -507,7 +510,7 @@
                   <input type="hidden" id="selectedAreaLat" name="selectedAreaLat"/>
              </td>
               <td style="padding-top:5px;" width="20%" height="20%">
-                 <a href="#" class="easyui-linkbutton"  data-options="width:80" iconCls="icon-ok" onclick="confirmSelectedArea()">确定</a>
+                 <a href="#" class="easyui-linkbutton" id="confirmSelectedArea"  data-options="width:80" iconCls="icon-ok" onclick="confirmSelectedArea()">确定</a>
              </td>
          </tr>
          <tr>

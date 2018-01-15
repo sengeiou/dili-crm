@@ -38,3 +38,16 @@ function readOrEditEasyUiForm(formId,type,value) {
     var formId = ("#" + formId);
     $(formId + " .easyui-textbox," + formId + " .easyui-datetimebox," + formId + " .easyui-combobox").textbox(type,value);
 }
+
+/**
+ * 是否禁用easyUi的控件
+ * @param controlId 控件ID
+ * @param isDisable 是否禁用(true-禁用)
+ */
+function disableEasyUiControl(controlId,isDisable) {
+    if (isDisable) {
+        $("#" + controlId).linkbutton("disable");
+    }else{
+        $("#" + controlId).linkbutton("enable");
+    }
+}
