@@ -149,7 +149,7 @@ public class ICardETLServiceImpl implements ICardETLService{
 		Address defaultAddrCondtion=DTOUtils.newDTO(Address.class);
 		defaultAddrCondtion.setIsDefault(1);
 		defaultAddrCondtion.setCustomerId(customer.getId());
-		int defaultAddrListSize=this.addressService.list(defaultAddrCondtion).size();
+		int defaultAddrListSize=this.addressService.listByExample(defaultAddrCondtion).size();
 		
 		//对地址信息做插入或者更新的判断
 		List<Address>addrList=new ArrayList<>();
@@ -160,7 +160,7 @@ public class ICardETLServiceImpl implements ICardETLService{
 			addrCondtion.setCustomerId(customer.getId());
 //					customerExtensions.setSystem(customerExtensions.getSystem());
 //					
-			List<Address>existedAddress=this.addressService.list(addrCondtion);
+			List<Address>existedAddress=this.addressService.listByExample(addrCondtion);
 			if(existedAddress==null||existedAddress.size()==0) {
 				addr.setCustomerId(customer.getId());
 				addr.setIsDefault(0);
@@ -536,8 +536,6 @@ public class ICardETLServiceImpl implements ICardETLService{
 		if(compareValue==0) {
 			return city;
 		}else if(compareValue<0){
-			return null;
-		}else {
 			Long parentId=city.getParentId();
 			if(parentId!=null) {
 				City parentCity=this.cityService.get(parentId);
@@ -545,6 +543,8 @@ public class ICardETLServiceImpl implements ICardETLService{
 					return this.findParentCity(parentCity, levelType);	
 				}
 			}
+			return null;
+		}else {
 			return null;
 		}
 		
