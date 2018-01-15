@@ -70,8 +70,11 @@
 						   loadFilter:treegridLoadFilter">
 	                <thead>
 	                    <tr>
-	                        <th width="15%" data-options="field:'name',   sortable:'true', order:'asc', align:'left', resizable:'true', fixed:'false'">
+	                        <th width="14%" data-options="field:'name',   sortable:'true', order:'asc', align:'left', resizable:'true', fixed:'false'">
 	                            名称
+	                        </th>
+	                  		<th width="4%" data-options="field:'id',   sortable:'true', order:'asc', align:'left', resizable:'true', fixed:'false'">
+	                            ID
 	                        </th>
 	                        <th width="6%" data-options="field:'shortName',   sortable:'true', order:'asc', align:'center', resizable:'true', fixed:'false'">
 	                            简称
@@ -82,7 +85,7 @@
 	                        <th width="4%" data-options="field:'cityCode',   sortable:'true', order:'asc', align:'center', resizable:'true', fixed:'false'">
 	                            区号
 	                        </th>
-	                        <th width="12%" data-options="field:'mergerName',   sortable:'true', order:'asc', align:'center', resizable:'true', fixed:'false'">
+	                        <th width="11%" data-options="field:'mergerName',   sortable:'true', order:'asc', align:'center', resizable:'true', fixed:'false'">
 	                            合并名称
 	                        </th>
 	                        <th width="8%" data-options="field:'lng',   sortable:'true', order:'asc', align:'center', resizable:'true', fixed:'false'">
@@ -94,16 +97,16 @@
 	                        <th width="8%" data-options="field:'pinyin',   sortable:'true', order:'asc', align:'center', resizable:'true', fixed:'false'">
 	                            拼音
 	                        </th>
-	                        <th width="6%" data-options="field:'shortPy',   sortable:'true', order:'asc', align:'center', resizable:'true', fixed:'false'">
+	                        <th width="5%" data-options="field:'shortPy',   sortable:'true', order:'asc', align:'center', resizable:'true', fixed:'false'">
 	                            拼音简写
 	                        </th>
 	                        <th width="6%" data-options="field:'yn', _provider:'cityYnProvider',  sortable:'true', order:'asc', align:'center', resizable:'true', fixed:'false'">
 	                            是否有效
 	                        </th>
-	                        <th width="12%" data-options="field:'created',  _provider:'datetimeProvider', sortable:'true', order:'asc', align:'center', resizable:'true', fixed:'false'">
+	                        <th width="11%" data-options="field:'created',  _provider:'datetimeProvider', sortable:'true', order:'asc', align:'center', resizable:'true', fixed:'false'">
 	                            创建时间
 	                        </th>
-	                        <th width="12%" data-options="field:'modified',  _provider:'datetimeProvider', sortable:'true', order:'asc', align:'center', resizable:'true', fixed:'false'">
+	                        <th width="11%" data-options="field:'modified',  _provider:'datetimeProvider', sortable:'true', order:'asc', align:'center', resizable:'true', fixed:'false'">
 	                            修改时间
 	                        </th>
 	                    </tr>
@@ -141,6 +144,12 @@
                     <input class="easyui-textbox" name="_name" id="_name" style="width:100%" required="true" data-options="label:'*名称:', labelAlign:'right', validType:'length[0,20]'" />
                 </td>
             </tr>
+                        <tr>
+                <td style="padding:5px;">
+                    <input class="easyui-textbox" name="_id" id="_id" style="width:100%" required="true" data-options="label:'id:', labelAlign:'right', validType:'length[0,20]'" />
+                </td>
+            </tr>
+            
             <tr>
                 <td style="padding:5px;">
                     <input class="easyui-textbox" name="_shortName" id="_shortName" style="width:100%" required="true" data-options="label:'*简称:', labelAlign:'right', validType:'length[0,20]'" />

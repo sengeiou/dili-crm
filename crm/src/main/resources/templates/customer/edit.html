@@ -117,7 +117,7 @@
              }
              return operatingAreaMap;
          }
-
+		//点击地图时保存坐标信息到隐藏域
          function mapClick(e) {
              var pt = e.point;
              addOverlay(pt);
@@ -128,7 +128,7 @@
                  $('#selectedAreaLng').val(pt.lng);
              });
          }
-
+		//添加图层
          function addOverlay(point) {
              operatingAreaMap.clearOverlays();    //清除地图上所有覆盖物
              var marker = new BMap.Marker(point);  // 创建标注
@@ -138,7 +138,7 @@
          }
 
          /**
-          * 打开地图
+          * 打开经营区域地图
           */
          function openMaps() {
              $('#operatingAreaDialog').dialog('open',true);
@@ -257,7 +257,8 @@
 	            async : true,
 	            success: function (data) {
 	                if(data.code=="200"){
-	                	var adcode=data.data.adcode;
+	                	//console.info(data.data)
+	                	var adcode=data.data.id;
 	                	$('#operatingAreaDialog').dialog('close',true);
 	                	$("#_operatingArea").combobox('initValue',adcode);
 	                	$("#_operatingArea").combobox('setText',selectOperatingArea);

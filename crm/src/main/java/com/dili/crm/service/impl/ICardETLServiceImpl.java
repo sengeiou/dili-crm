@@ -503,11 +503,11 @@ public class ICardETLServiceImpl implements ICardETLService{
 				String lat=cityJson.get("lat").toString();
 				String lng=cityJson.get("lng").toString();
 				//根据经纬度查询行政区划代码
-				baseOut=addressService.locationReverse(lat, lng);
-				if(baseOut.isSuccess()){
-					Map<String,Object> addressComponent=baseOut.getData();
+				BaseOutput<City>cityBaseOut=addressService.locationReverse(lat, lng);
+				if(cityBaseOut.isSuccess()){
+					City city=cityBaseOut.getData();
 					//行政区划代码即为CityId
-					 String cityId= addressComponent.get("adcode").toString();
+					 String cityId=String.valueOf(city.getId());
 					 //设置经纬度,城市
 					 address.setCityId(cityId);
 	        		 address.setLat(lat);

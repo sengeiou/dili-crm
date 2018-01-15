@@ -106,23 +106,13 @@ public class AddressServiceImpl extends BaseServiceImpl<Address, Long> implement
      */
     @Override
     public BaseOutput locationReverse(String lat,String lng) throws Exception {
-    	Map<String,String> params = Maps.newHashMap();
-        params.put("location", lat+","+lng);
-        params.put("output", "json");
-        params.put("latest_admin","1");
-        String geocoder = mapRpc.geocoder(params);
-        JSONObject object = JSONObject.parseObject(geocoder);
-        if (0==object.getIntValue("status")){
-            JSONObject addressJson = object.getJSONObject("result").getJSONObject("addressComponent");
-            Integer adcode = addressJson.getInteger("adcode");
-            City city =  cityMapper.selectByPrimaryKey(adcode.longValue());
-            if(city!=null) {
-            	return BaseOutput.success().setData(addressJson);
-            }else {
-            	return BaseOutput.failure("行政区划代码不存在,请管理员进行维护");
-            }
+    	City city=getCityByLatAndLng(lat,lng);
+    	if(city!=null) {
+        	return BaseOutput.success().setData(city);
+        }else {
+        	return BaseOutput.failure("地理信息在系统中不存在，请先维护");
         }
-        return BaseOutput.failure("访问出错");
+    	
     }
     /**
      * 获取城市信息
