@@ -7,10 +7,6 @@ import com.dili.crm.domain.dto.DataDictionaryValueTreeView;
 import com.dili.ss.base.BaseService;
 import com.dili.ss.domain.BaseOutput;
 
-/**
- * 由MyBatis Generator工具自动生成
- * This file was generated on 2017-07-12 10:41:19.
- */
 public interface DataDictionaryValueService extends BaseService<DataDictionaryValue, Long> {
 
 	BaseOutput<Object> insertAndGet(DataDictionaryValue dataDictionaryValue);
