@@ -319,7 +319,7 @@
                    	  	marker = new BMap.Marker(pt, {icon: myIcon});//其他位置使用自定义图标
                       }
                      //绑定自定义属性
-                     marker.meta={id:addr.id, name:customer.name};
+                     marker.meta={id:addr.id, name:customer.name,addr:addr};
                      //对地图添加聚合点
                      map.addOverlay(marker);
                      if(i==customer.centerIndex){//当前位置使用动画特效
@@ -351,10 +351,11 @@
                             if (typeof(infoBoxTemp)!='undefined') {
                                 infoBoxTemp.close();
                             }
+                            var currentAddr=m.meta.addr;
                             var content = "<table style='margin-top: 20px;color:#118bde;'>";  
-                            content = content + "<tr><td> <strong>名称：</strong>"+(typeof(addr['name'])=='undefined'?'':addr['name'])+"</td></tr>";  
+                            content = content + "<tr><td> <strong>名称：</strong>"+(typeof(currentAddr['name'])=='undefined'?'':currentAddr['name'])+"</td></tr>";  
                             content = content + "<tr><td> <strong>城市：</strong>"+ad+"</td></tr>";
-                            content = content + "<tr><td> <strong>地址：</strong>"+(typeof(addr['address'])=='undefined'?'':addr['address'])+"</td></tr>"; 
+                            content = content + "<tr><td> <strong>地址：</strong>"+(typeof(currentAddr['address'])=='undefined'?'':currentAddr['address'])+"</td></tr>"; 
                             content += "</table>";
                             var infoBox = new BMapLib.InfoBox(map, content, {
                                 boxStyle:{
