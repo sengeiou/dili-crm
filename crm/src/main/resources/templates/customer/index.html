@@ -224,7 +224,7 @@
             });
         }
         // var markerClusterer=null;
-        var clientLocationMap={map:null,markers:[],clusterer:null,customer:null};
+        var clientLocationMap={map:null,markers:[],clusterer:null,customer:null,clickable:true};
         function initOrGetClientLocationMap(){
         	if(clientLocationMap.map==null){
                 var lat ="<#config name='map.lat' />";
@@ -245,6 +245,10 @@
         }
 
 		function nextLocation() {
+			if(clientLocationMap.clickable==false){
+				return;
+			}
+			clientLocationMap.clickable=false;
 			var customer=clientLocationMap.customer;
 			//使customer.centerIndex指向下一下位置索引
 			 if(customer!=null){
@@ -260,6 +264,10 @@
 			 }
 		}
 		function previousLocation() {
+			if(clientLocationMap.clickable==false){
+				return;
+			}
+			clientLocationMap.clickable=false;
 			var customer=clientLocationMap.customer;
 			//使customer.centerIndex指向下一下位置索引
 			 if(customer!=null){
@@ -291,6 +299,8 @@
               for (var i = 0; i < clientLocationMap.markers.length; i++) {
                   	 map.removeOverlay(clientLocationMap.markers[i]);
 	          }
+             // map.clearOverlays();    //清除地图上所有覆盖物
+              map.reset();
               //移除聚合点(保留图层)
               markerClusterer.clearMarkers();
               
@@ -389,7 +399,10 @@
                clientLocationMap.markers=markers;
                window.setTimeout(function(){  
                 	map.panTo(new BMap.Point(lng,lat)); 
-                }, 100);
+                    window.setTimeout(function(){  
+                    	clientLocationMap.clickable=true;
+                    }, 350);
+                }, 350);
                
                 $('#dd').dialog('open',true);  
         
