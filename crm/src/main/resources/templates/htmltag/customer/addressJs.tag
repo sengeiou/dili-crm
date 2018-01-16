@@ -80,8 +80,11 @@
             $('#_address_isDefault').combobox("setValue",0);
             //重新定位到初始地址
             window.setTimeout(function(){
-                map.panTo(point);
+                // map.panTo(point);
+                map.clearOverlays();
+                map.centerAndZoom(point,12);
             }, 50);
+
         }
 
         //保存地址
