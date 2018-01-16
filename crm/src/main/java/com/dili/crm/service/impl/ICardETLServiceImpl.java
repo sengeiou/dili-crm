@@ -149,7 +149,7 @@ public class ICardETLServiceImpl implements ICardETLService{
 		Address defaultAddrCondtion=DTOUtils.newDTO(Address.class);
 		defaultAddrCondtion.setIsDefault(1);
 		defaultAddrCondtion.setCustomerId(customer.getId());
-		int defaultAddrListSize=this.addressService.listByExample(defaultAddrCondtion).size();
+		boolean hasDefaultAddr=this.addressService.listByExample(defaultAddrCondtion).size()>0;
 		
 		//对地址信息做插入或者更新的判断
 		List<Address>addrList=new ArrayList<>();
@@ -165,9 +165,10 @@ public class ICardETLServiceImpl implements ICardETLService{
 				addr.setCustomerId(customer.getId());
 				addr.setIsDefault(0);
 				//如果当前客户没有默认地址,将第一个设置为默认地址
-				if(defaultAddrListSize==0) {
+				if(!hasDefaultAddr) {
 					if(StringUtils.isNotBlank(addr.getCityId())) {
 						addr.setIsDefault(1);
+						hasDefaultAddr=true;
 					}
 				}
 				
