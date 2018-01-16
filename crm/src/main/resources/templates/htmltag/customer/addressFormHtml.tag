@@ -130,10 +130,7 @@
          * 地图上的单击事件，点击某个地址后，拾取坐标并添加标注
          */
         map.addEventListener("click", function(e){
-            var pt = e.point;
-            $('#_address_lng').val(pt.lng);
-            $('#_address_lat').val(pt.lat);
-            geocoderByPoint(pt);
+            geocoderByPoint(e.point);
         });
 
         /**
@@ -148,6 +145,8 @@
                 var addComp = rs.addressComponents;
                 $('#_address_city').textbox("setValue",addComp.province+','+addComp.city);
                 $('#_address_address').textbox("setValue", addComp.district  + addComp.street +  addComp.streetNumber);
+                $('#_address_lng').val(pt.lng);
+                $('#_address_lat').val(pt.lat);
                 addOverlayForAddress(map,pt);
             });
         }
