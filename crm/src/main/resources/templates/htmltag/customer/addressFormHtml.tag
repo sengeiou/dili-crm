@@ -108,6 +108,7 @@
                  *
                  */
                 if (typeof(poi.province)=='undefined' || typeof(poi.city)=='undefined'){
+                    map.panTo(poi.point);
                     geocoderByPoint(poi.point);
                 }else{
                     $('#_address_city').textbox("setValue", poi.province +','+  poi.city);
@@ -118,7 +119,6 @@
                     map.centerAndZoom(pp, 12);
                     addOverlayForAddress(map,pp);
                 }
-
             }
             var local = new BMap.LocalSearch(map, { //智能搜索
                 onSearchComplete: addressSearch
@@ -126,13 +126,11 @@
             local.search(myValue);
         }
 
-
+        /**
+         * 地图上的单击事件，点击某个地址后，拾取坐标并添加标注
+         */
         map.addEventListener("click", function(e){
-            var pt = e.point;
-            $('#_address_lng').val(pt.lng);
-            $('#_address_lat').val(pt.lat);
-            addOverlayForAddress(map,pt);
-            geocoderByPoint(pt);
+            geocoderByPoint(e.point);
         });
 
         /**
@@ -147,6 +145,9 @@
                 var addComp = rs.addressComponents;
                 $('#_address_city').textbox("setValue",addComp.province+','+addComp.city);
                 $('#_address_address').textbox("setValue", addComp.district  + addComp.street +  addComp.streetNumber);
+                $('#_address_lng').val(pt.lng);
+                $('#_address_lat').val(pt.lat);
+                addOverlayForAddress(map,pt);
             });
         }
 
@@ -158,6 +159,11 @@
             ac.setLocation(pt);
         });
 
+        /**
+         * 统一给地图添加 弹跳动画
+         * @param map 要添加动画的地图实例
+         * @param point 要添加动画的坐标点
+         */
         function addOverlayForAddress(map,point) {
             map.clearOverlays();    //清除地图上所有覆盖物
             var marker = new BMap.Marker(point);  // 创建标注
@@ -167,5 +173,6 @@
     <%}%>
 </script>
 <style>
+    /* 设置此样式，以保证地图输入提示搜索后的结果集能正常的显示在最外层 */
     .tangram-suggestion-main {z-index: 9999}
 </style>
