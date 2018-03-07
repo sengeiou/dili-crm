@@ -17,6 +17,7 @@ import com.dili.ss.domain.BaseOutput;
 import com.dili.ss.domain.EasyuiPageOutput;
 import com.dili.ss.dto.DTO;
 import com.dili.ss.dto.DTOUtils;
+import com.dili.ss.dto.IDTO;
 import com.dili.ss.metadata.ValueProviderUtils;
 import com.dili.sysadmin.sdk.domain.UserTicket;
 import com.dili.sysadmin.sdk.session.SessionContext;
@@ -65,7 +66,7 @@ public class CustomerServiceImpl extends BaseServiceImpl<Customer, Long> impleme
 	    //如果只有sort和order字段,即没有查询条件的情况下，就只查parentId为空的
 	    if(queryDto.size() <= getDefaultParamSize(domain)){
 		    //全查时查顶级
-		    customerTreeDto.mset(SsConstants.NULL_VALUE_FIELD, "parent_id");
+		    customerTreeDto.mset(IDTO.NULL_VALUE_FIELD, "parent_id");
 	    }
 	    domain.setYn(1);
 	    EasyuiPageOutput easyuiPageOutput = super.listEasyuiPageByExample(customerTreeDto, useProvider);

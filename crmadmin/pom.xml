@@ -267,6 +267,18 @@
 			<groupId>org.springframework.cloud</groupId>
 			<artifactId>spring-cloud-starter-hystrix</artifactId>
 		</dependency>
+		<!-- admin server依赖 st -->
+		<!--<dependency>-->
+			<!--<groupId>de.codecentric</groupId>-->
+			<!--<artifactId>spring-boot-admin-starter-client</artifactId>-->
+			<!--<version>1.5.0</version>-->
+		<!--</dependency>-->
+		<!--<dependency>-->
+			<!--<groupId>org.jolokia</groupId>-->
+			<!--<artifactId>jolokia-core</artifactId>-->
+		<!--</dependency>-->
+		<!-- admin server依赖 end -->
+
 		<!--<dependency>-->
 		<!--<groupId>org.springframework.cloud</groupId>-->
 		<!--<artifactId>spring-cloud-starter-hystrix-dashboard</artifactId>-->

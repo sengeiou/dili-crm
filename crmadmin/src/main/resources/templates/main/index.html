@@ -172,7 +172,7 @@
             });
 
         }
-        
+
         function logout() {
             $.post('${contextPath!}/login/logoutAction',null,function(data){
             	if ("200" == data.code) {
@@ -184,7 +184,7 @@
         }
 
 
-        
+
         $(function () {
             renderPage("主页", "${@com.dili.ss.util.SystemConfigUtils.getProperty("sysadmin.indexPage", "about:blank")}");
         });
