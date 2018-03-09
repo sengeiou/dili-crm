@@ -74,7 +74,7 @@
          //经营区域的地图搜索自动完成对象
          var areaAc =null;
         // var markes=[];
-         function initOperatingAreaMap(city){
+         function initOperatingAreaMap(city,point){
         	 var lat ="<#config name='map.lat' />";
              var lng ="<#config name='map.lng' />";
              if(operatingAreaMap==null){
@@ -94,26 +94,11 @@
             // operatingAreaMap.reset();
             // markes=[];
             // console.info(city)
-             if(null != city) {
-            	 var myGeo = new BMap.Geocoder();
+             if(null != city && point!=null) {
          		// 将地址解析结果显示在地图上,并调整地图视野
-         		myGeo.getPoint(city, function(point){
-         			if (point) {
-         				
-         				operatingAreaMap.centerAndZoom(point, 11);
-         				 $('#selectOperatingArea').textbox("setValue",city);
-                         $('#selectedAreaLat').val(point.lat);
-                         $('#selectedAreaLng').val(point.lng);
-                        // operatingAreaMap.clearOverlays(); 
-         				//var marker = new BMap.Marker(point);  // 创建标注
-         	            // operatingAreaMap.addOverlay(marker);               // 将标注添加到地图中
-                         addOverlay(point);
-         			}else{
-         				operatingAreaMap.centerAndZoom(new BMap.Point(lng, lat), 11);
-         			}
-         		});
-         		
-                 //operatingAreaMap.centerAndZoom(city, 11);
+                 $('#selectOperatingArea').textbox("setValue",city);
+                 operatingAreaMap.centerAndZoom(point, 11);
+                 addOverlay(point);
              }
              return operatingAreaMap;
          }
@@ -143,19 +128,21 @@
          function openMaps() {
              $('#operatingAreaDialog').dialog('open',true);
              //清空数据
-        	 $('#selectedAreaLat').val('');
-             $('#selectedAreaLng').val('');
+             // $('#selectedAreaLat').val('');
+             // $('#selectedAreaLng').val('');
              $('#selectOperatingArea').textbox("setValue","");
              //
              //console.info($("#_operatingArea").combobox('getValue'));
              if($('#_operatingArea').combobox('getText')==''){
-            	 initOperatingAreaMap(null);
+            	 initOperatingAreaMap(null,null);
              }else{
-            	 var reg=/,/g;
-            	 var city=$('#_operatingArea').combobox('getText').replace(reg,'');
+                 var point = new BMap.Point($('#selectedAreaLng').val(),$('#selectedAreaLat').val());
+                 debugger
+                 var reg=/,/g;
+                 var city=$('#_operatingArea').combobox('getText').replace(reg,'');
             	 //console.info(city)//黑龙江省哈尔滨市南岗区
             	
-            	 initOperatingAreaMap(city);
+            	 initOperatingAreaMap(city,point);
              };
              initAreaAc();
          }
@@ -249,7 +236,6 @@
             var selectOperatingArea=$('#selectOperatingArea').textbox("getValue");
 			var lat=$('#selectedAreaLat').val();
 			var lng=$('#selectedAreaLng').val();
-			
 			if(selectOperatingArea==''){
 				 $.messager.alert('提示','请选择经营区域');
                  disableEasyUiControl('confirmSelectedArea',false);
@@ -321,6 +307,8 @@
                 <div  class="easyui-panel" style="width: 96%;" title="客户基本信息" border="false" >
                     <form id="_form" class="easyui-form" method="post" fit="true">
                         <input name="_id" id="_id" type="hidden">
+                        <input type="hidden" id="selectedAreaLng" name="operatingLng"/>
+                        <input type="hidden" id="selectedAreaLat" name="operatingLat"/>
                         <table width="98%" style="border:0px;">
                             <tr>
                                 <td style="padding-top:10px;padding-left:15px;" width="33%">
@@ -579,6 +567,8 @@
             //设置父客户
             $("#_parentId").textbox("initValue", selected["$_parentId"]);
             $("#_parentId").textbox("setText", selected["parentId"]);
+                $('#selectedAreaLat').val(selected.operatingLat);
+                $('#selectedAreaLng').val(selected.operatingLng);
             $("#departmentName").textbox("setText", selected["department"]);
             formFocus("_form", "_name");
             listAddress();
@@ -617,6 +607,12 @@
                     //禁用保存
                     $("#saveBtn").linkbutton("disable");
                     $("#saveAndExitBtn").linkbutton("disable");
+                    var selectOperatingArea = $('#selectOperatingArea').textbox("getValue");
+                    if(selectOperatingArea == ''){
+                        $("#selectedAreaLat").val('');
+                        $("#selectedAreaLng").val('');
+                    }
+
                     var _formData = removeKeyStartWith($("#_form").serializeObject(true),"_");
                     var _url = null;
                     //没有id就新增
