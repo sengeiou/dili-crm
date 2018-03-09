@@ -157,6 +157,20 @@ public interface Customer extends IBaseDomain {
 
     void setOperatingArea(String operatingArea);
 
+    @Column(name = "`operating_lng`")
+    @FieldDef(label="经营经度", maxLength = 20)
+    @EditMode(editor = FieldEditor.Text, required = false)
+    String getOperatingLng();
+
+    void setOperatingLng(String operatingLng);
+
+    @Column(name = "`operating_lat`")
+    @FieldDef(label="经营纬度", maxLength = 20)
+    @EditMode(editor = FieldEditor.Text, required = false)
+    String getOperatingLat();
+
+    void setOperatingLat(String operatingLat);
+
     @Column(name = "`other_title`")
     @FieldDef(label="其它头衔", maxLength = 40)
     @EditMode(editor = FieldEditor.Text, required = false)
