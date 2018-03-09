@@ -137,7 +137,6 @@
             	 initOperatingAreaMap(null,null);
              }else{
                  var point = new BMap.Point($('#selectedAreaLng').val(),$('#selectedAreaLat').val());
-                 debugger
                  var reg=/,/g;
                  var city=$('#_operatingArea').combobox('getText').replace(reg,'');
             	 //console.info(city)//黑龙江省哈尔滨市南岗区
@@ -605,7 +604,7 @@
                     //禁用保存
                     $("#saveBtn").linkbutton("disable");
                     $("#saveAndExitBtn").linkbutton("disable");
-                    var selectOperatingArea = $('#selectOperatingArea').textbox("getValue");
+                    var selectOperatingArea = $('#_operatingArea').textbox("getValue");
                     if(selectOperatingArea == ''){
                         $("#selectedAreaLat").val('');
                         $("#selectedAreaLng").val('');
