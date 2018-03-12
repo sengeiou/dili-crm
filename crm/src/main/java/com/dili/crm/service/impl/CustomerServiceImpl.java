@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.dili.crm.dao.CustomerMapper;
 import com.dili.crm.domain.Customer;
+import com.dili.crm.domain.CustomerVisit;
 import com.dili.crm.domain.Department;
 import com.dili.crm.domain.User;
 import com.dili.crm.domain.dto.*;
@@ -298,6 +299,27 @@ public class CustomerServiceImpl extends BaseServiceImpl<Customer, Long> impleme
     public List<CustomerAddressDto> getCustomerAddress(){
         return getActualDao().selectCustomerAddress();
     }
+
+	/**
+	 * 根据客户类型获取客户的经营地区相关信息
+	 *
+	 * @param type 客户类型：采购、销售、代买等
+	 * @return
+	 */
+	@Override
+	public List<Customer> listCustomerOperating(String type) {
+		Example example = new Example(Customer.class);
+		Example.Criteria criteria = example.createCriteria();
+		/***  构造查询条件 ***/
+		//经纬度不能为空
+		criteria.andIsNotNull("operatingLng").andIsNotNull("operatingLat");
+		//状态为 可用
+		criteria.andEqualTo("yn",1);
+		if (StringUtils.isNotBlank(type)) {
+			criteria.andEqualTo("type", type);
+		}
+		return super.selectByExample(example);
+	}
 
 
 	// ========================================== 私有方法 ==========================================

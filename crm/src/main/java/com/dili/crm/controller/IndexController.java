@@ -41,7 +41,7 @@ public class IndexController {
 			 modelMap.put("indexPurchasingTopChartUrl",this.chartService.getIndexPurchasingTopChartUrl());
 			 modelMap.put("indexSalesTopChartUrl",this.chartService.getIndexSalesTopChartUrl());
 			 modelMap.put("chartServer",dataDictionaryValueService.findChartServer());
-		     modelMap.put("customerAddress", JSONArray.toJSONString(customerService.getCustomerAddress()));
+		     modelMap.put("customerAddress", JSONArray.toJSONString(customerService.listCustomerOperating(null)));
 			 modelMap.put("clientRefreshFrequency", clientRefreshFrequency);
 	        return "index";
 	    }

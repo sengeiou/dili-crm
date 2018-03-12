@@ -82,6 +82,8 @@
 
     <!-- ====================================================================================================================== -->
     <!-- style & script 分隔线 -->
+	 <!-- 客户定位相关JS -->
+	 <#customer_locationJs/>
     <!-- ====================================================================================================================== -->
     <script type="text/javascript">
 
@@ -123,8 +125,8 @@
                var customerAddresses = ${customerAddress};
                for (var i = 0; i < customerAddresses.length; i++) {
                    var customerAddress = customerAddresses[i];
-                   var pt = new BMap.Point(customerAddress.lng,customerAddress.lat);
-                   var marker = new BMap.Marker(pt, {icon: myIcon});
+                   var pt = new BMap.Point(customerAddress.operatingLng,customerAddress.operatingLat);
+                   var marker = new BMap.Marker(pt, {icon: getLocationIcon(customerAddress.type)});
                    //绑定自定义属性
                    marker.meta={id:customerAddress.id, name:customerAddress.name};
                    map.addOverlay(marker);

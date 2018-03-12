@@ -1,5 +1,6 @@
 package com.dili.crm.controller;
 
+import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.dili.crm.domain.Customer;
@@ -9,10 +10,12 @@ import com.dili.crm.rpc.MapRpc;
 import com.dili.crm.rpc.UserRpc;
 import com.dili.crm.service.CustomerService;
 import com.dili.ss.domain.BaseOutput;
+import com.dili.ss.metadata.ValuePair;
 import com.dili.ss.metadata.ValueProviderUtils;
 import com.dili.sysadmin.sdk.domain.UserTicket;
 import com.dili.sysadmin.sdk.session.SessionConstants;
 import com.dili.sysadmin.sdk.session.SessionContext;
+import com.google.common.collect.Maps;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
@@ -72,8 +75,15 @@ public class CustomerController {
 
 	@ApiOperation("客户分布页面")
 	@RequestMapping(value="/locations.html", method = {RequestMethod.GET, RequestMethod.POST})
-	public String locations(ModelMap modelMap) throws Exception {
-		modelMap.put("customerAddress", JSONArray.toJSONString(customerService.getCustomerAddress()));
+	public String locations(ModelMap modelMap, @RequestParam(name="type", required = false) String type) throws Exception {
+		modelMap.put("type",type);
+    	modelMap.put("customerAddress", JSONArray.toJSONString(customerService.listCustomerOperating(type)));
+		Map<String,Object> params =  Maps.newHashMap();
+		JSONObject queryParams = new JSONObject();
+		queryParams.put("dd_id",4);
+		params.put("queryParams", queryParams);
+		List<ValuePair<?>> ddList = valueProviderUtils.getLookupList("dataDictionaryValueProvider", null, params);
+		modelMap.put("ddList",ddList);
 		return "customer/locations";
 	}
 

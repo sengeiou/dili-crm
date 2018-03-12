@@ -102,4 +102,11 @@ public interface CustomerService extends BaseService<Customer, Long> {
 	 * @return
 	 */
 	List<CustomerAddressDto> getCustomerAddress();
+
+	/**
+	 * 根据客户类型获取客户的经营地区相关信息
+	 * @param type 客户类型：采购、销售、代买等
+	 * @return
+	 */
+	List<Customer> listCustomerOperating(String type);
 }

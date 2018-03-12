@@ -128,7 +128,7 @@ public class ChartController {
 	@ApiOperation("跳转到客户报表页面")
 	@RequestMapping(value = "/customer.html", method = RequestMethod.GET)
 	public String customerChart(ModelMap modelMap) {
-		modelMap.put("customerAddress", JSONArray.toJSONString(customerService.getCustomerAddress()));
+		modelMap.put("customerAddress", JSONArray.toJSONString(customerService.listCustomerOperating(null)));
 		return "chart/customer";
 	}
 	@ApiOperation("跳转到客户回访报表页面")

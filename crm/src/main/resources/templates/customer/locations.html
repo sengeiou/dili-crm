@@ -185,10 +185,22 @@
     <div id="nav" style="padding-left:15px;padding-top:10px;position:fixed;z-index:2008;width:100%;height:30px;background-color:white" align="left">
         <#nav/>
     </div>
-    <div id="mapDiv" style="width:100%;height:100%;"></div>
+    <!--<div class="mapwrap"  style="position: relative">-->
+        <div id="mapDiv" style="width:100%;height:100%; "></div>
+        <div  style="position:absolute; top: 50px; left: 20px;">
+            <select class="easyui-combobox" id="type" label="客户类型:" editable="false" labelPosition="left" labelAlign="right" panelHeight="auto" style="width:80%;">
+                <%for(dd in ddList){ %>
+                <option value="${dd.value}" <% if(dd.value==type){%> selected <%}%> >${dd.text}</option>
+                <%}%>
+            </select>
+            <a href="#" class="easyui-linkbutton"  data-options="width:24,height:24" iconCls="icon-search" onclick="queryByType()"></a>
+        </div>
+    <!--</div>-->
+
 
     <!-- ====================================================================================================================== -->
     <!-- style & script 分隔线 -->
+    <#customer_locationJs/>
     <!-- ====================================================================================================================== -->
     <script type="text/javascript">
         //          第三方InfoBox时保存上次打开的窗口
@@ -212,18 +224,12 @@
             map.centerAndZoom(new BMap.Point(lng,lat), 5);
             map.enableScrollWheelZoom();
             var markers = [];
-            var myIcon = new BMap.Icon("${contextPath}/resources/images/icon/pos-icon.png", new BMap.Size(23, 25), {
-                // 指定定位位置。
-                // 当标注显示在地图上时，其所指向的地理位置距离图标左上
-                // 角各偏移7像素和20像素。
-                anchor: new BMap.Size(7, 20)
-            });
             //所有客户地址信息
             var customerAddresses = ${customerAddress};
             for (var i = 0; i < customerAddresses.length; i++) {
                 var customerAddress = customerAddresses[i];
-                var pt = new BMap.Point(customerAddress.lng,customerAddress.lat);
-                var marker = new BMap.Marker(pt, {icon: myIcon});
+                var pt = new BMap.Point(customerAddress.operatingLng,customerAddress.operatingLat);
+                var marker = new BMap.Marker(pt, {icon: getLocationIcon(customerAddress.type)});
                 //绑定自定义属性
                 marker.meta={id:customerAddress.id, name:customerAddress.name};
                 map.addOverlay(marker);
@@ -265,6 +271,13 @@
             //最简单的用法，生成一个marker数组，然后调用markerClusterer类即可。
             var markerClusterer = new BMapLib.MarkerClusterer(map, {markers:markers});
         });
+
+        /**
+         * 根据客户类型展现客户地图
+         */
+        function queryByType() {
+            window.location.href="${contextPath}/customer/locations.html?type="+$('#type').val();
+        }
 
     </script>
 </body>

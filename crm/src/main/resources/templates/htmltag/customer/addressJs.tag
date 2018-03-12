@@ -48,7 +48,7 @@
                 }, 50);
             }else{
                 window.setTimeout(function(){
-                    map.panTo(point);
+                    map.reset();
                 }, 50);
             }
         }
