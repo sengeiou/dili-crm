@@ -15,9 +15,8 @@ import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.commons.lang.StringUtils;
-
 import com.dili.sysadmin.sdk.util.WebContent;
+import org.apache.commons.lang3.StringUtils;
 
 /**
  * User: juqkai (juqkai@gmail.com)

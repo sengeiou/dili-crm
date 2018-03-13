@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.PropertySource;
 import org.springframework.data.redis.connection.RedisConnectionFactory;
 import org.springframework.data.redis.connection.jedis.JedisConnectionFactory;
 import org.springframework.data.redis.core.RedisTemplate;
@@ -24,7 +25,9 @@ import org.springframework.data.redis.serializer.StringRedisSerializer;
  */
 
 @Configuration("manageRedisConfig")
-@ConfigurationProperties(prefix = "manage.redis",locations = {"classpath:conf/manage-${spring.profiles.active}.properties"})
+//@ConfigurationProperties(prefix = "manage.redis",locations = {"classpath:conf/manage-${spring.profiles.active}.properties"})
+@ConfigurationProperties(prefix = "manage.redis")
+@PropertySource({"classpath:conf/manage-${spring.profiles.active}.properties"})
 public class ManageRedisConfig {
 
 //    @Value("${manage.redis.host}")

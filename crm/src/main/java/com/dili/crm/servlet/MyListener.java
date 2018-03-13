@@ -8,7 +8,7 @@ import javax.servlet.ServletContextListener;
 /**
  * Created by asiam on 2017/4/20 0020.
  */
-@Component("myListener")
+//@Component("myListener")
 public class MyListener implements ServletContextListener {
     /**
      * @param arg0

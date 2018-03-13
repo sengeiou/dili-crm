@@ -4,6 +4,7 @@ import com.dili.sysadmin.sdk.util.ManageRedisUtil;
 import com.dili.sysadmin.sdk.util.WebContent;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.context.annotation.PropertySource;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -16,7 +17,9 @@ import java.util.regex.Pattern;
  * Created by asiamaster on 2017/7/4 0004.
  */
 @Component
-@ConfigurationProperties(prefix = "manage",locations = {"classpath:conf/manage-${spring.profiles.active}.properties"})
+//@ConfigurationProperties(prefix = "manage",locations = {"classpath:conf/manage-${spring.profiles.active}.properties"})
+@ConfigurationProperties(prefix = "manage")
+@PropertySource({"classpath:conf/manage-${spring.profiles.active}.properties"})
 public class ManageConfig {
 
 //	@Value("${manage.domain}")
