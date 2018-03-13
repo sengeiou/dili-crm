@@ -89,7 +89,11 @@
     </build>
 
     <dependencies>
-
+        <!-- 在运行时为项目临时迁移属性, 迁移完成之后，请确保从项目的依赖关系中移除该模块 -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-properties-migrator</artifactId>
+        </dependency>
         <!-- spring boot 基类  -->
 		<dependency>
 			<groupId>com.dili</groupId>
