@@ -22,11 +22,10 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 //@EnableScheduling
 @EnableTransactionManagement
 //@EnableAutoConfiguration(exclude = {ThymeleafAutoConfiguration.class, VelocityAutoConfiguration.class})
-@MapperScan(basePackages = {"com.dili.points.dao", "com.dili.ss.dao", "com.dili.ss.quartz.dao"})
+@MapperScan(basePackages = {"com.dili.points.dao", "com.dili.ss.dao"})
 //@ImportResource(locations = "classpath:applicationContext.xml")
 @ComponentScan(basePackages={"com.dili.ss","com.dili.points","com.dili.sysadmin"})
 @RestfulScan({"com.dili.points.rpc", "com.dili.sysadmin.sdk.rpc"})
-@Import({DynamicRoutingDataSourceRegister.class})// 注册动态多数据源
 //@EnableEncryptableProperties
 //@PropertySource(name="EncryptedProperties", value = "classpath:security.properties")
 //@EncryptablePropertySource(name = "EncryptedProperties", value = "classpath:security.properties")
