@@ -1,0 +1,45 @@
+<div class="easyui-layout" fit="true">
+	<div region="north" height="40" align="left" border="false">
+		<div style="margin: 5px 5px;">
+			<form class="easyui-form" id="searchUserForm">
+				<input id="searchUserTextbox" label="真实姓名:" labelAlign="right" name="searchUserTextbox" class="easyui-textbox" style="width: 300px">
+				<a class="easyui-linkbutton"  data-options="width:80" iconCls="icon-search" onclick="searchUser();">查询</a>
+				&nbsp;&nbsp;
+				<a class="easyui-linkbutton"  data-options="width:80" iconCls="icon-ok" onclick="javascript:confirmUserBtn('${textboxId}');">确认</a>
+			</form>
+		</div>
+	</div>
+	<div region="center" align="center" border="false">
+		<table class="easyui-datagrid" id="selectUserGrid" sortName="userName" sortOrder="asc" fitColumns="true" remoteSort="false" loadMsg="数据加载中..." singleSelect="true" method="post" multiSort="true"
+			align="center" fit="true" striped="true" idField="id" data-options="onDblClickRow:dbClickUser" >
+			<thead>
+				<tr>
+					<th data-options="field:'userName',width:50">用户名</th>
+					<th data-options="field:'realName',width:50">真实姓名</th>
+					<th data-options="field:'cellphone',width:50">手机号</th>
+					<th data-options="field:'email',width:70">邮箱</th>
+				</tr>
+			</thead>
+		</table>
+	</div>
+</div>
+<script type="text/javascript">
+	function dbClickUser(index, row) {
+		confirmUserBtn("${textboxId}");
+	}
+	function searchUser() {
+		var opts = $("#selectUserGrid").datagrid("options");
+        if (null == opts.url || "" == opts.url) {
+            opts.url = '${contextPath!}/selectDialog/listUser';
+        }
+		var text = $('#searchUserTextbox').textbox('getText');
+		$('#selectUserGrid').datagrid('load', bindGridMeta2Data("selectUserGrid",{realName : text}));
+	}
+
+	$(function() {
+//		$('#searchUserTextbox').textbox('addClearBtn', 'icon-clear');
+		$('#searchUserTextbox').textbox('textbox').focus();
+        bindFormEvent("searchUserForm", "searchUserTextbox", searchUser, closeUserSelectDlg);
+        searchUser();
+	})
+</script>
