@@ -188,11 +188,10 @@
     <!--<div class="mapwrap"  style="position: relative">-->
         <div id="mapDiv" style="width:100%;height:100%; "></div>
         <div  style="position:absolute; top: 50px; left: 20px;">
-            <select class="easyui-combobox" id="type" label="客户类型:" editable="false" labelPosition="left" labelAlign="right" panelHeight="auto" style="width:80%;">
-                <%for(dd in ddList){ %>
-                <option value="${dd.value}" <% if(dd.value==type){%> selected <%}%> >${dd.text}</option>
-                <%}%>
-            </select>
+            <%for(dd in ddList){ %>
+                <input  type="checkbox" name="type" value="${dd.value}" >${dd.text}&nbsp;&nbsp;
+            <%}%>
+            <input  type="checkbox" name="type"  value="other" >其它&nbsp;&nbsp;
             <a href="#" class="easyui-linkbutton"  data-options="width:24,height:24" iconCls="icon-search" onclick="queryByType()"></a>
         </div>
     <!--</div>-->
@@ -276,8 +275,20 @@
          * 根据客户类型展现客户地图
          */
         function queryByType() {
-            window.location.href="${contextPath}/customer/locations.html?type="+$('#type').val();
+            var chk_value =[];//定义一个数组
+            $('input[name="type"]:checked').each(function(){//遍历每一个名字为interest的复选框，其中选中的执行函数
+                chk_value.push($(this).val());//将选中的值添加到数组chk_value中
+            });
+            alert(chk_value);
+            window.location.href="${contextPath}/customer/locations.html?types="+chk_value;
         }
+
+        // var types='${types}';
+        // debugger;
+        // $.each(types,function(i){
+        //     debugger;
+        //     $('[name="type"][value="'+i+'"]').prop('checked',true);
+        // });
 
     </script>
 </body>
