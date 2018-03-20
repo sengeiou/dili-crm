@@ -38,8 +38,8 @@ public class IndexController {
     @Autowired
     ChartService chartService;
 
-    @Autowired
-    private AmqpTemplate amqpTemplate;
+//    @Autowired
+//    private AmqpTemplate amqpTemplate;
 
     @ApiOperation("跳转到index页面")
     @RequestMapping(value = "/index.html", method = RequestMethod.GET)
@@ -48,7 +48,7 @@ public class IndexController {
 //        customer.setId(1L);
 //        customer.setName("客户1");
 
-        amqpTemplate.convertAndSend(RabbitConfiguration.DEFAULT_TOPIC_EXCHANGE, RabbitConfiguration.TOPIC_ROUTE_KEY, "客户x");
+//        amqpTemplate.convertAndSend(RabbitConfiguration.DEFAULT_TOPIC_EXCHANGE, RabbitConfiguration.TOPIC_ROUTE_KEY, "客户x");
 
         int clientRefreshFrequency = this.getRefreshFrequency();
         modelMap.put("startDate", this.calStartDate());
