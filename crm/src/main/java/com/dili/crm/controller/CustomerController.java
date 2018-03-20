@@ -1,6 +1,5 @@
 package com.dili.crm.controller;
 
-import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.dili.crm.domain.Customer;
@@ -16,11 +15,13 @@ import com.dili.sysadmin.sdk.domain.UserTicket;
 import com.dili.sysadmin.sdk.session.SessionConstants;
 import com.dili.sysadmin.sdk.session.SessionContext;
 import com.google.common.collect.Maps;
+import com.google.common.collect.Sets;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 import org.apache.commons.collections4.CollectionUtils;
+import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -34,6 +35,7 @@ import javax.servlet.http.HttpServletRequest;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * 由MyBatis Generator工具自动生成
@@ -75,15 +77,26 @@ public class CustomerController {
 
 	@ApiOperation("客户分布页面")
 	@RequestMapping(value="/locations.html", method = {RequestMethod.GET, RequestMethod.POST})
-	public String locations(ModelMap modelMap, @RequestParam(name="type", required = false) String type) throws Exception {
-		modelMap.put("type",type);
-    	modelMap.put("customerAddress", JSONArray.toJSONString(customerService.listCustomerOperating(type)));
-		Map<String,Object> params =  Maps.newHashMap();
+	public String locations(ModelMap modelMap, @RequestParam(value = "types",required=false) String[] types)  throws Exception{
+    	Map<String,Object> params =  Maps.newHashMap();
 		JSONObject queryParams = new JSONObject();
 		queryParams.put("dd_id",4);
 		params.put("queryParams", queryParams);
 		List<ValuePair<?>> ddList = valueProviderUtils.getLookupList("dataDictionaryValueProvider", null, params);
+		//删除  --请选择--
+		ddList.remove(0);
 		modelMap.put("ddList",ddList);
+		Set<String> sets = Sets.newHashSet();
+		if(ArrayUtils.isNotEmpty(types)){
+			CollectionUtils.addAll(sets,types);
+		}else{
+			ddList.forEach(d -> {
+				sets.add(String.valueOf(d.getValue()));
+			});
+			sets.add("other");
+		}
+		modelMap.put("types",sets);
+    	modelMap.put("customerAddress", JSONArray.toJSONString(customerService.listCustomerOperating(sets)));
 		return "customer/locations";
 	}
 

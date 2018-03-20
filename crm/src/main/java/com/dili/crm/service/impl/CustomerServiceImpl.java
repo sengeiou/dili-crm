@@ -4,7 +4,6 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.dili.crm.dao.CustomerMapper;
 import com.dili.crm.domain.Customer;
-import com.dili.crm.domain.CustomerVisit;
 import com.dili.crm.domain.Department;
 import com.dili.crm.domain.User;
 import com.dili.crm.domain.dto.*;
@@ -13,7 +12,6 @@ import com.dili.crm.service.CacheService;
 import com.dili.crm.service.ChartService;
 import com.dili.crm.service.CustomerService;
 import com.dili.ss.base.BaseServiceImpl;
-import com.dili.ss.constant.SsConstants;
 import com.dili.ss.domain.BaseOutput;
 import com.dili.ss.domain.EasyuiPageOutput;
 import com.dili.ss.dto.DTO;
@@ -303,22 +301,32 @@ public class CustomerServiceImpl extends BaseServiceImpl<Customer, Long> impleme
 	/**
 	 * 根据客户类型获取客户的经营地区相关信息
 	 *
-	 * @param type 客户类型：采购、销售、代买等
+	 * @param types 客户类型：采购、销售、代买等
 	 * @return
 	 */
 	@Override
-	public List<Customer> listCustomerOperating(String type) {
+	public List<Customer> listCustomerOperating(Set<String> types) {
 		Example example = new Example(Customer.class);
 		Example.Criteria criteria = example.createCriteria();
 		/***  构造查询条件 ***/
 		//经纬度不能为空
 		criteria.andIsNotNull("operatingLng").andIsNotNull("operatingLat");
 		//状态为 可用
-		criteria.andEqualTo("yn",1);
-		if (StringUtils.isNotBlank(type)) {
-			criteria.andEqualTo("type", type);
+		criteria.andCondition("yn=1");
+		if (CollectionUtils.isNotEmpty(types)){
+			StringBuilder condition = new StringBuilder();
+			condition.append("( 1=1 ");
+			types.forEach(n ->{
+				 if ("other".equals(n.toLowerCase())){
+					 condition.append(" or type is null");
+				 }else{
+					 condition.append(" or type ='").append(n).append("'");
+				 }
+			});
+			condition.append(" )");
+			criteria.andCondition(condition.toString());
 		}
-		return super.selectByExample(example);
+		return getActualDao().selectByExample(example);
 	}
 
 

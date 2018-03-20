@@ -9,6 +9,7 @@ import com.dili.ss.domain.BaseOutput;
 import org.springframework.ui.ModelMap;
 
 import java.util.List;
+import java.util.Set;
 
 /**
  * 由MyBatis Generator工具自动生成
@@ -105,8 +106,8 @@ public interface CustomerService extends BaseService<Customer, Long> {
 
 	/**
 	 * 根据客户类型获取客户的经营地区相关信息
-	 * @param type 客户类型：采购、销售、代买等
+	 * @param types 客户类型：采购、销售、代买等
 	 * @return
 	 */
-	List<Customer> listCustomerOperating(String type);
+	List<Customer> listCustomerOperating(Set<String> types);
 }
