@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.dili.points.dao.RuleConditionMapper">
+  <resultMap id="BaseResultMap" type="com.dili.points.domain.RuleCondition">
+    <!--
+      WARNING - @mbg.generated
+    -->
+    <id column="id" jdbcType="BIGINT" property="id" />
+    <result column="point_rule_id" jdbcType="BIGINT" property="pointRuleId" />
+    <result column="weight_type" jdbcType="INTEGER" property="weightType" />
+    <result column="condition_type" jdbcType="INTEGER" property="conditionType" />
+    <result column="value" jdbcType="VARCHAR" property="value" />
+    <result column="start_value" jdbcType="VARCHAR" property="startValue" />
+    <result column="end_value" jdbcType="VARCHAR" property="endValue" />
+    <result column="weight" jdbcType="REAL" property="weight" />
+    <result column="created_id" jdbcType="BIGINT" property="createdId" />
+    <result column="modified_id" jdbcType="BIGINT" property="modifiedId" />
+    <result column="created" jdbcType="TIMESTAMP" property="created" />
+    <result column="modified" jdbcType="TIMESTAMP" property="modified" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    <!--
+      WARNING - @mbg.generated
+    -->
+    id, point_rule_id, weight_type, condition_type, value, start_value, end_value, weight, 
+    created_id, modified_id, created, modified
+  </sql>
+  <select id="selectBy" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    <!--
+      WARNING - @mbg.generated
+    -->
+    select 
+    <include refid="Base_Column_List" />
+    from rule_condition
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <update id="updateBy" parameterType="com.dili.points.domain.RuleCondition">
+    <!--
+      WARNING - @mbg.generated
+    -->
+    update rule_condition
+    <set>
+      <if test="pointRuleId != null">
+        point_rule_id = #{pointRuleId,jdbcType=BIGINT},
+      </if>
+      <if test="weightType != null">
+        weight_type = #{weightType,jdbcType=INTEGER},
+      </if>
+      <if test="conditionType != null">
+        condition_type = #{conditionType,jdbcType=INTEGER},
+      </if>
+      <if test="value != null">
+        value = #{value,jdbcType=VARCHAR},
+      </if>
+      <if test="startValue != null">
+        start_value = #{startValue,jdbcType=VARCHAR},
+      </if>
+      <if test="endValue != null">
+        end_value = #{endValue,jdbcType=VARCHAR},
+      </if>
+      <if test="weight != null">
+        weight = #{weight,jdbcType=REAL},
+      </if>
+      <if test="createdId != null">
+        created_id = #{createdId,jdbcType=BIGINT},
+      </if>
+      <if test="modifiedId != null">
+        modified_id = #{modifiedId,jdbcType=BIGINT},
+      </if>
+      <if test="created != null">
+        created = #{created,jdbcType=TIMESTAMP},
+      </if>
+      <if test="modified != null">
+        modified = #{modified,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+</mapper>

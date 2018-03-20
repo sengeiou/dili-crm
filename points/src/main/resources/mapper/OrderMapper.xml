@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.dili.points.dao.OrderMapper">
+  <resultMap id="BaseResultMap" type="com.dili.points.domain.Order">
+    <!--
+      WARNING - @mbg.generated
+    -->
+    <id column="id" jdbcType="BIGINT" property="id" />
+    <result column="code" jdbcType="VARCHAR" property="code" />
+    <result column="seller_id" jdbcType="VARCHAR" property="sellerId" />
+    <result column="seller_card_no" jdbcType="BIGINT" property="sellerCardNo" />
+    <result column="buyer_id" jdbcType="VARCHAR" property="buyerId" />
+    <result column="buyer_card_no" jdbcType="BIGINT" property="buyerCardNo" />
+    <result column="market" jdbcType="VARCHAR" property="market" />
+    <result column="total_money" jdbcType="BIGINT" property="totalMoney" />
+    <result column="weight" jdbcType="DECIMAL" property="weight" />
+    <result column="pay_date" jdbcType="TIMESTAMP" property="payDate" />
+    <result column="payment" jdbcType="INTEGER" property="payment" />
+    <result column="created" jdbcType="TIMESTAMP" property="created" />
+    <result column="business_type" jdbcType="INTEGER" property="businessType" />
+    <result column="source_system" jdbcType="VARCHAR" property="sourceSystem" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    <!--
+      WARNING - @mbg.generated
+    -->
+    id, code, seller_id, seller_card_no, buyer_id, buyer_card_no, market, total_money, 
+    weight, pay_date, payment, created, business_type, source_system
+  </sql>
+  <select id="selectBy" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    <!--
+      WARNING - @mbg.generated
+    -->
+    select 
+    <include refid="Base_Column_List" />
+    from order
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <update id="updateBy" parameterType="com.dili.points.domain.Order">
+    <!--
+      WARNING - @mbg.generated
+    -->
+    update order
+    <set>
+      <if test="code != null">
+        code = #{code,jdbcType=VARCHAR},
+      </if>
+      <if test="sellerId != null">
+        seller_id = #{sellerId,jdbcType=VARCHAR},
+      </if>
+      <if test="sellerCardNo != null">
+        seller_card_no = #{sellerCardNo,jdbcType=BIGINT},
+      </if>
+      <if test="buyerId != null">
+        buyer_id = #{buyerId,jdbcType=VARCHAR},
+      </if>
+      <if test="buyerCardNo != null">
+        buyer_card_no = #{buyerCardNo,jdbcType=BIGINT},
+      </if>
+      <if test="market != null">
+        market = #{market,jdbcType=VARCHAR},
+      </if>
+      <if test="totalMoney != null">
+        total_money = #{totalMoney,jdbcType=BIGINT},
+      </if>
+      <if test="weight != null">
+        weight = #{weight,jdbcType=DECIMAL},
+      </if>
+      <if test="payDate != null">
+        pay_date = #{payDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="payment != null">
+        payment = #{payment,jdbcType=INTEGER},
+      </if>
+      <if test="created != null">
+        created = #{created,jdbcType=TIMESTAMP},
+      </if>
+      <if test="businessType != null">
+        business_type = #{businessType,jdbcType=INTEGER},
+      </if>
+      <if test="sourceSystem != null">
+        source_system = #{sourceSystem,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+</mapper>

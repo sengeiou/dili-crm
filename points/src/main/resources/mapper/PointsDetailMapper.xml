@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.dili.points.dao.PointsDetailMapper">
+  <resultMap id="BaseResultMap" type="com.dili.points.domain.PointsDetail">
+    <!--
+      WARNING - @mbg.generated
+    -->
+    <result column="id" jdbcType="BIGINT" property="id" />
+    <result column="certificate_number" jdbcType="VARCHAR" property="certificateNumber" />
+    <result column="points" jdbcType="INTEGER" property="points" />
+    <result column="balance" jdbcType="INTEGER" property="balance" />
+    <result column="generate_way" jdbcType="INTEGER" property="generateWay" />
+    <result column="in_out" jdbcType="INTEGER" property="inOut" />
+    <result column="source_system" jdbcType="VARCHAR" property="sourceSystem" />
+    <result column="notes" jdbcType="VARCHAR" property="notes" />
+    <result column="created" jdbcType="TIMESTAMP" property="created" />
+    <result column="order_code" jdbcType="VARCHAR" property="orderCode" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    <!--
+      WARNING - @mbg.generated
+    -->
+    id, certificate_number, points, balance, generate_way, in_out, source_system, notes, 
+    created, order_code
+  </sql>
+</mapper>

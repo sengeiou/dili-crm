@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.dili.points.dao.PointsRuleMapper">
+  <resultMap id="BaseResultMap" type="com.dili.points.domain.PointsRule">
+    <!--
+      WARNING - @mbg.generated
+    -->
+    <id column="id" jdbcType="BIGINT" property="id" />
+    <result column="name" jdbcType="VARCHAR" property="name" />
+    <result column="code" jdbcType="VARCHAR" property="code" />
+    <result column="customer_type" jdbcType="VARCHAR" property="customerType" />
+    <result column="business_type" jdbcType="INTEGER" property="businessType" />
+    <result column="computing_standard" jdbcType="INTEGER" property="computingStandard" />
+    <result column="computing_parameter" jdbcType="INTEGER" property="computingParameter" />
+    <result column="created_id" jdbcType="BIGINT" property="createdId" />
+    <result column="modified_id" jdbcType="BIGINT" property="modifiedId" />
+    <result column="created" jdbcType="TIMESTAMP" property="created" />
+    <result column="modified" jdbcType="TIMESTAMP" property="modified" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    <!--
+      WARNING - @mbg.generated
+    -->
+    id, name, code, customer_type, business_type, computing_standard, computing_parameter, 
+    created_id, modified_id, created, modified
+  </sql>
+  <select id="selectBy" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    <!--
+      WARNING - @mbg.generated
+    -->
+    select 
+    <include refid="Base_Column_List" />
+    from points_rule
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <update id="updateBy" parameterType="com.dili.points.domain.PointsRule">
+    <!--
+      WARNING - @mbg.generated
+    -->
+    update points_rule
+    <set>
+      <if test="name != null">
+        name = #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="code != null">
+        code = #{code,jdbcType=VARCHAR},
+      </if>
+      <if test="customerType != null">
+        customer_type = #{customerType,jdbcType=VARCHAR},
+      </if>
+      <if test="businessType != null">
+        business_type = #{businessType,jdbcType=INTEGER},
+      </if>
+      <if test="computingStandard != null">
+        computing_standard = #{computingStandard,jdbcType=INTEGER},
+      </if>
+      <if test="computingParameter != null">
+        computing_parameter = #{computingParameter,jdbcType=INTEGER},
+      </if>
+      <if test="createdId != null">
+        created_id = #{createdId,jdbcType=BIGINT},
+      </if>
+      <if test="modifiedId != null">
+        modified_id = #{modifiedId,jdbcType=BIGINT},
+      </if>
+      <if test="created != null">
+        created = #{created,jdbcType=TIMESTAMP},
+      </if>
+      <if test="modified != null">
+        modified = #{modified,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+</mapper>
