@@ -14,25 +14,32 @@ import javax.persistence.Id;
 /**
  * 由MyBatis Generator工具自动生成
  * 
- * This file was generated on 2018-03-20 11:29:31.
+ * This file was generated on 2018-03-20 14:29:31.
  */
 @Table(name = "`category`")
 public interface Category extends IBaseDomain {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "`id`")
-    @FieldDef(label="ID", maxLength = 20)
+    @FieldDef(label="ID")
+    @EditMode(editor = FieldEditor.Number, required = true)
+    Long getId();
+
+    void setId(Long id);
+
+    @Column(name = "`category_id`")
+    @FieldDef(label="商品id", maxLength = 20)
     @EditMode(editor = FieldEditor.Text, required = true)
-    String getId();
+    String getCategoryId();
 
-    void setId(String id);
+    void setCategoryId(String categoryId);
 
-    @Column(name = "`parent_id`")
-    @FieldDef(label="上级id", maxLength = 20)
+    @Column(name = "`parent_category_id`")
+    @FieldDef(label="商品上级id", maxLength = 20)
     @EditMode(editor = FieldEditor.Text, required = false)
-    String getParentId();
+    String getParentCategoryId();
 
-    void setParentId(String parentId);
+    void setParentCategoryId(String parentCategoryId);
 
     @Column(name = "`name`")
     @FieldDef(label="品名", maxLength = 20)

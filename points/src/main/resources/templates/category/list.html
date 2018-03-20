@@ -12,25 +12,38 @@
     表注释:<br/>
     实体对象名:Category<br/>
     列信息:<br/>
-    获取指定id列JDBC类型:VARCHAR<br/>
+    获取指定id列JDBC类型:BIGINT<br/>
     所有列:
         actualColumnName:String:id,
         javaProperty:String:id,
         defaultValue:String:,
         remarks:String:ID,
-        length:int:20,
+        length:int:19,
         nullable:boolean:false,
         identity:boolean:true,
+        tableAlias:String:,
+        jdbcTypeName:String:BIGINT,
+        scale:int:0,
+        jdbcTypeName:String:BIGINT,
+        jdbcType:int:-5:BIGINT
+        ===========================================================================
+        actualColumnName:String:category_id,
+        javaProperty:String:categoryId,
+        defaultValue:String:,
+        remarks:String:商品id,
+        length:int:20,
+        nullable:boolean:false,
+        identity:boolean:false,
         tableAlias:String:,
         jdbcTypeName:String:VARCHAR,
         scale:int:0,
         jdbcTypeName:String:VARCHAR,
         jdbcType:int:12:VARCHAR
         ===========================================================================
-        actualColumnName:String:parent_id,
-        javaProperty:String:parentId,
+        actualColumnName:String:parent_category_id,
+        javaProperty:String:parentCategoryId,
         defaultValue:String:,
-        remarks:String:上级id,
+        remarks:String:商品上级id,
         length:int:20,
         nullable:boolean:true,
         identity:boolean:false,

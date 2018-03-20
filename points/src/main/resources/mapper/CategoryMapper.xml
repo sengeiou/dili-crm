@@ -5,8 +5,9 @@
     <!--
       WARNING - @mbg.generated
     -->
-    <result column="id" jdbcType="VARCHAR" property="id" />
-    <result column="parent_id" jdbcType="VARCHAR" property="parentId" />
+    <id column="id" jdbcType="BIGINT" property="id" />
+    <result column="category_id" jdbcType="VARCHAR" property="categoryId" />
+    <result column="parent_category_id" jdbcType="VARCHAR" property="parentCategoryId" />
     <result column="name" jdbcType="VARCHAR" property="name" />
     <result column="source_system" jdbcType="VARCHAR" property="sourceSystem" />
     <result column="created" jdbcType="TIMESTAMP" property="created" />
@@ -15,6 +16,39 @@
     <!--
       WARNING - @mbg.generated
     -->
-    id, parent_id, name, source_system, created
+    id, category_id, parent_category_id, name, source_system, created
   </sql>
+  <select id="selectBy" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    <!--
+      WARNING - @mbg.generated
+    -->
+    select 
+    <include refid="Base_Column_List" />
+    from category
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <update id="updateBy" parameterType="com.dili.points.domain.Category">
+    <!--
+      WARNING - @mbg.generated
+    -->
+    update category
+    <set>
+      <if test="categoryId != null">
+        category_id = #{categoryId,jdbcType=VARCHAR},
+      </if>
+      <if test="parentCategoryId != null">
+        parent_category_id = #{parentCategoryId,jdbcType=VARCHAR},
+      </if>
+      <if test="name != null">
+        name = #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="sourceSystem != null">
+        source_system = #{sourceSystem,jdbcType=VARCHAR},
+      </if>
+      <if test="created != null">
+        created = #{created,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
 </mapper>
