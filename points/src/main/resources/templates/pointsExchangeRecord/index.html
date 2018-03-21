@@ -56,7 +56,7 @@
             <table class="easyui-datagrid" title="PointsExchangeRecord列表" id="grid" fitColumns="true" noheader="true"
                    pagination="true" pageSize="30" pageNumber="1" pagePosition="top" rownumbers="true" remoteSort="false"
                    loadMsg="数据加载中..." singleSelect="true" method="post" multiSort="false" sortName="customerId"
-                   align="center" fit="true" striped="true" toolbar="#toolbar" idField="id" data-options="onDblClickRow:openUpdate, onHeaderContextMenu:headerContextMenu">
+                   align="center" fit="true" striped="true" idField="id" data-options="onDblClickRow:openUpdate, onHeaderContextMenu:headerContextMenu">
                 <thead>
                     <tr>
                         <th data-options="field:'customerId',   sortable:true, order:'asc', align:'center', resizable:'true', fixed:'false'">
@@ -80,22 +80,6 @@
                     </tr>
                 </thead>
             </table>
-            <!-- datagrid工具栏 -->
-            <div id="toolbar" style="padding:2px 5px;">
-                <a href="#" class="easyui-linkbutton" iconCls="icon-add" onclick="openInsert()" plain="true"></a>
-                <a href="#" class="easyui-linkbutton" iconCls="icon-edit" onclick="openUpdate()" plain="true"></a>
-                <a href="#" class="easyui-linkbutton" iconCls="icon-remove" onclick="del()" plain="true"></a>
-                <a href="#" class="easyui-linkbutton" iconCls="icon-export" onclick="doExport('grid')" plain="true"></a>
-                <div style="float:right">
-                边框显示:<select onchange="changeBorder('grid',this.value)">
-                    <option value="lines-both">全边框</option>
-                    <option value="lines-no">无边框</option>
-                    <option value="lines-right">右边框</option>
-                    <option value="lines-bottom">下边框</option>
-                </select>
-                行条纹:<input type="checkbox" checked="checked" onclick="$('#grid').datagrid({striped:$(this).is(':checked')})">
-                </div>
-            </div>
         </div>
     </div>
     <!-- 隐藏编辑框 -->
@@ -310,27 +294,27 @@
                 pager.pagination({
                     <#controls_paginationOpts/>,
                     buttons:[
-                    {
-                        iconCls:'icon-add',
-                        text:'新增',
-                        handler:function(){
-                            openInsert();
-                        }
-                    },
-                    {
-                        iconCls:'icon-edit',
-                        text:'修改',
-                        handler:function(){
-                            openUpdate();
-                        }
-                    },
-                    {
-                        iconCls:'icon-remove',
-                        text:'删除',
-                        handler:function(){
-                            del();
-                        }
-                    },
+                    // {
+                    //     iconCls:'icon-add',
+                    //     text:'新增',
+                    //     handler:function(){
+                    //         openInsert();
+                    //     }
+                    // },
+                    // {
+                    //     iconCls:'icon-edit',
+                    //     text:'修改',
+                    //     handler:function(){
+                    //         openUpdate();
+                    //     }
+                    // },
+                    // {
+                    //     iconCls:'icon-remove',
+                    //     text:'删除',
+                    //     handler:function(){
+                    //         del();
+                    //     }
+                    // },
                     {
                         iconCls:'icon-export',
                         text:'导出',
