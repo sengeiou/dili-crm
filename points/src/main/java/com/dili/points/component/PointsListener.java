@@ -1,6 +1,7 @@
 package com.dili.points.component;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -26,7 +27,13 @@ public class PointsListener {
 		System.out.println("PointsListener:"+categoryJson);
 		Category category=DTOUtils.newDTO(Category.class);
 		if(this.convertAndValidate(category)) {
-			categoryService.saveOrUpdate(category);	
+			Category example=DTOUtils.newDTO(Category.class);
+			example.setCategoryId(category.getCategoryId());
+			example.setSourceSystem(category.getSourceSystem());
+			Optional<Category>firstOne=this.categoryService.listByExample(example).stream().findFirst();
+			
+			Category categoryDto=firstOne.orElse(category);
+			categoryService.saveOrUpdate(categoryDto);	
 		}else {
 			logger.error("验证品类信息出错:{}",categoryJson);
 		}
