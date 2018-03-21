@@ -315,14 +315,16 @@ public class CustomerServiceImpl extends BaseServiceImpl<Customer, Long> impleme
 		criteria.andCondition("yn=1");
 		if (CollectionUtils.isNotEmpty(types)){
 			StringBuilder condition = new StringBuilder();
-			condition.append("( 1=1 ");
+			condition.append("(");
 			types.forEach(n ->{
 				 if ("other".equals(n.toLowerCase())){
-					 condition.append(" or type is null");
+					 condition.append(" type is null or");
 				 }else{
-					 condition.append(" or type ='").append(n).append("'");
+					 condition.append(" type ='").append(n).append("' or");
 				 }
 			});
+			int or = condition.lastIndexOf("or");
+			condition.delete(or,or+2);
 			condition.append(" )");
 			criteria.andCondition(condition.toString());
 		}

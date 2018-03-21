@@ -95,7 +95,7 @@ public class CustomerController {
 			});
 			sets.add("other");
 		}
-		modelMap.put("types",sets);
+		modelMap.put("types",StringUtils.join(sets.toArray(), ";"));
     	modelMap.put("customerAddress", JSONArray.toJSONString(customerService.listCustomerOperating(sets)));
 		return "customer/locations";
 	}

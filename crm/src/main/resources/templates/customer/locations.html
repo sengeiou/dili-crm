@@ -189,10 +189,10 @@
         <div id="mapDiv" style="width:100%;height:100%; "></div>
         <div  style="position:absolute; top: 50px; left: 20px;">
             <%for(dd in ddList){ %>
-                <input  type="checkbox" name="type" value="${dd.value}" >${dd.text}&nbsp;&nbsp;
+                <input  type="checkbox" name="type" value="${dd.value}" onclick="queryByType()">${dd.text}&nbsp;&nbsp;
             <%}%>
-            <input  type="checkbox" name="type"  value="other" >其它&nbsp;&nbsp;
-            <a href="#" class="easyui-linkbutton"  data-options="width:24,height:24" iconCls="icon-search" onclick="queryByType()"></a>
+            <input  type="checkbox" name="type"  value="other" onclick="queryByType()">其它&nbsp;&nbsp;
+            <!--<a href="#" class="easyui-linkbutton"  data-options="width:24,height:24" iconCls="icon-search" onclick="queryByType()"></a>-->
         </div>
     <!--</div>-->
 
@@ -204,6 +204,8 @@
     <script type="text/javascript">
         //          第三方InfoBox时保存上次打开的窗口
         var infoBoxTemp = null;
+        //百度地图
+        var map = new BMap.Map("mapDiv");
         /**
          * 绑定页面回车事件，以及初始化页面时的光标定位
          * @formId
@@ -216,7 +218,6 @@
         $(function () {
 // ============================  地图相关js  ============================
             // 百度地图API功能
-            var map = new BMap.Map("mapDiv");
             //哈尔滨
             var lat = 45.709509;
             var lng = 126.608858;
@@ -275,20 +276,31 @@
          * 根据客户类型展现客户地图
          */
         function queryByType() {
-            var chk_value =[];//定义一个数组
-            $('input[name="type"]:checked').each(function(){//遍历每一个名字为interest的复选框，其中选中的执行函数
-                chk_value.push($(this).val());//将选中的值添加到数组chk_value中
-            });
-            alert(chk_value);
-            window.location.href="${contextPath}/customer/locations.html?types="+chk_value;
+            //获取已选择的复选框
+            var ck = $('input[name="type"]:checked');
+            if (ck.length == 0){
+                //目前发现，clearOverlays貌似不能正常清除自定义覆盖物
+                // map.clearOverlays();
+                var overlays = map.getOverlays();
+                if(overlays.length > 0){
+                    for (i = 0; i < overlays.length; i++) {
+                        overlays[i].hide();
+                    }
+                }
+            }else{
+                var chk_value =[];//定义一个数组
+                ck.each(function(){//遍历
+                    chk_value.push($(this).val());//将选中的值添加到数组chk_value中
+                });
+                window.location.href="${contextPath}/customer/locations.html?types="+chk_value;
+            }
         }
 
-        // var types='${types}';
-        // debugger;
-        // $.each(types,function(i){
-        //     debugger;
-        //     $('[name="type"][value="'+i+'"]').prop('checked',true);
-        // });
+        var types='${types}';
+        var types_t = types.split(';');
+        $.each(types_t,function(i){
+            $('input[name="type"][value="'+types_t[i]+'"]').prop('checked',true);
+        });
 
     </script>
 </body>
