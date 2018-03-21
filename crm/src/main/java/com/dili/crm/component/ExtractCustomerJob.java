@@ -25,7 +25,7 @@ public class ExtractCustomerJob implements ApplicationListener<ContextRefreshedE
 
 	@Autowired
 	CommonService commonService;
-	@Autowired	ICardETLService service;
+	//@Autowired	ICardETLService service;
 
 	@Override
 	public void onApplicationEvent(ContextRefreshedEvent contextRefreshedEvent) {

@@ -7,6 +7,10 @@
     -->
     <id column="id" jdbcType="BIGINT" property="id" />
     <result column="customer_id" jdbcType="BIGINT" property="customerId" />
+    <result column="certificate_number" jdbcType="VARCHAR" property="certificateNumber" />
+    <result column="organization_type" jdbcType="VARCHAR" property="organizationType" />
+    <result column="certificate_type" jdbcType="VARCHAR" property="certificateType" />
+    <result column="type" jdbcType="VARCHAR" property="type" />
     <result column="points" jdbcType="INTEGER" property="points" />
     <result column="exchange_commodities_id" jdbcType="BIGINT" property="exchangeCommoditiesId" />
     <result column="quantity" jdbcType="INTEGER" property="quantity" />
@@ -17,7 +21,8 @@
     <!--
       WARNING - @mbg.generated
     -->
-    id, customer_id, points, exchange_commodities_id, quantity, created, created_id
+    id, customer_id, certificate_number, organization_type, certificate_type, type, points, 
+    exchange_commodities_id, quantity, created, created_id
   </sql>
   <select id="selectBy" parameterType="java.lang.Long" resultMap="BaseResultMap">
     <!--
@@ -36,6 +41,18 @@
     <set>
       <if test="customerId != null">
         customer_id = #{customerId,jdbcType=BIGINT},
+      </if>
+      <if test="certificateNumber != null">
+        certificate_number = #{certificateNumber,jdbcType=VARCHAR},
+      </if>
+      <if test="organizationType != null">
+        organization_type = #{organizationType,jdbcType=VARCHAR},
+      </if>
+      <if test="certificateType != null">
+        certificate_type = #{certificateType,jdbcType=VARCHAR},
+      </if>
+      <if test="type != null">
+        type = #{type,jdbcType=VARCHAR},
       </if>
       <if test="points != null">
         points = #{points,jdbcType=INTEGER},

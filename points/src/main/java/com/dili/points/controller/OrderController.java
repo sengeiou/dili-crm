@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 /**
  * 由MyBatis Generator工具自动生成
- * This file was generated on 2018-03-20 11:29:31.
+ * This file was generated on 2018-03-21 16:01:59.
  */
 @Api("/order")
 @Controller

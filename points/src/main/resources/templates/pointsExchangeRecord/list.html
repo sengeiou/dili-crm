@@ -40,6 +40,58 @@
         jdbcTypeName:String:BIGINT,
         jdbcType:int:-5:BIGINT
         ===========================================================================
+        actualColumnName:String:certificate_number,
+        javaProperty:String:certificateNumber,
+        defaultValue:String:,
+        remarks:String:证件号,
+        length:int:40,
+        nullable:boolean:true,
+        identity:boolean:false,
+        tableAlias:String:,
+        jdbcTypeName:String:VARCHAR,
+        scale:int:0,
+        jdbcTypeName:String:VARCHAR,
+        jdbcType:int:12:VARCHAR
+        ===========================================================================
+        actualColumnName:String:organization_type,
+        javaProperty:String:organizationType,
+        defaultValue:String:,
+        remarks:String:组织类型##个人/企业##{provider:"dataDictionaryValueProvider",queryParams:{dd_id:5}},
+        length:int:20,
+        nullable:boolean:true,
+        identity:boolean:false,
+        tableAlias:String:,
+        jdbcTypeName:String:VARCHAR,
+        scale:int:0,
+        jdbcTypeName:String:VARCHAR,
+        jdbcType:int:12:VARCHAR
+        ===========================================================================
+        actualColumnName:String:certificate_type,
+        javaProperty:String:certificateType,
+        defaultValue:String:,
+        remarks:String:证件类型##{provider:"dataDictionaryValueProvider",queryParams:{dd_id:3}},
+        length:int:20,
+        nullable:boolean:true,
+        identity:boolean:false,
+        tableAlias:String:,
+        jdbcTypeName:String:VARCHAR,
+        scale:int:0,
+        jdbcTypeName:String:VARCHAR,
+        jdbcType:int:12:VARCHAR
+        ===========================================================================
+        actualColumnName:String:type,
+        javaProperty:String:type,
+        defaultValue:String:,
+        remarks:String:客户类型##采购、销售、代买等##{provider:"dataDictionaryValueProvider",queryParams:{dd_id:4}},
+        length:int:20,
+        nullable:boolean:true,
+        identity:boolean:false,
+        tableAlias:String:,
+        jdbcTypeName:String:VARCHAR,
+        scale:int:0,
+        jdbcTypeName:String:VARCHAR,
+        jdbcType:int:12:VARCHAR
+        ===========================================================================
         actualColumnName:String:points,
         javaProperty:String:points,
         defaultValue:String:,

@@ -14,6 +14,27 @@
 
                             </td>
                             <td style="padding:5px;">
+                                <input class="easyui-textbox" name="certificateNumber" id="certificateNumber" style="width:100%" labelAlign="right" data-options="label:'证件号:', validType:'length[0,40]'" />
+
+                            </td>
+                            <td style="padding:5px;">
+                                    <input name="organizationType" id="organizationType" style="width:100%;" editable="false" labelAlign="right" panelWidth="auto" panelHeight="auto" label="组织类型:"/>
+                                    <#comboProvider _id="organizationType" _provider='dataDictionaryValueProvider'/>
+
+                            </td>
+                            <td style="padding:5px;">
+                                    <input name="certificateType" id="certificateType" style="width:100%;" editable="false" labelAlign="right" panelWidth="auto" panelHeight="auto" label="证件类型:"/>
+                                    <#comboProvider _id="certificateType" _provider='dataDictionaryValueProvider'/>
+
+                            </td>
+                            <td style="padding:5px;">
+                                    <input name="type" id="type" style="width:100%;" editable="false" labelAlign="right" panelWidth="auto" panelHeight="auto" label="客户类型:"/>
+                                    <#comboProvider _id="type" _provider='dataDictionaryValueProvider'/>
+
+                            </td>
+                        </tr>
+                        <tr>
+                            <td style="padding:5px;">
                                 <input class="easyui-numberbox" name="points" id="points" style="width:100%" labelAlign="right" data-options="label:'使用积分:', validType:'length[0,10]'" />
 
                             </td>
@@ -29,8 +50,6 @@
                                 <input class="easyui-datetimebox" name="created" id="created" style="width:100%" labelAlign="right" data-options="label:'兑换时间:'" />
 
                             </td>
-                        </tr>
-                        <tr>
                             <td style="padding:5px;">
                                 <input class="easyui-numberbox" name="createdId" id="createdId" style="width:100%" labelAlign="right" data-options="label:'兑换操作员:', validType:'length[0,19]'" />
 
@@ -61,6 +80,18 @@
                     <tr>
                         <th data-options="field:'customerId',   sortable:true, order:'asc', align:'center', resizable:'true', fixed:'false'">
                             客户ID
+                        </th>
+                        <th data-options="field:'certificateNumber',   sortable:true, order:'asc', align:'center', resizable:'true', fixed:'false'">
+                            证件号
+                        </th>
+                        <th data-options="field:'organizationType',  _provider:'dataDictionaryValueProvider', sortable:true, order:'asc', align:'center', resizable:'true', fixed:'false'">
+                            组织类型
+                        </th>
+                        <th data-options="field:'certificateType',  _provider:'dataDictionaryValueProvider', sortable:true, order:'asc', align:'center', resizable:'true', fixed:'false'">
+                            证件类型
+                        </th>
+                        <th data-options="field:'type',  _provider:'dataDictionaryValueProvider', sortable:true, order:'asc', align:'center', resizable:'true', fixed:'false'">
+                            客户类型
                         </th>
                         <th data-options="field:'points',   sortable:true, order:'asc', align:'center', resizable:'true', fixed:'false'">
                             使用积分
@@ -121,6 +152,32 @@
             <tr>
                 <td style="padding:5px;">
                     <input class="easyui-numberbox" name="_customerId" id="_customerId" style="width:100%" data-options="label:'客户ID:'" />
+                </td>
+            </tr>
+            <tr>
+                <td style="padding:5px;">
+                    <input class="easyui-textbox" name="_certificateNumber" id="_certificateNumber" style="width:100%" data-options="label:'证件号:', validType:'length[0,40]'" />
+                </td>
+            </tr>
+            <tr>
+                <td style="padding:5px;">
+                       <input name="_organizationType" id="_organizationType" style="width:100%;" editable="false" panelWidth="auto" panelHeight="auto" label="组织类型:" />
+                       <#comboProvider _id="_organizationType" _provider='dataDictionaryValueProvider'/>
+
+                </td>
+            </tr>
+            <tr>
+                <td style="padding:5px;">
+                       <input name="_certificateType" id="_certificateType" style="width:100%;" editable="false" panelWidth="auto" panelHeight="auto" label="证件类型:" />
+                       <#comboProvider _id="_certificateType" _provider='dataDictionaryValueProvider'/>
+
+                </td>
+            </tr>
+            <tr>
+                <td style="padding:5px;">
+                       <input name="_type" id="_type" style="width:100%;" editable="false" panelWidth="auto" panelHeight="auto" label="客户类型:" />
+                       <#comboProvider _id="_type" _provider='dataDictionaryValueProvider'/>
+
                 </td>
             </tr>
             <tr>
