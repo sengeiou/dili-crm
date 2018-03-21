@@ -14,7 +14,7 @@ import javax.persistence.Id;
 /**
  * 由MyBatis Generator工具自动生成
  * 
- * This file was generated on 2018-03-21 17:00:42.
+ * This file was generated on 2018-03-21 17:06:49.
  */
 @Table(name = "`points_exchange_record`")
 public interface PointsExchangeRecord extends IBaseDomain {
@@ -33,6 +33,34 @@ public interface PointsExchangeRecord extends IBaseDomain {
     Long getCustomerId();
 
     void setCustomerId(Long customerId);
+
+    @Column(name = "`certificate_number`")
+    @FieldDef(label="证件号", maxLength = 40)
+    @EditMode(editor = FieldEditor.Text, required = false)
+    String getCertificateNumber();
+
+    void setCertificateNumber(String certificateNumber);
+
+    @Column(name = "`organization_type`")
+    @FieldDef(label="组织类型", maxLength = 20)
+    @EditMode(editor = FieldEditor.Combo, required = false, params="{\"provider\":\"dataDictionaryValueProvider\",\"queryParams\":{\"dd_id\":5}}")
+    String getOrganizationType();
+
+    void setOrganizationType(String organizationType);
+
+    @Column(name = "`certificate_type`")
+    @FieldDef(label="证件类型", maxLength = 20)
+    @EditMode(editor = FieldEditor.Combo, required = false, params="{\"provider\":\"dataDictionaryValueProvider\",\"queryParams\":{\"dd_id\":3}}")
+    String getCertificateType();
+
+    void setCertificateType(String certificateType);
+
+    @Column(name = "`type`")
+    @FieldDef(label="客户类型", maxLength = 20)
+    @EditMode(editor = FieldEditor.Combo, required = false, params="{\"provider\":\"dataDictionaryValueProvider\",\"queryParams\":{\"dd_id\":4}}")
+    String getType();
+
+    void setType(String type);
 
     @Column(name = "`points`")
     @FieldDef(label="使用积分")
