@@ -65,9 +65,9 @@ public interface PointsRule extends IBaseDomain {
     @Column(name = "`computing_parameter`")
     @FieldDef(label="计算参数")
     @EditMode(editor = FieldEditor.Number, required = false)
-    Integer getComputingParameter();
+    Float getComputingParameter();
 
-    void setComputingParameter(Integer computingParameter);
+    void setComputingParameter(Float computingParameter);
 
     @Column(name = "`created_id`")
     @FieldDef(label="创建人")

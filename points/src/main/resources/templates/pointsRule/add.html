@@ -186,25 +186,25 @@
             <tr>
                 <td><span style="display:inline-block;line-height: 26px">条件:</span></td>
                 <td><select class="easyui-combobox inputWidth" name="conditionType" id="conditionType"
-                            data-options="editable:false,labelAlign:'right',onLoadSuccess:success,onChange:change">
-                    <option value="181">大于</option>
+                            data-options="editable:false,labelAlign:'right'">
                     <option value="179">区间</option>
+                    <option value="181">大于</option>
                 </select></td>
             </tr>
             <tr id="number_179">
                 <td><span style="display:inline-block;line-height: 26px">条件值:</span></td>
                 <td>
-                    <input type="text" style="width:100px" required="true" class="easyui-numberbox" name="startValue" id="startValue"> - <input style="width:100px" required="true" type="text" validType="big['#startValue']"
-                                              class="easyui-numberbox"
-                                              name="endValue" id="endValue">
-                    <span>公斤</span>
+                    <input type="text" style="width:100px" required="true" class="easyui-numberbox" name="startValue"
+                           id="startValue"> - <input style="width:100px" required="true" type="text"
+                                                     validType="big['#startValue']"
+                                                     class="easyui-numberbox"
+                                                     name="endValue" id="endValue">
                 </td>
             </tr>
             <tr id="number_179_other">
                 <td><span style="display:inline-block;line-height: 26px">条件值:</span></td>
                 <td>
                     <input type="text" required="true" class="easyui-numberbox" id="value" name="value" value="">
-                    <span>公斤</span>
                 </td>
             </tr>
             <tr>
@@ -218,9 +218,9 @@
     </form>
     <div style="text-align:center;padding:5px;">
         <a href="javascript:void(0)" class="easyui-linkbutton" data-options="width:'80px'"
-           onclick="$('#dlg').dialog('close');">取消</a>
-        <a href="javascript:void(0)" class="easyui-linkbutton" data-options="width:'80px'"
            onclick="saveNumber()">确定</a>
+        <a href="javascript:void(0)" class="easyui-linkbutton" data-options="width:'80px'"
+           onclick="$('#dlg').dialog('close');">取消</a>
     </div>
 </div>
 
@@ -249,9 +249,9 @@
     </form>
     <div style="text-align:center;padding:5px;">
         <a href="javascript:void(0)" class="easyui-linkbutton" data-options="width:'80px'"
-           onclick="$('#dlg_pay').dialog('close');">取消</a>
-        <a href="javascript:void(0)" class="easyui-linkbutton" data-options="width:'80px'"
            onclick="savePay()">确定</a>
+        <a href="javascript:void(0)" class="easyui-linkbutton" data-options="width:'80px'"
+           onclick="$('#dlg_pay').dialog('close');">取消</a>
     </div>
 </div>
 <script type="text/javascript">
@@ -262,7 +262,7 @@
             $("#edit_type").val(0);
             $("#type").val(0);
             $('#dlg').dialog({
-                title: '交易量权重'
+                title: '交易量权重（公斤）'
             });
             $('#dlg').dialog('open');
         }
@@ -279,7 +279,7 @@
             $("#edit_type").val(1);
             $("#type").val(0);
             $('#dlg').dialog({
-                title: '交易量权重'
+                title: '交易量权重（公斤）'
             });
             $('#dlg').dialog('open');
         }
@@ -305,7 +305,7 @@
             $("#edit_type").val(0);
             $("#type").val(1);
             $('#dlg').dialog({
-                title: '交易额权重'
+                title: '交易额权重（元）'
             });
             $('#dlg').dialog('open');
         }
@@ -322,7 +322,7 @@
             $("#edit_type").val(1);
             $("#type").val(1);
             $('#dlg').dialog({
-                title: '交易额权重'
+                title: '交易额权重（元）'
             });
             $('#dlg').dialog('open');
         }
@@ -460,14 +460,17 @@
 
     function setDisplay(value) {
         if (value == 179) {
-            // $("#number_179").show();
-            // $("#value").numberbox('setValue','');
-            // $("#number_179_other").hide();
+            $("#number_179").show();
+            $("#value").numberbox('disable');
+            $("#startValue").numberbox('enable');
+            $("#endValue").numberbox('enable');
+            $("#number_179_other").hide();
         } else {
-            // $("#number_179").hide();
-            $("#startValue").numberbox('getValue');
-            // $("#endValue").numberbox('setValue','');
-            // $("#number_179_other").show();
+            $("#number_179").hide();
+            $("#value").numberbox('enable');
+            $("#startValue").numberbox('disable');
+            $("#endValue").numberbox('disable');
+            $("#number_179_other").show();
         }
     }
 
@@ -496,6 +499,17 @@
             },
             message: '必须大于起始值'
         }
+    });
+
+    $(function () {
+        $('#conditionType').combobox({
+            onLoadSuccess: function () {
+                success();
+            },
+            onChange: function (newValue) {
+                change(newValue)
+            }
+        });
     });
 </script>
 </#body>
