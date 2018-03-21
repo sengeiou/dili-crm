@@ -96,4 +96,10 @@ public interface PointsRule extends IBaseDomain {
     Date getModified();
 
     void setModified(Date modified);
+    @Column(name = "`yn`")
+    @FieldDef(label="是否可用")
+    @EditMode(editor = FieldEditor.Number, required = false)
+    Integer getYn();
+
+    void setYn(Integer yn);
 }
