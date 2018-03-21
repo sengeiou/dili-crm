@@ -1,0 +1,269 @@
+<#body>
+<style>
+    input {
+        height: 18px;
+    }
+
+    .inputWidth {
+        width: 20%;
+    }
+
+    /*回访进度条*/
+    #stateDiv {
+        width: 100%;
+        padding: 0;
+    }
+
+    #stateDiv .step {
+        display: inline-block;
+        width: 32%;
+        height: 36px;
+        line-height: 36px;
+    }
+
+    #stateDiv .step.cur {
+        color: #fff;
+    }
+
+    #stateDiv .step:first-child {
+        background: url(${contextPath}/resources/images/visitCus/step1.png) no-repeat left center;
+        background-size: 100%;
+    }
+
+    #stateDiv .step:first-child.cur {
+        background: url(${contextPath}/resources/images/visitCus/step1-hv.png) no-repeat left center;
+        background-size: 100%;
+    }
+
+    #stateDiv .step:nth-child(2) {
+        background: url(${contextPath}/resources/images/visitCus/step2.png) no-repeat left center;
+        background-size: 100%;
+    }
+
+    #stateDiv .step:nth-child(2).cur {
+        background: url(${contextPath}/resources/images/visitCus/step2-hv.png) no-repeat left center;
+        background-size: 100%;
+    }
+
+    #stateDiv .step:last-child {
+        background: url(${contextPath}/resources/images/visitCus/step3.png) no-repeat left center;
+        background-size: 100%;
+    }
+
+    #stateDiv .step:last-child.cur {
+        background: url(${contextPath}/resources/images/visitCus/step3-hv.png) no-repeat left center;
+        background-size: 100%;
+
+    }
+
+</style>
+<div class="easyui-layout" fit="true">
+    <div id="userSelectDialog" style="display: none;"></div>
+    <div id="customerSelectDialog" style="display: none;"></div>
+    <div region="center" style="width:100%;" minHeight="360" align="center" border="false">
+        <!-- 上方导航栏 (锁定不滚动) -->
+        <div id="nav"
+             style="padding-left:10px;padding-top:10px;position:fixed;z-index:2008;width:99%;height:30px;background-color:white"
+             align="left">
+            <div style="display: inline;float:right;padding-right: 40px;">
+                    <span id="newPage" style="display: none;">
+                            <a id="saveBtn" href="#" class="easyui-linkbutton" iconCls="icon-save"
+                               data-options="width:80" onclick="saveOrUpdate(1,'确定要保存吗？')">保存</a>&nbsp;&nbsp;
+                            <a id="saveAndNewBtn" href="#" class="easyui-linkbutton" iconCls="icon-save"
+                               data-options="width:120" onclick="saveOrUpdate(2,'确定要保存并新建吗？')">保存并新建</a>&nbsp;&nbsp;
+                        </span>
+                <span id="modifyPage" style="display: none;">
+                            <a id="modifyBtn" href="#" class="easyui-linkbutton" iconCls="icon-save"
+                               data-options="width:80" onclick="saveOrUpdate(1,'确定要更新吗？')">更新</a>&nbsp;&nbsp;
+                            <a id="modifyAndFilishedBtn" href="#" class="easyui-linkbutton" iconCls="icon-save"
+                               data-options="width:100" onclick="saveOrUpdate(3,'确定要完成回访吗？')">完成回访</a>&nbsp;&nbsp;
+                        </span>
+                <a id="cancelBtn" href="#" class="easyui-linkbutton" iconCls="icon-cancel" data-options="width:80"
+                   onclick="doBack()">取消</a>
+            </div>
+        </div>
+        <div align="center" style="margin-top:50px">
+            <div class="easyui-panel" style="width: 94%;" title="积分基础信息" border="false">
+                <form id="_form" class="easyui-form" method="post" fit="true">
+                    <input name="_id" id="_id" type="hidden">
+                    <table align="center" width="94%">
+                        <tr>
+                            <td style="padding-top:10px;" width="33%">
+                                <select class="easyui-combobox inputWidth" name="businessType" id="businessType"
+                                        data-options="labelAlign:'right',label:'交易类型:'">
+                                    <option value="pay">交易</option>
+                                </select>
+                            </td>
+
+                            <td style="padding-top:10px;padding-left:10px;" width="33%">
+                                <input class="easyui-textbox inputWidth" name="name" id="name"
+                                       data-options="labelAlign:'right',label:'&lowast;规则名称:', validType:'length[0,40]'"
+                                       required="true"/>
+                            </td>
+                            <td style="padding-top:10px;padding-left:10px;" width="33%">
+                                <input class="easyui-textbox inputWidth" name="code" id="code"
+                                       panelWidth="auto" panelHeight="auto" label="&lowast;规则编码:" required="true"
+                                       data-options="labelAlign:'right',editable:false"/>
+                            </td>
+
+                        </tr>
+                    </table>
+                </form>
+            </div>
+        </div>
+        <div align="center" style="margin-top:50px">
+            <div class="easyui-panel" style="width: 94%;" title="积分计算标准" border="false">
+
+                <table align="center" width="94%">
+                    <tr>
+                        <td style="padding-top:10px;" width="33%">
+                            <select class="easyui-combobox inputWidth" name="computingStandard" id="computingStandard"
+                                    data-options="labelAlign:'right',label:'计算标准:'">
+                                <option value="pay">交易</option>
+                            </select>
+                        </td>
+
+                        <td style="padding-top:10px;padding-left:10px;" width="33%">
+                            <input class="easyui-textbox inputWidth" name="computingParameter" id="computingParameter"
+                                   data-options="labelAlign:'right',label:'&lowast;计算参数:', validType:'length[0,40]'"
+                                   required="true"/>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+        <div align="center" style="margin-top:50px">
+            <div class="easyui-panel" style="width: 94%;" title="积分权重" border="false">
+                <table class="easyui-datagrid" id="dg_number" title="交易量" style="width:100%;margin:20px 0;"
+                       data-options="singleSelect:true,collapsible:false,url:'datagrid_data1.json',method:'get',toolbar:toolbar">
+                    <thead>
+                    <tr>
+                        <th data-options="field:'displayText',width:80">交易量（公斤）</th>
+                        <th data-options="field:'weight',width:100">权重值</th>
+                        <th data-options="field:'weight_type',width:100,hidden:true"></th>
+                        <th data-options="field:'condition_type',width:100,hidden:true"></th>
+                        <th data-options="field:'value',width:100,hidden:true"></th>
+                        <th data-options="field:'start_value',width:100,hidden:true"></th>
+                        <th data-options="field:'end_value',width:100,hidden:true"></th>
+                        <th data-options="field:'operate',width:60,align:'center',formatter:button"></th>
+                    </tr>
+                    </thead>
+                </table>
+
+                <table class="easyui-datagrid" title="交易额" style="width:100%;margin:20px 0;"
+                       data-options="singleSelect:true,collapsible:false,url:'datagrid_data1.json',method:'get',toolbar:toolbar">
+                    <thead>
+                    <tr>
+                        <th data-options="field:'itemid',width:80">交易量（公斤）</th>
+                        <th data-options="field:'productid',width:100">权重值</th>
+                        <th data-options="field:'status',width:60,align:'center',formatter:button"></th>
+                    </tr>
+                    </thead>
+                </table>
+
+                <table class="easyui-datagrid" title="支付方式" style="width:100%;margin:20px 0;"
+                       data-options="singleSelect:true,collapsible:false,url:'datagrid_data1.json',method:'get',toolbar:toolbar">
+                    <thead>
+                    <tr>
+                        <th data-options="field:'itemid',width:80">交易量（公斤）</th>
+                        <th data-options="field:'productid',width:100">权重值</th>
+                        <th data-options="field:'status',width:60,align:'center',formatter:button"></th>
+                    </tr>
+                    </thead>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="dlg" class="easyui-dialog" title="交易量权重" data-options="iconCls:'icon-save'" closed="true"
+     style="width:500px;height:200px;padding:10px">
+    <form id="ff" method="post" action="">
+
+        <table cellpadding="5" id="tb" style="width: 100%">
+            <tr>
+                <td><span style="display:inline-block;line-height: 26px">条件:</span></td>
+                <td><select class="easyui-combobox inputWidth" id="numbers_condition_type"
+                            data-options="labelAlign:'right',onLoadSuccess:number_success,onChange:number_change">
+                    <option value="179">区间</option>
+                    <option value="181">大于</option>
+                </select></td>
+            </tr>
+            <tr id="number_179">
+                <td><span style="display:inline-block;line-height: 26px">条件值:</span></td>
+                <td>
+                    <input type="text" id="number_startValue" value="">----<input type="text" id="number_endValue"
+                                                                                  value="">
+                    <span>公斤</span>
+                </td>
+            </tr>
+            <tr id="number_179_other">
+                <td><span style="display:inline-block;line-height: 26px">条件值:</span></td>
+                <td>
+                    <input type="text" name="number_value" value="">
+                    <span>公斤</span>
+                </td>
+            </tr>
+            <tr>
+                <td><span style="display:inline-block;line-height: 26px">权重值:</span></td>
+                <td>
+                    <input type="text" id="number_weight" style="float: left;margin-top: 6px">
+                </td>
+            </tr>
+        </table>
+    </form>
+    <div style="text-align:center;padding:5px;">
+        <a href="javascript:void(0)" class="easyui-linkbutton" data-options="width:'80px'"
+           onclick="$('#dlg').dialog('close');">取消</a>
+        <a href="javascript:void(0)" class="easyui-linkbutton" data-options="width:'80px'"
+           onclick="saveNumber()">下一步</a>
+    </div>
+</div>
+<script type="text/javascript">
+    var toolbar = [{
+        text: '新增',
+        iconCls: 'icon-add',
+        handler: function () {
+            $('#dlg').dialog('open');
+        }
+    }];
+
+    function saveNumber() {
+        var c_type = $("#numbers_condition_type").combobox("getValue");
+        var value = $("#number_value").val();
+        var start_value = $("#number_startValue").val();
+        var end_value = $("#number_endValue").val();
+        var weight = $("#number_weight").val();
+        console.log(c_type);
+        console.log(start_value);
+        console.log(value);
+        console.log(end_value);
+        $('#dg_number').datagrid('appendRow', {weightType:172,conditionType:c_type,value:value,startValue:start_value,endValue:end_value,weight:weight});
+        $('#dlg').dialog('close');
+    }
+
+    function number_success() {
+        var a = $("#numbers_condition_type").combobox("getValue");
+        if (a == 179) {
+            $("#number_179").show();
+            $("#number_179_other").hide();
+        }
+    }
+
+    function number_change(newValue, oldValue) {
+        if (newValue == 179) {
+            $("#number_179").show();
+            $("#number_179_other").hide();
+        } else {
+            $("#number_179").hide();
+            $("#number_179_other").show();
+        }
+    }
+
+    function button(value, row, index) {
+        return "<a href='#' class='button-delete button-danger'>鍒犻櫎</a> <a href='#' class='button-edit button-default'>缂栬緫</a>";
+    }
+
+
+</script>
+</#body>

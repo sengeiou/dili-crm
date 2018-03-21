@@ -32,6 +32,11 @@ public class PointsRuleController {
         return "pointsRule/index";
     }
 
+    @RequestMapping(value="/add", method = RequestMethod.GET)
+    public String add(ModelMap modelMap) {
+        return "pointsRule/add";
+    }
+
     @ApiOperation(value="查询PointsRule", notes = "查询PointsRule，返回列表信息")
     @ApiImplicitParams({
 		@ApiImplicitParam(name="PointsRule", paramType="form", value = "PointsRule的form信息", required = false, dataType = "string")
