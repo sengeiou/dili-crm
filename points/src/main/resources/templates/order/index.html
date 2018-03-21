@@ -10,11 +10,15 @@
                     <table style="padding:10px;">
                         <tr>
                             <td style="padding:5px;">
+                                <input class="easyui-textbox" name="settlementCode" id="settlementCode" style="width:100%" labelAlign="right" data-options="label:'结算单号:', validType:'length[0,20]'" />
+
+                            </td>
+                            <td style="padding:5px;">
                                 <input class="easyui-textbox" name="code" id="code" style="width:100%" labelAlign="right" data-options="label:'订单编号:', validType:'length[0,20]'" />
 
                             </td>
                             <td style="padding:5px;">
-                                <input class="easyui-textbox" name="sellerId" id="sellerId" style="width:100%" labelAlign="right" data-options="label:'卖家身份证号:', validType:'length[0,20]'" />
+                                <input class="easyui-textbox" name="sellerCertificateNumber" id="sellerCertificateNumber" style="width:100%" labelAlign="right" data-options="label:'卖家证件号:', validType:'length[0,20]'" />
 
                             </td>
                             <td style="padding:5px;">
@@ -22,15 +26,15 @@
 
                             </td>
                             <td style="padding:5px;">
-                                <input class="easyui-textbox" name="buyerId" id="buyerId" style="width:100%" labelAlign="right" data-options="label:'买家身份证号:', validType:'length[0,20]'" />
-
-                            </td>
-                            <td style="padding:5px;">
-                                <input class="easyui-numberbox" name="buyerCardNo" id="buyerCardNo" style="width:100%" labelAlign="right" data-options="label:'买家卡号:', validType:'length[0,19]'" />
+                                <input class="easyui-textbox" name="buyerCertificateNumber" id="buyerCertificateNumber" style="width:100%" labelAlign="right" data-options="label:'买家证件号:', validType:'length[0,20]'" />
 
                             </td>
                         </tr>
                         <tr>
+                            <td style="padding:5px;">
+                                <input class="easyui-numberbox" name="buyerCardNo" id="buyerCardNo" style="width:100%" labelAlign="right" data-options="label:'买家卡号:', validType:'length[0,19]'" />
+
+                            </td>
                             <td style="padding:5px;">
                                     <input name="market" id="market" style="width:100%;" editable="false" labelAlign="right" panelWidth="auto" panelHeight="auto" label="所属市场:"/>
                                     <#comboProvider _id="market" _provider='dataDictionaryValueProvider'/>
@@ -48,12 +52,12 @@
                                 <input class="easyui-datetimebox" name="payDate" id="payDate" style="width:100%" labelAlign="right" data-options="label:'付款日期:'" />
 
                             </td>
+                        </tr>
+                        <tr>
                             <td style="padding:5px;">
                                 <input class="easyui-numberbox" name="payment" id="payment" style="width:100%" labelAlign="right" data-options="label:'支付方式:', validType:'length[0,10]'" />
 
                             </td>
-                        </tr>
-                        <tr>
                             <td style="padding:5px;">
                                 <input class="easyui-datetimebox" name="created" id="created" style="width:100%" labelAlign="right" data-options="label:'创建时间:'" />
 
@@ -86,21 +90,24 @@
             <!-- =========================================================表格========================================================= -->
             <table class="easyui-datagrid" title="Order列表" id="grid" fitColumns="true" noheader="true"
                    pagination="true" pageSize="30" pageNumber="1" pagePosition="top" rownumbers="true" remoteSort="false"
-                   loadMsg="数据加载中..." singleSelect="true" method="post" multiSort="false" sortName="code"
+                   loadMsg="数据加载中..." singleSelect="true" method="post" multiSort="false" sortName="settlementCode"
                    align="center" fit="true" striped="true" toolbar="#toolbar" idField="id" data-options="onDblClickRow:openUpdate, onHeaderContextMenu:headerContextMenu">
                 <thead>
                     <tr>
+                        <th data-options="field:'settlementCode',   sortable:true, order:'asc', align:'center', resizable:'true', fixed:'false'">
+                            结算单号
+                        </th>
                         <th data-options="field:'code',   sortable:true, order:'asc', align:'center', resizable:'true', fixed:'false'">
                             订单编号
                         </th>
-                        <th data-options="field:'sellerId',   sortable:true, order:'asc', align:'center', resizable:'true', fixed:'false'">
-                            卖家身份证号
+                        <th data-options="field:'sellerCertificateNumber',   sortable:true, order:'asc', align:'center', resizable:'true', fixed:'false'">
+                            卖家证件号
                         </th>
                         <th data-options="field:'sellerCardNo',   sortable:true, order:'asc', align:'center', resizable:'true', fixed:'false'">
                             卖家卡号
                         </th>
-                        <th data-options="field:'buyerId',   sortable:true, order:'asc', align:'center', resizable:'true', fixed:'false'">
-                            买家身份证号
+                        <th data-options="field:'buyerCertificateNumber',   sortable:true, order:'asc', align:'center', resizable:'true', fixed:'false'">
+                            买家证件号
                         </th>
                         <th data-options="field:'buyerCardNo',   sortable:true, order:'asc', align:'center', resizable:'true', fixed:'false'">
                             买家卡号
@@ -172,12 +179,17 @@
         <table width="360px">
             <tr>
                 <td style="padding:5px;">
+                    <input class="easyui-textbox" name="_settlementCode" id="_settlementCode" style="width:100%" data-options="label:'结算单号:', validType:'length[0,20]'" />
+                </td>
+            </tr>
+            <tr>
+                <td style="padding:5px;">
                     <input class="easyui-textbox" name="_code" id="_code" style="width:100%" data-options="label:'订单编号:', validType:'length[0,20]'" />
                 </td>
             </tr>
             <tr>
                 <td style="padding:5px;">
-                    <input class="easyui-textbox" name="_sellerId" id="_sellerId" style="width:100%" data-options="label:'卖家身份证号:', validType:'length[0,20]'" />
+                    <input class="easyui-textbox" name="_sellerCertificateNumber" id="_sellerCertificateNumber" style="width:100%" data-options="label:'卖家证件号:', validType:'length[0,20]'" />
                 </td>
             </tr>
             <tr>
@@ -187,7 +199,7 @@
             </tr>
             <tr>
                 <td style="padding:5px;">
-                    <input class="easyui-textbox" name="_buyerId" id="_buyerId" style="width:100%" data-options="label:'买家身份证号:', validType:'length[0,20]'" />
+                    <input class="easyui-textbox" name="_buyerCertificateNumber" id="_buyerCertificateNumber" style="width:100%" data-options="label:'买家证件号:', validType:'length[0,20]'" />
                 </td>
             </tr>
             <tr>
@@ -252,7 +264,7 @@
             $('#dlg').dialog('open');
             $('#dlg').dialog('center');
             $('#_form').form('clear');
-            formFocus("_form", "_code");
+            formFocus("_form", "_settlementCode");
         }
 
         //打开修改窗口
@@ -264,7 +276,7 @@
             }
             $('#dlg').dialog('open');
             $('#dlg').dialog('center');
-            formFocus("_form", "_code");
+            formFocus("_form", "_settlementCode");
             var formData = $.extend({},selected);
             formData = addKeyStartWith(getOriginalData(formData),"_");
             $('#_form').form('load', formData);
@@ -387,8 +399,8 @@
          *          表单提交需执行的任务
          */
         $(function () {
-            bindFormEvent("form", "code", queryGrid);
-            bindFormEvent("_form", "_code", saveOrUpdate, function (){$('#dlg').dialog('close');});
+            bindFormEvent("form", "settlementCode", queryGrid);
+            bindFormEvent("_form", "_settlementCode", saveOrUpdate, function (){$('#dlg').dialog('close');});
             if (document.addEventListener) {
                 document.addEventListener("keyup",getKey,false);
             } else if (document.attachEvent) {

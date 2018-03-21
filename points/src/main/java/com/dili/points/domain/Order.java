@@ -15,7 +15,7 @@ import javax.persistence.Id;
 /**
  * 由MyBatis Generator工具自动生成
  * 
- * This file was generated on 2018-03-20 11:29:31.
+ * This file was generated on 2018-03-21 16:01:59.
  */
 @Table(name = "`order`")
 public interface Order extends IBaseDomain {
@@ -28,6 +28,13 @@ public interface Order extends IBaseDomain {
 
     void setId(Long id);
 
+    @Column(name = "`settlement_code`")
+    @FieldDef(label="结算单号", maxLength = 20)
+    @EditMode(editor = FieldEditor.Text, required = false)
+    String getSettlementCode();
+
+    void setSettlementCode(String settlementCode);
+
     @Column(name = "`code`")
     @FieldDef(label="订单编号", maxLength = 20)
     @EditMode(editor = FieldEditor.Text, required = false)
@@ -35,12 +42,12 @@ public interface Order extends IBaseDomain {
 
     void setCode(String code);
 
-    @Column(name = "`seller_id`")
-    @FieldDef(label="卖家身份证号", maxLength = 20)
+    @Column(name = "`seller_certificate_number`")
+    @FieldDef(label="卖家证件号", maxLength = 20)
     @EditMode(editor = FieldEditor.Text, required = false)
-    String getSellerId();
+    String getSellerCertificateNumber();
 
-    void setSellerId(String sellerId);
+    void setSellerCertificateNumber(String sellerCertificateNumber);
 
     @Column(name = "`seller_card_no`")
     @FieldDef(label="卖家卡号")
@@ -49,12 +56,12 @@ public interface Order extends IBaseDomain {
 
     void setSellerCardNo(Long sellerCardNo);
 
-    @Column(name = "`buyer_id`")
-    @FieldDef(label="买家身份证号", maxLength = 20)
+    @Column(name = "`buyer_certificate_number`")
+    @FieldDef(label="买家证件号", maxLength = 20)
     @EditMode(editor = FieldEditor.Text, required = false)
-    String getBuyerId();
+    String getBuyerCertificateNumber();
 
-    void setBuyerId(String buyerId);
+    void setBuyerCertificateNumber(String buyerCertificateNumber);
 
     @Column(name = "`buyer_card_no`")
     @FieldDef(label="买家卡号")

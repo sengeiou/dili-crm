@@ -6,10 +6,11 @@
       WARNING - @mbg.generated
     -->
     <id column="id" jdbcType="BIGINT" property="id" />
+    <result column="settlement_code" jdbcType="VARCHAR" property="settlementCode" />
     <result column="code" jdbcType="VARCHAR" property="code" />
-    <result column="seller_id" jdbcType="VARCHAR" property="sellerId" />
+    <result column="seller_certificate_number" jdbcType="VARCHAR" property="sellerCertificateNumber" />
     <result column="seller_card_no" jdbcType="BIGINT" property="sellerCardNo" />
-    <result column="buyer_id" jdbcType="VARCHAR" property="buyerId" />
+    <result column="buyer_certificate_number" jdbcType="VARCHAR" property="buyerCertificateNumber" />
     <result column="buyer_card_no" jdbcType="BIGINT" property="buyerCardNo" />
     <result column="market" jdbcType="VARCHAR" property="market" />
     <result column="total_money" jdbcType="BIGINT" property="totalMoney" />
@@ -24,8 +25,9 @@
     <!--
       WARNING - @mbg.generated
     -->
-    id, code, seller_id, seller_card_no, buyer_id, buyer_card_no, market, total_money, 
-    weight, pay_date, payment, created, business_type, source_system
+    id, settlement_code, code, seller_certificate_number, seller_card_no, buyer_certificate_number, 
+    buyer_card_no, market, total_money, weight, pay_date, payment, created, business_type, 
+    source_system
   </sql>
   <select id="selectBy" parameterType="java.lang.Long" resultMap="BaseResultMap">
     <!--
@@ -42,17 +44,20 @@
     -->
     update order
     <set>
+      <if test="settlementCode != null">
+        settlement_code = #{settlementCode,jdbcType=VARCHAR},
+      </if>
       <if test="code != null">
         code = #{code,jdbcType=VARCHAR},
       </if>
-      <if test="sellerId != null">
-        seller_id = #{sellerId,jdbcType=VARCHAR},
+      <if test="sellerCertificateNumber != null">
+        seller_certificate_number = #{sellerCertificateNumber,jdbcType=VARCHAR},
       </if>
       <if test="sellerCardNo != null">
         seller_card_no = #{sellerCardNo,jdbcType=BIGINT},
       </if>
-      <if test="buyerId != null">
-        buyer_id = #{buyerId,jdbcType=VARCHAR},
+      <if test="buyerCertificateNumber != null">
+        buyer_certificate_number = #{buyerCertificateNumber,jdbcType=VARCHAR},
       </if>
       <if test="buyerCardNo != null">
         buyer_card_no = #{buyerCardNo,jdbcType=BIGINT},
