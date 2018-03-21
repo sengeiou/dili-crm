@@ -66,108 +66,109 @@
              style="padding-left:10px;padding-top:10px;position:fixed;z-index:2008;width:99%;height:30px;background-color:white"
              align="left">
             <div style="display: inline;float:right;padding-right: 40px;">
-                    <span id="newPage" style="display: none;">
-                            <a id="saveBtn" href="#" class="easyui-linkbutton" iconCls="icon-save"
-                               data-options="width:80" onclick="saveOrUpdate(1,'确定要保存吗？')">保存</a>&nbsp;&nbsp;
-                            <a id="saveAndNewBtn" href="#" class="easyui-linkbutton" iconCls="icon-save"
-                               data-options="width:120" onclick="saveOrUpdate(2,'确定要保存并新建吗？')">保存并新建</a>&nbsp;&nbsp;
-                        </span>
-                <span id="modifyPage" style="display: none;">
-                            <a id="modifyBtn" href="#" class="easyui-linkbutton" iconCls="icon-save"
-                               data-options="width:80" onclick="saveOrUpdate(1,'确定要更新吗？')">更新</a>&nbsp;&nbsp;
-                            <a id="modifyAndFilishedBtn" href="#" class="easyui-linkbutton" iconCls="icon-save"
-                               data-options="width:100" onclick="saveOrUpdate(3,'确定要完成回访吗？')">完成回访</a>&nbsp;&nbsp;
-                        </span>
+                <a id="saveBtn" href="#" class="easyui-linkbutton" iconCls="icon-save"
+                   data-options="width:80" onclick="submitForm(this)">保存</a>
                 <a id="cancelBtn" href="#" class="easyui-linkbutton" iconCls="icon-cancel" data-options="width:80"
                    onclick="doBack()">取消</a>
             </div>
         </div>
-        <div align="center" style="margin-top:50px">
-            <div class="easyui-panel" style="width: 94%;" title="积分基础信息" border="false">
-                <form id="_form" class="easyui-form" method="post" fit="true">
-                    <input name="_id" id="_id" type="hidden">
+        <form id="_form" class="easyui-form" method="post" fit="true">
+            <input type="hidden" name="numberJson" id="numberJson"/>
+            <input type="hidden" name="moneyJson" id="moneyJson"/>
+            <input type="hidden" name="payMethodJson" id="payMethodJson"/>
+            <div align="center" style="margin-top:50px">
+                <div class="easyui-panel" style="width: 94%;" title="积分基础信息" border="false">
                     <table align="center" width="94%">
                         <tr>
-                            <td style="padding-top:10px;" width="33%">
+                            <td style="padding-top:10px;" width="25%">
                                 <select class="easyui-combobox inputWidth" name="businessType" id="businessType"
-                                        data-options="labelAlign:'right',label:'交易类型:'">
-                                    <option value="pay">交易</option>
+                                        data-options="editable:false,labelAlign:'right',label:'交易类型:'">
+                                    <option value="1">交易</option>
+                                </select>
+                            </td>
+                            <td style="padding-top:10px;" width="25%">
+                                <select class="easyui-combobox inputWidth" name="customerType" id="customerType"
+                                        data-options="editable:false,labelAlign:'right',label:'客户类型:'">
+                                    <option value="1">卖家</option>
                                 </select>
                             </td>
 
-                            <td style="padding-top:10px;padding-left:10px;" width="33%">
+                            <td style="padding-top:10px;padding-left:10px;" width="25%">
                                 <input class="easyui-textbox inputWidth" name="name" id="name"
                                        data-options="labelAlign:'right',label:'&lowast;规则名称:', validType:'length[0,40]'"
                                        required="true"/>
                             </td>
-                            <td style="padding-top:10px;padding-left:10px;" width="33%">
+                            <td style="padding-top:10px;padding-left:10px;" width="25%">
                                 <input class="easyui-textbox inputWidth" name="code" id="code"
                                        panelWidth="auto" panelHeight="auto" label="&lowast;规则编码:" required="true"
-                                       data-options="labelAlign:'right',editable:false"/>
+                                       data-options="labelAlign:'right',validType:'length[0,40]'"/>
                             </td>
 
                         </tr>
                     </table>
-                </form>
+                </div>
             </div>
-        </div>
-        <div align="center" style="margin-top:50px">
-            <div class="easyui-panel" style="width: 94%;" title="积分计算标准" border="false">
+            <div align="center" style="margin-top:50px">
+                <div class="easyui-panel" style="width: 94%;" title="积分计算标准" border="false">
 
-                <table align="center" width="94%">
-                    <tr>
-                        <td style="padding-top:10px;" width="33%">
-                            <select class="easyui-combobox inputWidth" name="computingStandard" id="computingStandard"
-                                    data-options="labelAlign:'right',label:'计算标准:'">
-                                <option value="pay">交易</option>
-                            </select>
-                        </td>
+                    <table align="center" width="94%">
+                        <tr>
+                            <td style="padding-top:10px;" width="33%">
+                                <select class="easyui-combobox inputWidth" name="computingStandard"
+                                        id="computingStandard"
+                                        data-options="editable:false,labelAlign:'right',label:'计算标准:'">
+                                    <option value="2">交易</option>
+                                </select>
+                            </td>
 
-                        <td style="padding-top:10px;padding-left:10px;" width="33%">
-                            <input class="easyui-textbox inputWidth" name="computingParameter" id="computingParameter"
-                                   data-options="labelAlign:'right',label:'&lowast;计算参数:', validType:'length[0,40]'"
-                                   required="true"/>
-                        </td>
-                    </tr>
-                </table>
+                            <td style="padding-top:10px;padding-left:10px;" width="33%">
+                                <input class="easyui-textbox inputWidth" name="computingParameter"
+                                       id="computingParameter"
+                                       data-options="labelAlign:'right',label:'&lowast;计算参数:', validType:'length[0,40]'"
+                                       required="true"/>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
             </div>
-        </div>
+        </form>
         <div align="center" style="margin-top:50px">
             <div class="easyui-panel" style="width: 94%;" title="积分权重" border="false">
-                <table class="easyui-datagrid" id="dg_number" title="交易量" style="width:100%;margin:20px 0;"
-                       data-options="singleSelect:true,collapsible:false,url:'datagrid_data1.json',method:'get',toolbar:toolbar">
+                <table class="easyui-datagrid" id="dg_0" title="交易量" style="width:100%;margin:20px 0;"
+                       data-options="singleSelect:true,collapsible:false,method:'get',toolbar:toolbar">
                     <thead>
                     <tr>
-                        <th data-options="field:'displayText',width:80">交易量（公斤）</th>
+                        <th data-options="field:'displayText',width:200">交易量（公斤）</th>
                         <th data-options="field:'weight',width:100">权重值</th>
-                        <th data-options="field:'weight_type',width:100,hidden:true"></th>
-                        <th data-options="field:'condition_type',width:100,hidden:true"></th>
+                        <th data-options="field:'conditionType',width:100,hidden:true"></th>
                         <th data-options="field:'value',width:100,hidden:true"></th>
-                        <th data-options="field:'start_value',width:100,hidden:true"></th>
-                        <th data-options="field:'end_value',width:100,hidden:true"></th>
-                        <th data-options="field:'operate',width:60,align:'center',formatter:button"></th>
+                        <th data-options="field:'startValue',width:100,hidden:true"></th>
+                        <th data-options="field:'endValue',width:100,hidden:true"></th>
                     </tr>
                     </thead>
                 </table>
 
-                <table class="easyui-datagrid" title="交易额" style="width:100%;margin:20px 0;"
-                       data-options="singleSelect:true,collapsible:false,url:'datagrid_data1.json',method:'get',toolbar:toolbar">
+                <table class="easyui-datagrid" id="dg_1" title="交易额" style="width:100%;margin:20px 0;"
+                       data-options="singleSelect:true,collapsible:false,method:'get',toolbar:toolbarMoney">
                     <thead>
                     <tr>
-                        <th data-options="field:'itemid',width:80">交易量（公斤）</th>
-                        <th data-options="field:'productid',width:100">权重值</th>
-                        <th data-options="field:'status',width:60,align:'center',formatter:button"></th>
+                        <th data-options="field:'displayText',width:200">交易额（元）</th>
+                        <th data-options="field:'weight',width:100">权重值</th>
+                        <th data-options="field:'conditionType',width:100,hidden:true"></th>
+                        <th data-options="field:'value',width:100,hidden:true"></th>
+                        <th data-options="field:'startValue',width:100,hidden:true"></th>
+                        <th data-options="field:'endValue',width:100,hidden:true"></th>
                     </tr>
                     </thead>
                 </table>
 
-                <table class="easyui-datagrid" title="支付方式" style="width:100%;margin:20px 0;"
-                       data-options="singleSelect:true,collapsible:false,url:'datagrid_data1.json',method:'get',toolbar:toolbar">
+                <table class="easyui-datagrid" id="dg_2" title="支付方式" style="width:100%;margin:20px 0;"
+                       data-options="singleSelect:true,collapsible:false,method:'get',toolbar:toolbarPay">
                     <thead>
                     <tr>
-                        <th data-options="field:'itemid',width:80">交易量（公斤）</th>
-                        <th data-options="field:'productid',width:100">权重值</th>
-                        <th data-options="field:'status',width:60,align:'center',formatter:button"></th>
+                        <th data-options="field:'displayText',width:200">支付方式</th>
+                        <th data-options="field:'weight',width:100">权重值</th>
+                        <th data-options="field:'value',width:100,hidden:true"></th>
                     </tr>
                     </thead>
                 </table>
@@ -176,38 +177,41 @@
     </div>
 </div>
 
-<div id="dlg" class="easyui-dialog" title="交易量权重" data-options="iconCls:'icon-save'" closed="true"
-     style="width:500px;height:200px;padding:10px">
-    <form id="ff" method="post" action="">
-
+<div id="dlg" class="easyui-dialog" title="交易量权重" data-options="iconCls:'icon-save'" modal="true" closed="true"
+     style="width:500px;height:230px;padding:10px">
+    <form id="number_form" method="post" action="">
+        <input type="hidden" id="type" value="0"/>
+        <input type="hidden" id="edit_type" value="0"/>
         <table cellpadding="5" id="tb" style="width: 100%">
             <tr>
                 <td><span style="display:inline-block;line-height: 26px">条件:</span></td>
-                <td><select class="easyui-combobox inputWidth" id="numbers_condition_type"
-                            data-options="labelAlign:'right',onLoadSuccess:number_success,onChange:number_change">
-                    <option value="179">区间</option>
+                <td><select class="easyui-combobox inputWidth" name="conditionType" id="conditionType"
+                            data-options="editable:false,labelAlign:'right',onLoadSuccess:success,onChange:change">
                     <option value="181">大于</option>
+                    <option value="179">区间</option>
                 </select></td>
             </tr>
             <tr id="number_179">
                 <td><span style="display:inline-block;line-height: 26px">条件值:</span></td>
                 <td>
-                    <input type="text" id="number_startValue" value="">----<input type="text" id="number_endValue"
-                                                                                  value="">
+                    <input type="text" style="width:100px" required="true" class="easyui-numberbox" name="startValue" id="startValue"> - <input style="width:100px" required="true" type="text" validType="big['#startValue']"
+                                              class="easyui-numberbox"
+                                              name="endValue" id="endValue">
                     <span>公斤</span>
                 </td>
             </tr>
             <tr id="number_179_other">
                 <td><span style="display:inline-block;line-height: 26px">条件值:</span></td>
                 <td>
-                    <input type="text" name="number_value" value="">
+                    <input type="text" required="true" class="easyui-numberbox" id="value" name="value" value="">
                     <span>公斤</span>
                 </td>
             </tr>
             <tr>
                 <td><span style="display:inline-block;line-height: 26px">权重值:</span></td>
                 <td>
-                    <input type="text" id="number_weight" style="float: left;margin-top: 6px">
+                    <input type="text" required="true" id="weight" class="easyui-numberbox" name="weight"
+                           style="float: left;margin-top: 6px">
                 </td>
             </tr>
         </table>
@@ -216,7 +220,38 @@
         <a href="javascript:void(0)" class="easyui-linkbutton" data-options="width:'80px'"
            onclick="$('#dlg').dialog('close');">取消</a>
         <a href="javascript:void(0)" class="easyui-linkbutton" data-options="width:'80px'"
-           onclick="saveNumber()">下一步</a>
+           onclick="saveNumber()">确定</a>
+    </div>
+</div>
+
+
+<div id="dlg_pay" class="easyui-dialog" title="支付方式" data-options="iconCls:'icon-save'" closed="true"
+     style="width:500px;height:200px;padding:10px">
+    <form id="pay_form" method="post" action="">
+        <input type="hidden" id="pay_edit_type" value="0"/>
+        <table cellpadding="5" style="width: 100%">
+            <tr>
+                <td><span style="display:inline-block;line-height: 26px">支付方式:</span></td>
+                <td><select class="easyui-combobox inputWidth" name="conditionType" id="payConditionType"
+                            data-options="editable:false,labelAlign:'right'">
+                    <option value="1">园区卡</option>
+                    <option value="2">现金</option>
+                </select></td>
+            </tr>
+            <tr>
+                <td><span style="display:inline-block;line-height: 26px">权重值:</span></td>
+                <td>
+                    <input required="true" type="text" id="payWeight" class="easyui-numberbox" name="weight"
+                           style="float: left;margin-top: 6px">
+                </td>
+            </tr>
+        </table>
+    </form>
+    <div style="text-align:center;padding:5px;">
+        <a href="javascript:void(0)" class="easyui-linkbutton" data-options="width:'80px'"
+           onclick="$('#dlg_pay').dialog('close');">取消</a>
+        <a href="javascript:void(0)" class="easyui-linkbutton" data-options="width:'80px'"
+           onclick="savePay()">确定</a>
     </div>
 </div>
 <script type="text/javascript">
@@ -224,46 +259,243 @@
         text: '新增',
         iconCls: 'icon-add',
         handler: function () {
+            $("#edit_type").val(0);
+            $("#type").val(0);
+            $('#dlg').dialog({
+                title: '交易量权重'
+            });
             $('#dlg').dialog('open');
+        }
+    }, {
+        text: '修改',
+        iconCls: 'icon-edit',
+        handler: function () {
+            var row = $('#dg_0').datagrid('getSelected');
+            if (null == row) {
+                $.messager.alert('警告', '请选中一条数据');
+                return;
+            }
+            $('#number_form').form('load', row);
+            $("#edit_type").val(1);
+            $("#type").val(0);
+            $('#dlg').dialog({
+                title: '交易量权重'
+            });
+            $('#dlg').dialog('open');
+        }
+    }, {
+        text: '删除',
+        iconCls: 'icon-remove',
+        handler: function () {
+            var row = $('#dg_0').datagrid('getSelected');
+            if (null == row) {
+                $.messager.alert('警告', '请选中一条数据');
+                return;
+            }
+            var index = $('#dg_0').datagrid('getRowIndex');
+            $('#dg_0').datagrid('deleteRow', index);
+        }
+    }];
+
+
+    var toolbarMoney = [{
+        text: '新增',
+        iconCls: 'icon-add',
+        handler: function () {
+            $("#edit_type").val(0);
+            $("#type").val(1);
+            $('#dlg').dialog({
+                title: '交易额权重'
+            });
+            $('#dlg').dialog('open');
+        }
+    }, {
+        text: '修改',
+        iconCls: 'icon-edit',
+        handler: function () {
+            var row = $('#dg_1').datagrid('getSelected');
+            if (null == row) {
+                $.messager.alert('警告', '请选中一条数据');
+                return;
+            }
+            $('#number_form').form('load', row);
+            $("#edit_type").val(1);
+            $("#type").val(1);
+            $('#dlg').dialog({
+                title: '交易额权重'
+            });
+            $('#dlg').dialog('open');
+        }
+    }, {
+        text: '删除',
+        iconCls: 'icon-remove',
+        handler: function () {
+            var row = $('#dg_1').datagrid('getSelected');
+            if (null == row) {
+                $.messager.alert('警告', '请选中一条数据');
+                return;
+            }
+            var index = $('#dg_1').datagrid('getRowIndex');
+            $('#dg_1').datagrid('deleteRow', index);
+        }
+    }];
+
+
+    var toolbarPay = [{
+        text: '新增',
+        iconCls: 'icon-add',
+        handler: function () {
+            $("#pay_edit_type").val(0);
+            $('#dlg_pay').dialog('open');
+        }
+    }, {
+        text: '修改',
+        iconCls: 'icon-edit',
+        handler: function () {
+            var row = $('#dg_2').datagrid('getSelected');
+            if (null == row) {
+                $.messager.alert('警告', '请选中一条数据');
+                return;
+            }
+            $('#pay_form').form('load', row);
+            $("#pay_edit_type").val(1);
+            $('#dlg_pay').dialog('open');
+        }
+    }, {
+        text: '删除',
+        iconCls: 'icon-remove',
+        handler: function () {
+            var row = $('#dg_2').datagrid('getSelected');
+            if (null == row) {
+                $.messager.alert('警告', '请选中一条数据');
+                return;
+            }
+            var index = $('#dg_2').datagrid('getRowIndex');
+            $('#dg_2').datagrid('deleteRow', index);
         }
     }];
 
     function saveNumber() {
-        var c_type = $("#numbers_condition_type").combobox("getValue");
-        var value = $("#number_value").val();
-        var start_value = $("#number_startValue").val();
-        var end_value = $("#number_endValue").val();
-        var weight = $("#number_weight").val();
-        console.log(c_type);
-        console.log(start_value);
-        console.log(value);
-        console.log(end_value);
-        $('#dg_number').datagrid('appendRow', {weightType:172,conditionType:c_type,value:value,startValue:start_value,endValue:end_value,weight:weight});
-        $('#dlg').dialog('close');
-    }
-
-    function number_success() {
-        var a = $("#numbers_condition_type").combobox("getValue");
-        if (a == 179) {
-            $("#number_179").show();
-            $("#number_179_other").hide();
+        if (!$("#number_form").form('validate')) {
+            alert("没有");
+            return;
         }
-    }
-
-    function number_change(newValue, oldValue) {
-        if (newValue == 179) {
-            $("#number_179").show();
-            $("#number_179_other").hide();
+        var edit_type = $("#edit_type").val();
+        var type = $("#type").val();
+        var c_type = $("#conditionType").combobox("getValue");
+        var value = $("#value").val();
+        var start_value = $("#startValue").val();
+        var end_value = $("#endValue").val();
+        var weight = $("#weight").val();
+        var displayText = "";
+        if ($("#conditionType").combobox("getValue") == 179) {
+            displayText = start_value + " - " + end_value;
         } else {
-            $("#number_179").hide();
-            $("#number_179_other").show();
+            displayText = $("#conditionType").combobox("getText") + value;
+        }
+        var dg = $("#dg_" + type);
+        if (edit_type == 0) {
+            dg.datagrid('appendRow', {
+                conditionType: c_type,
+                value: value,
+                startValue: start_value,
+                endValue: end_value,
+                weight: weight,
+                displayText: displayText
+            });
+        } else {
+            var index = dg.datagrid('getRowIndex');
+            dg.datagrid('updateRow', {
+                index: index,
+                row: {
+                    conditionType: c_type,
+                    value: value,
+                    startValue: start_value,
+                    endValue: end_value,
+                    weight: weight,
+                    displayText: displayText
+                }
+            });
+        }
+        $('#dlg').dialog('close');
+        $('#number_form').form('clear');
+    }
+
+
+    function savePay() {
+        var edit_type = $("#pay_edit_type").val();
+        var value = $("#payConditionType").combobox("getValue");
+        var weight = $("#payWeight").val();
+        var displayText = $("#payConditionType").combobox("getText");
+        var dg = $("#dg_2");
+        if (edit_type == 0) {
+            dg.datagrid('appendRow', {
+                value: value,
+                weight: weight,
+                displayText: displayText
+            });
+        } else {
+            var index = dg.datagrid('getRowIndex');
+            dg.datagrid('updateRow', {
+                index: index,
+                row: {
+                    value: value,
+                    weight: weight,
+                    displayText: displayText
+                }
+            });
+        }
+        $('#dlg_pay').dialog('close');
+        $('#pay_form').form('clear');
+    }
+
+    function success() {
+        var value = $("#conditionType").combobox("getValue");
+        setDisplay(value);
+    }
+
+    function change(newValue) {
+        setDisplay(newValue);
+    }
+
+    function setDisplay(value) {
+        if (value == 179) {
+            // $("#number_179").show();
+            // $("#value").numberbox('setValue','');
+            // $("#number_179_other").hide();
+        } else {
+            // $("#number_179").hide();
+            $("#startValue").numberbox('getValue');
+            // $("#endValue").numberbox('setValue','');
+            // $("#number_179_other").show();
         }
     }
 
-    function button(value, row, index) {
-        return "<a href='#' class='button-delete button-danger'>鍒犻櫎</a> <a href='#' class='button-edit button-default'>缂栬緫</a>";
+    function submitForm(obj) {
+        $('#_form').form('submit', {
+            url: "${contextPath}/pointsRule/insert",
+            onSubmit: function () {
+                if ($("#_form").form('validate')) {
+                    $(obj).linkbutton('disable');
+                }
+                $("#numberJson").val(JSON.stringify($("#dg_0").datagrid("getData").rows));
+                $("#moneyJson").val(JSON.stringify($("#dg_1").datagrid("getData").rows));
+                $("#payMethodJson").val(JSON.stringify($("#dg_2").datagrid("getData").rows));
+                return $("#_form").form('validate');
+            },
+            success: function (data) {
+
+            }
+        });
     }
 
-
+    $.extend($.fn.validatebox.defaults.rules, {
+        big: {
+            validator: function (value, param) {
+                return value > $(param[0]).val();
+            },
+            message: '必须大于起始值'
+        }
+    });
 </script>
 </#body>
