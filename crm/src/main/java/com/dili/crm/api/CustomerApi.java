@@ -1,6 +1,7 @@
 package com.dili.crm.api;
 
 import com.dili.crm.domain.Customer;
+import com.dili.crm.domain.dto.CustomerApiDTO;
 import com.dili.crm.service.CustomerService;
 import com.dili.ss.domain.BaseOutput;
 import io.swagger.annotations.Api;
@@ -37,7 +38,7 @@ public class CustomerApi {
     @ApiImplicitParams({ @ApiImplicitParam(name = "Customer", paramType = "form", value = "Customer的form信息", required = false, dataType = "string") })
     @RequestMapping(value = "/list", method = { RequestMethod.GET, RequestMethod.POST })
     public @ResponseBody
-    BaseOutput<List<Customer>> list(@RequestBody(required = false) Customer customer) {
+    BaseOutput<List<Customer>> list(@RequestBody(required = false) CustomerApiDTO customer) {
         return BaseOutput.success().setData(customerService.listByExample(customer));
     }
 }

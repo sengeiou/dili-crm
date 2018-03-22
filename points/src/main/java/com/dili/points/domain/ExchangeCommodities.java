@@ -68,4 +68,18 @@ public interface ExchangeCommodities extends IBaseDomain {
     Long getCreatedId();
 
     void setCreatedId(Long createdId);
+
+    @Column(name = "`modified`")
+    @FieldDef(label="操作时间")
+    @EditMode(editor = FieldEditor.Datetime, required = true)
+    Date getModified();
+
+    void setModified(Date modified);
+
+    @Column(name = "`modified_id`")
+    @FieldDef(label="操作员")
+    @EditMode(editor = FieldEditor.Number, required = false)
+    Long getModifiedId();
+
+    void setModifiedId(Long modifiedId);
 }

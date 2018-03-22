@@ -3,40 +3,22 @@
         <!-- ====================================================================================================================== -->
         <!-- 上方布局 -->
         <!-- ====================================================================================================================== -->
-        <div region="north" height="auto" align="center">
+        <div region="north" height="auto" align="center" border="false">
+            <div id="nav" style="padding-left:15px;padding-top:10px;" align="left">
+                <#nav/>
+            </div>
             <!-- =========================================================表单========================================================= -->
-            <div class="easyui-panel" style="width:100%;" align="left">
-                <form id="form" class="easyui-form" method="post" fit="true">
+            <div class="easyui-panel" style="width:100%;" align="left" border="false">
+                <form id="form" class="easyui-form" method="post" fit="true" >
                     <table style="padding:10px;">
                         <tr>
                             <td style="padding:5px;">
                                 <input class="easyui-textbox" name="name" id="name" style="width:100%" labelAlign="right" data-options="label:'商品名称:', validType:'length[0,20]'" />
-
                             </td>
                             <td style="padding:5px;">
-                                <input class="easyui-numberbox" name="points" id="points" style="width:100%" labelAlign="right" data-options="label:'售价（积分）:', validType:'length[0,10]'" />
-
+                                <input class="easyui-datetimebox" name="createdStart" id="createdStart" editable="false" style="width:49%" labelAlign="right" data-options="label:'操作日期:'" />
+                                <input class="easyui-datetimebox" name="createdEnd" id="createdEnd" editable="false" style="width:50%" labelAlign="center" data-options="label:'——'" />
                             </td>
-                            <td style="padding:5px;">
-                                <input class="easyui-numberbox" name="available" id="available" style="width:100%" labelAlign="right" data-options="label:'可兑换:', validType:'length[0,10]'" />
-
-                            </td>
-                            <td style="padding:5px;">
-                                <input class="easyui-numberbox" name="total" id="total" style="width:100%" labelAlign="right" data-options="label:'总量:', validType:'length[0,10]'" />
-
-                            </td>
-                            <td style="padding:5px;">
-                                <input class="easyui-datetimebox" name="created" id="created" style="width:100%" labelAlign="right" data-options="label:'操作时间:'" />
-
-                            </td>
-                        </tr>
-                        <tr>
-                            <td style="padding:5px;">
-                                <input class="easyui-numberbox" name="createdId" id="createdId" style="width:100%" labelAlign="right" data-options="label:'操作员:', validType:'length[0,19]'" />
-
-                            </td>
-                        </tr>
-                        <tr>
                             <td style="padding-left:28px;padding-top: 10px; padding-bottom: 10px;">
                                 <a href="#" class="easyui-linkbutton" iconCls="icon-search" id="queryBtn"
                                    onclick="queryGrid()">查询</a>&nbsp;&nbsp;
@@ -51,68 +33,51 @@
         <!-- 中央布局 -->
         <!-- ====================================================================================================================== -->
         <!-- 表格 -->
-        <div region="center" style="width:100%;" height="auto">
+        <div region="center" style="width:100%;" height="auto" align="center" border="false">
+            <div style="width: 96%;height: 100%;" align="center">
             <!-- =========================================================表格========================================================= -->
-            <table class="easyui-datagrid" title="ExchangeCommodities列表" id="grid" fitColumns="true" noheader="true"
-                   pagination="true" pageSize="30" pageNumber="1" pagePosition="top" rownumbers="true" remoteSort="false"
-                   loadMsg="数据加载中..." singleSelect="true" method="post" multiSort="false" sortName="name"
-                   align="center" fit="true" striped="true" toolbar="#toolbar" idField="id" data-options="onDblClickRow:openUpdate, onHeaderContextMenu:headerContextMenu">
-                <thead>
-                    <tr>
-                        <th data-options="field:'name',   sortable:true, order:'asc', align:'center', resizable:'true', fixed:'false'">
-                            商品名称
-                        </th>
-                        <th data-options="field:'points',   sortable:true, order:'asc', align:'center', resizable:'true', fixed:'false'">
-                            售价（积分）
-                        </th>
-                        <th data-options="field:'available',   sortable:true, order:'asc', align:'center', resizable:'true', fixed:'false'">
-                            可兑换
-                        </th>
-                        <th data-options="field:'total',   sortable:true, order:'asc', align:'center', resizable:'true', fixed:'false'">
-                            总量
-                        </th>
-                        <th data-options="field:'created',  _provider:'datetimeProvider', sortable:true, order:'asc', align:'center', resizable:'true', fixed:'false'">
-                            操作时间
-                        </th>
-                        <th data-options="field:'createdId',   sortable:true, order:'asc', align:'center', resizable:'true', fixed:'false'">
-                            操作员
-                        </th>
-                    </tr>
-                </thead>
-            </table>
-            <!-- datagrid工具栏 -->
-            <div id="toolbar" style="padding:2px 5px;">
-                <a href="#" class="easyui-linkbutton" iconCls="icon-add" onclick="openInsert()" plain="true"></a>
-                <a href="#" class="easyui-linkbutton" iconCls="icon-edit" onclick="openUpdate()" plain="true"></a>
-                <a href="#" class="easyui-linkbutton" iconCls="icon-remove" onclick="del()" plain="true"></a>
-                <a href="#" class="easyui-linkbutton" iconCls="icon-export" onclick="doExport('grid')" plain="true"></a>
-                <div style="float:right">
-                边框显示:<select onchange="changeBorder('grid',this.value)">
-                    <option value="lines-both">全边框</option>
-                    <option value="lines-no">无边框</option>
-                    <option value="lines-right">右边框</option>
-                    <option value="lines-bottom">下边框</option>
-                </select>
-                行条纹:<input type="checkbox" checked="checked" onclick="$('#grid').datagrid({striped:$(this).is(':checked')})">
-                </div>
+                <table class="easyui-datagrid" title="ExchangeCommodities列表" id="grid" fitColumns="true" noheader="true"
+                       pagination="true" pageSize="30" pageNumber="1" pagePosition="top" remoteSort="false"
+                       loadMsg="数据加载中..." singleSelect="true" method="post" multiSort="false" sortName="name"
+                       align="center" fit="true" striped="true"  idField="id" data-options="onDblClickRow:openUpdate, onHeaderContextMenu:headerContextMenu">
+                    <thead>
+                        <tr>
+                            <th width="20%" data-options="field:'name',   sortable:true, order:'asc', align:'center', resizable:'true', fixed:'false'">
+                                商品名称
+                            </th>
+                            <th width="12%" data-options="field:'points',   sortable:true, order:'asc', align:'center', resizable:'true', fixed:'false'">
+                                售价（积分）
+                            </th>
+                            <th width="13%" data-options="field:'available',sortable:true, order:'asc', align:'center', resizable:'true', fixed:'false'">
+                                可兑换
+                            </th>
+                            <th width="13%" data-options="field:'exchanged',formatter:exchangedFormatter,sortable:true, order:'asc', align:'center', resizable:'true', fixed:'false'">
+                                已兑换
+                            </th>
+                            <th width="13%" data-options="field:'total',   sortable:true, order:'asc', align:'center', resizable:'true', fixed:'false'">
+                                总量
+                            </th>
+                            <th width="13%" data-options="field:'modifiedId',_provider:'userProvider',sortable:true, order:'asc', align:'center', resizable:'true', fixed:'false'">
+                                操作员
+                            </th>
+                            <th width="17%" data-options="field:'modified',  _provider:'datetimeProvider', sortable:true, order:'asc', align:'center', resizable:'true', fixed:'false'">
+                                操作时间
+                            </th>
+                        </tr>
+                    </thead>
+                </table>
             </div>
         </div>
     </div>
     <!-- 隐藏编辑框 -->
-    <div id="dlg" class="easyui-dialog" resizable="false" constrain="true" shadow="true" draggable="false" title="ExchangeCommodities信息" style="padding:20px" modal="true" border="thin" closed="true"
+    <div id="dlg" class="easyui-dialog" resizable="false" constrain="true" shadow="true" draggable="false" title="商品信息" style="padding:20px" modal="true" border="thin" closed="true"
          data-options="
 				iconCls: 'icon-save',
-				height: 480,
+				height: 280,
 				buttons: [{
 					text:'确认',
 					iconCls:'icon-ok',
 					handler:saveOrUpdate
-				},{
-					text:'取消',
-					iconCls:'icon-cancel',
-					handler:function(){
-						$('#dlg').dialog('close');
-					}
 				}]
 			">
     <form id="_form" class="easyui-form" method="post" fit="true">
@@ -120,33 +85,22 @@
         <table width="360px">
             <tr>
                 <td style="padding:5px;">
-                    <input class="easyui-textbox" name="_name" id="_name" style="width:100%" data-options="label:'商品名称:', validType:'length[0,20]'" />
+                    <input class="easyui-textbox" name="_name" id="_name" style="width:100%" required data-options="labelAlign:'right',labelWidth:100,label:'&lowast;商品名称:', validType:'length[0,20]'" />
                 </td>
             </tr>
             <tr>
                 <td style="padding:5px;">
-                    <input class="easyui-numberbox" name="_points" id="_points" style="width:100%" data-options="label:'售价（积分）:'" />
+                    <input class="easyui-numberbox" name="_points" id="_points" style="width:100%" required data-options="labelAlign:'right',min:0,labelWidth:100,label:'&lowast;售价(积分):',validType:['number','length[0,20]']" />
+                </td>
+            </tr>
+            <tr id="exchangedTr">
+                <td style="padding:5px;">
+                    <input class="easyui-numberbox" name="exchanged" id="exchanged" style="width:100%" disabled data-options="labelAlign:'right',editable:false,labelWidth:100,label:'已兑换:'" />
                 </td>
             </tr>
             <tr>
                 <td style="padding:5px;">
-                    <input class="easyui-numberbox" name="_available" id="_available" style="width:100%" data-options="label:'可兑换:'" />
-                </td>
-            </tr>
-            <tr>
-                <td style="padding:5px;">
-                    <input class="easyui-numberbox" name="_total" id="_total" style="width:100%" data-options="label:'总量:'" />
-                </td>
-            </tr>
-            <tr>
-                <td style="padding:5px;">
-                    <input class="easyui-datetimebox" name="_created" id="_created" style="width:100%" editable="false" data-options="label:'操作时间:'" 
-                        required="true" />
-                </td>
-            </tr>
-            <tr>
-                <td style="padding:5px;">
-                    <input class="easyui-numberbox" name="_createdId" id="_createdId" style="width:100%" data-options="label:'操作员:'" />
+                    <input class="easyui-numberbox" name="_available" id="_available" style="width:100%" required data-options="labelAlign:'right',min:0,labelWidth:100,label:'&lowast;可兑换:',validType:['number','length[0,20]']" />
                 </td>
             </tr>
         </table>
@@ -159,6 +113,8 @@
     <script type="text/javascript">
         //打开新增窗口
         function openInsert(){
+            $('#exchangedTr').hide();
+            $("#_name").textbox("enable",true);
             $('#dlg').dialog('open');
             $('#dlg').dialog('center');
             $('#_form').form('clear');
@@ -178,6 +134,11 @@
             var formData = $.extend({},selected);
             formData = addKeyStartWith(getOriginalData(formData),"_");
             $('#_form').form('load', formData);
+            $("#_name").textbox("disable", true);
+            var total = selected["total"];
+            var available = selected["available"];
+            $("#exchanged").textbox("initValue", total-available);
+            $('#exchangedTr').show();
         }
 
         function saveOrUpdate(){
@@ -288,6 +249,13 @@
         }
 
         /**
+         * 计算已兑换
+         */
+        var exchangedFormatter=function(value,row,index){
+            return row["total"]-row["available"];
+        }
+
+        /**
          * 绑定页面回车事件，以及初始化页面时的光标定位
          * @formId
          *          表单ID
@@ -324,13 +292,13 @@
                             openUpdate();
                         }
                     },
-                    {
-                        iconCls:'icon-remove',
-                        text:'删除',
-                        handler:function(){
-                            del();
-                        }
-                    },
+                    // {
+                    //     iconCls:'icon-remove',
+                    //     text:'删除',
+                    //     handler:function(){
+                    //         del();
+                    //     }
+                    // },
                     {
                         iconCls:'icon-export',
                         text:'导出',

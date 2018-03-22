@@ -1,6 +1,7 @@
 package com.dili.points.rpc;
 
 import com.dili.points.domain.Customer;
+import com.dili.points.domain.dto.CustomerApiDTO;
 import com.dili.ss.domain.BaseOutput;
 import com.dili.ss.retrofitful.annotation.POST;
 import com.dili.ss.retrofitful.annotation.Restful;
@@ -21,5 +22,5 @@ import java.util.List;
 public interface CustomerRpc {
 
     @POST("/customerApi/list")
-    BaseOutput<List<Customer>> list(@VOBody Customer customer);
+    BaseOutput<List<Customer>> list(@VOBody CustomerApiDTO customer);
 }

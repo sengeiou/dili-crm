@@ -8,11 +8,11 @@
         anchor: new BMap.Size(7, 20)
     });
     //销售者icon
-    var saleIcon = new BMap.Icon("${contextPath}/resources/images/icon/dili-logo.png", new BMap.Size(23, 25), {
+    var saleIcon = new BMap.Icon("${contextPath}/resources/images/icon/sale.png", new BMap.Size(23, 25), {
         anchor: new BMap.Size(7, 20)
     });
     //采购者icon
-    var purchaseIcon = new BMap.Icon("${contextPath}/resources/images/icon/buy-icon.png", new BMap.Size(23, 25), {
+    var purchaseIcon = new BMap.Icon("${contextPath}/resources/images/icon/purchase.png", new BMap.Size(23, 25), {
         anchor: new BMap.Size(7, 20)
     });
 
