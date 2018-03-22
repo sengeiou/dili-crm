@@ -1,13 +1,24 @@
 package com.dili.points.controller;
 
+import com.dili.points.domain.Customer;
+import com.dili.points.domain.CustomerDTO;
 import com.dili.points.domain.CustomerPoints;
+import com.dili.points.domain.dto.CustomerApiDTO;
 import com.dili.points.service.CustomerPointsService;
 import com.dili.ss.domain.BaseOutput;
+import com.dili.ss.domain.EasyuiPageOutput;
+import com.dili.ss.dto.DTOUtils;
+
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
+
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
@@ -46,8 +57,9 @@ public class CustomerPointsController {
 		@ApiImplicitParam(name="CustomerPoints", paramType="form", value = "CustomerPoints的form信息", required = false, dataType = "string")
 	})
     @RequestMapping(value="/listPage", method = {RequestMethod.GET, RequestMethod.POST})
-    public @ResponseBody String listPage(CustomerPoints customerPoints) throws Exception {
-        return customerPointsService.listEasyuiPageByExample(customerPoints, true).toString();
+    public @ResponseBody String listPage(CustomerApiDTO customer) throws Exception {
+    	EasyuiPageOutput easyuiPageOutput = this.customerPointsService.listCustomerPointsByCustomer(customer);
+        return easyuiPageOutput.toString();
     }
 
     @ApiOperation("新增CustomerPoints")

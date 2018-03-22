@@ -38,7 +38,7 @@ public class CustomerApi {
     @ApiImplicitParams({ @ApiImplicitParam(name = "Customer", paramType = "form", value = "Customer的form信息", required = false, dataType = "string") })
     @RequestMapping(value = "/list", method = { RequestMethod.GET, RequestMethod.POST })
     public @ResponseBody
-    BaseOutput<List<Customer>> list(@RequestBody(required = false) CustomerApiDTO customer) {
+    BaseOutput<List<Customer>> list(CustomerApiDTO customer) {
         return BaseOutput.success().setData(customerService.listByExample(customer));
     }
 }

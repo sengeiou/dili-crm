@@ -12,27 +12,35 @@
                 <form id="form" class="easyui-form" method="post" fit="true">
                     <table style="padding:10px;">
                         <tr>
-                           <td style="padding:5px;">
-                           <input class="easyui-textbox" name="name" id="name" style="width:100%" data-options="label:'客户名称:', labelAlign:'right', validType:'length[0,40]'" />
+                            <td style="padding:5px;">
+                                <input class="easyui-textbox" name="name" id="name" style="width:100%" labelAlign="right" data-options="label:'客户名称:',cls:'noborder', editable:false, readonly:true,hasDownArrow:false, validType:'length[0,40]'" />
                             </td>
                             <td style="padding:5px;">
-                                  <input class="easyui-textbox" name="certificateNumber" id="certificateNumber" style="width:100%" data-options="label:'证件号:', labelAlign:'right', validType:'length[0,40]'" />
+                                <input class="easyui-textbox" name="certificateNumber" id="certificateNumber" style="width:100%" labelAlign="right" data-options="label:'客户证件号:',cls:'noborder', editable:false, readonly:true,hasDownArrow:false, validType:'length[0,40]'" />
                             </td>
                             <td style="padding:5px;">
-                                 <input name="type" id="type" style="width:100%;" panelWidth="auto" data-options="editable:false, labelAlign:'right'" panelHeight="auto" label="客户类型:"/>
-                                <#comboProvider _id="type" _provider='dataDictionaryValueProvider' _queryParams='{dd_id:"4"}'/>
+                                <input class="easyui-textbox" name="phone" id="phone" style="width:100%" labelAlign="right" data-options="label:'电话:',cls:'noborder', editable:false, readonly:true,hasDownArrow:false, validType:'length[0,40]'" />
                             </td>
-                           <td style="padding:5px;">
-                                 <input name="profession" id="profession" style="width:100%;" data-options="labelAlign:'right', editable:false" panelWidth="auto" panelHeight="auto" label="客户行业:"/>
-                                <#comboProvider _id="profession" _provider='dataDictionaryValueProvider' _queryParams='{dd_id:"6"}'/>
+                            <td style="padding:5px;">
+                                <input class="easyui-numberbox" name="points" id="points" style="width:100%" labelAlign="right" data-options="label:'积分:',cls:'noborder', editable:false, readonly:true,hasDownArrow:false, validType:'length[0,10]'" />
                             </td>
-                             <td style="padding:5px;">
-                               <input name="organizationType" id="organizationType" style="width:100%;" data-options="labelAlign:'right', editable:false" panelWidth="auto" panelHeight="auto" label="组织类型:"/>
-                                <#comboProvider _id="organizationType" _provider='dataDictionaryValueProvider' _queryParams='{dd_id:"5"}'/>
-                            </td>
-                           
                         </tr>
-                       
+                        <tr>
+                            <td style="padding:5px;">
+                                <input class="easyui-numberbox" name="generateWay" id="generateWay" style="width:100%;" labelAlign="right" data-options="label:'获得/使用方式:',labelWidth:100, validType:'length[0,10]'" />
+
+                            </td>
+                            <td style="padding:5px;">
+                                <input class="easyui-numberbox" name="inOut" id="inOut" style="width:100%" labelAlign="right" data-options="label:'收支类型:', validType:'length[0,10]'" />
+
+                            </td>
+                      
+                          
+                            <td style="padding:5px;">
+                                <input class="easyui-textbox" name="orderCode" id="orderCode" style="width:100%" labelAlign="right" data-options="label:'订单编号:', validType:'length[0,20]'" />
+
+                            </td>
+                        </tr>
                         <tr>
                             <td style="padding-left:28px;padding-top: 10px; padding-bottom: 10px;">
                                 <a href="#" class="easyui-linkbutton" iconCls="icon-search" id="queryBtn"
@@ -48,61 +56,54 @@
         <!-- 中央布局 -->
         <!-- ====================================================================================================================== -->
         <!-- 表格 -->
-      <div region="center" style="width: 100%;" height="auto"  align="center" border="false">
+            <div region="center" style="width: 100%;" height="auto"  align="center" border="false">
         	<div class="easyui-panel" align="center" style="width:96%;height:100%;" border="false">
             <!-- =========================================================表格========================================================= -->
-            <table class="easyui-datagrid" title="CustomerPoints列表" id="grid" fitColumns="true" noheader="true"
+            <table class="easyui-datagrid" title="PointsDetail列表" id="grid" fitColumns="true" noheader="true"
                    pagination="true" pageSize="30" pageNumber="1" pagePosition="top" rownumbers="true" remoteSort="false"
                    loadMsg="数据加载中..." singleSelect="true" method="post" multiSort="false" sortName="certificateNumber"
-                    align="center" fit="true" striped="true"   toolbar="#toolbar" idField="id" data-options="onDblClickRow:openUpdate, onHeaderContextMenu:headerContextMenu">
+                   align="center" fit="true" striped="true" toolbar="#toolbar" idField="id" data-options="onDblClickRow:openUpdate, onHeaderContextMenu:headerContextMenu">
                 <thead>
                     <tr>
-                     <th data-options="field:'id',   sortable:true, order:'asc', align:'center', resizable:'true', fixed:'false'">
-                            客户ID
-                        </th>
-                         <th data-options="field:'organizationType',  _provider:'dataDictionaryValueProvider', _queryParams:{dd_id:5},  sortable:true, order:'asc', align:'center', resizable:'true', fixed:'false'">
-                            组织类型
-                        </th>
-                         <th data-options="field:'name',   sortable:true, order:'asc', align:'center', resizable:'true', fixed:'false'">
-                            客户名称
-                        </th>
-                        <th data-options="field:'certificateType',   _provider:'dataDictionaryValueProvider', _queryParams:{dd_id:3}, sortable:true, order:'asc', align:'center', resizable:'true', fixed:'false'">
-                            证件类型
-                        </th>
                         <th data-options="field:'certificateNumber',   sortable:true, order:'asc', align:'center', resizable:'true', fixed:'false'">
-                            证件号
+                            客户证件号
                         </th>
-                        <th data-options="field:'available',   sortable:true, order:'asc', align:'center', resizable:'true', fixed:'false'">
-                            可用积分
+                        <th data-options="field:'points',   sortable:true, order:'asc', align:'center', resizable:'true', fixed:'false'">
+                            积分
                         </th>
-                     
-                        <th data-options="field:'total',   sortable:true, order:'asc', align:'center', resizable:'true', fixed:'false'">
-                            总积分
+                        <th data-options="field:'balance',   sortable:true, order:'asc', align:'center', resizable:'true', fixed:'false'">
+                            积分余额
                         </th>
-                        
+                        <th data-options="field:'generateWay',   sortable:true, order:'asc', align:'center', resizable:'true', fixed:'false'">
+                            获得/使用方式
+                        </th>
+                        <th data-options="field:'inOut',   sortable:true, order:'asc', align:'center', resizable:'true', fixed:'false'">
+                            收支类型
+                        </th>
+                        <th data-options="field:'sourceSystem',   sortable:true, order:'asc', align:'center', resizable:'true', fixed:'false'">
+                            来源系统
+                        </th>
+                        <th data-options="field:'notes',   sortable:true, order:'asc', align:'center', resizable:'true', fixed:'false'">
+                            备注
+                        </th>
+                        <th data-options="field:'created',  _provider:'datetimeProvider', sortable:true, order:'asc', align:'center', resizable:'true', fixed:'false'">
+                            获得时间
+                        </th>
+                        <th data-options="field:'orderCode',   sortable:true, order:'asc', align:'center', resizable:'true', fixed:'false'">
+                            订单编号
+                        </th>
                     </tr>
                 </thead>
             </table>
             <!-- datagrid工具栏 -->
             <div id="toolbar" style="padding:2px 5px;">
-                
-                <div style="float:right">
-              
-                </div>
+               
             </div>
             </div>
-            
-            
-            
-            
-            
-            
-            
-            
         </div>
     </div>
     <!-- 隐藏编辑框 -->
-    <div id="dlg" class="easyui-dialog" resizable="false" constrain="true" shadow="true" draggable="false" title="CustomerPoints信息" style="padding:20px" modal="true" border="thin" closed="true"
+    <div id="dlg" class="easyui-dialog" resizable="false" constrain="true" shadow="true" draggable="false" title="PointsDetail信息" style="padding:20px" modal="true" border="thin" closed="true"
          data-options="
 				iconCls: 'icon-save',
 				height: 480,
@@ -123,39 +124,48 @@
         <table width="360px">
             <tr>
                 <td style="padding:5px;">
-                    <input class="easyui-textbox" name="_certificateNumber" id="_certificateNumber" style="width:100%" data-options="label:'证件号:', validType:'length[0,40]'" />
+                    <input class="easyui-textbox" name="_certificateNumber" id="_certificateNumber" style="width:100%" data-options="label:'客户证件号:', validType:'length[0,40]'" />
                 </td>
             </tr>
             <tr>
                 <td style="padding:5px;">
-                    <input class="easyui-numberbox" name="_available" id="_available" style="width:100%" data-options="label:'可用积分:'" />
+                    <input class="easyui-numberbox" name="_points" id="_points" style="width:100%" data-options="label:'积分:'" />
                 </td>
             </tr>
             <tr>
                 <td style="padding:5px;">
-                    <input class="easyui-numberbox" name="_frozen" id="_frozen" style="width:100%" data-options="label:'冻结积分:'" />
+                    <input class="easyui-numberbox" name="_balance" id="_balance" style="width:100%" data-options="label:'积分余额:'" />
                 </td>
             </tr>
             <tr>
                 <td style="padding:5px;">
-                    <input class="easyui-numberbox" name="_total" id="_total" style="width:100%" data-options="label:'总积分:'" />
+                    <input class="easyui-numberbox" name="_generateWay" id="_generateWay" style="width:100%" data-options="label:'获得/使用方式:'" />
                 </td>
             </tr>
             <tr>
                 <td style="padding:5px;">
-                    <input class="easyui-numberbox" name="_modifiedId" id="_modifiedId" style="width:100%" data-options="label:'修改人:'" />
+                    <input class="easyui-numberbox" name="_inOut" id="_inOut" style="width:100%" data-options="label:'收支类型:'" />
                 </td>
             </tr>
             <tr>
                 <td style="padding:5px;">
-                    <input class="easyui-datetimebox" name="_created" id="_created" style="width:100%" editable="false" data-options="label:'创建时间:'" 
+                    <input class="easyui-textbox" name="_sourceSystem" id="_sourceSystem" style="width:100%" data-options="label:'来源系统:', validType:'length[0,20]'" />
+                </td>
+            </tr>
+            <tr>
+                <td style="padding:5px;">
+                    <input class="easyui-textbox" name="_notes" id="_notes" style="width:100%" data-options="label:'备注:', validType:'length[0,120]'" />
+                </td>
+            </tr>
+            <tr>
+                <td style="padding:5px;">
+                    <input class="easyui-datetimebox" name="_created" id="_created" style="width:100%" editable="false" data-options="label:'获得时间:'" 
                         required="true" />
                 </td>
             </tr>
             <tr>
                 <td style="padding:5px;">
-                    <input class="easyui-datetimebox" name="_modified" id="_modified" style="width:100%" editable="false" data-options="label:'修改时间:'" 
-                        required="true" />
+                    <input class="easyui-textbox" name="_orderCode" id="_orderCode" style="width:100%" data-options="label:'订单编号:', validType:'length[0,20]'" />
                 </td>
             </tr>
         </table>
@@ -166,16 +176,10 @@
     <!-- style & script 分隔线 -->
     <!-- ====================================================================================================================== -->
     <script type="text/javascript">
-    //打开明细窗口
-    function openDetail(){
-        var selected = $("#grid").treegrid("getSelected");
-        if (null == selected) {
-            $.messager.alert('警告','请选中一条数据');
-            return;
-        }
-        window.location.href="${contextPath}/pointsDetail/detail.html?certificateNumber="+selected["certificateNumber"];
-    }
-    
+    $("#_phone").textbox("setValue", "${customerPoints.phone}");
+    $("#_name").textbox("setValue", "${customerPoints.name}");
+    $("#_certificateNumber").textbox("setValue", "${customerPoints.certificateNumber}");
+    $("#_total").textbox("setValue", "${customerPoints.total}");
         //打开新增窗口
         function openInsert(){
             $('#dlg').dialog('open');
@@ -207,9 +211,9 @@
             var _url = null;
             //没有id就新增
             if(_formData.id == null || _formData.id==""){
-                _url = "${contextPath}/customerPoints/insert";
+                _url = "${contextPath}/pointsDetail/insert";
             }else{//有id就修改
-                _url = "${contextPath}/customerPoints/update";
+                _url = "${contextPath}/pointsDetail/update";
             }
             $.ajax({
                 type: "POST",
@@ -243,7 +247,7 @@
                 if (r){
                     $.ajax({
                         type: "POST",
-                        url: "${contextPath}/customerPoints/delete",
+                        url: "${contextPath}/pointsDetail/delete",
                         data: {id:selected.id},
                         processData:true,
                         dataType: "json",
@@ -268,7 +272,7 @@
         function queryGrid() {
             var opts = $("#grid").datagrid("options");
             if (null == opts.url || "" == opts.url) {
-                opts.url = "${contextPath}/customerPoints/listPage";
+                opts.url = "${contextPath}/pointsDetail/listPage";
             }
             if(!$('#form').form("validate")){
                 return;
@@ -329,14 +333,6 @@
                 pager.pagination({
                     <#controls_paginationOpts/>,
                     buttons:[
-                  	  {
-                            iconCls:'icon-detail',
-                            text:'明细',
-                                handler:function(){
-                                openDetail();
-                            }
-                        },
-                    
                     {
                         iconCls:'icon-add',
                         text:'新增',

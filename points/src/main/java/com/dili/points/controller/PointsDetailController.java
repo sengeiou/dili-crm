@@ -1,8 +1,13 @@
 package com.dili.points.controller;
 
+import com.dili.points.domain.CustomerPoints;
 import com.dili.points.domain.PointsDetail;
+import com.dili.points.service.CustomerPointsService;
 import com.dili.points.service.PointsDetailService;
 import com.dili.ss.domain.BaseOutput;
+import com.dili.ss.dto.DTO;
+import com.dili.ss.dto.DTOUtils;
+
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
@@ -25,13 +30,20 @@ import org.springframework.web.bind.annotation.ResponseBody;
 public class PointsDetailController {
     @Autowired
     PointsDetailService pointsDetailService;
+    @Autowired CustomerPointsService customerPointsService;
 
     @ApiOperation("跳转到PointsDetail页面")
     @RequestMapping(value="/index.html", method = RequestMethod.GET)
     public String index(ModelMap modelMap) {
         return "pointsDetail/index";
     }
-
+    @ApiOperation("跳转到detail页面")
+    @RequestMapping(value="/detail.html", method = RequestMethod.GET)
+    public String detail(ModelMap modelMap,String certificateNumber) {
+    	DTO customerPoints=this.customerPointsService.findCustomerPointsByCertificateNumber(certificateNumber);
+    	modelMap.put("customerPoints", customerPoints);
+        return "pointsDetail/detail";
+    }
     @ApiOperation(value="查询PointsDetail", notes = "查询PointsDetail，返回列表信息")
     @ApiImplicitParams({
 		@ApiImplicitParam(name="PointsDetail", paramType="form", value = "PointsDetail的form信息", required = false, dataType = "string")
