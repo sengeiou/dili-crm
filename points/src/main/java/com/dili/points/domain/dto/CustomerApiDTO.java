@@ -1,6 +1,7 @@
 package com.dili.points.domain.dto;
 
-import com.dili.crm.domain.Customer;
+
+import com.dili.points.domain.Customer;
 import com.dili.ss.domain.annotation.Operator;
 
 import javax.persistence.Column;
