@@ -33,8 +33,9 @@ public class ExchangeCommoditiesServiceImpl extends BaseServiceImpl<ExchangeComm
             return BaseOutput.failure("新增失败，登录超时");
         }
         //新增时，可兑换量即等于总量
-        exchangeCommodities.setAvailable(exchangeCommodities.getTotal());
+        exchangeCommodities.setTotal(exchangeCommodities.getAvailable());
         exchangeCommodities.setCreatedId(userTicket.getId());
+        exchangeCommodities.setModifiedId(userTicket.getId());
         super.insertSelective(exchangeCommodities);
         return BaseOutput.success("新增成功").setData(exchangeCommodities);
     }
@@ -47,14 +48,17 @@ public class ExchangeCommoditiesServiceImpl extends BaseServiceImpl<ExchangeComm
      */
     @Override
     public BaseOutput updateSelectiveWithOutput(ExchangeCommodities exchangeCommodities) {
-        ExchangeCommodities old = get(exchangeCommodities.getId());
-        Integer add = exchangeCommodities.getTotal()-old.getTotal();
-        Integer newAvailable = old.getAvailable()+add;
-        if (newAvailable<=0){
-            exchangeCommodities.setAvailable(0);
-        }else{
-            exchangeCommodities.setAvailable(newAvailable);
+        UserTicket userTicket = SessionContext.getSessionContext().getUserTicket();
+        if(userTicket == null){
+            return BaseOutput.failure("新增失败，登录超时");
         }
+        ExchangeCommodities old = get(exchangeCommodities.getId());
+        //计算出新增的可兑换量
+        Integer add = exchangeCommodities.getAvailable()-old.getAvailable();
+        //则新的总量等于旧的加上新增的可兑换量
+        Integer newTotal = old.getTotal()+add;
+        exchangeCommodities.setTotal(newTotal);
+        exchangeCommodities.setModifiedId(userTicket.getId());
         super.updateSelective(exchangeCommodities);
         return BaseOutput.success("更新成功").setData(exchangeCommodities);
     }

@@ -41,9 +41,6 @@ public class CommodityProvider implements ValueProvider {
      */
     @Override
     public List<ValuePair<?>> getLookupList(Object val, Map metaMap, FieldMeta fieldMeta) {
-        if(null == val || StringUtils.isBlank(val.toString())) {
-            return null;
-        }
         List<ValuePair<?>> buffer = new ArrayList<ValuePair<?>>();
         ExchangeCommodities ec = DTOUtils.newDTO(ExchangeCommodities.class);
         List<ExchangeCommodities> list = exchangeCommoditiesService.listByExample(ec);

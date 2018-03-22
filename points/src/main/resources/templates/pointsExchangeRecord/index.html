@@ -13,7 +13,7 @@
                     <table style="padding:10px;">
                         <tr>
                             <td style="padding:5px;">
-                                <input class="easyui-numberbox" name="name" id="name" style="width:100%" labelAlign="right" data-options="label:'客户ID:', validType:'length[0,19]'" />
+                                <input class="easyui-textbox" name="name" id="name" style="width:100%" labelAlign="right" data-options="label:'客户名称:', validType:'length[0,19]'" />
 
                             </td>
                             <td style="padding:5px;">
@@ -22,24 +22,23 @@
                             </td>
                             <td style="padding:5px;">
                                     <input name="type" id="type" style="width:100%;" editable="false" labelAlign="right" panelWidth="auto" panelHeight="auto" label="客户类型:"/>
-                                    <#comboProvider _id="type" _provider='dataDictionaryValueProvider'/>
+                                    <#comboProvider _id="type" _provider='dataDictionaryValueProvider' _queryParams='{dd_id:4}'/>
                             </td>
                             <td style="padding:5px;">
                                 <input name="organizationType" id="organizationType" style="width:100%;" editable="false" labelAlign="right" panelWidth="auto" panelHeight="auto" label="组织类型:"/>
-                                <#comboProvider _id="organizationType" _provider='dataDictionaryValueProvider'/>
+                                <#comboProvider _id="organizationType" _provider='dataDictionaryValueProvider' _queryParams='{dd_id:5}'/>
 
                             </td>
                         </tr>
                         <tr>
-
                             <td style="padding:5px;">
-                                <input  name="exchangeCommoditiesId" id="exchangeCommoditiesId" editable="false" style="width:100%" labelAlign="right" data-options="label:'兑换商品:'" />
+                                <input  name="exchangeCommoditiesId" id="exchangeCommoditiesId" editable="false" style="width:100%" labelAlign="right" panelWidth="auto" panelHeight="auto" data-options="label:'兑换商品:'" />
                                 <#comboProvider _id="exchangeCommoditiesId" _provider='commodityProvider'/>
                             </td>
 
                             <td style="padding:5px;" colspan="2">
-                                <input class="easyui-datetimebox" name="created" id="createdStart" editable="false" style="width:49%" labelAlign="right" data-options="label:'兑换时间:'" />
-                                <input class="easyui-datetimebox" name="created" id="createdEnd" editable="false" style="width:50%" labelAlign="center" data-options="label:'——'" />
+                                <input class="easyui-datetimebox" name="createdStart" id="createdStart" editable="false" style="width:49%" labelAlign="right" data-options="label:'兑换时间:'" />
+                                <input class="easyui-datetimebox" name="createdEnd" id="createdEnd" editable="false" style="width:50%" labelAlign="center" data-options="label:'——'" />
                             </td>
                             <td style="padding-left:28px;padding-top: 10px; padding-bottom: 10px;">
                                 <a href="#" class="easyui-linkbutton" iconCls="icon-search" id="queryBtn"
@@ -80,19 +79,19 @@
                         <th width="10%" data-options="field:'type',  _provider:'dataDictionaryValueProvider',  _queryParams:'{dd_id:4}', sortable:true, order:'asc', align:'center', resizable:'true', fixed:'false'">
                             客户类型
                         </th>
-                        <th width="10%" data-options="field:'points',   sortable:true, order:'asc', align:'center', resizable:'true', fixed:'false'">
+                        <th width="8%" data-options="field:'points',   sortable:true, order:'asc', align:'center', resizable:'true', fixed:'false'">
                             使用积分
                         </th>
-                        <th width="10%" data-options="field:'exchangeCommoditiesId',   sortable:true, order:'asc', align:'center', resizable:'true', fixed:'false'">
+                        <th width="10%" data-options="field:'exchangeCommoditiesId',_provider:'commodityProvider',sortable:true, order:'asc', align:'center', resizable:'true', fixed:'false'">
                             兑换商品
                         </th>
-                        <th width="10%" data-options="field:'quantity',   sortable:true, order:'asc', align:'center', resizable:'true', fixed:'false'">
+                        <th width="8%" data-options="field:'quantity',   sortable:true, order:'asc', align:'center', resizable:'true', fixed:'false'">
                             兑换数量
                         </th>
                         <th width="10%" data-options="field:'createdId', _provider:'userProvider',  sortable:true, order:'asc', align:'center', resizable:'true', fixed:'false'">
                             兑换操作员
                         </th>
-                        <th width="10%" data-options="field:'created',  _provider:'datetimeProvider', sortable:true, order:'asc', align:'center', resizable:'true', fixed:'false'">
+                        <th width="15%" data-options="field:'created',  _provider:'datetimeProvider', sortable:true, order:'asc', align:'center', resizable:'true', fixed:'false'">
                             兑换时间
                         </th>
                     </tr>

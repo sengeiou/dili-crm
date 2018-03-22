@@ -1,6 +1,7 @@
 package com.dili.points.controller;
 
 import com.dili.points.domain.PointsExchangeRecord;
+import com.dili.points.domain.dto.PointsExchangeRecordDTO;
 import com.dili.points.service.PointsExchangeRecordService;
 import com.dili.ss.domain.BaseOutput;
 import io.swagger.annotations.Api;
@@ -47,7 +48,7 @@ public class PointsExchangeRecordController {
 		@ApiImplicitParam(name="PointsExchangeRecord", paramType="form", value = "PointsExchangeRecord的form信息", required = false, dataType = "string")
 	})
     @RequestMapping(value="/listPage", method = {RequestMethod.GET, RequestMethod.POST})
-    public @ResponseBody String listPage(PointsExchangeRecord pointsExchangeRecord) throws Exception {
+    public @ResponseBody String listPage(PointsExchangeRecordDTO pointsExchangeRecord) throws Exception {
         return pointsExchangeRecordService.listEasyuiPageByExample(pointsExchangeRecord, true).toString();
     }
 
