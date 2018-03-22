@@ -39,7 +39,7 @@ public interface PointsExchangeRecord extends IBaseDomain {
     @FieldDef(label="客户名")
     @EditMode(editor = FieldEditor.Text, required = false)
     @Like
-    Long getName();
+    String getName();
 
     void setName(String name);
 
