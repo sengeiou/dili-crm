@@ -24,4 +24,7 @@ public interface UserRpc {
 	@POST("/userApi/listByExample")
 	BaseOutput<List<User>> listByExample(@VOBody User user);
 
+	@POST("/userApi/listUserByIds")
+	BaseOutput<List<User>> listUserByIds(@VOSingleParameter List<String> ids);
+
 }
