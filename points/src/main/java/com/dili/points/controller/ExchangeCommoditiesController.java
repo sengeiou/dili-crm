@@ -1,6 +1,7 @@
 package com.dili.points.controller;
 
 import com.dili.points.domain.ExchangeCommodities;
+import com.dili.points.domain.dto.ExchangeCommoditiesDTO;
 import com.dili.points.service.ExchangeCommoditiesService;
 import com.dili.ss.domain.BaseOutput;
 import io.swagger.annotations.Api;
@@ -46,7 +47,7 @@ public class ExchangeCommoditiesController {
 		@ApiImplicitParam(name="ExchangeCommodities", paramType="form", value = "ExchangeCommodities的form信息", required = false, dataType = "string")
 	})
     @RequestMapping(value="/listPage", method = {RequestMethod.GET, RequestMethod.POST})
-    public @ResponseBody String listPage(ExchangeCommodities exchangeCommodities) throws Exception {
+    public @ResponseBody String listPage(ExchangeCommoditiesDTO exchangeCommodities) throws Exception {
         return exchangeCommoditiesService.listEasyuiPageByExample(exchangeCommodities, true).toString();
     }
 
@@ -56,8 +57,7 @@ public class ExchangeCommoditiesController {
 	})
     @RequestMapping(value="/insert", method = {RequestMethod.GET, RequestMethod.POST})
     public @ResponseBody BaseOutput insert(ExchangeCommodities exchangeCommodities) {
-        exchangeCommoditiesService.insertSelective(exchangeCommodities);
-        return BaseOutput.success("新增成功");
+        return exchangeCommoditiesService.insertSelectiveWithOutput(exchangeCommodities);
     }
 
     @ApiOperation("修改ExchangeCommodities")
@@ -66,8 +66,7 @@ public class ExchangeCommoditiesController {
 	})
     @RequestMapping(value="/update", method = {RequestMethod.GET, RequestMethod.POST})
     public @ResponseBody BaseOutput update(ExchangeCommodities exchangeCommodities) {
-        exchangeCommoditiesService.updateSelective(exchangeCommodities);
-        return BaseOutput.success("修改成功");
+        return exchangeCommoditiesService.updateSelectiveWithOutput(exchangeCommodities);
     }
 
     @ApiOperation("删除ExchangeCommodities")
