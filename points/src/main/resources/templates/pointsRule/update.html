@@ -7,6 +7,7 @@
     .inputWidth {
         width: 20%;
     }
+
 </style>
 <div class="easyui-layout" fit="true">
     <div id="userSelectDialog" style="display: none;"></div>
@@ -27,6 +28,7 @@
             <input type="hidden" name="numberJson" id="numberJson"/>
             <input type="hidden" name="moneyJson" id="moneyJson"/>
             <input type="hidden" name="payMethodJson" id="payMethodJson"/>
+            <input type="hidden" name="id" value="${id}">
             <div align="center" style="margin-top:50px">
                 <div class="easyui-panel" style="width: 94%;" title="积分基础信息" border="false">
                     <table align="center" width="94%">
@@ -39,7 +41,7 @@
                             </td>
                             <td style="padding-top:10px;" width="25%">
                                 <select class="easyui-combobox inputWidth" name="customerType" id="customerType"
-                                        data-options="editable:false,labelAlign:'right',label:'生效对象:'">
+                                        data-options="editable:false,labelAlign:'right',label:'客户类型:'">
                                     <option value="1">卖家</option>
                                 </select>
                             </td>
@@ -64,7 +66,7 @@
 
                     <table align="center" width="94%">
                         <tr>
-                            <td style="padding-top:10px;" width="25%">
+                            <td style="padding-top:10px;" width="33%">
                                 <select class="easyui-combobox inputWidth" name="computingStandard"
                                         id="computingStandard"
                                         data-options="editable:false,labelAlign:'right',label:'计算标准:'">
@@ -72,14 +74,12 @@
                                 </select>
                             </td>
 
-                            <td style="padding-top:10px;padding-left:10px;" width="25%">
+                            <td style="padding-top:10px;padding-left:10px;" width="33%">
                                 <input class="easyui-textbox inputWidth" name="computingParameter"
                                        id="computingParameter"
                                        data-options="labelAlign:'right',label:'&lowast;计算参数:', validType:'length[0,40]'"
                                        required="true"/>
                             </td>
-                            <td style="padding-top:10px;" width="25%"></td>
-                            <td style="padding-top:10px;" width="25%"></td>
                         </tr>
                     </table>
                 </div>
@@ -87,8 +87,8 @@
         </form>
         <div align="center" style="margin-top:50px">
             <div class="easyui-panel" style="width: 94%;" title="积分权重" border="false">
-                <table class="easyui-datagrid" id="dg_0" title="交易量" style="width:100%;"
-                       data-options="singleSelect:true,collapsible:false,method:'get',toolbar:toolbar,style:{marginTop:20}">
+                <table class="easyui-datagrid" id="dg_0" title="交易量" style="width:100%;margin:20px 0;"
+                       data-options="singleSelect:true,collapsible:false,method:'get',toolbar:toolbar">
                     <thead>
                     <tr>
                         <th data-options="field:'displayText',width:200">交易量（公斤）</th>
@@ -101,8 +101,8 @@
                     </thead>
                 </table>
 
-                <table class="easyui-datagrid" id="dg_1" title="交易额" style="width:100%;"
-                       data-options="singleSelect:true,collapsible:false,method:'get',toolbar:toolbarMoney,style:{marginTop:20}">
+                <table class="easyui-datagrid" id="dg_1" title="交易额" style="width:100%;margin:20px 0;"
+                       data-options="singleSelect:true,collapsible:false,method:'get',toolbar:toolbarMoney">
                     <thead>
                     <tr>
                         <th data-options="field:'displayText',width:200">交易额（元）</th>
@@ -115,8 +115,8 @@
                     </thead>
                 </table>
 
-                <table class="easyui-datagrid" id="dg_2" title="支付方式" style="width:100%;"
-                       data-options="singleSelect:true,collapsible:false,method:'get',toolbar:toolbarPay,style:{marginTop:20}">
+                <table class="easyui-datagrid" id="dg_2" title="支付方式" style="width:100%;margin:20px 0;"
+                       data-options="singleSelect:true,collapsible:false,method:'get',toolbar:toolbarPay">
                     <thead>
                     <tr>
                         <th data-options="field:'displayText',width:200">支付方式</th>
@@ -209,10 +209,9 @@
 </div>
 <#pointsRule_js/>
 <script type="text/javascript">
-
     function submitForm(obj) {
         $('#_form').form('submit', {
-            url: "${contextPath}/pointsRule/insert",
+            url: "${contextPath}/pointsRule/update",
             onSubmit: function () {
                 if ($("#_form").form('validate')) {
                     $(obj).linkbutton('disable');
@@ -224,7 +223,7 @@
             },
             success: function (data) {
                 var data = eval('(' + data + ')');
-                if(data.code == 200){
+                if (data.code == 200) {
                     $.messager.alert('提示', '修改成功');
                     window.location.href = '${contextPath}/pointsRule/index.html';
                 }
@@ -236,7 +235,6 @@
         });
     }
 
-
     $.extend($.fn.validatebox.defaults.rules, {
         big: {
             validator: function (value, param) {
@@ -245,7 +243,6 @@
             message: '必须大于起始值'
         }
     });
-
 
     $(function () {
         $('#conditionType').combobox({
@@ -256,6 +253,7 @@
                 change(newValue)
             }
         });
+        $('#_form').form('load', '${contextPath}/pointsRule/get/${id}');
     });
 </script>
 </#body>

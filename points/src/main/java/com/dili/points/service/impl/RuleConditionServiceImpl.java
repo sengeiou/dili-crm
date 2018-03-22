@@ -4,6 +4,7 @@ import com.dili.points.dao.RuleConditionMapper;
 import com.dili.points.domain.RuleCondition;
 import com.dili.points.service.RuleConditionService;
 import com.dili.ss.base.BaseServiceImpl;
+import com.dili.ss.dto.DTOUtils;
 import org.springframework.stereotype.Service;
 
 /**
@@ -14,6 +15,11 @@ import org.springframework.stereotype.Service;
 public class RuleConditionServiceImpl extends BaseServiceImpl<RuleCondition, Long> implements RuleConditionService {
 
     public RuleConditionMapper getActualDao() {
-        return (RuleConditionMapper)getDao();
+        return (RuleConditionMapper) getDao();
+    }
+
+    @Override
+    public void deleteByRuleId(Long ruleId) {
+        getActualDao().deleteByRuleId(ruleId);
     }
 }

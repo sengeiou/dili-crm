@@ -76,4 +76,8 @@
     </set>
     where id = #{id,jdbcType=BIGINT}
   </update>
+
+  <delete id="deleteByRuleId" >
+  	DELETE FROM `rule_condition` WHERE point_rule_id = #{ruleId}
+  </delete>
 </mapper>

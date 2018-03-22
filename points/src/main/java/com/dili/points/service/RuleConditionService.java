@@ -8,4 +8,6 @@ import com.dili.ss.base.BaseService;
  * This file was generated on 2018-03-20 11:29:31.
  */
 public interface RuleConditionService extends BaseService<RuleCondition, Long> {
+
+    void deleteByRuleId(Long ruleId);
 }

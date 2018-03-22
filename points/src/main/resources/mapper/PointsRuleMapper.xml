@@ -72,4 +72,13 @@
     </set>
     where id = #{id,jdbcType=BIGINT}
   </update>
+
+  <update id="updateByYn" parameterType="com.dili.points.domain.PointsRule">
+    <!--
+      WARNING - @mbg.generated
+    -->
+    update points_rule set yn = 0
+
+    where customer_type = #{customerType,jdbcType=VARCHAR} and business_type = #{businessType,jdbcType=VARCHAR}
+  </update>
 </mapper>

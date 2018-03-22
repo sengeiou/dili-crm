@@ -30,7 +30,13 @@ public class PointsRuleServiceImpl extends BaseServiceImpl<PointsRule, Long> imp
     @Override
     public int insertPointRule(PointsRule pointsRule, String numberJson, String moneyJson, String payMethodJson) {
         pointsRule.setCreatedId(SessionContext.getSessionContext().getUserTicket().getId());
+        pointsRule.setYn(0);
         getActualDao().insertSelective(pointsRule);
+
+        return 0;
+    }
+
+    private void makeRuleCondition(PointsRule pointsRule , String numberJson, String moneyJson, String payMethodJson){
         List<RuleCondition> numberRuleConditions = JSON.parseArray(numberJson, RuleCondition.class);
         for (RuleCondition numberRuleCondition : numberRuleConditions) {
             numberRuleCondition.setCreatedId(pointsRule.getCreatedId());
@@ -54,8 +60,42 @@ public class PointsRuleServiceImpl extends BaseServiceImpl<PointsRule, Long> imp
             payRuleCondition.setPointRuleId(pointsRule.getId());
             ruleConditionService.insertSelective(payRuleCondition);
         }
+    }
+    @Override
+    public int updatePointRule(PointsRule pointsRule, String numberJson, String moneyJson, String payMethodJson) {
+        getActualDao().updateByPrimaryKeySelective(pointsRule);
+        ruleConditionService.deleteByRuleId(pointsRule.getId());
+
+        List<RuleCondition> numberRuleConditions = JSON.parseArray(numberJson, RuleCondition.class);
+        for (RuleCondition numberRuleCondition : numberRuleConditions) {
+            numberRuleCondition.setCreatedId(pointsRule.getCreatedId());
+            numberRuleCondition.setPointRuleId(pointsRule.getId());
+            ruleConditionService.insertSelective(numberRuleCondition);
+        }
+
+        List<RuleCondition> moneyRuleConditions = JSON.parseArray(moneyJson, RuleCondition.class);
+
+        for (RuleCondition moneyRuleCondition : moneyRuleConditions) {
+            moneyRuleCondition.setCreatedId(pointsRule.getCreatedId());
+            moneyRuleCondition.setPointRuleId(pointsRule.getId());
+            ruleConditionService.insertSelective(moneyRuleCondition);
+        }
 
 
+        List<RuleCondition> payRuleConditions = JSON.parseArray(payMethodJson, RuleCondition.class);
+
+        for (RuleCondition payRuleCondition : payRuleConditions) {
+            payRuleCondition.setCreatedId(pointsRule.getCreatedId());
+            payRuleCondition.setPointRuleId(pointsRule.getId());
+            ruleConditionService.insertSelective(payRuleCondition);
+        }
         return 0;
+    }
+
+    @Override
+    public void startPointRule(PointsRule pointsRule) {
+        getActualDao().updateByYn(pointsRule);
+        pointsRule.setYn(1);
+        this.updateSelective(pointsRule);
     }
 }

@@ -13,6 +13,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -37,6 +38,19 @@ public class PointsRuleController {
     @RequestMapping(value = "/add", method = RequestMethod.GET)
     public String add(ModelMap modelMap) {
         return "pointsRule/add";
+    }
+
+    @RequestMapping(value = "/get/{id}", method = RequestMethod.GET)
+    @ResponseBody
+    public Object get(@PathVariable("id") Long id) {
+        PointsRule pointsRule = pointsRuleService.get(id);
+        return pointsRule;
+    }
+
+    @RequestMapping(value = "/toUpdate/{id}", method = RequestMethod.GET)
+    public String toUpdate(ModelMap modelMap, @PathVariable("id") Long id) {
+        modelMap.addAttribute("id", id);
+        return "pointsRule/update";
     }
 
     @ApiOperation(value = "查询PointsRule", notes = "查询PointsRule，返回列表信息")
@@ -80,8 +94,8 @@ public class PointsRuleController {
     })
     @RequestMapping(value = "/update", method = {RequestMethod.GET, RequestMethod.POST})
     public @ResponseBody
-    BaseOutput update(PointsRule pointsRule) {
-        pointsRuleService.updateSelective(pointsRule);
+    BaseOutput update(PointsRule pointsRule, String numberJson, String moneyJson, String payMethodJson) {
+        pointsRuleService.updatePointRule(pointsRule, numberJson, moneyJson, payMethodJson);
         return BaseOutput.success("修改成功");
     }
 
@@ -89,10 +103,10 @@ public class PointsRuleController {
     @ApiImplicitParams({
             @ApiImplicitParam(name = "id", paramType = "form", value = "PointsRule的主键", required = true, dataType = "long")
     })
-    @RequestMapping(value = "/delete", method = {RequestMethod.GET, RequestMethod.POST})
+    @RequestMapping(value = "/startPointsRule", method = {RequestMethod.GET, RequestMethod.POST})
     public @ResponseBody
-    BaseOutput delete(Long id) {
-        pointsRuleService.delete(id);
+    BaseOutput startPointsRule(PointsRule pointsRule) {
+        pointsRuleService.startPointRule(pointsRule);
         return BaseOutput.success("删除成功");
     }
 }
