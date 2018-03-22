@@ -244,7 +244,7 @@
 			//发送ajax请求查询adcode
         	$.ajax({
 	            type: "POST",
-	            url:"${contextPath}/address/locationReverse.json",
+	            url:"${contextPath}/address/locationReverse",
 	            data: {"lat":lat,"lng":lng},
 	            processData:true,
 	            dataType: "json",
