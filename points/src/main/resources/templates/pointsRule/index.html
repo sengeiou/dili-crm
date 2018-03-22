@@ -19,40 +19,18 @@
                             </td>
                             <td style="padding:5px;">
                                     <input name="customerType" id="customerType" style="width:100%;" editable="false" labelAlign="right" panelWidth="auto" panelHeight="auto" label="客户类型:"/>
-                                    <#comboProvider _id="customerType" _provider='dataDictionaryValueProvider'/>
-
+                                    <#comboProvider _id="customerType" _provider='dataDictionaryValueProvider' _queryParams='{dd_id:"4"}'/>
                             </td>
                             <td style="padding:5px;">
-                                <input class="easyui-numberbox" name="businessType" id="businessType" style="width:100%" labelAlign="right" data-options="label:'交易类型:', validType:'length[0,10]'" />
-
+                                <input name="businessType" id="businessType" style="width:100%" labelAlign="right" editable="false" data-options="label:'交易类型:'" panelWidth="auto" panelHeight="auto" />
+                                <#comboProvider _id="businessType" _provider='dataDictionaryValueProvider' _queryParams='{dd_id:"20"}'/>
                             </td>
                             <td style="padding:5px;">
                                 <input class="easyui-numberbox" name="computingStandard" id="computingStandard" style="width:100%" labelAlign="right" data-options="label:'计算标准:', validType:'length[0,10]'" />
 
                             </td>
                         </tr>
-                        <tr>
-                            <td style="padding:5px;">
-                                <input class="easyui-numberbox" name="computingParameter" id="computingParameter" style="width:100%" labelAlign="right" data-options="label:'计算参数:', validType:'length[0,10]'" />
 
-                            </td>
-                            <td style="padding:5px;">
-                                <input class="easyui-numberbox" name="createdId" id="createdId" style="width:100%" labelAlign="right" data-options="label:'创建人:', validType:'length[0,19]'" />
-
-                            </td>
-                            <td style="padding:5px;">
-                                <input class="easyui-numberbox" name="modifiedId" id="modifiedId" style="width:100%" labelAlign="right" data-options="label:'修改人:', validType:'length[0,19]'" />
-
-                            </td>
-                            <td style="padding:5px;">
-                                <input class="easyui-datetimebox" name="created" id="created" style="width:100%" labelAlign="right" data-options="label:'创建时间:'" />
-
-                            </td>
-                            <td style="padding:5px;">
-                                <input class="easyui-datetimebox" name="modified" id="modified" style="width:100%" labelAlign="right" data-options="label:'修改时间:'" />
-
-                            </td>
-                        </tr>
                         <tr>
                             <td style="padding-left:28px;padding-top: 10px; padding-bottom: 10px;">
                                 <a href="#" class="easyui-linkbutton" iconCls="icon-search" id="queryBtn"
@@ -82,7 +60,7 @@
                         <th data-options="field:'code',   sortable:true, order:'asc', align:'center', resizable:'true', fixed:'false'">
                             规则编码
                         </th>
-                        <th data-options="field:'customerType',  _provider:'dataDictionaryValueProvider', sortable:true, order:'asc', align:'center', resizable:'true', fixed:'false'">
+                        <th data-options="field:'customerType',  _provider:'dataDictionaryValueProvider', _queryParams:'{dd_id:4}', sortable:true, order:'asc', align:'center', resizable:'true', fixed:'false'">
                             客户类型
                         </th>
                         <th data-options="field:'businessType',   sortable:true, order:'asc', align:'center', resizable:'true', fixed:'false'">
@@ -94,10 +72,10 @@
                         <th data-options="field:'computingParameter',   sortable:true, order:'asc', align:'center', resizable:'true', fixed:'false'">
                             计算参数
                         </th>
-                        <th data-options="field:'createdId',   sortable:true, order:'asc', align:'center', resizable:'true', fixed:'false'">
+                        <th data-options="field:'createdId', _provider:'userProvider',  sortable:true, order:'asc', align:'center', resizable:'true', fixed:'false'">
                             创建人
                         </th>
-                        <th data-options="field:'modifiedId',   sortable:true, order:'asc', align:'center', resizable:'true', fixed:'false'">
+                        <th data-options="field:'modifiedId', _provider:'userProvider',  sortable:true, order:'asc', align:'center', resizable:'true', fixed:'false'">
                             修改人
                         </th>
                         <th data-options="field:'created',  _provider:'datetimeProvider', sortable:true, order:'asc', align:'center', resizable:'true', fixed:'false'">

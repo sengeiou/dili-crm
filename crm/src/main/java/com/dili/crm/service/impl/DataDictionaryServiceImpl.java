@@ -32,6 +32,14 @@ public class DataDictionaryServiceImpl extends BaseServiceImpl<DataDictionary, L
 	}
 
 	@Override
+	public List<DataDictionaryValue> listByDdId(Long ddId) {
+		DataDictionaryValue dataDictionaryValue = DTOUtils.newDTO(DataDictionaryValue.class);
+		dataDictionaryValue.setDdId(ddId);
+		dataDictionaryValue.setYn(1);
+		return valueMapper.select(dataDictionaryValue);
+	}
+
+	@Override
 	public DataDictionaryDto findByCode(String code) {
 		DataDictionary record = DTOUtils.newDTO(DataDictionary.class);
 		record.setCode(code);

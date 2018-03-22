@@ -3,6 +3,7 @@ package com.dili.sysadmin.api;
 import com.dili.ss.domain.BaseOutput;
 import com.dili.sysadmin.domain.Department;
 import com.dili.sysadmin.domain.User;
+import com.dili.sysadmin.domain.dto.UserDto;
 import com.dili.sysadmin.service.UserService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
@@ -51,5 +52,13 @@ public class UserApi {
 	@RequestMapping(value = "/listUserDepartmentByUserId", method = { RequestMethod.GET, RequestMethod.POST })
 	public BaseOutput<List<Department>> listUserDepartmentByUserId(@RequestBody Long userId) {
 		return BaseOutput.success().setData(this.userService.listUserDepartmentByUserId(userId));
+	}
+
+	@ResponseBody
+	@RequestMapping(value = "/listUserByIds", method = { RequestMethod.GET, RequestMethod.POST })
+	public BaseOutput<List<User>> listUserByIds(@RequestBody List<Long> ids){
+		UserDto user = new UserDto();
+		user.setIds(ids);
+		return BaseOutput.success().setData(userService.listByExample(user));
 	}
 }
