@@ -101,7 +101,7 @@
 				buttons: [{
 					text:'确认',
 					iconCls:'icon-ok',
-					handler:saveOrUpdate
+					handler:savePointsDetail
 				},{
 					text:'取消',
 					iconCls:'icon-cancel',
@@ -156,6 +156,40 @@
         }
         window.location.href="${contextPath}/pointsDetail/detail.html?certificateNumber="+selected["certificateNumber"];
     }
+
+    function savePointsDetail(){
+        if(!$('#_form').form("validate")){
+            return;
+        }
+        var _formData = removeKeyStartWith($("#_form").serializeObject(),"_");
+        var _url = null;
+        //没有id就新增
+        //if(_formData.id == null || _formData.id==""){
+            _url = "${contextPath}/pointsDetail/mannuallyInsert";
+        //}else{//有id就修改
+       //     _url = "${contextPath}/customerPoints/update";
+        //}
+        $.ajax({
+            type: "POST",
+            url: _url,
+            data: _formData,
+            processData:true,
+            dataType: "json",
+            async : true,
+            success: function (data) {
+                if(data.code=="200"){
+                    $("#grid").datagrid("reload");
+                    $('#dlg').dialog('close');
+                }else{
+                    $.messager.alert('错误',data.result);
+                }
+            },
+            error: function(){
+                $.messager.alert('错误','远程访问失败');
+            }
+        });
+    }
+    
     //打开调整窗口窗口
     function openDetailChange(){
         var selected = $("#grid").treegrid("getSelected");

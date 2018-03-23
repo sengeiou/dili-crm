@@ -28,14 +28,6 @@ public interface PointsDetail extends IBaseDomain {
 
     void setId(Long id);
 
-    @Column(name = "`name`")
-    @FieldDef(label="客户名称", maxLength = 40)
-    @EditMode(editor = FieldEditor.Text, required = false)
-    @Like(Like.BOTH)
-    String getName();
-
-    void setName(String name);
-    
     @Column(name = "`certificate_number`")
     @FieldDef(label="客户证件号", maxLength = 40)
     @EditMode(editor = FieldEditor.Text, required = false)
@@ -98,4 +90,18 @@ public interface PointsDetail extends IBaseDomain {
     String getOrderCode();
 
     void setOrderCode(String orderCode);
+    
+    @Column(name = "`order_type`")
+    @FieldDef(label="订单类型", maxLength = 20)
+    @EditMode(editor = FieldEditor.Text, required = false)
+    String getOrderType();
+
+    void setOrderType(String orderCode);
+    
+    @Column(name = "`created_id`")
+    @FieldDef(label="操作人")
+    @EditMode(editor = FieldEditor.Number, required = false)
+    Long getCreatedId();
+
+    void setCreatedId(Long createdId);
 }

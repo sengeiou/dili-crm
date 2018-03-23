@@ -7,12 +7,16 @@ import com.dili.points.service.PointsDetailService;
 import com.dili.ss.domain.BaseOutput;
 import com.dili.ss.dto.DTO;
 import com.dili.ss.dto.DTOUtils;
+import com.dili.sysadmin.sdk.domain.UserTicket;
+import com.dili.sysadmin.sdk.session.SessionContext;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 import java.util.List;
+
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
@@ -70,8 +74,23 @@ public class PointsDetailController {
 	})
     @RequestMapping(value="/mannuallyInsert", method = {RequestMethod.GET, RequestMethod.POST})
     public @ResponseBody BaseOutput mannuallyInsert(PointsDetail pointsDetail) {
+    	//先进行基本属性判断
+    	//积分不能为空
+    	if(pointsDetail.getPoints()==null) {
+    		
+    	}
+    	//证件号码不能为空
+    	if(StringUtils.isBlank(pointsDetail.getCertificateNumber())) {
+    		
+    	}
+    	
+		UserTicket userTicket = SessionContext.getSessionContext().getUserTicket();
+		if (userTicket == null) {
+			throw new RuntimeException("未登录");
+		}
+		pointsDetail.setCreatedId(userTicket.getId());//操作人
     	pointsDetail.setGenerateWay(50);//50 手工调整
-        pointsDetailService.insertSelective(pointsDetail);
+        pointsDetailService.insert(pointsDetail);
         return BaseOutput.success("新增成功");
     }
     
