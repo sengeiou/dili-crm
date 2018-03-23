@@ -4,16 +4,14 @@ import com.dili.crm.domain.Customer;
 import com.dili.crm.domain.dto.CustomerApiDTO;
 import com.dili.crm.service.CustomerService;
 import com.dili.ss.domain.BaseOutput;
+import com.dili.ss.domain.EasyuiPageOutput;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -27,7 +25,7 @@ import java.util.List;
  * @createTime 2018/3/21 14:11
  */
 @Api("/customerApi")
-@Controller
+@RestController
 @RequestMapping("/customerApi")
 public class CustomerApi {
 
@@ -38,7 +36,15 @@ public class CustomerApi {
     @ApiImplicitParams({ @ApiImplicitParam(name = "Customer", paramType = "form", value = "Customer的form信息", required = false, dataType = "string") })
     @RequestMapping(value = "/list", method = { RequestMethod.GET, RequestMethod.POST })
     public @ResponseBody
-    BaseOutput<List<Customer>> list(@RequestBody(required = false) CustomerApiDTO customer) {
+    BaseOutput<List<Customer>> list(CustomerApiDTO customer) {
         return BaseOutput.success().setData(customerService.listByExample(customer));
+    }
+
+    @ApiOperation(value = "分页查询customer列表接口", notes = "分页查询customer列表接口，返回列表信息")
+    @ApiImplicitParams({ @ApiImplicitParam(name = "Customer", paramType = "form", value = "Customer的form信息", required = false, dataType = "string") })
+    @RequestMapping(value = "/listPage", method = { RequestMethod.GET, RequestMethod.POST })
+    public @ResponseBody
+    BaseOutput<EasyuiPageOutput> listPage(CustomerApiDTO customer) throws Exception {
+        return BaseOutput.success().setData(customerService.listEasyuiPageByExample(customer, false));
     }
 }

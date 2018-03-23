@@ -174,8 +174,8 @@
 						<groupId>com.dili</groupId>
 						<artifactId>sharp-sword</artifactId>
 						<version>${sharp-sword.version}</version>
-						<!--<scope>system</scope> -->
-						<!--<systemPath>${\project.basedir}/lib/sharp-sword-1.0.0-SNAPSHOT.jar</systemPath> -->
+						<!--scope>system</scope>
+						<systemPath>${\project.basedir}/lib/sharp-sword-1.0.0-SNAPSHOT.jar</systemPath-->
 					</dependency>
 					<dependency>
 						<groupId>com.ibeetl</groupId>

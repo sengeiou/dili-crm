@@ -1,10 +1,13 @@
 package com.dili.points.domain;
 
+import com.dili.ss.domain.annotation.Operator;
 import com.dili.ss.dto.IBaseDomain;
 import com.dili.ss.metadata.FieldEditor;
 import com.dili.ss.metadata.annotation.EditMode;
 import com.dili.ss.metadata.annotation.FieldDef;
 import java.util.Date;
+import java.util.List;
+
 import javax.persistence.*;
 import javax.persistence.Column;
 import javax.persistence.GeneratedValue;
@@ -26,6 +29,11 @@ public interface CustomerPoints extends IBaseDomain {
     Long getId();
 
     void setId(Long id);
+    
+    @Column(name = "`certificate_number`")
+    @Operator(Operator.IN)
+    List<String> getCertificateNumbers();
+    void setCertificateNumbers(List<String> certificateNumbers);
 
     @Column(name = "`certificate_number`")
     @FieldDef(label="证件号", maxLength = 40)
