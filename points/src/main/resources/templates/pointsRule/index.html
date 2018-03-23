@@ -4,13 +4,16 @@
     <!-- 上方布局 -->
     <!-- ====================================================================================================================== -->
     <div region="north" height="auto" align="center">
-        <!-- =========================================================表单========================================================= -->
-        <div class="easyui-panel" style="width:100%;" align="left">
+        <div id="nav" style="padding-left:15px;padding-top:10px;" align="left">
+            <#nav/>
+        </div>
+
+        <div class="easyui-panel" style="width:100%;border: 0px;" align="left">
             <form id="form" class="easyui-form" method="post" fit="true">
                 <table style="padding:10px;">
                     <tr>
                         <td style="padding:5px;">
-                            <input class="easyui-textbox" name="name" id="name" style="width:100%" labelAlign="right"
+                            <input class="easyui-textbox" name="name" id="name" style="width:99%" labelAlign="right"
                                    data-options="label:'规则名称:', validType:'length[0,20]'"/>
 
                         </td>
@@ -32,7 +35,7 @@
                     <tr>
                         <td style="padding:5px;">
                             <input class="easyui-datetimebox" name="startCreated" id="startCreated"
-                                   labelAlign="right" data-options="label:'创建时间:'" style="width: 200px;"/>
+                                   labelAlign="right" data-options="label:'创建时间:'" style="width: 250px;"/>
                             - <input class="easyui-datetimebox" name="endCreated" id="endCreated"
                                      labelAlign="right" style="width: 150px;"/>
 
@@ -342,14 +345,14 @@
                 }
             },
             {
-                iconCls: 'icon-remove',
+                iconCls: 'icon-play',
                 text: '启用',
                 handler: function () {
                     on();
                 }
             },
             {
-                iconCls: 'icon-export',
+                iconCls: 'icon-stop',
                 text: '禁用',
                 handler: function () {
                     off();

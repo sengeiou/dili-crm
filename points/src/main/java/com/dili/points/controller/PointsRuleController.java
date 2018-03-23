@@ -35,17 +35,16 @@ public class PointsRuleController {
     @Autowired
     PointsRuleService pointsRuleService;
 
-    @Autowired
-    private DataDictionaryValueRpc dataDictionaryValueRpc;
+
 
     @ApiOperation("跳转到PointsRule页面")
     @RequestMapping(value = "/index.html", method = RequestMethod.GET)
-    public String index(ModelMap modelMap) {
+    public String index() {
         return "pointsRule/index";
     }
 
     @RequestMapping(value = "/add", method = RequestMethod.GET)
-    public String add(ModelMap modelMap) {
+    public String add() {
         return "pointsRule/add";
     }
 
@@ -61,28 +60,23 @@ public class PointsRuleController {
         PointsRule pointsRule = pointsRuleService.get(id);
         // 启用或者不存在的规则直接跳转到列表页
         if (pointsRule == null || pointsRule.getYn() == 1) {
-            return "pointsRule/index";
+            return "redirect:/pointsRule/index.html";
         }
         modelMap.addAttribute("id", id);
         modelMap.addAttribute("potins",pointsRule);
-        BaseOutput<List<DataDictionaryValue>> output = dataDictionaryValueRpc.listByDdId(23L);
-        modelMap.addAttribute("conditionType", JSON.toJSONString(output.getData()));
-        modelMap.addAttribute("payMethod", JSON.toJSONString(dataDictionaryValueRpc.listByDdId(19L).getData()));
+        pointsRuleService.buildConditionParameter(modelMap);
         return "pointsRule/update";
     }
 
     @RequestMapping(value = "/view/{id}", method = RequestMethod.GET)
     public String view(ModelMap modelMap, @PathVariable("id") Long id) {
         PointsRule pointsRule = pointsRuleService.get(id);
-        // 启用或者不存在的规则直接跳转到列表页
-        if (pointsRule == null || pointsRule.getYn() == 1) {
-            return "pointsRule/index";
+        if (pointsRule == null) {
+            return "redirect:/pointsRule/index.html";
         }
         modelMap.addAttribute("id", id);
         modelMap.addAttribute("potins",pointsRule);
-        BaseOutput<List<DataDictionaryValue>> output = dataDictionaryValueRpc.listByDdId(23L);
-        modelMap.addAttribute("conditionType", JSON.toJSONString(output.getData()));
-        modelMap.addAttribute("payMethod", JSON.toJSONString(dataDictionaryValueRpc.listByDdId(19L).getData()));
+        pointsRuleService.buildConditionParameter(modelMap);
         return "pointsRule/view";
     }
 
@@ -90,14 +84,12 @@ public class PointsRuleController {
     public String copy(ModelMap modelMap, @PathVariable("id") Long id) {
         PointsRule pointsRule = pointsRuleService.get(id);
         // 启用或者不存在的规则直接跳转到列表页
-        if (pointsRule == null || pointsRule.getYn() == 1) {
-            return "pointsRule/index";
+        if (pointsRule == null ) {
+            return "redirect:/pointsRule/index.html";
         }
         modelMap.addAttribute("id", id);
         modelMap.addAttribute("potins",pointsRule);
-        BaseOutput<List<DataDictionaryValue>> output = dataDictionaryValueRpc.listByDdId(23L);
-        modelMap.addAttribute("conditionType", JSON.toJSONString(output.getData()));
-        modelMap.addAttribute("payMethod", JSON.toJSONString(dataDictionaryValueRpc.listByDdId(19L).getData()));
+        pointsRuleService.buildConditionParameter(modelMap);
         return "pointsRule/copy";
     }
 
@@ -155,7 +147,7 @@ public class PointsRuleController {
     public @ResponseBody
     BaseOutput startPointsRule(PointsRule pointsRule, int status) {
         pointsRuleService.startPointRule(pointsRule, status);
-        return BaseOutput.success("删除成功");
+        return BaseOutput.success("成功");
     }
 
     @RequestMapping(value = "/checkName")

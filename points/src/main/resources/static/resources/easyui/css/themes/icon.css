@@ -9,6 +9,11 @@
 	background:url('icons/pencil.png') no-repeat center center;
 }
 
+.icon-stop{
+	background:url('icons/stop.png') no-repeat center center;
+}
+
+
 .icon-clear{
 	background:url('icons/clear.png') no-repeat center center;
 }
@@ -60,6 +65,10 @@
 
 .icon-back{
 	background:url('icons/back.png') no-repeat center center;
+}
+
+.icon-play{
+	background:url('icons/icon-play.png') no-repeat center center;
 }
 
 .icon-sum{
@@ -161,7 +170,15 @@
 }
 .l-btn:hover .icon-filter{
 	background-image:url('icons/filter-on.png'); 
-} 
+}
+.l-btn:hover .icon-play{
+	background-image:url('icons/icon-play-on.png');
+}
+
+.l-btn:hover .icon-stop{
+	background-image:url('icons/stop-on.png');
+}
+
 
 /* 自定义样式 */
 .icon-export{

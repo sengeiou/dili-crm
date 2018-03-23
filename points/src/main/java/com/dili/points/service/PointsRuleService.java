@@ -4,6 +4,7 @@ import com.dili.points.domain.PointsRule;
 import com.dili.ss.base.BaseService;
 
 import java.awt.*;
+import java.util.Map;
 
 /**
  * 由MyBatis Generator工具自动生成
@@ -11,9 +12,10 @@ import java.awt.*;
  */
 public interface PointsRuleService extends BaseService<PointsRule, Long> {
 
-    int insertPointRule(PointsRule pointsRule, String numberJson, String moneyJson, String payMethodJson);
+    void insertPointRule(PointsRule pointsRule, String numberJson, String moneyJson, String payMethodJson);
 
-    int updatePointRule(PointsRule pointsRule, String numberJson, String moneyJson, String payMethodJson);
+    void updatePointRule(PointsRule pointsRule, String numberJson, String moneyJson, String payMethodJson);
 
     void startPointRule(PointsRule pointsRule,int yn);
+    void buildConditionParameter(Map map);
 }

@@ -3,13 +3,16 @@ package com.dili.points.service.impl;
 import com.alibaba.fastjson.JSON;
 import com.dili.points.constant.Constants;
 import com.dili.points.dao.PointsRuleMapper;
+import com.dili.points.domain.DataDictionaryValue;
 import com.dili.points.domain.PointsRule;
 import com.dili.points.domain.PointsRuleLog;
 import com.dili.points.domain.RuleCondition;
+import com.dili.points.rpc.DataDictionaryValueRpc;
 import com.dili.points.service.PointsRuleLogService;
 import com.dili.points.service.PointsRuleService;
 import com.dili.points.service.RuleConditionService;
 import com.dili.ss.base.BaseServiceImpl;
+import com.dili.ss.domain.BaseOutput;
 import com.dili.ss.dto.DTOUtils;
 import com.dili.sysadmin.sdk.session.SessionContext;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,6 +20,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 /**
  * 由MyBatis Generator工具自动生成
@@ -31,19 +35,20 @@ public class PointsRuleServiceImpl extends BaseServiceImpl<PointsRule, Long> imp
     @Autowired
     private PointsRuleLogService pointsRuleLogService;
 
+    @Autowired
+    private DataDictionaryValueRpc dataDictionaryValueRpc;
 
     public PointsRuleMapper getActualDao() {
         return (PointsRuleMapper) getDao();
     }
 
     @Override
-    public int insertPointRule(PointsRule pointsRule, String numberJson, String moneyJson, String payMethodJson) {
+    public void insertPointRule(PointsRule pointsRule, String numberJson, String moneyJson, String payMethodJson) {
         pointsRule.setCreatedId(SessionContext.getSessionContext().getUserTicket().getId());
         pointsRule.setYn(0);
         getActualDao().insertSelective(pointsRule);
         savelog(pointsRule.getId());
         makeRuleCondition(pointsRule, numberJson, moneyJson, payMethodJson);
-        return 0;
     }
 
     /**
@@ -76,14 +81,13 @@ public class PointsRuleServiceImpl extends BaseServiceImpl<PointsRule, Long> imp
     }
 
     @Override
-    public int updatePointRule(PointsRule pointsRule, String numberJson, String moneyJson, String payMethodJson) {
+    public void updatePointRule(PointsRule pointsRule, String numberJson, String moneyJson, String payMethodJson) {
         pointsRule.setModified(new Date());
         pointsRule.setModifiedId(SessionContext.getSessionContext().getUserTicket().getId());
         getActualDao().updateByPrimaryKeySelective(pointsRule);
         savelog(pointsRule.getId());
         ruleConditionService.deleteByRuleId(pointsRule.getId());
         makeRuleCondition(pointsRule, numberJson, moneyJson, payMethodJson);
-        return 0;
     }
 
     @Override
@@ -98,6 +102,17 @@ public class PointsRuleServiceImpl extends BaseServiceImpl<PointsRule, Long> imp
         savelog(pointsRule.getId());
     }
 
+    @Override
+    public void buildConditionParameter(Map map) {
+        BaseOutput<List<DataDictionaryValue>> output = dataDictionaryValueRpc.listByDdId(23L);
+        map.put("conditionType", JSON.toJSONString(output.getData()));
+        map.put("payMethod", JSON.toJSONString(dataDictionaryValueRpc.listByDdId(19L).getData()));
+    }
+
+    /**
+     * 生成操作日志
+     * @param ruleId
+     */
     private void savelog(Long ruleId){
         PointsRuleLog log = DTOUtils.newDTO(PointsRuleLog.class);
         log.setCreated(new Date());

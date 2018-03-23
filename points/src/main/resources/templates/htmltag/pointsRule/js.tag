@@ -212,7 +212,7 @@
     $.extend($.fn.validatebox.defaults.rules, {
         big: {
             validator: function (value, param) {
-                return value > $(param[0]).val();
+                return parseFloat(value) > parseFloat($(param[0]).val());
             },
             message: '必须大于起始值'
         }
