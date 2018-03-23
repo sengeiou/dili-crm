@@ -128,6 +128,16 @@
                     </tr>
                     </thead>
                 </table>
+
+                <table class="easyui-datagrid" id="dg_log" title="操作日志" sortName="created" sortOrder="desc" style="width:100%;"
+                       data-options="singleSelect:true,collapsible:false,method:'get',style:{marginTop:20}">
+                    <thead>
+                    <tr>
+                        <th data-options="field:'createdId',width:200,_provider:'userProvider'">操作员</th>
+                        <th data-options="field:'created',_provider:'datetimeProvider'">操作时间</th>
+                    </tr>
+                    </thead>
+                </table>
             </div>
         </div>
     </div>
@@ -251,6 +261,13 @@
     $(function () {
         $('#_form').form('load', '${contextPath}/pointsRule/get/${id}');
         $('input[class^=easyui-]').textbox("disable");
+
+        // 操作日志
+        var opts = $("#dg_log").datagrid("options");
+        if (null == opts.url || "" == opts.url) {
+            opts.url = "${contextPath}/pointsRuleLog/listPage?pointsRuleId=${id}";
+        }
+        $("#dg_log").datagrid("load", bindGridMeta2Data("dg_log", {}));
     });
 </script>
 </#body>
