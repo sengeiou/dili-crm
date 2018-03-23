@@ -2,7 +2,6 @@ package com.dili.points.service.impl;
 
 import com.dili.points.dao.CustomerPointsMapper;
 import com.dili.points.domain.Customer;
-import com.dili.points.domain.CustomerDTO;
 import com.dili.points.domain.CustomerPoints;
 import com.dili.points.domain.dto.CustomerApiDTO;
 import com.dili.points.rpc.CustomerRpc;
