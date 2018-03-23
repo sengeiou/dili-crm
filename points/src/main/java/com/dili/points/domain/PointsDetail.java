@@ -1,5 +1,6 @@
 package com.dili.points.domain;
 
+import com.dili.ss.domain.annotation.Like;
 import com.dili.ss.dto.IBaseDomain;
 import com.dili.ss.metadata.FieldEditor;
 import com.dili.ss.metadata.annotation.EditMode;
@@ -27,6 +28,14 @@ public interface PointsDetail extends IBaseDomain {
 
     void setId(Long id);
 
+    @Column(name = "`name`")
+    @FieldDef(label="客户名称", maxLength = 40)
+    @EditMode(editor = FieldEditor.Text, required = false)
+    @Like(Like.BOTH)
+    String getName();
+
+    void setName(String name);
+    
     @Column(name = "`certificate_number`")
     @FieldDef(label="客户证件号", maxLength = 40)
     @EditMode(editor = FieldEditor.Text, required = false)

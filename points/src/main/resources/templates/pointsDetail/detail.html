@@ -13,39 +13,30 @@
                     <table style="padding:10px;">
                         <tr>
                             <td style="padding:5px;">
-                                <input class="easyui-textbox" name="name" id="name" style="width:100%" labelAlign="right" data-options="label:'客户名称:',cls:'noborder', editable:false, readonly:true,hasDownArrow:false, validType:'length[0,40]'" />
+                                <input class="easyui-textbox" name="name" id="name" style="width:100%" labelAlign="right" data-options="label:'客户名称:',value:'${customerPoints.name}',cls:'noborder', editable:false, readonly:true,disabled:true,hasDownArrow:false, validType:'length[0,40]'" />
                             </td>
-                            <td style="padding:5px;">
-                                <input class="easyui-textbox" name="certificateNumber" id="certificateNumber" style="width:100%" labelAlign="right" data-options="label:'客户证件号:',cls:'noborder', editable:false, readonly:true,hasDownArrow:false, validType:'length[0,40]'" />
-                            </td>
-                            <td style="padding:5px;">
-                                <input class="easyui-textbox" name="phone" id="phone" style="width:100%" labelAlign="right" data-options="label:'电话:',cls:'noborder', editable:false, readonly:true,hasDownArrow:false, validType:'length[0,40]'" />
-                            </td>
-                            <td style="padding:5px;">
-                                <input class="easyui-numberbox" name="points" id="points" style="width:100%" labelAlign="right" data-options="label:'积分:',cls:'noborder', editable:false, readonly:true,hasDownArrow:false, validType:'length[0,10]'" />
-                            </td>
-                        </tr>
-                        <tr>
-                            <td style="padding:5px;">
-                                <input class="easyui-numberbox" name="generateWay" id="generateWay" style="width:100%;" labelAlign="right" data-options="label:'获得/使用方式:',labelWidth:100, validType:'length[0,10]'" />
 
+                             <td style="padding:5px;">
+                                <input class="easyui-textbox" name="certificateNumber" id="certificateNumber"                         style="width:100%" labelAlign="right" data-options="label:'客户证件号:',value:'${customerPoints.certificateNumber}',                 cls:'noborder', editable:false, readonly:true,hasDownArrow:false, validType:'length[0,40]'" />
                             </td>
                             <td style="padding:5px;">
-                                <input class="easyui-numberbox" name="inOut" id="inOut" style="width:100%" labelAlign="right" data-options="label:'收支类型:', validType:'length[0,10]'" />
-
+                                <input class="easyui-textbox" name="phone" id="phone"                         style="width:100%" labelAlign="right" data-options="label:'电话:',value:'${customerPoints.phone}',                 cls:'noborder', editable:false, readonly:true,disabled:true,hasDownArrow:false, validType:'length[0,40]'" />
                             </td>
-                      
-                          
                             <td style="padding:5px;">
-                                <input class="easyui-textbox" name="orderCode" id="orderCode" style="width:100%" labelAlign="right" data-options="label:'订单编号:', validType:'length[0,20]'" />
-
+                                <input class="easyui-numberbox" name="points" id="points" style="width:100%" labelAlign="right" data-options="label:'积分:',value:'${customerPoints.available}',cls:'noborder', editable:false, readonly:true,disabled:true,hasDownArrow:false, validType:'length[0,10]'" />
                             </td>
+                       		<td style="padding:5px;display:none">
+                               <input name="inOut" id="inOut" style="width:100%;display:none" data-options="labelAlign:'right', editable:false,value:'10'" panelWidth="auto" panelHeight="auto" label=""/>
+                                <#comboProvider _id="inOut" _provider='dataDictionaryValueProvider' _queryParams='{dd_id:"18"}'/>
+                            </td>
+                            
                         </tr>
                         <tr>
                             <td style="padding-left:28px;padding-top: 10px; padding-bottom: 10px;">
-                                <a href="#" class="easyui-linkbutton" iconCls="icon-search" id="queryBtn"
-                                   onclick="queryGrid()">查询</a>&nbsp;&nbsp;
-                                <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-clear" onclick="clearForm()">清除</a>
+                                <a href="#" class="easyui-linkbutton" id="queryBtn"
+                                   onclick="queryGrid('in')">获得</a>&nbsp;&nbsp;
+                                    <a href="#" class="easyui-linkbutton"  id="queryBtn"
+                                   onclick="queryGrid('out')">使用</a>&nbsp;&nbsp;
                             </td>
                         </tr>
                     </table>
@@ -74,15 +65,10 @@
                         <th data-options="field:'balance',   sortable:true, order:'asc', align:'center', resizable:'true', fixed:'false'">
                             积分余额
                         </th>
-                        <th data-options="field:'generateWay',   sortable:true, order:'asc', align:'center', resizable:'true', fixed:'false'">
-                            获得/使用方式
+                        <th data-options="field:'generateWay',   _provider:'dataDictionaryValueProvider', _queryParams:{dd_id:17},  sortable:true, order:'asc', align:'center', resizable:'true', fixed:'false'">
+               	来源
                         </th>
-                        <th data-options="field:'inOut',   sortable:true, order:'asc', align:'center', resizable:'true', fixed:'false'">
-                            收支类型
-                        </th>
-                        <th data-options="field:'sourceSystem',   sortable:true, order:'asc', align:'center', resizable:'true', fixed:'false'">
-                            来源系统
-                        </th>
+                       
                         <th data-options="field:'notes',   sortable:true, order:'asc', align:'center', resizable:'true', fixed:'false'">
                             备注
                         </th>
@@ -176,10 +162,11 @@
     <!-- style & script 分隔线 -->
     <!-- ====================================================================================================================== -->
     <script type="text/javascript">
-    $("#_phone").textbox("setValue", "${customerPoints.phone}");
-    $("#_name").textbox("setValue", "${customerPoints.name}");
-    $("#_certificateNumber").textbox("setValue", "${customerPoints.certificateNumber}");
-    $("#_total").textbox("setValue", "${customerPoints.total}");
+    //$("#phone").textbox("setValue", "${customerPoints.phone}");
+    //$("#name").textbox("setValue", "${customerPoints.name}");
+    //$("#certificateNumber").textbox("setValue", "${customerPoints.certificateNumber}");
+   // $("#total").textbox("setValue", "${customerPoints.total}");
+    //alert("${customerPoints.certificateNumber}")
         //打开新增窗口
         function openInsert(){
             $('#dlg').dialog('open');
@@ -269,21 +256,53 @@
 
         }
         //表格查询
-        function queryGrid() {
+        function queryGrid(inOut) {
+        	if(typeof(inOut)!="undefined"){
+        		if(inOut!='in'&&inOut!='out'){
+        			inOut='in';
+        		}
+        	}else{
+        		inOut='in';
+        	}
+        	var generateWaycolumn=$('#grid').datagrid('getColumnOption','generateWay');                            
+            if(inOut=='in')
+            {           
+            	generateWaycolumn.title='来源';
+               	$("#inOut").combobox("setText", '收入');
+            	$("#inOut").combobox("setValue", '10');
+            }
+            else
+            {  
+            	
+            	generateWaycolumn.title='使用方式';    
+            	$("#inOut").combobox("setText", '支出');
+            	$("#inOut").combobox("setValue", '20');
+            }
+            
+           
             var opts = $("#grid").datagrid("options");
+            //重新渲染修改表格列
+            opts.url='';
+            $('#grid').datagrid();
+            
             if (null == opts.url || "" == opts.url) {
                 opts.url = "${contextPath}/pointsDetail/listPage";
             }
             if(!$('#form').form("validate")){
                 return;
             }
+           
             $("#grid").datagrid("load", bindGridMeta2Form("grid", "form"));
         }
 
 
         //清空表单
         function clearForm() {
-            $('#form').form('clear');
+           // $('#form').form('clear');
+
+            $("#generateWay").textbox("setValue", "");
+            $("#inOut").combobox("setValue", "");
+            $("#orderCode").textbox("setValue", "");
         }
 
         //表格表头右键菜单
@@ -320,6 +339,7 @@
          *          表单提交需执行的任务
          */
         $(function () {
+        	//$('#inOut').next(".combo").hide();
             bindFormEvent("form", "certificateNumber", queryGrid);
             bindFormEvent("_form", "_certificateNumber", saveOrUpdate, function (){$('#dlg').dialog('close');});
             if (document.addEventListener) {

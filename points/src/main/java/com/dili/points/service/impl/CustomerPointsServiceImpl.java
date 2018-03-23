@@ -1,5 +1,6 @@
 package com.dili.points.service.impl;
 
+import com.alibaba.fastjson.JSONObject;
 import com.dili.points.dao.CustomerPointsMapper;
 import com.dili.points.domain.Customer;
 import com.dili.points.domain.CustomerPoints;
@@ -23,62 +24,80 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 /**
- * 由MyBatis Generator工具自动生成
- * This file was generated on 2018-03-20 11:29:30.
+ * 由MyBatis Generator工具自动生成 This file was generated on 2018-03-20 11:29:30.
  */
 @Service
 public class CustomerPointsServiceImpl extends BaseServiceImpl<CustomerPoints, Long> implements CustomerPointsService {
-	@Autowired CustomerRpc customerRpc;
-    public CustomerPointsMapper getActualDao() {
-        return (CustomerPointsMapper)getDao();
-    }
-    public DTO findCustomerPointsByCertificateNumber(String certificateNumber) {
-    	
-    	
-    	return null;
-    }
-    public EasyuiPageOutput listCustomerPointsByCustomer(CustomerApiDTO customer) {
+	@Autowired
+	CustomerRpc customerRpc;
 
-    	BaseOutput<List<Customer>>baseOut=	customerRpc.list(customer);
-    	if(baseOut.isSuccess()) {
-        	List<Customer>customerList=baseOut.getData().subList(0, 10);
-        	List<String>certificateNumbers=customerList.stream().map(Customer::getCertificateNumber).collect(Collectors.toList());
-        	
-        	
-        	CustomerPoints example=DTOUtils.newDTO(CustomerPoints.class);
-        	example.setCertificateNumbers(certificateNumbers);
-        	example.setPage(customer.getPage());
-        	example.setRows(customer.getRows());
-        	BasePage<CustomerPoints> basePage=	this.listPageByExample(example);
-        	Map<String,CustomerPoints>map=basePage.getDatas().stream().collect(Collectors.toMap(CustomerPoints::getCertificateNumber, cp->cp));
-        	
-        	
-        	List<DTO>resultList=customerList.stream().map(c->{
-        		CustomerPoints cp=map.get(c.getCertificateNumber());
-        		//如果客户没有对应的积分信息,则创建一个新的默认积分信息显示到页面
-        		if(cp==null) {
-        			 cp=DTOUtils.newDTO(CustomerPoints.class);
-        			 cp.setId(c.getId());
-        			 cp.setCertificateNumber(c.getCertificateNumber());
-        			 cp.setAvailable(0);
-        			 cp.setFrozen(0);
-        			 cp.setTotal(0);
-        		}
-        		//将客户的其他信息(名字,组织类型等信息附加到积分信息)
-    			DTO dto=DTOUtils.go(cp);
-    			dto.put("name", c.getName());
-    			dto.put("organizationType", c.getOrganizationType());
-    			dto.put("profession", c.getProfession());
-    			dto.put("type", c.getType());
-    			dto.put("certificateType", c.getCertificateType());
-        		return dto;
-        	}).collect(Collectors.toList());
-        	
+	public CustomerPointsMapper getActualDao() {
+		return (CustomerPointsMapper) getDao();
+	}
 
-    		return new EasyuiPageOutput(10, resultList);
-    	}
-    	
+	public DTO findCustomerPointsByCertificateNumber(String certificateNumber) {
+		CustomerApiDTO dto = DTOUtils.newDTO(CustomerApiDTO.class);
+		dto.setCertificateNumber(certificateNumber);
+		EasyuiPageOutput output = this.listCustomerPointsByCustomer(dto);
+		List<DTO> list = output.getRows();
+		return list.stream().findFirst().orElseGet(() -> {
+			CustomerPoints cp = DTOUtils.newDTO(CustomerPoints.class);
+			cp.setId(0L);
+			cp.setCertificateNumber(certificateNumber);
+			cp.setAvailable(0);
+			cp.setFrozen(0);
+			cp.setTotal(0);
+			return DTOUtils.go(cp);
+
+		});
+	}
+
+	public EasyuiPageOutput listCustomerPointsByCustomer(CustomerApiDTO customer) {
+		BaseOutput<EasyuiPageOutput> baseOut = customerRpc.listPage(customer);
+		if (baseOut.isSuccess()) {
+			List<JSONObject> jsonList = baseOut.getData().getRows();
+			List<Customer> customerList = jsonList.stream().map(json -> {
+				return (Customer) DTOUtils.as(new DTO(json), Customer.class);
+			}).collect(Collectors.toList());
+			
+			List<String> certificateNumbers = customerList.stream()
+					.map(Customer::getCertificateNumber)
+					.collect(Collectors.toList());
+
+			CustomerPoints example = DTOUtils.newDTO(CustomerPoints.class);
+			example.setCertificateNumbers(certificateNumbers);
+			example.setPage(customer.getPage());
+			example.setRows(customer.getRows());
+			BasePage<CustomerPoints> basePage = this.listPageByExample(example);
+			
+			Map<String, CustomerPoints> map = basePage.getDatas().stream()
+					.collect(Collectors.toMap(CustomerPoints::getCertificateNumber, cp -> cp));
+
+			List<DTO> resultList = customerList.stream().map(c -> {
+				CustomerPoints cp = map.get(c.getCertificateNumber());
+				// 如果客户没有对应的积分信息,则创建一个新的默认积分信息显示到页面
+				if (cp == null) {
+					cp = DTOUtils.newDTO(CustomerPoints.class);
+					cp.setId(c.getId());
+					cp.setCertificateNumber(c.getCertificateNumber());
+					cp.setAvailable(0);
+					cp.setFrozen(0);
+					cp.setTotal(0);
+				}
+				// 将客户的其他信息(名字,组织类型等信息附加到积分信息)
+				DTO dto = DTOUtils.go(cp);
+				dto.put("name", c.getName());
+				dto.put("organizationType", c.getOrganizationType());
+				dto.put("profession", c.getProfession());
+				dto.put("type", c.getType());
+				dto.put("certificateType", c.getCertificateType());
+				return dto;
+			}).collect(Collectors.toList());
+
+			return new EasyuiPageOutput(baseOut.getData().getTotal(), resultList);
+		}
+
 		return new EasyuiPageOutput(0, Collections.emptyList());
-    	
-    }
+
+	}
 }

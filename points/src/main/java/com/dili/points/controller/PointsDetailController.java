@@ -44,6 +44,7 @@ public class PointsDetailController {
     	modelMap.put("customerPoints", customerPoints);
         return "pointsDetail/detail";
     }
+    
     @ApiOperation(value="查询PointsDetail", notes = "查询PointsDetail，返回列表信息")
     @ApiImplicitParams({
 		@ApiImplicitParam(name="PointsDetail", paramType="form", value = "PointsDetail的form信息", required = false, dataType = "string")
@@ -62,6 +63,18 @@ public class PointsDetailController {
         return pointsDetailService.listEasyuiPageByExample(pointsDetail, true).toString();
     }
 
+    
+    @ApiOperation("手工调整PointsDetail")
+    @ApiImplicitParams({
+		@ApiImplicitParam(name="PointsDetail", paramType="form", value = "PointsDetail的form信息", required = true, dataType = "string")
+	})
+    @RequestMapping(value="/mannuallyInsert", method = {RequestMethod.GET, RequestMethod.POST})
+    public @ResponseBody BaseOutput mannuallyInsert(PointsDetail pointsDetail) {
+    	pointsDetail.setGenerateWay(50);//50 手工调整
+        pointsDetailService.insertSelective(pointsDetail);
+        return BaseOutput.success("新增成功");
+    }
+    
     @ApiOperation("新增PointsDetail")
     @ApiImplicitParams({
 		@ApiImplicitParam(name="PointsDetail", paramType="form", value = "PointsDetail的form信息", required = true, dataType = "string")
