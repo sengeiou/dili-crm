@@ -20,6 +20,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+import com.dili.ss.metadata.ValueProviderUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -35,7 +36,8 @@ public class CustomerPointsServiceImpl extends BaseServiceImpl<CustomerPoints, L
 		return (CustomerPointsMapper) getDao();
 	}
 
-	public DTO findCustomerPointsByCertificateNumber(String certificateNumber) {
+	@Override
+    public DTO findCustomerPointsByCertificateNumber(String certificateNumber) {
 		CustomerApiDTO dto = DTOUtils.newDTO(CustomerApiDTO.class);
 		dto.setCertificateNumber(certificateNumber);
 		EasyuiPageOutput output = this.listCustomerPointsByCustomer(dto);
@@ -52,7 +54,8 @@ public class CustomerPointsServiceImpl extends BaseServiceImpl<CustomerPoints, L
 		});
 	}
 
-	public EasyuiPageOutput listCustomerPointsByCustomer(CustomerApiDTO customer) {
+	@Override
+    public EasyuiPageOutput listCustomerPointsByCustomer(CustomerApiDTO customer) {
 		BaseOutput<EasyuiPageOutput> baseOut = customerRpc.listPage(customer);
 		if (baseOut.isSuccess()) {
 			List<JSONObject> jsonList = baseOut.getData().getRows();
@@ -73,7 +76,7 @@ public class CustomerPointsServiceImpl extends BaseServiceImpl<CustomerPoints, L
 			Map<String, CustomerPoints> map = basePage.getDatas().stream()
 					.collect(Collectors.toMap(CustomerPoints::getCertificateNumber, cp -> cp));
 
-			List<DTO> resultList = customerList.stream().map(c -> {
+			List<CustomerPoints> resultList = customerList.stream().map(c -> {
 				CustomerPoints cp = map.get(c.getCertificateNumber());
 				// 如果客户没有对应的积分信息,则创建一个新的默认积分信息显示到页面
 				if (cp == null) {
@@ -85,18 +88,22 @@ public class CustomerPointsServiceImpl extends BaseServiceImpl<CustomerPoints, L
 					cp.setTotal(0);
 				}
 				// 将客户的其他信息(名字,组织类型等信息附加到积分信息)
-				DTO dto = DTOUtils.go(cp);
-				dto.put("name", c.getName());
-				dto.put("organizationType", c.getOrganizationType());
-				dto.put("profession", c.getProfession());
-				dto.put("type", c.getType());
-				dto.put("certificateType", c.getCertificateType());
-				return dto;
+                cp.aset("name", c.getName());
+				cp.aset("organizationType", c.getOrganizationType());
+				cp.aset("profession", c.getProfession());
+				cp.aset("type", c.getType());
+				cp.aset("certificateType", c.getCertificateType());
+				return cp;
 			}).collect(Collectors.toList());
-
-			return new EasyuiPageOutput(baseOut.getData().getTotal(), resultList);
+            //提供者转换
+            List<Map> datas = null;
+            try {
+                datas = ValueProviderUtils.buildDataByProvider(customer, resultList);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            return new EasyuiPageOutput(baseOut.getData().getTotal(), datas);
 		}
-
 		return new EasyuiPageOutput(0, Collections.emptyList());
 
 	}
