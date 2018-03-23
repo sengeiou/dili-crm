@@ -2,13 +2,17 @@ package com.dili.points.service.impl;
 
 import com.dili.points.dao.CustomerPointsMapper;
 import com.dili.points.dao.PointsDetailMapper;
+import com.dili.points.domain.Customer;
 import com.dili.points.domain.CustomerPoints;
 import com.dili.points.domain.PointsDetail;
+import com.dili.points.domain.dto.CustomerApiDTO;
+import com.dili.points.rpc.CustomerRpc;
 import com.dili.points.service.PointsDetailService;
 import com.dili.ss.base.BaseServiceImpl;
 import com.dili.ss.dto.DTOUtils;
 
 import java.util.Date;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -25,25 +29,34 @@ public class PointsDetailServiceImpl extends BaseServiceImpl<PointsDetail, Long>
 
 	@Autowired
 	CustomerPointsMapper customerPointsMapper;
-
+	@Autowired
+	CustomerRpc customerRpc;
 	public int insert(PointsDetail pointsDetail) {
 		CustomerPoints example = DTOUtils.newDTO(CustomerPoints.class);
 		example.setCertificateNumber(pointsDetail.getCertificateNumber());
 		// 如果用户积分不存在,则先插入用户积分
-		CustomerPoints customerPoints = this.customerPointsMapper.selectByExample(example).stream().findFirst()
+		CustomerPoints customerPoints = this.customerPointsMapper.select(example).stream().findFirst()
 				.orElseGet(() -> {
-
-					CustomerPoints cp = DTOUtils.newDTO(CustomerPoints.class);
-					cp.setAvailable(0);
-					cp.setCertificateNumber(pointsDetail.getCertificateNumber());
-					cp.setCreated(new Date());
-					cp.setFrozen(0);
-					cp.setTotal(0);
-					this.customerPointsMapper.insert(cp);
-					return cp;
-
+					CustomerApiDTO customer=DTOUtils.newDTO(CustomerApiDTO.class);
+					customer.setCertificateNumber(pointsDetail.getCertificateNumber());
+					Customer c=customerRpc.list(customer).getData().stream().findFirst().orElseGet(null);
+					if(c!=null) {
+						CustomerPoints cp = DTOUtils.newDTO(CustomerPoints.class);
+						cp.setAvailable(0);
+						cp.setId(c.getId());
+						cp.setCertificateNumber(pointsDetail.getCertificateNumber());
+						cp.setCreated(new Date());
+						cp.setFrozen(0);
+						cp.setTotal(0);
+						this.customerPointsMapper.insertExact(cp);
+						return cp;
+					}
+					return null;
 				});
-
+		//无法找到客户信息
+		if(customerPoints==null) {
+			return 0;
+		}
 		Integer points = pointsDetail.getPoints();
 		if (points == null) {
 			pointsDetail.setPoints(0);
@@ -57,17 +70,17 @@ public class PointsDetailServiceImpl extends BaseServiceImpl<PointsDetail, Long>
 
 		// 计算用户可用积分和总积分
 		customerPoints.setAvailable(customerPoints.getAvailable() + points);
-		// 如果可用积分小于0,则重设置为0
-		if (customerPoints.getAvailable() < 0) {
-			customerPoints.setAvailable(0);
-		}
+//		// 如果可用积分小于0,则重设置为0
+//		if (customerPoints.getAvailable() < 0) {
+//			customerPoints.setAvailable(0);
+//		}
 		customerPoints.setTotal(customerPoints.getAvailable() + customerPoints.getFrozen());
 
 		pointsDetail.setBalance(customerPoints.getTotal());
+		pointsDetail.setId(System.currentTimeMillis());
 		this.customerPointsMapper.updateByPrimaryKey(customerPoints);
-		this.customerPointsMapper.insert(customerPoints);
-
-		return super.insert(pointsDetail);
+//return 0;
+		return super.insertSelective(pointsDetail);
 	}
 
 	public PointsDetail manullyGeneratePointsDetail(PointsDetail pointsDetail) {

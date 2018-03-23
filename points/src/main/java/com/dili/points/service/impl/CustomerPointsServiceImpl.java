@@ -74,7 +74,7 @@ public class CustomerPointsServiceImpl extends BaseServiceImpl<CustomerPoints, L
 			Map<String, CustomerPoints> map = basePage.getDatas().stream()
 					.collect(Collectors.toMap(CustomerPoints::getCertificateNumber, cp -> cp));
 
-			List<CustomerPoints> resultList = customerList.stream().map(c -> {
+			List<DTO> resultList = customerList.stream().map(c -> {
 				CustomerPoints cp = map.get(c.getCertificateNumber());
 				// 如果客户没有对应的积分信息,则创建一个新的默认积分信息显示到页面
 				if (cp == null) {
@@ -86,12 +86,14 @@ public class CustomerPointsServiceImpl extends BaseServiceImpl<CustomerPoints, L
 					cp.setTotal(0);
 				}
 				// 将客户的其他信息(名字,组织类型等信息附加到积分信息)
-                cp.aset("name", c.getName());
-				cp.aset("organizationType", c.getOrganizationType());
-				cp.aset("profession", c.getProfession());
-				cp.aset("type", c.getType());
-				cp.aset("certificateType", c.getCertificateType());
-				return cp;
+				// 将客户的其他信息(名字,组织类型等信息附加到积分信息)
+				DTO dto = DTOUtils.go(cp);
+				dto.put("name", c.getName());
+				dto.put("organizationType", c.getOrganizationType());
+				dto.put("profession", c.getProfession());
+				dto.put("type", c.getType());
+				dto.put("certificateType", c.getCertificateType());
+				return dto;
 			}).collect(Collectors.toList());
             //提供者转换
             List<Map> datas = null;

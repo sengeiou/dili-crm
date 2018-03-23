@@ -48,7 +48,11 @@ public class PointsDetailController {
     	modelMap.put("customerPoints", customerPoints);
         return "pointsDetail/detail";
     }
-    
+    @ApiOperation("跳转到manullyDetail页面")
+    @RequestMapping(value="/manullyDetail.html", method = RequestMethod.GET)
+    public String manullyDetail(ModelMap modelMap) {
+        return "pointsDetail/manullyDetail";
+    }
     @ApiOperation(value="查询PointsDetail", notes = "查询PointsDetail，返回列表信息")
     @ApiImplicitParams({
 		@ApiImplicitParam(name="PointsDetail", paramType="form", value = "PointsDetail的form信息", required = false, dataType = "string")
