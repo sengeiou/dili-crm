@@ -29,10 +29,10 @@ public interface PointsRuleLog extends IBaseDomain {
 
     @Column(name = "`points_rule_id`")
     @FieldDef(label="规则id", maxLength = 20)
-    @EditMode(editor = FieldEditor.Text, required = false)
-    String getPointsRuleId();
+    @EditMode(editor = FieldEditor.Number, required = false)
+    Long getPointsRuleId();
 
-    void setPointsRuleId(String pointsRuleId);
+    void setPointsRuleId(Long pointsRuleId);
 
     @Column(name = "`created_id`")
     @FieldDef(label="创建人")

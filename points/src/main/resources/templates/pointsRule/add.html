@@ -32,22 +32,25 @@
                     <table align="center" width="94%">
                         <tr>
                             <td style="padding-top:10px;" width="25%">
-                                <select class="easyui-combobox inputWidth" name="businessType" id="businessType"
-                                        data-options="editable:false,labelAlign:'right',label:'交易类型:'">
-                                    <option value="1">交易</option>
-                                </select>
+                                <input class="easyui-combobox inputWidth" name="businessType" id="businessType"
+                                       data-options="required:true,editable:false,labelAlign:'right',label:'交易类型:'"/>
+                                <#comboProvider _id="businessType" _provider='dataDictionaryValueProvider'
+                                _queryParams='{dd_id:"20"}'/>
+
                             </td>
                             <td style="padding-top:10px;" width="25%">
-                                <select class="easyui-combobox inputWidth" name="customerType" id="customerType"
-                                        data-options="editable:false,labelAlign:'right',label:'生效对象:'">
-                                    <option value="1">卖家</option>
-                                </select>
+                                <input class="easyui-combobox inputWidth" name="customerType" id="customerType"
+                                       data-options="required:true,editable:false,labelAlign:'right',label:'生效对象:'"/>
+                                <#comboProvider _id="customerType" _provider='dataDictionaryValueProvider'
+                                _queryParams='{dd_id:"4"}'/>
                             </td>
 
                             <td style="padding-top:10px;padding-left:10px;" width="25%">
                                 <input class="easyui-textbox inputWidth" name="name" id="name"
-                                       data-options="labelAlign:'right',label:'&lowast;规则名称:', validType:'length[0,40]'"
-                                       required="true"/>
+                                       data-options="invalidMessage:'名称必填，且不能重复',labelAlign:'right',label:'&lowast;规则名称:', validType:{
+		length:[1,20],
+		remote:['${contextPath}/pointsRule/checkName','name']
+	}" required="true"/>
                             </td>
                             <td style="padding-top:10px;padding-left:10px;" width="25%">
                                 <input class="easyui-textbox inputWidth" name="code" id="code"
@@ -65,17 +68,18 @@
                     <table align="center" width="94%">
                         <tr>
                             <td style="padding-top:10px;" width="25%">
-                                <select class="easyui-combobox inputWidth" name="computingStandard"
-                                        id="computingStandard"
-                                        data-options="editable:false,labelAlign:'right',label:'计算标准:'">
-                                    <option value="2">交易</option>
-                                </select>
+                                <input class="easyui-combobox inputWidth" name="computingStandard"
+                                       id="computingStandard"
+                                       data-options="required:true,editable:false,labelAlign:'right',label:'计算标准:'"/>
+                                <#comboProvider _id="computingStandard" _provider='dataDictionaryValueProvider'
+                                _queryParams='{dd_id:"21"}'/>
                             </td>
 
                             <td style="padding-top:10px;padding-left:10px;" width="25%">
-                                <input class="easyui-textbox inputWidth" name="computingParameter"
+                                <input class="easyui-numberbox inputWidth" name="computingParameter"
                                        id="computingParameter"
-                                       data-options="labelAlign:'right',label:'&lowast;计算参数:', validType:'length[0,40]'"
+                                       data-options="min:0.1,precision:2
+,labelAlign:'right',label:'&lowast;计算参数:'"
                                        required="true"/>
                             </td>
                             <td style="padding-top:10px;" width="25%"></td>
@@ -91,7 +95,7 @@
                        data-options="singleSelect:true,collapsible:false,method:'get',toolbar:toolbar,style:{marginTop:20}">
                     <thead>
                     <tr>
-                        <th data-options="field:'displayText',width:200">交易量（公斤）</th>
+                        <th data-options="formatter:formatDisplay,field:'displayText',width:200">交易量（公斤）</th>
                         <th data-options="field:'weight',width:100">权重值</th>
                         <th data-options="field:'conditionType',width:100,hidden:true"></th>
                         <th data-options="field:'value',width:100,hidden:true"></th>
@@ -105,7 +109,7 @@
                        data-options="singleSelect:true,collapsible:false,method:'get',toolbar:toolbarMoney,style:{marginTop:20}">
                     <thead>
                     <tr>
-                        <th data-options="field:'displayText',width:200">交易额（元）</th>
+                        <th data-options="formatter:formatDisplay,field:'displayText',width:200">交易额（元）</th>
                         <th data-options="field:'weight',width:100">权重值</th>
                         <th data-options="field:'conditionType',width:100,hidden:true"></th>
                         <th data-options="field:'value',width:100,hidden:true"></th>
@@ -138,11 +142,9 @@
         <table cellpadding="5" id="tb" style="width: 100%">
             <tr>
                 <td><span style="display:inline-block;line-height: 26px">条件:</span></td>
-                <td><select class="easyui-combobox inputWidth" name="conditionType" id="conditionType"
-                            data-options="editable:false,labelAlign:'right'">
-                    <option value="179">区间</option>
-                    <option value="181">大于</option>
-                </select></td>
+                <td><input class="easyui-combobox inputWidth" name="conditionType" id="conditionType"
+                           data-options="required:true,editable:false,labelAlign:'right'">
+                </td>
             </tr>
             <tr id="number_range">
                 <td><span style="display:inline-block;line-height: 26px">条件值:</span></td>
@@ -164,7 +166,7 @@
                 <td><span style="display:inline-block;line-height: 26px">权重值:</span></td>
                 <td>
                     <input type="text" required="true" id="weight" class="easyui-numberbox" name="weight"
-                           style="float: left;margin-top: 6px">
+                           style="float: left;margin-top: 6px" data-options="min:1,precision:2">
                 </td>
             </tr>
         </table>
@@ -185,16 +187,17 @@
         <table cellpadding="5" style="width: 100%">
             <tr>
                 <td><span style="display:inline-block;line-height: 26px">支付方式:</span></td>
-                <td><select class="easyui-combobox inputWidth" name="conditionType" id="payConditionType"
-                            data-options="editable:false,labelAlign:'right'">
-                    <option value="1">园区卡</option>
-                    <option value="2">现金</option>
-                </select></td>
+                <td><input class="easyui-combobox inputWidth" name="conditionType" id="payConditionType"
+                           data-options="required:true,editable:false,labelAlign:'right'">
+                    <#comboProvider _id="payConditionType" _provider='dataDictionaryValueProvider'
+                    _queryParams='{dd_id:"19"}'/>
+                </td>
             </tr>
             <tr>
                 <td><span style="display:inline-block;line-height: 26px">权重值:</span></td>
                 <td>
-                    <input required="true" type="text" id="payWeight" class="easyui-numberbox" name="weight"
+                    <input required="true" data-options="min:1,precision:2" type="text" id="payWeight"
+                           class="easyui-numberbox" name="weight"
                            style="float: left;margin-top: 6px">
                 </td>
             </tr>
@@ -209,7 +212,6 @@
 </div>
 <#pointsRule_js/>
 <script type="text/javascript">
-
     function submitForm(obj) {
         $('#_form').form('submit', {
             url: "${contextPath}/pointsRule/insert",
@@ -224,9 +226,15 @@
             },
             success: function (data) {
                 var data = eval('(' + data + ')');
-                if(data.code == 200){
-                    $.messager.alert('提示', '修改成功');
-                    window.location.href = '${contextPath}/pointsRule/index.html';
+                if (data.code == 200) {
+                    $.messager.alert({
+                        title: '提示',
+                        msg: '保存成功!',
+                        fn: function () {
+                            window.location.href = '${contextPath}/pointsRule/index.html';
+                        }
+                    });
+
                 }
             },
             error: function () {
@@ -235,27 +243,5 @@
             }
         });
     }
-
-
-    $.extend($.fn.validatebox.defaults.rules, {
-        big: {
-            validator: function (value, param) {
-                return value > $(param[0]).val();
-            },
-            message: '必须大于起始值'
-        }
-    });
-
-
-    $(function () {
-        $('#conditionType').combobox({
-            onLoadSuccess: function () {
-                success();
-            },
-            onChange: function (newValue) {
-                change(newValue)
-            }
-        });
-    });
 </script>
 </#body>

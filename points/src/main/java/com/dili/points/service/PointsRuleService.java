@@ -15,5 +15,5 @@ public interface PointsRuleService extends BaseService<PointsRule, Long> {
 
     int updatePointRule(PointsRule pointsRule, String numberJson, String moneyJson, String payMethodJson);
 
-    void startPointRule(PointsRule pointsRule);
+    void startPointRule(PointsRule pointsRule,int yn);
 }

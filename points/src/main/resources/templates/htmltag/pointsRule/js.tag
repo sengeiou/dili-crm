@@ -1,5 +1,5 @@
 <script type="text/javascript">
-    var rangeCode = 179;
+    var rangeCode = 60; //区间条件CODE
     var toolbar = [{
         text: '新增',
         iconCls: 'icon-add',
@@ -41,7 +41,6 @@
             $('#dg_0').datagrid('deleteRow', index);
         }
     }];
-
 
     var toolbarMoney = [{
         text: '新增',
@@ -85,7 +84,6 @@
         }
     }];
 
-
     var toolbarPay = [{
         text: '新增',
         iconCls: 'icon-add',
@@ -120,33 +118,20 @@
         }
     }];
 
+    // 保存交易额，交易量
     function saveNumber() {
         if (!$("#number_form").form('validate')) {
             return;
         }
-        var edit_type = $("#edit_type").val();
-        var type = $("#type").val();
-        var c_type = $("#conditionType").combobox("getValue");
-        var value = $("#value").val();
-        var start_value = $("#startValue").val();
-        var end_value = $("#endValue").val();
-        var weight = $("#weight").val();
-        var displayText = "";
-        if ($("#conditionType").combobox("getValue") == rangeCode) {
-            displayText = start_value + " - " + end_value;
-        } else {
-            displayText = $("#conditionType").combobox("getText") + value;
-        }
-        var dg = $("#dg_" + type);
+        var dg = $("#dg_" + $("#type").val());
         var row = {
-            conditionType: c_type,
-            value: value,
-            startValue: start_value,
-            endValue: end_value,
-            weight: weight,
-            displayText: displayText
+            conditionType: $("#conditionType").combobox("getValue"),
+            value: $("#value").val(),
+            startValue: $("#startValue").val(),
+            endValue: $("#endValue").val(),
+            weight: $("#weight").val()
         };
-        if (edit_type == 0) {
+        if ($("#edit_type").val() == 0) {
             dg.datagrid('appendRow', row);
         } else {
             var index = dg.datagrid('getRowIndex');
@@ -161,14 +146,14 @@
 
 
     function savePay() {
-        var edit_type = $("#pay_edit_type").val();
         var dg = $("#dg_2");
         var row = {
             value: $("#payConditionType").combobox("getValue"),
             weight: $("#payWeight").numberbox('getValue'),
+            conditionType: $("#payConditionType").combobox("getValue"),
             displayText: $("#payConditionType").combobox("getText")
         };
-        if (edit_type == 0) {
+        if ($("#pay_edit_type").val() == 0) {
             dg.datagrid('appendRow', row);
         } else {
             var index = dg.datagrid('getRowIndex');
@@ -195,6 +180,7 @@
         if (value == rangeCode) {
             $("#number_range").show();
             $("#value").numberbox('disable');
+            $("#value").numberbox('setValue','');
             $("#startValue").numberbox('enable');
             $("#endValue").numberbox('enable');
             $("#number_other").hide();
@@ -202,27 +188,24 @@
             $("#number_range").hide();
             $("#value").numberbox('enable');
             $("#startValue").numberbox('disable');
+            $("#startValue").numberbox('setValue','');
             $("#endValue").numberbox('disable');
+            $("#endValue").numberbox('setValue','');
             $("#number_other").show();
         }
     }
-
-    function submitForm(obj) {
-        $('#_form').form('submit', {
-            url: "${contextPath}/pointsRule/insert",
-            onSubmit: function () {
-                if ($("#_form").form('validate')) {
-                    $(obj).linkbutton('disable');
+    function formatDisplay(value, row, index) {
+        if (row.conditionType == rangeCode) {
+            return row.startValue + " - " + row.endValue;
+        } else{
+           var data =  $("#conditionType").combobox("getData");
+            for(var d in data){
+                if(data[d].value == row.conditionType ){
+                    return data[d].text + "" + row.value;
                 }
-                $("#numberJson").val(JSON.stringify($("#dg_0").datagrid("getData").rows));
-                $("#moneyJson").val(JSON.stringify($("#dg_1").datagrid("getData").rows));
-                $("#payMethodJson").val(JSON.stringify($("#dg_2").datagrid("getData").rows));
-                return $("#_form").form('validate');
-            },
-            success: function (data) {
-
             }
-        });
+            return "";
+        }
     }
 
 
@@ -234,16 +217,35 @@
             message: '必须大于起始值'
         }
     });
-
-
     $(function () {
-        $('#conditionType').combobox({
+        var _comboProviderParamObj_conditionType = {};
+        _comboProviderParamObj_conditionType.provider = 'dataDictionaryValueProvider';
+        //仅为simpleValueProvider传入默认参数
+        if (_comboProviderParamObj_conditionType.provider == "simpleValueProvider") {
+            _comboProviderParamObj_conditionType.queryParams = '{dd_id:"23"}';
+            _comboProviderParamObj_conditionType.valueField = 'value';
+            _comboProviderParamObj_conditionType.textField = 'text';
+        } else {
+            _comboProviderParamObj_conditionType.queryParams = '{dd_id:"23"}';
+            _comboProviderParamObj_conditionType.valueField = '';
+            _comboProviderParamObj_conditionType.textField = '';
+        }
+        _comboProviderParamObj_conditionType.table = '';
+
+        //注意，这里只能取到value属性中的值，而无法取到combobox的当前值，因为还没有渲染，渲染以后应该使用getValue方法取值
+        _comboProviderParamObj_conditionType.value = $("#conditionType").val();
+        $("#conditionType").combobox({
             onLoadSuccess: function () {
                 success();
             },
             onChange: function (newValue) {
                 change(newValue)
-            }
+            },
+            url: "/provider/getLookupList"
+            , method: "POST"
+            , valueField: "value"
+            , textField: "text"
+            , queryParams: _comboProviderParamObj_conditionType
         });
     });
 </script>

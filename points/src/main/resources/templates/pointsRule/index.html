@@ -17,20 +17,23 @@
                         <td style="padding:5px;">
                             <input name="customerType" id="customerType" style="width:100%;" editable="false"
                                    labelAlign="right" panelWidth="auto" panelHeight="auto" label="客户类型:"/>
-                            <#comboProvider _id="customerType" _provider='dataDictionaryValueProvider'/>
+                            <#comboProvider _id="customerType" _provider='dataDictionaryValueProvider'
+                            _queryParams='{dd_id:"4"}'/>
 
                         </td>
                         <td style="padding:5px;">
-                            <input class="easyui-numberbox" name="businessType" id="businessType" style="width:100%"
-                                   labelAlign="right" data-options="label:'交易类型:', validType:'length[0,10]'"/>
-
+                            <input class="easyui-combobox" name="businessType" editable="false" id="businessType"
+                                   style="width:100%"
+                                   labelAlign="right" data-options="label:'交易类型:'"/>
+                            <#comboProvider _id="businessType" _provider='dataDictionaryValueProvider'
+                            _queryParams='{dd_id:"20"}'/>
                         </td>
                     </tr>
                     <tr>
                         <td style="padding:5px;">
-                            <input class="easyui-datetimebox" name="created" id="created"
+                            <input class="easyui-datetimebox" name="startCreated" id="startCreated"
                                    labelAlign="right" data-options="label:'创建时间:'" style="width: 200px;"/>
-                            - <input class="easyui-datetimebox" name="modified" id="modified"
+                            - <input class="easyui-datetimebox" name="endCreated" id="endCreated"
                                      labelAlign="right" style="width: 150px;"/>
 
                         </td>
@@ -62,25 +65,28 @@
                align="center" fit="true" striped="true" idField="id">
             <thead>
             <tr>
-                <th data-options="field:'code',   sortable:true, order:'asc', align:'center', resizable:'true', fixed:'false'">
+                <th data-options="field:'code',   sortable:true, order:'asc', align:'center', resizable:'true', fixed:'false',formatter:formatview">
                     规则编码
                 </th>
-                <th data-options="field:'businessType',   sortable:true, order:'asc', align:'center', resizable:'true', fixed:'false'">
+                <th data-options="field:'businessType',   sortable:true, order:'asc', align:'center', resizable:'true', fixed:'false',_provider:'dataDictionaryValueProvider', _queryParams:'{dd_id:20}'">
                     交易类型
                 </th>
-                <th data-options="field:'customerType',  sortable:true, order:'asc', align:'center', resizable:'true', fixed:'false'">
+                <th data-options="field:'customerType',  sortable:true, order:'asc', align:'center', resizable:'true', fixed:'false',_provider:'dataDictionaryValueProvider', _queryParams:'{dd_id:4}'">
                     客户类型
                 </th>
-                <th data-options="field:'name',   sortable:true, order:'asc', align:'center', resizable:'true', fixed:'false'">
+                <th data-options="field:'name',   sortable:true, order:'asc', align:'center', resizable:'true', fixed:'false',formatter:formatview">
                     规则名称
                 </th>
-                <th data-options="field:'computingStandard',   sortable:true, order:'asc', align:'center', resizable:'true', fixed:'false'">
+                <th data-options="field:'computingStandard',   sortable:true, order:'asc', align:'center', resizable:'true', fixed:'false',_provider:'dataDictionaryValueProvider', _queryParams:'{dd_id:21}',formatter:computingStandard">
                     计算标准
                 </th>
-                <th data-options="field:'createdId',   sortable:true, order:'asc', align:'center', resizable:'true', fixed:'false'">
+                <th data-options="field:'ruleCondition',sortable:true, order:'asc', align:'center', resizable:'true', fixed:'false',_provider:'ruleConditionProvider'">
+                    积分权重
+                </th>
+                <th data-options="field:'createdId',   sortable:true, order:'asc', align:'center', resizable:'true', fixed:'false',_provider:'userProvider'">
                     创建人
                 </th>
-                <th data-options="field:'modifiedId',   sortable:true, order:'asc', align:'center', resizable:'true', fixed:'false'">
+                <th data-options="field:'modifiedId',   sortable:true, order:'asc', align:'center', resizable:'true', fixed:'false',_provider:'userProvider'">
                     修改人
                 </th>
                 <th data-options="field:'created',  _provider:'datetimeProvider', sortable:true, order:'asc', align:'center', resizable:'true', fixed:'false'">
@@ -89,7 +95,7 @@
                 <th data-options="field:'modified',  _provider:'datetimeProvider', sortable:true, order:'asc', align:'center', resizable:'true', fixed:'false'">
                     修改时间
                 </th>
-                <th data-options="field:'yn',  _provider:'ynProvider', sortable:true, order:'asc', align:'center', resizable:'true', fixed:'false'">
+                <th data-options="formatter:status,field:'yn',  _provider:'ynProvider', sortable:true, order:'asc', align:'center', resizable:'true', fixed:'false'">
                     状态
                 </th>
             </tr>
@@ -113,8 +119,20 @@
             $.messager.alert('警告', '请选中一条数据');
             return;
         }
-        console.log(selected);
+        if (selected.$_yn == 1) {
+            $.messager.alert('警告', '不能修改启用中的规则,请禁用后重试!');
+            return;
+        }
         window.location.href = "${contextPath}/pointsRule/toUpdate/" + selected.id;
+    }
+
+    function copy() {
+        var selected = $("#grid").datagrid("getSelected");
+        if (null == selected) {
+            $.messager.alert('警告', '请选中一条数据');
+            return;
+        }
+        window.location.href = "${contextPath}/pointsRule/copy/" + selected.id;
     }
 
     function saveOrUpdate() {
@@ -156,12 +174,21 @@
             $.messager.alert('警告', '请选中一条数据');
             return;
         }
-        $.messager.confirm('确认', '您确认想要删除记录吗？', function (r) {
+        if (selected.$_yn == 1) {
+            $.messager.alert('警告', '该规则已启用，无需重复启用!');
+            return;
+        }
+        $.messager.confirm('确认', '您确认想要启用规则吗？', function (r) {
             if (r) {
                 $.ajax({
                     type: "POST",
                     url: "${contextPath}/pointsRule/startPointsRule",
-                    data: selected,
+                    data: {
+                        id: selected.id,
+                        customerType: selected.$_customerType,
+                        businessType: selected.$_businessType,
+                        status: 1
+                    },
                     processData: true,
                     dataType: "json",
                     async: true,
@@ -179,7 +206,41 @@
                 });
             }
         });
+    }
 
+    function off() {
+        var selected = $("#grid").datagrid("getSelected");
+        if (null == selected) {
+            $.messager.alert('警告', '请选中一条数据');
+            return;
+        }
+        if (selected.$_yn == 0) {
+            $.messager.alert('警告', '该规则已启用，无需重复禁用!');
+            return;
+        }
+        $.messager.confirm('确认', '您确认想要禁用规则吗？', function (r) {
+            if (r) {
+                $.ajax({
+                    type: "POST",
+                    url: "${contextPath}/pointsRule/startPointsRule",
+                    data: {id: selected.id, status: 0},
+                    processData: true,
+                    dataType: "json",
+                    async: true,
+                    success: function (data) {
+                        if (data.code == "200") {
+                            $("#grid").datagrid("reload");
+                            $('#dlg').dialog('close');
+                        } else {
+                            $.messager.alert('错误', data.result);
+                        }
+                    },
+                    error: function () {
+                        $.messager.alert('错误', '远程访问失败');
+                    }
+                });
+            }
+        });
     }
 
     //表格查询
@@ -198,7 +259,24 @@
     //清空表单
     function clearForm() {
         $('#form').form('clear');
+        queryGrid();
     }
+
+    function computingStandard(value, row, index) {
+        return row.computingStandard + "*" + row.computingParameter;
+    }
+
+    function status(value, row, index) {
+        if (row.$_yn == 1) {
+            return '<span style="color:red;">' + value + '</span>';
+        }
+        return value;
+    }
+
+    function formatview(value, row, index) {
+        return '<a href="${contextPath}/pointsRule/view/' + row.id + '">' + value + '</a>';
+    }
+
 
     //表格表头右键菜单
     function headerContextMenu(e, field) {
@@ -250,31 +328,38 @@
             <#controls_paginationOpts/>,
             buttons:[
             {
-                iconCls:'icon-add',
-                text:'新增',
-                handler:function(){
+                iconCls: 'icon-add',
+                text: '新增',
+                handler: function () {
                     openInsert();
                 }
             },
             {
-                iconCls:'icon-edit',
-                text:'修改',
-                handler:function(){
+                iconCls: 'icon-edit',
+                text: '修改',
+                handler: function () {
                     openUpdate();
                 }
             },
             {
-                iconCls:'icon-remove',
-                text:'启用',
-                handler:function(){
+                iconCls: 'icon-remove',
+                text: '启用',
+                handler: function () {
                     on();
                 }
             },
             {
-                iconCls:'icon-export',
-                text:'导出',
-                handler:function(){
-                    doExport('grid');
+                iconCls: 'icon-export',
+                text: '禁用',
+                handler: function () {
+                    off();
+                }
+            },
+            {
+                iconCls: 'icon-export',
+                text: '复制',
+                handler: function () {
+                    copy();
                 }
             }
         ]
