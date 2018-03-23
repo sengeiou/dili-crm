@@ -1,5 +1,6 @@
 package com.dili.points.domain;
 
+import com.alibaba.fastjson.annotation.JSONField;
 import com.dili.ss.domain.annotation.Operator;
 import com.dili.ss.dto.IBaseDomain;
 import com.dili.ss.metadata.FieldEditor;

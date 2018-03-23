@@ -202,9 +202,10 @@
                             var sourceSystem=v.sourceSystem?v.sourceSystem:'';
                             var created="";
                             if(v.created){
-                                var date=new Date();
-                                date.setTime(v.created);
-                                created=datetimeFormatter(date);
+//                                var date=new Date();
+//                                date.setTime(v.created);
+//                                created=datetimeFormatter(date);
+                                created = v.created;
                             }else{
                                 created="";
                             }

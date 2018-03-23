@@ -1,4 +1,5 @@
  <#body>
+
     <div class="easyui-layout" fit="true">
         <!-- ====================================================================================================================== -->
         <!-- 上方布局 -->
@@ -51,35 +52,31 @@
       <div region="center" style="width: 100%;" height="auto"  align="center" border="false">
         	<div class="easyui-panel" align="center" style="width:96%;height:100%;" border="false">
             <!-- =========================================================表格========================================================= -->
-            <table class="easyui-datagrid" title="CustomerPoints列表" id="grid" fitColumns="true" noheader="true"
+            <table class="easyui-datagrid" title="客户积分" id="grid" fitColumns="true" noheader="true"
                    pagination="true" pageSize="30" pageNumber="1" pagePosition="top" rownumbers="true" remoteSort="false"
                    loadMsg="数据加载中..." singleSelect="true" method="post" multiSort="false" sortName="certificateNumber"
-                    align="center" fit="true" striped="true"   toolbar="#toolbar" idField="id" data-options="onDblClickRow:openUpdate, onHeaderContextMenu:headerContextMenu">
+                    align="center" fit="true" striped="true"   toolbar="#toolbar" idField="id" data-options="onDblClickRow:openUpdate, showFooter:true, view:footerView, onHeaderContextMenu:headerContextMenu">
                 <thead>
                     <tr>
-                     <th data-options="field:'id',   sortable:true, order:'asc', align:'center', resizable:'true', fixed:'false'">
+                        <th width="10%" data-options="field:'id', sortable:true, order:'asc', align:'center', resizable:'true', fixed:'false'">
                             客户ID
                         </th>
-                         <th data-options="field:'organizationType',  _provider:'dataDictionaryValueProvider', _queryParams:{dd_id:5},  sortable:true, order:'asc', align:'center', resizable:'true', fixed:'false'">
+                         <th width="10%" data-options="field:'organizationType',  _provider:'dataDictionaryValueProvider', _queryParams:{dd_id:5},  sortable:true, order:'asc', align:'center', resizable:'true', fixed:'false'">
                             组织类型
                         </th>
-                         <th data-options="field:'name',   sortable:true, order:'asc', align:'center', resizable:'true', fixed:'false'">
+                         <th width="10%" data-options="field:'name',   sortable:true, order:'asc', align:'center', resizable:'true', fixed:'false'">
                             客户名称
                         </th>
-                        <th data-options="field:'certificateType',   _provider:'dataDictionaryValueProvider', _queryParams:{dd_id:3}, sortable:true, order:'asc', align:'center', resizable:'true', fixed:'false'">
+                        <th width="10%" data-options="field:'certificateType',   _provider:'dataDictionaryValueProvider', _queryParams:{dd_id:3}, sortable:true, order:'asc', align:'center', resizable:'true', fixed:'false'">
                             证件类型
                         </th>
-                        <th data-options="field:'certificateNumber',   sortable:true, order:'asc', align:'center', resizable:'true', fixed:'false'">
+                        <th width="20%" data-options="field:'certificateNumber',   sortable:true, order:'asc', align:'center', resizable:'true', fixed:'false'">
                             证件号
                         </th>
-                        <th data-options="field:'available',   sortable:true, order:'asc', align:'center', resizable:'true', fixed:'false'">
+                        <th width="10%" data-options="field:'available',   sortable:true, order:'asc', align:'center', resizable:'true', fixed:'false'">
                             可用积分
                         </th>
-                     
-                        <th data-options="field:'total',   sortable:true, order:'asc', align:'center', resizable:'true', fixed:'false'">
-                            总积分
-                        </th>
-                        
+
                     </tr>
                 </thead>
             </table>

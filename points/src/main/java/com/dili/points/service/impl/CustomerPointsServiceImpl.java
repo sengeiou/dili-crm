@@ -14,13 +14,11 @@ import com.dili.ss.domain.EasyuiPageOutput;
 import com.dili.ss.dto.DTO;
 import com.dili.ss.dto.DTOUtils;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import com.dili.ss.metadata.ValueProviderUtils;
+import com.google.common.collect.Lists;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -102,7 +100,15 @@ public class CustomerPointsServiceImpl extends BaseServiceImpl<CustomerPoints, L
             } catch (Exception e) {
                 e.printStackTrace();
             }
-            return new EasyuiPageOutput(baseOut.getData().getTotal(), datas);
+            EasyuiPageOutput easyuiPageOutput = new EasyuiPageOutput(baseOut.getData().getTotal(), datas);
+
+            List<Map> footers = Lists.newArrayList();
+            Map footer = new HashMap(1);
+            footer.put("id", "总可用积分");
+            footer.put("organizationType", "1000");
+            footers.add(footer);
+            easyuiPageOutput.setFooter(footers);
+            return easyuiPageOutput;
 		}
 		return new EasyuiPageOutput(0, Collections.emptyList());
 
