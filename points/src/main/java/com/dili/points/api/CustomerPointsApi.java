@@ -3,6 +3,7 @@ package com.dili.points.api;
 import com.alibaba.fastjson.JSONObject;
 import com.dili.points.domain.CustomerPoints;
 import com.dili.points.domain.PointsDetail;
+import com.dili.points.domain.dto.CustomerPointsApiDTO;
 import com.dili.points.service.CustomerPointsService;
 import com.dili.points.service.PointsDetailService;
 import com.dili.ss.domain.BaseOutput;
@@ -62,5 +63,13 @@ public class CustomerPointsApi {
         pointsDetail.setCertificateNumber(jsonObject.getString("certificateNumber"));
         List<PointsDetail> pointsDetails = pointsDetailService.listByExample(pointsDetail);
         return BaseOutput.success().setData(pointsDetails);
+    }
+
+    @ApiOperation(value = "根据客户证件号码查询客户积分信息", notes = "根据客户证件号码查询客户积分信息")
+    @ApiImplicitParams({ @ApiImplicitParam(name = "CustomerPointsApiDTO", paramType = "form", value = "客户积分条件对象", dataType = "string") })
+    @RequestMapping(value = "/listCustomerPoints", method = { RequestMethod.POST })
+    public @ResponseBody
+    BaseOutput<List<CustomerPoints>> listCustomerPoints(CustomerPointsApiDTO customerPointsApiDTO) {
+        return BaseOutput.success().setData(customerPointsService.listByExample(customerPointsApiDTO));
     }
 }

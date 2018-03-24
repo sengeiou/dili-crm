@@ -8,7 +8,9 @@ import com.dili.crm.domain.SystemConfig;
 import com.dili.crm.domain.User;
 import com.dili.crm.service.*;
 import com.dili.ss.dto.DTOUtils;
+import com.dili.ss.metadata.ValuePair;
 import com.dili.ss.metadata.ValueProviderUtils;
+import com.google.common.collect.Maps;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
@@ -37,6 +39,8 @@ public class IndexController {
     SystemConfigService systemConfigService;
     @Autowired
     ChartService chartService;
+    @Autowired
+    private ValueProviderUtils valueProviderUtils;
 
 //    @Autowired
 //    private AmqpTemplate amqpTemplate;
@@ -59,6 +63,14 @@ public class IndexController {
         modelMap.put("chartServer", dataDictionaryValueService.findChartServer());
         modelMap.put("customerAddress", JSONArray.toJSONString(customerService.listCustomerOperating(null)));
         modelMap.put("clientRefreshFrequency", clientRefreshFrequency);
+        Map<String,Object> params =  Maps.newHashMap();
+        JSONObject queryParams = new JSONObject();
+        queryParams.put("dd_id",4);
+        params.put("queryParams", queryParams);
+        List<ValuePair<?>> ddList = valueProviderUtils.getLookupList("dataDictionaryValueProvider", null, params);
+        //删除  --请选择--
+        ddList.remove(0);
+        modelMap.put("ddList",ddList);
         return "index";
     }
 

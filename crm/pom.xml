@@ -349,6 +349,7 @@
             <artifactId>crmadmin-sdk</artifactId>
             <version>${project.parent.version}</version>
         </dependency>
+
     </dependencies>
 
 
