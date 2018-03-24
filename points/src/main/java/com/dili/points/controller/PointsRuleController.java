@@ -1,9 +1,7 @@
 package com.dili.points.controller;
 
-import com.alibaba.fastjson.JSON;
-import com.dili.points.domain.DataDictionaryValue;
 import com.dili.points.domain.PointsRule;
-import com.dili.points.rpc.DataDictionaryValueRpc;
+import com.dili.points.domain.dto.PointsRuleDTO;
 import com.dili.points.service.PointsRuleService;
 import com.dili.ss.domain.BaseOutput;
 import com.dili.ss.dto.DTOUtils;
@@ -11,9 +9,6 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
-
-import java.util.List;
-
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,6 +18,8 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
+
+import java.util.List;
 
 /**
  * 由MyBatis Generator工具自动生成
@@ -109,7 +106,7 @@ public class PointsRuleController {
     })
     @RequestMapping(value = "/listPage", method = {RequestMethod.GET, RequestMethod.POST})
     public @ResponseBody
-    String listPage(PointsRule pointsRule) throws Exception {
+    String listPage(PointsRuleDTO pointsRule) throws Exception {
         return pointsRuleService.listEasyuiPageByExample(pointsRule, true).toString();
     }
 
@@ -149,15 +146,28 @@ public class PointsRuleController {
     @RequestMapping(value = "/checkName")
     public @ResponseBody
     Object checkName(String name, String org) {
+        PointsRuleDTO ex = DTOUtils.newDTO(PointsRuleDTO.class);
+        ex.setCheckName(name);
+        return checkDuplicate(name, org, ex);
+    }
+
+    @RequestMapping(value = "/checkCode")
+    public @ResponseBody
+    Object checkCode(String code, String org) {
+        PointsRuleDTO ex = DTOUtils.newDTO(PointsRuleDTO.class);
+        ex.setCheckCode(code);
+        return checkDuplicate(code, org, ex);
+    }
+
+    private boolean checkDuplicate(String name, String org, PointsRuleDTO example) {
         if (StringUtils.isNotBlank(name) && StringUtils.isNotBlank(org)) {
             if (name.equals(org)) {
                 return true;
             }
         }
         if (StringUtils.isNotBlank(name)) {
-            PointsRule ex = DTOUtils.newDTO(PointsRule.class);
-            ex.setCheckName(name);
-            List<PointsRule> ruleList = pointsRuleService.listByExample(ex);
+
+            List<PointsRule> ruleList = pointsRuleService.listByExample(example);
 
             return CollectionUtils.isEmpty(ruleList);
         }

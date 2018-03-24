@@ -37,13 +37,6 @@ public interface PointsRule extends IBaseDomain {
 
     void setName(String name);
 
-    @Column(name = "`name`")
-    @FieldDef(label="规则名称", maxLength = 20)
-    @EditMode(editor = FieldEditor.Text, required = false)
-    String getCheckName();
-
-    void setCheckName(String checkName);
-
     @Column(name = "`code`")
     @FieldDef(label="规则编码", maxLength = 20)
     @EditMode(editor = FieldEditor.Text, required = false)
@@ -100,21 +93,6 @@ public interface PointsRule extends IBaseDomain {
 
     void setCreated(Date created);
 
-    @Column(name = "`created`")
-    @FieldDef(label="创建时间")
-    @Operator(Operator.GREAT_EQUAL_THAN)
-    @EditMode(editor = FieldEditor.Datetime, required = true)
-    Date getStartCreated();
-
-    void setStartCreated(Date startCreated);
-
-    @Column(name = "`created`")
-    @FieldDef(label="创建时间")
-    @Operator(Operator.LITTLE_EQUAL_THAN)
-    @EditMode(editor = FieldEditor.Datetime, required = true)
-    Date getEndCreated();
-
-    void setEndCreated(Date endCreated);
 
     @Column(name = "`modified`")
     @FieldDef(label="修改时间")
