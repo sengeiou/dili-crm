@@ -18,6 +18,7 @@ import com.google.common.collect.Lists;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.CollectionUtils;
 import tk.mybatis.mapper.entity.Example;
 
 import java.util.Date;
@@ -112,12 +113,19 @@ public class PointsExchangeRecordServiceImpl extends BaseServiceImpl<PointsExcha
         EasyuiPageOutput easyuiPageOutput = super.listEasyuiPageByExample(domain, useProvider);
         //查询总使用积分和总兑换量
         List<Map> maps = commonMapper.selectMap("SELECT SUM(quantity) AS quantity,SUM(points) AS points FROM points_exchange_record");
+        String points = "0";
+        String quantity = "0";
+        Map map = maps.get(0);
+        if(!CollectionUtils.isEmpty(map)){
+            points = map.get("points").toString();
+            quantity = map.get("quantity").toString();
+        }
         List<Map> footers = Lists.newArrayList();
         Map footer = new HashMap(1);
         footer.put("name", "总使用积分:");
-        footer.put("certificateNumber", maps.get(0).get("points"));
+        footer.put("certificateNumber", points);
         footer.put("organizationType","总兑换数量:");
-        footer.put("certificateType",maps.get(0).get("quantity"));
+        footer.put("certificateType",quantity);
         footers.add(footer);
         easyuiPageOutput.setFooter(footers);
         return easyuiPageOutput;

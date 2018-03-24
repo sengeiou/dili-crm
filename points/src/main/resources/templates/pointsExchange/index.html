@@ -246,6 +246,7 @@
                         $('#customerDiv').panel("open");
                     }else{
                         $.messager.alert('系统错误',ret.result);
+                        $('#customerDiv').panel("close");
                     }
                     disableEasyUiControl('queryBtn',false);
                 },
