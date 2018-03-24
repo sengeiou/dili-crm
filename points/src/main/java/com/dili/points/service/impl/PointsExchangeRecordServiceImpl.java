@@ -8,16 +8,22 @@ import com.dili.points.domain.ExchangeCommodities;
 import com.dili.points.domain.PointsExchangeRecord;
 import com.dili.points.service.PointsExchangeRecordService;
 import com.dili.ss.base.BaseServiceImpl;
+import com.dili.ss.dao.CommonMapper;
 import com.dili.ss.domain.BaseOutput;
+import com.dili.ss.domain.EasyuiPageOutput;
 import com.dili.ss.exception.BusinessException;
 import com.dili.sysadmin.sdk.domain.UserTicket;
 import com.dili.sysadmin.sdk.session.SessionContext;
+import com.google.common.collect.Lists;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import tk.mybatis.mapper.entity.Example;
 
 import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * 由MyBatis Generator工具自动生成
@@ -34,6 +40,8 @@ public class PointsExchangeRecordServiceImpl extends BaseServiceImpl<PointsExcha
     private CustomerPointsMapper customerPointsMapper;
     @Autowired
     private ExchangeCommoditiesMapper exchangeCommoditiesMapper;
+    @Autowired
+    private CommonMapper commonMapper;
 
     /**
      * 新增商品兑换记录
@@ -90,5 +98,28 @@ public class PointsExchangeRecordServiceImpl extends BaseServiceImpl<PointsExcha
         pointsExchangeRecord.setCreatedId(userTicket.getId());
         insertSelective(pointsExchangeRecord);
         return BaseOutput.success("兑换成功");
+    }
+
+    /**
+     * 用于支持like, order by 的easyui分页查询
+     *
+     * @param domain
+     * @param useProvider
+     * @return
+     */
+    @Override
+    public EasyuiPageOutput listEasyuiPageByExample(PointsExchangeRecord domain, boolean useProvider) throws Exception {
+        EasyuiPageOutput easyuiPageOutput = super.listEasyuiPageByExample(domain, useProvider);
+        //查询总使用积分和总兑换量
+        List<Map> maps = commonMapper.selectMap("SELECT SUM(quantity) AS quantity,SUM(points) AS points FROM points_exchange_record");
+        List<Map> footers = Lists.newArrayList();
+        Map footer = new HashMap(1);
+        footer.put("name", "总使用积分:");
+        footer.put("certificateNumber", maps.get(0).get("points"));
+        footer.put("organizationType","总兑换数量:");
+        footer.put("certificateType",maps.get(0).get("quantity"));
+        footers.add(footer);
+        easyuiPageOutput.setFooter(footers);
+        return easyuiPageOutput;
     }
 }
