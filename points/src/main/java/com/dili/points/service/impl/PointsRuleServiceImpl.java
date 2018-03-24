@@ -76,6 +76,12 @@ public class PointsRuleServiceImpl extends BaseServiceImpl<PointsRule, Long> imp
             numberRuleCondition.setCreatedId(pointsRule.getCreatedId());
             numberRuleCondition.setPointRuleId(pointsRule.getId());
             numberRuleCondition.setWeightType(weightTypeNumber);
+
+            // fix id
+            if(numberRuleCondition.getId()!=null){
+                numberRuleCondition.setId(null);
+            }
+
             ruleConditionService.insertSelective(numberRuleCondition);
         }
     }
