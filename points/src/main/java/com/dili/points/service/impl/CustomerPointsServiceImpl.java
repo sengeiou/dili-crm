@@ -15,6 +15,7 @@ import com.dili.ss.dto.DTO;
 import com.dili.ss.dto.DTOUtils;
 
 import java.util.*;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 
 import com.dili.ss.metadata.ValueProviderUtils;
@@ -73,7 +74,7 @@ public class CustomerPointsServiceImpl extends BaseServiceImpl<CustomerPoints, L
 			
 			Map<String, CustomerPoints> map = basePage.getDatas().stream()
 					.collect(Collectors.toMap(CustomerPoints::getCertificateNumber, cp -> cp));
-
+			AtomicInteger totalAvailablePoints=new AtomicInteger(0);
 			List<DTO> resultList = customerList.stream().map(c -> {
 				CustomerPoints cp = map.get(c.getCertificateNumber());
 				// 如果客户没有对应的积分信息,则创建一个新的默认积分信息显示到页面
@@ -85,7 +86,7 @@ public class CustomerPointsServiceImpl extends BaseServiceImpl<CustomerPoints, L
 					cp.setFrozen(0);
 					cp.setTotal(0);
 				}
-				// 将客户的其他信息(名字,组织类型等信息附加到积分信息)
+				totalAvailablePoints.addAndGet(cp.getAvailable());
 				// 将客户的其他信息(名字,组织类型等信息附加到积分信息)
 				DTO dto = DTOUtils.go(cp);
 				dto.put("name", c.getName());
@@ -107,7 +108,7 @@ public class CustomerPointsServiceImpl extends BaseServiceImpl<CustomerPoints, L
             List<Map> footers = Lists.newArrayList();
             Map footer = new HashMap(1);
             footer.put("id", "总可用积分");
-            footer.put("organizationType", "1000");
+            footer.put("organizationType", totalAvailablePoints.get());
             footers.add(footer);
             easyuiPageOutput.setFooter(footers);
             return easyuiPageOutput;
