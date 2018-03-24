@@ -3,6 +3,7 @@ package com.dili.points.service;
 import com.dili.points.domain.Customer;
 import com.dili.points.domain.CustomerPoints;
 import com.dili.points.domain.dto.CustomerApiDTO;
+import com.dili.points.domain.dto.CustomerPointsDTO;
 import com.dili.ss.base.BaseService;
 import com.dili.ss.domain.EasyuiPageOutput;
 import com.dili.ss.dto.DTO;
@@ -13,5 +14,5 @@ import com.dili.ss.dto.DTO;
 public interface CustomerPointsService extends BaseService<CustomerPoints, Long> {
 	public EasyuiPageOutput listCustomerPointsByCustomer(CustomerApiDTO customer);
 
-	public DTO findCustomerPointsByCertificateNumber(String certificateNumber);
+	public CustomerPointsDTO findCustomerPointsByCertificateNumber(String certificateNumber);
 }

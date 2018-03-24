@@ -2,6 +2,8 @@ package com.dili.points.controller;
 
 import com.dili.points.domain.CustomerPoints;
 import com.dili.points.domain.PointsDetail;
+import com.dili.points.domain.dto.CustomerPointsDTO;
+import com.dili.points.domain.dto.PointsDetailDTO;
 import com.dili.points.service.CustomerPointsService;
 import com.dili.points.service.PointsDetailService;
 import com.dili.ss.domain.BaseOutput;
@@ -44,7 +46,7 @@ public class PointsDetailController {
     @ApiOperation("跳转到detail页面")
     @RequestMapping(value="/detail.html", method = RequestMethod.GET)
     public String detail(ModelMap modelMap,String certificateNumber) {
-    	DTO customerPoints=this.customerPointsService.findCustomerPointsByCertificateNumber(certificateNumber);
+    	CustomerPointsDTO customerPoints=this.customerPointsService.findCustomerPointsByCertificateNumber(certificateNumber);
     	modelMap.put("customerPoints", customerPoints);
         return "pointsDetail/detail";
     }
@@ -77,7 +79,7 @@ public class PointsDetailController {
 		@ApiImplicitParam(name="PointsDetail", paramType="form", value = "PointsDetail的form信息", required = true, dataType = "string")
 	})
     @RequestMapping(value="/mannuallyInsert", method = {RequestMethod.GET, RequestMethod.POST})
-    public @ResponseBody BaseOutput mannuallyInsert(PointsDetail pointsDetail) {
+    public @ResponseBody BaseOutput mannuallyInsert(PointsDetailDTO pointsDetail) {
     	//先进行基本属性判断
     	//积分不能为空
     	if(pointsDetail.getPoints()==null) {
@@ -94,8 +96,7 @@ public class PointsDetailController {
 		}
 		pointsDetail.setCreatedId(userTicket.getId());//操作人
     	pointsDetail.setGenerateWay(50);//50 手工调整
-    	Long customerId=Long.parseLong(pointsDetail.aget("customerId").toString());
-        pointsDetailService.insert(pointsDetail,customerId);
+        pointsDetailService.insert(pointsDetail);
         return BaseOutput.success("新增成功");
     }
     

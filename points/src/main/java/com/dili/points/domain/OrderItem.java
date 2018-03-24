@@ -28,12 +28,12 @@ public interface OrderItem extends IBaseDomain {
 
     void setId(Long id);
 
-    @Column(name = "`order_id`")
-    @FieldDef(label="订单id")
+    @Column(name = "`order_code`")
+    @FieldDef(label="订单code")
     @EditMode(editor = FieldEditor.Number, required = false)
-    Long getOrderId();
+    String getOrderCode();
 
-    void setOrderId(Long orderId);
+    void setOrderCode(String orderCode);
 
     @Column(name = "`category_id`")
     @FieldDef(label="品类id")

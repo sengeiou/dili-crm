@@ -17,7 +17,8 @@
                             </td>
 
                              <td style="padding:5px;">
-                                <input class="easyui-textbox" name="certificateNumber" id="certificateNumber"                         style="width:100%" labelAlign="right" data-options="label:'客户证件号:',value:'${customerPoints.certificateNumber}',                 cls:'noborder', editable:false, readonly:true,hasDownArrow:false, validType:'length[0,40]'" />
+                                <input class="easyui-textbox"  style="width:100%" labelAlign="right" data-options="label:'客户证件号:',value:'${customerPoints.certificateNumber}',                 cls:'noborder', editable:false, readonly:true,disabled:true,hasDownArrow:false, validType:'length[0,40]'" />
+                                <input type="hidden"  name="certificateNumber" id="certificateNumber" value="${customerPoints.certificateNumber}"/>
                             </td>
                             <td style="padding:5px;">
                                 <input class="easyui-textbox" name="phone" id="phone"                         style="width:100%" labelAlign="right" data-options="label:'电话:',value:'${customerPoints.phone}',                 cls:'noborder', editable:false, readonly:true,disabled:true,hasDownArrow:false, validType:'length[0,40]'" />

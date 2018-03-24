@@ -31,10 +31,6 @@ public interface CustomerPoints extends IBaseDomain {
 
     void setId(Long id);
     
-    @Column(name = "`certificate_number`")
-    @Operator(Operator.IN)
-    List<String> getCertificateNumbers();
-    void setCertificateNumbers(List<String> certificateNumbers);
 
     @Column(name = "`certificate_number`")
     @FieldDef(label="证件号", maxLength = 40)

@@ -6,6 +6,7 @@ import com.dili.points.domain.Customer;
 import com.dili.points.domain.CustomerPoints;
 import com.dili.points.domain.PointsDetail;
 import com.dili.points.domain.dto.CustomerApiDTO;
+import com.dili.points.domain.dto.PointsDetailDTO;
 import com.dili.points.rpc.CustomerRpc;
 import com.dili.points.service.PointsDetailService;
 import com.dili.ss.base.BaseServiceImpl;
@@ -34,7 +35,15 @@ public class PointsDetailServiceImpl extends BaseServiceImpl<PointsDetail, Long>
 	@Autowired
 	CustomerRpc customerRpc;
 	@Transactional(propagation=Propagation.REQUIRED)
-	public int insert(PointsDetail pointsDetail,Long customerId) {
+	public int batchInsertPointsDetailDTO(List<PointsDetailDTO> pointsDetail) {
+		pointsDetail.forEach(p->{
+			this.insert(p);
+		});
+		return pointsDetail.size();		
+	}
+	@Transactional(propagation=Propagation.REQUIRED)
+	public int insert(PointsDetailDTO pointsDetail) {
+		Long customerId=pointsDetail.getCustomerId();
 		CustomerPoints example = DTOUtils.newDTO(CustomerPoints.class);
 		example.setCertificateNumber(pointsDetail.getCertificateNumber());
 		// 如果用户积分不存在,则先插入用户积分

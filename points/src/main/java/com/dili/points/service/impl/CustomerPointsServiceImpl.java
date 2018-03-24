@@ -5,6 +5,7 @@ import com.dili.points.dao.CustomerPointsMapper;
 import com.dili.points.domain.Customer;
 import com.dili.points.domain.CustomerPoints;
 import com.dili.points.domain.dto.CustomerApiDTO;
+import com.dili.points.domain.dto.CustomerPointsDTO;
 import com.dili.points.rpc.CustomerRpc;
 import com.dili.points.service.CustomerPointsService;
 import com.dili.ss.base.BaseServiceImpl;
@@ -14,12 +15,15 @@ import com.dili.ss.domain.EasyuiPageOutput;
 import com.dili.ss.dto.DTO;
 import com.dili.ss.dto.DTOUtils;
 
+import java.lang.reflect.InvocationTargetException;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 
 import com.dili.ss.metadata.ValueProviderUtils;
 import com.google.common.collect.Lists;
+
+import org.apache.commons.beanutils.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -36,19 +40,19 @@ public class CustomerPointsServiceImpl extends BaseServiceImpl<CustomerPoints, L
 	}
 
 	@Override
-    public DTO findCustomerPointsByCertificateNumber(String certificateNumber) {
+    public CustomerPointsDTO findCustomerPointsByCertificateNumber(String certificateNumber) {
 		CustomerApiDTO dto = DTOUtils.newDTO(CustomerApiDTO.class);
 		dto.setCertificateNumber(certificateNumber);
 		EasyuiPageOutput output = this.listCustomerPointsByCustomer(dto);
-		List<DTO> list = output.getRows();
+		List<CustomerPointsDTO> list = output.getRows();
 		return list.stream().findFirst().orElseGet(() -> {
-			CustomerPoints cp = DTOUtils.newDTO(CustomerPoints.class);
+			CustomerPointsDTO cp = DTOUtils.newDTO(CustomerPointsDTO.class);
 			cp.setId(0L);
 			cp.setCertificateNumber(certificateNumber);
 			cp.setAvailable(0);
 			cp.setFrozen(0);
 			cp.setTotal(0);
-			return DTOUtils.go(cp);
+			return cp;
 
 		});
 	}
@@ -66,7 +70,7 @@ public class CustomerPointsServiceImpl extends BaseServiceImpl<CustomerPoints, L
 					.map(Customer::getCertificateNumber)
 					.collect(Collectors.toList());
 
-			CustomerPoints example = DTOUtils.newDTO(CustomerPoints.class);
+			CustomerPointsDTO example = DTOUtils.newDTO(CustomerPointsDTO.class);
 			example.setCertificateNumbers(certificateNumbers);
 			example.setPage(customer.getPage());
 			example.setRows(customer.getRows());
@@ -75,26 +79,32 @@ public class CustomerPointsServiceImpl extends BaseServiceImpl<CustomerPoints, L
 			Map<String, CustomerPoints> map = basePage.getDatas().stream()
 					.collect(Collectors.toMap(CustomerPoints::getCertificateNumber, cp -> cp));
 			AtomicInteger totalAvailablePoints=new AtomicInteger(0);
-			List<DTO> resultList = customerList.stream().map(c -> {
+			List<CustomerPointsDTO> resultList = customerList.stream().map(c -> {
 				CustomerPoints cp = map.get(c.getCertificateNumber());
 				// 如果客户没有对应的积分信息,则创建一个新的默认积分信息显示到页面
+				CustomerPointsDTO cpdto =DTOUtils.newDTO(CustomerPointsDTO.class);
 				if (cp == null) {
-					cp = DTOUtils.newDTO(CustomerPoints.class);
-					cp.setId(c.getId());
-					cp.setCertificateNumber(c.getCertificateNumber());
-					cp.setAvailable(0);
-					cp.setFrozen(0);
-					cp.setTotal(0);
+					cpdto.setId(c.getId());
+					cpdto.setCertificateNumber(c.getCertificateNumber());
+					cpdto.setAvailable(0);
+					cpdto.setFrozen(0);
+					cpdto.setTotal(0);
+				}else {
+					try {
+						BeanUtils.copyProperties(cpdto, cp);
+					} catch (Exception e) {
+						
+					}
 				}
-				totalAvailablePoints.addAndGet(cp.getAvailable());
+				
+				totalAvailablePoints.addAndGet(cpdto.getAvailable());
 				// 将客户的其他信息(名字,组织类型等信息附加到积分信息)
-				DTO dto = DTOUtils.go(cp);
-				dto.put("name", c.getName());
-				dto.put("organizationType", c.getOrganizationType());
-				dto.put("profession", c.getProfession());
-				dto.put("type", c.getType());
-				dto.put("certificateType", c.getCertificateType());
-				return dto;
+				cpdto.setName(c.getName());
+				cpdto.setOrganizationType(c.getOrganizationType());
+				cpdto.setProfession(c.getProfession());
+				cpdto.setType(c.getType());
+				cpdto.setCertificateType(c.getCertificateType());
+				return cpdto;
 			}).collect(Collectors.toList());
             //提供者转换
             List<Map> datas = null;
