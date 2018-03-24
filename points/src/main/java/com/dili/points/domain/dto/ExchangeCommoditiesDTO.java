@@ -22,20 +22,20 @@ import java.util.Date;
 @Table(name = "`exchange_commodities`")
 public interface ExchangeCommoditiesDTO extends ExchangeCommodities {
 
-    @Column(name = "`created`")
+    @Column(name = "`modified`")
     @FieldDef(label="操作时间")
     @EditMode(editor = FieldEditor.Datetime)
     @Operator(Operator.GREAT_EQUAL_THAN)
-    Date getCreatedStart();
+    Date getModifiedStart();
 
-    void setCreatedStart(Date createdStart);
+    void setModifiedStart(Date modifiedStart);
 
-    @Column(name = "`created`")
+    @Column(name = "`modified`")
     @FieldDef(label="操作时间")
     @EditMode(editor = FieldEditor.Datetime)
     @Operator(Operator.LITTLE_EQUAL_THAN)
-    Date getCreatedEnd();
+    Date getModifiedEnd();
 
-    void setCreatedEnd(Date createdEnd);
+    void setModifiedEnd(Date modifiedEnd);
 
 }

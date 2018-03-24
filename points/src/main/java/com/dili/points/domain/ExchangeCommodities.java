@@ -1,5 +1,6 @@
 package com.dili.points.domain;
 
+import com.dili.ss.domain.annotation.Like;
 import com.dili.ss.dto.IBaseDomain;
 import com.dili.ss.metadata.FieldEditor;
 import com.dili.ss.metadata.annotation.EditMode;
@@ -30,6 +31,7 @@ public interface ExchangeCommodities extends IBaseDomain {
     @Column(name = "`name`")
     @FieldDef(label="商品名称", maxLength = 20)
     @EditMode(editor = FieldEditor.Text, required = false)
+    @Like
     String getName();
 
     void setName(String name);

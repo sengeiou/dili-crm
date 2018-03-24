@@ -45,6 +45,7 @@ public class CommodityProvider implements ValueProvider {
         ExchangeCommodities ec = DTOUtils.newDTO(ExchangeCommodities.class);
         List<ExchangeCommodities> list = exchangeCommoditiesService.listByExample(ec);
         list.forEach(n -> buffer.add(new ValuePairImpl(n.getName(),n.getId().toString())));
+        buffer.add(0,new ValuePairImpl(EMPTY_ITEM_TEXT, null));
         return buffer;
 
     }
