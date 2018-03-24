@@ -1,0 +1,261 @@
+<#body>
+
+<script>
+
+    /**
+     * 商品列表改变时，重新赋值‘售价’
+     */
+    function commodityChange(record) {
+        var points = record["points"];
+        $('#_exchange_price').textbox("setValue",points);
+    }
+
+    /**
+     * 计算总价
+     */
+    function calcTotal() {
+        var price = $('#_exchange_price').textbox("getValue");
+        var quantity = $('#_exchange_quantity').textbox("getValue");
+        var re = /^[1-9]+[0-9]*]*$/;
+        var points = 0;
+        if (re.test(price) && re.test(quantity)){
+            points = price*quantity;
+        }
+        $('#_exchange_points').textbox("setValue",points);
+    }
+</script>
+
+<div class="easyui-layout" fit="true">
+    <!-- ====================================================================================================================== -->
+    <!-- 上方布局 -->
+    <!-- ====================================================================================================================== -->
+    <div region="north" height="auto" align="center" border="false">
+        <div id="nav" style="padding-left:15px;padding-top:10px;" align="left">
+            <#nav/>
+        </div>
+        <!-- =========================================================表单========================================================= -->
+        <div class="easyui-panel" style="width:96%;" align="left" border="false">
+            <form id="form" class="easyui-form" method="post" fit="true">
+                <table style="padding:10px;">
+                    <tr>
+                        <td style="padding:5px;">
+                            <input class="easyui-textbox" name="certificate_number" id="certificate_number" style="width:100%" labelAlign="right" data-options="label:'客户证件号:', validType:'length[0,19]'" />
+                        </td>
+                        <td style="padding:5px;">
+                            <a href="#" class="easyui-linkbutton" iconCls="icon-search" id="queryBtn"
+                               onclick="queryCustomer()">查询</a>
+                        </td>
+                    </tr>
+                </table>
+            </form>
+        </div>
+    </div>
+    <!-- ====================================================================================================================== -->
+    <!-- 中央布局 -->
+    <!-- ====================================================================================================================== -->
+    <!-- 表格 -->
+    <div region="center" style="width:100%;" height="auto" align="center" border="false">
+        <div id="customerDiv"   class="easyui-panel" style="width: 94%;" closed="true" title="客户基本信息" border="false" >
+            <form id="_customerForm" class="easyui-form" method="post" fit="true">
+                <input type="hidden" id="_id" name="_id">
+                <input type="hidden" id="_organizationType" name="_organizationType">
+                <input type="hidden" id="_certificateType" name="_certificateType">
+                <input type="hidden" id="_type" name="_type">
+                <table width="94%" align="center">
+                    <tr>
+                        <td style="padding-top:10px;">
+                            <input class="easyui-textbox" name="_name" id="_name" style="width:80%"  data-options="labelAlign:'right',label:'客户姓名:',cls:'noborder',readonly:true, editable:false" />
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="padding-top:10px;">
+                            <input class="easyui-textbox" name="_certificateNumber" id="_certificateNumber"  label="证件号:" style="width: 80%;" data-options="labelAlign:'right',cls:'noborder', readonly:true, editable:false" />
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="padding-top:10px;">
+                            <input class="easyui-textbox" name="_phone" id="_phone" style="width:80%" data-options="labelAlign:'right',label:'电话:',cls:'noborder', readonly:true, editable:false"/>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="padding-top:10px;">
+                            <input class="easyui-textbox" name="_points" id="_points" style="width:90%"  data-options="labelAlign:'right',cls:'noborder',label:'积分余额:',readonly:true, editable:false" />
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="padding:10px;">
+                            <a href="#" class="easyui-linkbutton"  id="exchangeBtn"
+                               onclick="openExchange()">&nbsp;兑换商品&nbsp;</a>
+                        </td>
+                    </tr>
+                </table>
+            </form>
+        </div>
+    </div>
+</div>
+<!-- 隐藏编辑框 -->
+<div id="exchangeDlg" class="easyui-dialog" resizable="false" constrain="true" shadow="true" draggable="false" title="兑换商品" style="padding:20px" modal="true" border="thin" closed="true"
+     data-options="
+				height: 300,
+				buttons: [{
+					text:'兑换',
+					iconCls:'icon-ok',
+					handler:saveOrUpdate
+				}]
+			">
+    <form id="_exchangeForm" class="easyui-form" method="post" fit="true">
+        <table width="360px">
+            <tr>
+                <td style="padding:5px;">
+                    <select class="easyui-combobox" name="_exchange_exchangeCommoditiesId" id="_exchange_exchangeCommoditiesId" style="width:80%" required editable="false" labelAlign="right" panelWidth="auto" panelHeight="auto" data-options="label:'&lowast;兑换商品:',valueField:'id',textField:'name',onSelect:commodityChange">
+                    </select>
+                </td>
+            </tr>
+            <tr>
+                <td style="padding:5px;">
+                    <input class="easyui-numberbox" name="_exchange_price" id="_exchange_price" style="width:80%" labelAlign="right" min="0" required data-options="label:'&lowast;售价:',onChange:calcTotal" />积分
+                </td>
+            </tr>
+            <tr>
+                <td style="padding:5px;">
+                    <input class="easyui-numberbox" name="_available" id="_available" disabled style="width:80%" labelAlign="right" data-options="label:'可用积分:'" />
+                </td>
+            </tr>
+            <tr>
+                <td style="padding:5px;">
+                    <input class="easyui-numberbox" name="_exchange_quantity" id="_exchange_quantity" style="width:80%" min="1" labelAlign="right" required data-options="label:'&lowast;兑换数量:',onChange:calcTotal" />
+                </td>
+            </tr>
+            <tr>
+                <td style="padding:5px;">
+                    <input class="easyui-numberbox" name="_exchange_points" id="_exchange_points" readonly="true" editable="false" labelAlign="right" style="width:80%" data-options="label:'总价:'" />
+                </td>
+            </tr>
+        </table>
+    </form>
+
+</div>
+<!-- ====================================================================================================================== -->
+<!-- style & script 分隔线 -->
+<!-- ====================================================================================================================== -->
+<script type="text/javascript">
+
+    /**
+     * 提交兑换记录
+     */
+    function saveOrUpdate() {
+        if(!$('#_exchangeForm').form("validate")){
+            return;
+        }
+        var _formData = removeKeyStartWith($("#_exchangeForm").serializeObject(),"_exchange_");
+        var available = $('#_available').textbox("getValue");
+        if (parseInt(available) < parseInt(_formData["points"])){
+            $.messager.alert('敬告','可用余额不足');
+            return;
+        }
+        var goodsName = $('#_exchange_exchangeCommoditiesId').textbox("getText");
+        var msg = '请确认需要用'+_formData["points"]+'积分兑换'+_formData["quantity"]+'件'+goodsName+'吗？';
+        $.messager.confirm('确认',msg,function(r) {
+            if(r){
+                var _url = "${contextPath}/pointsExchangeRecord/insert";
+                _formData["customerId"] = $('#_id').val();
+                _formData["organizationType"] = $('#_organizationType').val();
+                _formData["certificateType"] = $('#_certificateType').val();
+                _formData["type"] = $('#_type').val();
+                _formData["certificateNumber"] = $('#_certificateNumber').textbox("getValue");
+                _formData["name"] = $('#_name').textbox("getValue");
+                $.ajax({
+                    type: "POST",
+                    url: _url,
+                    data: _formData,
+                    processData:true,
+                    dataType: "json",
+                    async : true,
+                    success: function (ret) {
+                        if(ret.success){
+                            $('#exchangeDlg').dialog('close');
+                            $('#_exchangeForm').form('clear');
+                            queryCustomer();
+                        }else{
+                            $.messager.alert('错误',ret.result);
+                        }
+                    },
+                    error: function(){
+                        $.messager.alert('错误','远程访问失败');
+                    }
+                });
+            }
+        });
+    }
+
+    /**
+     * 兑换按钮，打开兑换商品页面
+     */
+    function openExchange() {
+        $('#exchangeDlg').dialog('open');
+        $('#exchangeDlg').dialog('center');
+        $('#_exchangeForm').form('clear');
+        $('#_available').textbox("setValue",$('#_points').textbox("getValue"));
+        //加载可兑换商品的数据列表
+        getCommodities();
+    }
+
+    /**
+     * 获取可兑换的商品
+     */
+    function getCommodities() {
+        //先清空下拉值
+        $('#_exchange_exchangeCommoditiesId').combobox("loadData",[]);
+        $.ajax({
+            type: "POST",
+            url: "${contextPath}/exchangeCommodities/list",
+            processData:true,
+            dataType: "json",
+            async : true,
+            success: function (ret) {
+                if(null != ret){
+                    $('#_exchange_exchangeCommoditiesId').combobox("loadData",ret);
+                }else{
+                    $.messager.alert('敬告','未获取到可兑换的商品信息');
+                }
+            },
+            error: function(){
+                $.messager.alert('错误','远程访问失败');
+
+            }
+        });
+    }
+
+    function queryCustomer() {
+        var certificate_number = $('#certificate_number').textbox("getValue");
+        if (null != certificate_number && '' !=trim(certificate_number)){
+            disableEasyUiControl('queryBtn',true);
+            $('#_customerForm').form('clear');
+            $.ajax({
+                type: "POST",
+                url: "${contextPath}/pointsExchange/getCustomerInfo",
+                data: {idCard:certificate_number},
+                processData:true,
+                dataType: "json",
+                async : true,
+                success: function (ret) {
+                    if(ret.success){
+                        var formData = $.extend({},ret.data);
+                        formData = addKeyStartWith(getOriginalData(formData),"_");
+                        $('#_customerForm').form('load', formData);
+                        $('#customerDiv').panel("open");
+                    }else{
+                        $.messager.alert('系统错误',ret.result);
+                    }
+                    disableEasyUiControl('queryBtn',false);
+                },
+                error: function(){
+                    $.messager.alert('错误','远程访问失败');
+                    disableEasyUiControl('queryBtn',false);
+                }
+            });
+        }
+    }
+    
+</script>
+</#body>
