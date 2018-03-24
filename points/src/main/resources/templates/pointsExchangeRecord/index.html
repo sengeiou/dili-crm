@@ -60,8 +60,8 @@
             <!-- =========================================================表格========================================================= -->
             <table class="easyui-datagrid" title="PointsExchangeRecord列表" id="grid" fitColumns="true" noheader="true"
                    pagination="true" pageSize="30" pageNumber="1" pagePosition="top"  remoteSort="false"
-                   loadMsg="数据加载中..." singleSelect="true" method="post" multiSort="false" sortName="customerId"
-                   align="center" fit="true" striped="true" idField="id" data-options="onDblClickRow:openUpdate, onHeaderContextMenu:headerContextMenu">
+                   loadMsg="数据加载中..." singleSelect="true" method="post" multiSort="false" sortName="name"
+                   align="center" fit="true" striped="true" idField="id" data-options="onHeaderContextMenu:headerContextMenu">
                 <thead>
                     <tr>
                         <th width="10%" data-options="field:'name',  sortable:true, order:'asc', align:'center', resizable:'true', fixed:'false'">
@@ -100,179 +100,11 @@
             </div>
         </div>
     </div>
-    <!-- 隐藏编辑框 -->
-    <div id="dlg" class="easyui-dialog" resizable="false" constrain="true" shadow="true" draggable="false" title="PointsExchangeRecord信息" style="padding:20px" modal="true" border="thin" closed="true"
-         data-options="
-				iconCls: 'icon-save',
-				height: 480,
-				buttons: [{
-					text:'确认',
-					iconCls:'icon-ok',
-					handler:saveOrUpdate
-				},{
-					text:'取消',
-					iconCls:'icon-cancel',
-					handler:function(){
-						$('#dlg').dialog('close');
-					}
-				}]
-			">
-    <form id="_form" class="easyui-form" method="post" fit="true">
-        <input name="_id" id="_id" type="hidden">
-        <table width="360px">
-            <tr>
-                <td style="padding:5px;">
-                    <input class="easyui-numberbox" name="_customerId" id="_customerId" style="width:100%" data-options="label:'客户ID:'" />
-                </td>
-            </tr>
-            <tr>
-                <td style="padding:5px;">
-                    <input class="easyui-textbox" name="_certificateNumber" id="_certificateNumber" style="width:100%" data-options="label:'证件号:', validType:'length[0,40]'" />
-                </td>
-            </tr>
-            <tr>
-                <td style="padding:5px;">
-                       <input name="_organizationType" id="_organizationType" style="width:100%;" editable="false" panelWidth="auto" panelHeight="auto" label="组织类型:" />
-                       <#comboProvider _id="_organizationType" _provider='dataDictionaryValueProvider'/>
-
-                </td>
-            </tr>
-            <tr>
-                <td style="padding:5px;">
-                       <input name="_certificateType" id="_certificateType" style="width:100%;" editable="false" panelWidth="auto" panelHeight="auto" label="证件类型:" />
-                       <#comboProvider _id="_certificateType" _provider='dataDictionaryValueProvider'/>
-
-                </td>
-            </tr>
-            <tr>
-                <td style="padding:5px;">
-                       <input name="_type" id="_type" style="width:100%;" editable="false" panelWidth="auto" panelHeight="auto" label="客户类型:" />
-                       <#comboProvider _id="_type" _provider='dataDictionaryValueProvider'/>
-
-                </td>
-            </tr>
-            <tr>
-                <td style="padding:5px;">
-                    <input class="easyui-numberbox" name="_points" id="_points" style="width:100%" data-options="label:'使用积分:'" />
-                </td>
-            </tr>
-            <tr>
-                <td style="padding:5px;">
-                    <input class="easyui-numberbox" name="_exchangeCommoditiesId" id="_exchangeCommoditiesId" style="width:100%" data-options="label:'兑换商品:'" />
-                </td>
-            </tr>
-            <tr>
-                <td style="padding:5px;">
-                    <input class="easyui-numberbox" name="_quantity" id="_quantity" style="width:100%" data-options="label:'兑换数量:'" />
-                </td>
-            </tr>
-            <tr>
-                <td style="padding:5px;">
-                    <input class="easyui-datetimebox" name="_created" id="_created" style="width:100%" editable="false" data-options="label:'兑换时间:'" 
-                        required="true" />
-                </td>
-            </tr>
-            <tr>
-                <td style="padding:5px;">
-                    <input class="easyui-numberbox" name="_createdId" id="_createdId" style="width:100%" data-options="label:'兑换操作员:'" />
-                </td>
-            </tr>
-        </table>
-    </form>
-
-    </div>
     <!-- ====================================================================================================================== -->
     <!-- style & script 分隔线 -->
     <!-- ====================================================================================================================== -->
     <script type="text/javascript">
-        //打开新增窗口
-        function openInsert(){
-            $('#dlg').dialog('open');
-            $('#dlg').dialog('center');
-            $('#_form').form('clear');
-            formFocus("_form", "_customerId");
-        }
 
-        //打开修改窗口
-        function openUpdate(){
-            var selected = $("#grid").datagrid("getSelected");
-            if (null == selected) {
-                $.messager.alert('警告','请选中一条数据');
-                return;
-            }
-            $('#dlg').dialog('open');
-            $('#dlg').dialog('center');
-            formFocus("_form", "_customerId");
-            var formData = $.extend({},selected);
-            formData = addKeyStartWith(getOriginalData(formData),"_");
-            $('#_form').form('load', formData);
-        }
-
-        function saveOrUpdate(){
-            if(!$('#_form').form("validate")){
-                return;
-            }
-            var _formData = removeKeyStartWith($("#_form").serializeObject(),"_");
-            var _url = null;
-            //没有id就新增
-            if(_formData.id == null || _formData.id==""){
-                _url = "${contextPath}/pointsExchangeRecord/insert";
-            }else{//有id就修改
-                _url = "${contextPath}/pointsExchangeRecord/update";
-            }
-            $.ajax({
-                type: "POST",
-                url: _url,
-                data: _formData,
-                processData:true,
-                dataType: "json",
-                async : true,
-                success: function (data) {
-                    if(data.code=="200"){
-                        $("#grid").datagrid("reload");
-                        $('#dlg').dialog('close');
-                    }else{
-                        $.messager.alert('错误',data.result);
-                    }
-                },
-                error: function(){
-                    $.messager.alert('错误','远程访问失败');
-                }
-            });
-        }
-
-        //根据主键删除
-        function del() {
-            var selected = $("#grid").datagrid("getSelected");
-            if (null == selected) {
-                $.messager.alert('警告','请选中一条数据');
-                return;
-            }
-            $.messager.confirm('确认','您确认想要删除记录吗？',function(r){
-                if (r){
-                    $.ajax({
-                        type: "POST",
-                        url: "${contextPath}/pointsExchangeRecord/delete",
-                        data: {id:selected.id},
-                        processData:true,
-                        dataType: "json",
-                        async : true,
-                        success: function (data) {
-                            if(data.code=="200"){
-                                $("#grid").datagrid("reload");
-                                $('#dlg').dialog('close');
-                            }else{
-                                $.messager.alert('错误',data.result);
-                            }
-                        },
-                        error: function(){
-                            $.messager.alert('错误','远程访问失败');
-                        }
-                    });
-                }
-            });
-
-        }
         //表格查询
         function queryGrid() {
             var opts = $("#grid").datagrid("options");
@@ -325,8 +157,7 @@
          *          表单提交需执行的任务
          */
         $(function () {
-            bindFormEvent("form", "customerId", queryGrid);
-            bindFormEvent("_form", "_customerId", saveOrUpdate, function (){$('#dlg').dialog('close');});
+            bindFormEvent("form", "name", queryGrid);
             if (document.addEventListener) {
                 document.addEventListener("keyup",getKey,false);
             } else if (document.attachEvent) {

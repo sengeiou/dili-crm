@@ -121,6 +121,13 @@
 								<a class="linkmore" href="${contextPath}/customer/locations.html">查看更多&gt;</a>
 							</div>
 							<div id="mapDiv" style="width:99%;height:99%;"></div>
+							<div  style="position:absolute; top: 50px; left: 20px;">
+								<%for(dd in ddList){ %>
+								<input  type="checkbox" name="type" checked value="${dd.value}" onclick="viewCustomerMap()">${dd.text}&nbsp;&nbsp;
+								<%}%>
+								<input  type="checkbox" name="type" checked  value="other" onclick="viewCustomerMap()">其它&nbsp;&nbsp;
+								<!--<a href="#" class="easyui-linkbutton"  data-options="width:24,height:24" iconCls="icon-search" onclick="queryByType()"></a>-->
+							</div>
 						</div>
 					</div>
 				</div>
@@ -236,6 +243,12 @@
 
 //          第三方InfoBox时保存上次打开的窗口
             var infoBoxTemp = null;
+            //客户信息
+			var customerAddresses = null;
+			//地图对象
+			var map = null;
+
+            var markerClusterer = null;
             /**
              * 绑定页面回车事件，以及初始化页面时的光标定位
              * @formId
@@ -247,68 +260,103 @@
              */
             $(function () {
 // ============================  地图相关js  ============================
-                // 百度地图API功能
-                var map = new BMap.Map("mapDiv");
                 //哈尔滨
         		//var lat =45.766474;//126.608858;
                 //var lng =126.641694;//45.709509;
+
+                //所有客户地址信息
+				customerAddresses = ${customerAddress};
+                viewCustomerMap();
+            });
+
+            function initMap() {
+				map = new BMap.Map("mapDiv");
                 var lat ="<#config name='map.lat' />";
-                
                 var lng ="<#config name='map.lng' />";
-                
                 map.centerAndZoom(new BMap.Point(lng,lat), 5);
                 //map.centerAndZoom("哈尔滨市", 12);
                 map.enableScrollWheelZoom();
-                var MAX = 100;
-                var markers = [];
+            }
 
-                //所有客户地址信息
-                var customerAddresses = ${customerAddress};
-                for (var i = 0; i < customerAddresses.length; i++) {
-                    var customerAddress = customerAddresses[i];
-                    var pt = new BMap.Point(customerAddress.operatingLng,customerAddress.operatingLat);
-                    var marker = new BMap.Marker(pt, {icon: getLocationIcon(customerAddress.type)});
-                    //绑定自定义属性
-                    marker.meta={id:customerAddress.id, name:customerAddress.name};
-                    map.addOverlay(marker);
-                    //标签显示在图标下方
-                    var label = new window.BMap.Label(customerAddress.name, { offset: new window.BMap.Size(-10, 25) });
-                    label.setStyle({border:'0px',background: "transparent none repeat"});
-                    marker.setLabel(label);
-                    //鼠标悬停时显示
-                    marker.setTitle(marker.meta.name);
-                    marker.addEventListener("click", function(e){
-                        //第三方InfoBox
-                        if (infoBoxTemp) {
-                            infoBoxTemp.close();
+            function viewCustomerMap(){
+                initMap();
+                //获取已选择的复选框
+                var ck = $('input[name="type"]:checked');
+                if (ck.length == 0){
+                    //目前发现，clearOverlays貌似不能正常清除自定义覆盖物
+                    // map.clearOverlays();
+                    var overlays = map.getOverlays();
+                    if(overlays.length > 0){
+                        for (i = 0; i < overlays.length; i++) {
+                            // overlays[i].hide();
+                            map.removeOverlay(overlays[i]);
                         }
-                        var content = [
-                            '<iframe scrolling="auto" frameborder="0" src="'
-                            ,'http://crmweb.diligrp.com:8085/customer/info.html?id='+this.meta.id
-                            ,'" onLoad="" style="width:100%; height: 99.2%;"></iframe>'
-                        ];
-                        var infoBox = new BMapLib.InfoBox(map, content.join(""), {
-                            boxStyle:{
-                                background: "white none repeat scroll 0% 0%",
-                        		border:"1px solid #118bde",
-                                // background:"url('${contextPath}/resources/images/bg.png') no-repeat center top",
-                                width: "480px"
-                                ,height: "140px"
-                            }
-                            ,closeIconMargin: "1px 1px 0 0"
-                            ,offset: new BMap.Size(0, 18)
-                            ,closeIconUrl:"${contextPath}/resources/images/close24.png"
-                            ,enableAutoPan: true
-                            ,align: INFOBOX_AT_TOP
-                        });
-                        infoBoxTemp = infoBox;
-                        infoBox.open(this);
+                    }
+                    //标记
+                    if (markerClusterer) {
+                        // markerClusterer.clearMarkers();
+                        var mcs = markerClusterer.getMarkers();
+                        if(mcs.length > 0){
+                            markerClusterer.removeMarkers(mcs);
+                        }
+                    }
+
+                }else{
+                    var markers = [];
+                    var chk_value =[];//定义一个数组
+                    ck.each(function(){//遍历
+                        chk_value.push($(this).val());//将选中的值添加到数组chk_value中
                     });
-                    markers.push(marker);
+                    for (var i = 0; i < customerAddresses.length; i++) {
+                        var customerAddress = customerAddresses[i];
+                        if (null == customerAddress.type || $.inArray(customerAddress.type, chk_value) >=0 ){
+                            var pt = new BMap.Point(customerAddress.operatingLng,customerAddress.operatingLat);
+                            var marker = new BMap.Marker(pt, {icon: getLocationIcon(customerAddress.type)});
+                            //绑定自定义属性
+                            marker.meta={id:customerAddress.id, name:customerAddress.name};
+                            map.addOverlay(marker);
+                            //标签显示在图标下方
+                            var label = new window.BMap.Label(customerAddress.name, { offset: new window.BMap.Size(-10, 25) });
+                            label.setStyle({border:'0px',background: "transparent none repeat"});
+                            marker.setLabel(label);
+                            //鼠标悬停时显示
+                            marker.setTitle(marker.meta.name);
+                            marker.addEventListener("click", function(e){
+                                //第三方InfoBox
+                                if (infoBoxTemp) {
+                                    infoBoxTemp.close();
+                                }
+                                var content = [
+                                    '<iframe scrolling="auto" frameborder="0" src="'
+                                    ,'http://crmweb.diligrp.com:8085/customer/info.html?id='+this.meta.id
+                                    ,'" onLoad="" style="width:100%; height: 99.2%;"></iframe>'
+                                ];
+                                var infoBox = new BMapLib.InfoBox(map, content.join(""), {
+                                    boxStyle:{
+                                        background: "white none repeat scroll 0% 0%",
+                                        border:"1px solid #118bde",
+                                        // background:"url('${contextPath}/resources/images/bg.png') no-repeat center top",
+                                        width: "480px"
+                                        ,height: "140px"
+                                    }
+                                    ,closeIconMargin: "1px 1px 0 0"
+                                    ,offset: new BMap.Size(0, 18)
+                                    ,closeIconUrl:"${contextPath}/resources/images/close24.png"
+                                    ,enableAutoPan: true
+                                    ,align: INFOBOX_AT_TOP
+                                });
+                                infoBoxTemp = infoBox;
+                                infoBox.open(this);
+                            });
+                            markers.push(marker);
+                        }
+                    }
+                    //最简单的用法，生成一个marker数组，然后调用markerClusterer类即可。
+                    markerClusterer = new BMapLib.MarkerClusterer(map, {markers:markers});
                 }
-                //最简单的用法，生成一个marker数组，然后调用markerClusterer类即可。
-                var markerClusterer = new BMapLib.MarkerClusterer(map, {markers:markers});
-            })
+
+            }
+
             $(document).ready(function(){
                 var clientRefreshFrequency=${clientRefreshFrequency};
                 queryGrid();

@@ -4,6 +4,7 @@ import com.dili.points.domain.PointsExchangeRecord;
 import com.dili.points.domain.dto.PointsExchangeRecordDTO;
 import com.dili.points.service.PointsExchangeRecordService;
 import com.dili.ss.domain.BaseOutput;
+import com.dili.ss.exception.BusinessException;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
@@ -58,8 +59,13 @@ public class PointsExchangeRecordController {
 	})
     @RequestMapping(value="/insert", method = {RequestMethod.GET, RequestMethod.POST})
     public @ResponseBody BaseOutput insert(PointsExchangeRecord pointsExchangeRecord) {
-        pointsExchangeRecordService.insertSelective(pointsExchangeRecord);
-        return BaseOutput.success("新增成功");
+        try {
+            return pointsExchangeRecordService.insertSelectiveWithOutput(pointsExchangeRecord);
+        } catch (BusinessException e) {
+            return BaseOutput.failure(e.getErrorMsg());
+        } catch (Exception e) {
+            return BaseOutput.failure("系统异常");
+        }
     }
 
     @ApiOperation("修改PointsExchangeRecord")

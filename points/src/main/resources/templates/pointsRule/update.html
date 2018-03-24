@@ -33,14 +33,14 @@
                     <table align="center" width="94%">
                         <tr>
                             <td style="padding-top:10px;" width="25%">
-                                <input class="easyui-combobox inputWidth" name="businessType" id="businessType"
+                                <input class="easyui-combobox inputWidth" panelWidth="auto" panelHeight="auto" name="businessType" id="businessType"
                                        data-options="required:true,editable:false,labelAlign:'right',label:'&lowast;交易类型:'"/>
                                 <#comboProvider _id="businessType" _provider='dataDictionaryValueProvider'
                                 _queryParams='{dd_id:"20"}'/>
 
                             </td>
                             <td style="padding-top:10px;" width="25%">
-                                <input class="easyui-combobox inputWidth" name="customerType" id="customerType"
+                                <input class="easyui-combobox inputWidth" panelWidth="auto" panelHeight="auto" name="customerType" id="customerType"
                                        data-options="required:true,editable:false,labelAlign:'right',label:'&lowast;生效对象:'"/>
                                 <#comboProvider _id="customerType" _provider='dataDictionaryValueProvider'
                                 _queryParams='{dd_id:"4"}'/>
@@ -70,7 +70,7 @@
                         <tr>
                             <td style="padding-top:10px;" width="25%">
                                 <input class="easyui-combobox inputWidth" name="computingStandard"
-                                       id="computingStandard"
+                                       id="computingStandard" panelWidth="auto" panelHeight="auto"
                                        data-options="required:true,editable:false,labelAlign:'right',label:'&lowast;计算标准:'"/>
                                 <#comboProvider _id="computingStandard" _provider='dataDictionaryValueProvider'
                                 _queryParams='{dd_id:"21"}'/>
@@ -100,8 +100,8 @@
                                    data-options="url:'${contextPath}/ruleCondition/list?pointRuleId=${id}&weightType=10',singleSelect:true,collapsible:false,method:'get',toolbar:toolbar,style:{marginTop:20}">
                                 <thead>
                                 <tr>
-                                    <th data-options="formatter:formatUpdateDisplay,field:'displayText',width:200">交易量（公斤）</th>
-                                    <th data-options="field:'weight',width:100">权重值</th>
+                                    <th width="51%" data-options="formatter:formatUpdateDisplay,field:'displayText',width:200">交易量（公斤）</th>
+                                    <th width="52%" data-options="field:'weight',width:100">权重值</th>
                                     <th data-options="_provider:'dataDictionaryValueProvider', _queryParams:'{dd_id:23}',field:'conditionType',width:100,hidden:true"></th>
                                     <th data-options="field:'value',width:100,hidden:true"></th>
                                     <th data-options="field:'startValue',width:100,hidden:true"></th>
@@ -115,8 +115,8 @@
                                    data-options="url:'${contextPath}/ruleCondition/list?pointRuleId=${id}&weightType=20',singleSelect:true,collapsible:false,method:'get',toolbar:toolbarMoney,style:{marginTop:20}">
                                 <thead>
                                 <tr>
-                                    <th data-options="formatter:formatUpdateDisplay,field:'displayText',width:200">交易量（公斤）</th>
-                                    <th data-options="field:'weight',width:100">权重值</th>
+                                    <th  width="51%" data-options="formatter:formatUpdateDisplay,field:'displayText',width:200">交易量（公斤）</th>
+                                    <th  width="52%" data-options="field:'weight',width:100">权重值</th>
                                     <th data-options="_provider:'dataDictionaryValueProvider', _queryParams:'{dd_id:23}',field:'conditionType',width:100,hidden:true"></th>
                                     <th data-options="field:'value',width:100,hidden:true"></th>
                                     <th data-options="field:'startValue',width:100,hidden:true"></th>
@@ -130,8 +130,8 @@
                                    data-options="url:'${contextPath}/ruleCondition/list?pointRuleId=${id}&weightType=40',singleSelect:true,collapsible:false,method:'get',toolbar:toolbarPay,style:{marginTop:20}">
                                 <thead>
                                 <tr>
-                                    <th data-options="formatter:formatPayDisplay,field:'displayText',width:200">支付方式</th>
-                                    <th data-options="field:'weight',width:100">权重值</th>
+                                    <th  width="51%" data-options="formatter:formatPayDisplay,field:'displayText',width:200">支付方式</th>
+                                    <th  width="52%" data-options="field:'weight',width:100">权重值</th>
                                     <th data-options="field:'value',width:100,hidden:true"></th>
                                 </tr>
                                 </thead>
@@ -152,7 +152,7 @@
         <table cellpadding="5" id="tb" style="width: 100%">
             <tr>
                 <td><span style="display:inline-block;line-height: 26px">条件:</span></td>
-                <td><input class="easyui-combobox inputWidth" name="conditionType" id="conditionType"
+                <td><input style="width:140px" class="easyui-combobox inputWidth" name="conditionType" id="conditionType"
                            data-options="required:true,editable:false,labelAlign:'right'">
                 </td>
             </tr>
@@ -197,7 +197,7 @@
         <table cellpadding="5" style="width: 100%">
             <tr>
                 <td><span style="display:inline-block;line-height: 26px">支付方式:</span></td>
-                <td><input class="easyui-combobox inputWidth" name="conditionType" id="payConditionType"
+                <td><input style="width:140px" class="easyui-combobox inputWidth" name="conditionType" id="payConditionType"
                            data-options="required:true,editable:false,labelAlign:'right'">
                     <#comboProvider _id="payConditionType" _provider='dataDictionaryValueProvider'
                     _queryParams='{dd_id:"19"}'/>

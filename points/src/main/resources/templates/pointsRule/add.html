@@ -100,9 +100,9 @@
                                    data-options="singleSelect:true,collapsible:false,method:'get',toolbar:toolbar,style:{marginTop:20}">
                                 <thead>
                                 <tr>
-                                    <th data-options="formatter:formatDisplay,field:'displayText',width:200">交易量（公斤）
+                                    <th  width="51%" data-options="formatter:formatDisplay,field:'displayText',width:200">交易量（公斤）
                                     </th>
-                                    <th data-options="field:'weight',width:100">权重值</th>
+                                    <th  width="52%" data-options="field:'weight',width:100">权重值</th>
                                     <th data-options="field:'conditionType',width:100,hidden:true"></th>
                                     <th data-options="field:'value',width:100,hidden:true"></th>
                                     <th data-options="field:'startValue',width:100,hidden:true"></th>
@@ -116,8 +116,8 @@
                                    data-options="singleSelect:true,collapsible:false,method:'get',toolbar:toolbarMoney,style:{marginTop:20}">
                                 <thead>
                                 <tr>
-                                    <th data-options="formatter:formatDisplay,field:'displayText',width:200">交易额（元）</th>
-                                    <th data-options="field:'weight',width:100">权重值</th>
+                                    <th  width="51%" data-options="formatter:formatDisplay,field:'displayText',width:200">交易额（元）</th>
+                                    <th  width="52%" data-options="field:'weight',width:100">权重值</th>
                                     <th data-options="field:'conditionType',width:100,hidden:true"></th>
                                     <th data-options="field:'value',width:100,hidden:true"></th>
                                     <th data-options="field:'startValue',width:100,hidden:true"></th>
@@ -131,8 +131,8 @@
                                    data-options="singleSelect:true,collapsible:false,method:'get',toolbar:toolbarPay,style:{marginTop:20}">
                                 <thead>
                                 <tr>
-                                    <th data-options="field:'displayText',width:200">支付方式</th>
-                                    <th data-options="field:'weight',width:100">权重值</th>
+                                    <th  width="51%" data-options="field:'displayText',width:200">支付方式</th>
+                                    <th  width="52%" data-options="field:'weight',width:100">权重值</th>
                                     <th data-options="field:'value',width:100,hidden:true"></th>
                                 </tr>
                                 </thead>
@@ -153,7 +153,7 @@
         <table cellpadding="5" id="tb" style="width: 100%">
             <tr>
                 <td><span style="display:inline-block;line-height: 26px">条件:</span></td>
-                <td><input class="easyui-combobox inputWidth" name="conditionType" id="conditionType"
+                <td><input style="width:140px" class="easyui-combobox inputWidth" name="conditionType" id="conditionType"
                            data-options="required:true,editable:false,labelAlign:'right'">
                 </td>
             </tr>
@@ -198,7 +198,7 @@
         <table cellpadding="5" style="width: 100%">
             <tr>
                 <td><span style="display:inline-block;line-height: 26px">支付方式:</span></td>
-                <td><input class="easyui-combobox inputWidth" name="conditionType" id="payConditionType"
+                <td><input style="width:140px" class="easyui-combobox inputWidth" name="conditionType" id="payConditionType"
                            data-options="required:true,editable:false,labelAlign:'right'">
                     <#comboProvider _id="payConditionType" _provider='dataDictionaryValueProvider'
                     _queryParams='{dd_id:"19"}'/>

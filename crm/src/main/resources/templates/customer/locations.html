@@ -205,7 +205,7 @@
         //          第三方InfoBox时保存上次打开的窗口
         var infoBoxTemp = null;
         //百度地图
-        var map = new BMap.Map("mapDiv");
+        var map = null;
         /**
          * 绑定页面回车事件，以及初始化页面时的光标定位
          * @formId
@@ -217,12 +217,7 @@
          */
         $(function () {
 // ============================  地图相关js  ============================
-            // 百度地图API功能
-            //哈尔滨
-            var lat = 45.709509;
-            var lng = 126.608858;
-            map.centerAndZoom(new BMap.Point(lng,lat), 5);
-            map.enableScrollWheelZoom();
+            initMap();
             var markers = [];
             //所有客户地址信息
             var customerAddresses = ${customerAddress};
@@ -271,7 +266,13 @@
             //最简单的用法，生成一个marker数组，然后调用markerClusterer类即可。
             var markerClusterer = new BMapLib.MarkerClusterer(map, {markers:markers});
         });
-
+        function initMap() {
+            map = new BMap.Map("mapDiv");
+            var lat ="<#config name='map.lat' />";
+            var lng ="<#config name='map.lng' />";
+            map.centerAndZoom(new BMap.Point(lng,lat), 5);
+            map.enableScrollWheelZoom();
+        }
         /**
          * 根据客户类型展现客户地图
          */
@@ -287,6 +288,7 @@
                         overlays[i].hide();
                     }
                 }
+                initMap();
             }else{
                 var chk_value =[];//定义一个数组
                 ck.each(function(){//遍历

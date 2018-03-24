@@ -183,7 +183,7 @@
             return;
         }
         if (selected.$_yn == 0) {
-            $.messager.alert('警告', '该规则已启用，无需重复禁用!');
+            $.messager.alert('警告', '该规则已禁用，无需重复禁用!');
             return;
         }
         $.messager.confirm('确认', '您确认想要禁用规则吗？', function (r) {
