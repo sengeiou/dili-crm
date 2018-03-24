@@ -111,7 +111,7 @@
 				}]
 			">
     <form id="_form" class="easyui-form" method="post" fit="true">
-        <input name="_id" id="_id" type="hidden">
+        <input name="_customerId" id="_customerId" type="hidden">
         <table width="360px">
             <tr>
                 <td style="padding:5px;">
@@ -206,6 +206,9 @@
         $('#dlg').dialog('open');
         $('#dlg').dialog('center');
         formFocus("_form", "_certificateNumber");
+        
+        $('#_customerId').val(selected['id']);
+        
         var formData = $.extend({},selected);
         formData = addKeyStartWith(getOriginalData(formData),"_");
         $('#_form').form('load', formData);
@@ -380,7 +383,7 @@
                             }
                         },
                     
-                    {
+                    /*{
                         iconCls:'icon-add',
                         text:'新增',
                         handler:function(){
@@ -400,7 +403,7 @@
                         handler:function(){
                             del();
                         }
-                    },
+                    },*/
                     {
                         iconCls:'icon-export',
                         text:'导出',

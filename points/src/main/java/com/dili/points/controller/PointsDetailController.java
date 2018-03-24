@@ -94,7 +94,8 @@ public class PointsDetailController {
 		}
 		pointsDetail.setCreatedId(userTicket.getId());//操作人
     	pointsDetail.setGenerateWay(50);//50 手工调整
-        pointsDetailService.insert(pointsDetail);
+    	Long customerId=Long.parseLong(pointsDetail.aget("customerId").toString());
+        pointsDetailService.insert(pointsDetail,customerId);
         return BaseOutput.success("新增成功");
     }
     

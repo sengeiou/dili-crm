@@ -16,6 +16,8 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  * 由MyBatis Generator工具自动生成 This file was generated on 2018-03-20 11:29:31.
@@ -31,27 +33,28 @@ public class PointsDetailServiceImpl extends BaseServiceImpl<PointsDetail, Long>
 	CustomerPointsMapper customerPointsMapper;
 	@Autowired
 	CustomerRpc customerRpc;
-	public int insert(PointsDetail pointsDetail) {
+	@Transactional(propagation=Propagation.REQUIRED)
+	public int insert(PointsDetail pointsDetail,Long customerId) {
 		CustomerPoints example = DTOUtils.newDTO(CustomerPoints.class);
 		example.setCertificateNumber(pointsDetail.getCertificateNumber());
 		// 如果用户积分不存在,则先插入用户积分
 		CustomerPoints customerPoints = this.customerPointsMapper.select(example).stream().findFirst()
 				.orElseGet(() -> {
-					CustomerApiDTO customer=DTOUtils.newDTO(CustomerApiDTO.class);
-					customer.setCertificateNumber(pointsDetail.getCertificateNumber());
-					Customer c=customerRpc.list(customer).getData().stream().findFirst().orElseGet(null);
-					if(c!=null) {
+					//CustomerApiDTO customer=DTOUtils.newDTO(CustomerApiDTO.class);
+					//customer.setCertificateNumber(pointsDetail.getCertificateNumber());
+					//Customer c=customerRpc.list(customer).getData().stream().findFirst().orElseGet(null);
+					//if(c!=null) {
 						CustomerPoints cp = DTOUtils.newDTO(CustomerPoints.class);
 						cp.setAvailable(0);
-						cp.setId(c.getId());
+						cp.setId(customerId);
 						cp.setCertificateNumber(pointsDetail.getCertificateNumber());
 						cp.setCreated(new Date());
 						cp.setFrozen(0);
 						cp.setTotal(0);
 						this.customerPointsMapper.insertExact(cp);
 						return cp;
-					}
-					return null;
+					//}
+					//return null;
 				});
 		//无法找到客户信息
 		if(customerPoints==null) {
@@ -77,9 +80,10 @@ public class PointsDetailServiceImpl extends BaseServiceImpl<PointsDetail, Long>
 		customerPoints.setTotal(customerPoints.getAvailable() + customerPoints.getFrozen());
 
 		pointsDetail.setBalance(customerPoints.getTotal());
-		pointsDetail.setId(System.currentTimeMillis());
+//		pointsDetail.setId(System.currentTimeMillis());
 		this.customerPointsMapper.updateByPrimaryKey(customerPoints);
 //return 0;
+//		pointsDetail.setId(null);
 		return super.insertSelective(pointsDetail);
 	}
 

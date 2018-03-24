@@ -10,6 +10,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.tuple.MutablePair;
@@ -102,16 +103,28 @@ public class OrderListener {
 		List<RuleCondition>list=ruleConditionService.listByExample(condition);
 		return list;
 	}
-	private List<Order> sumOrdersForPurchase(Collection<Order> orderList){
+	protected List<Order> sumOrdersForPurchase(Collection<Order> orderList){
+		if(orderList.size()==1) {
+			return orderList.stream().collect(Collectors.toList());
+		}
+		
+		
 		Order order=DTOUtils.newDTO(Order.class);
 		order.setTotalMoney(0L);
 		order.setWeight(BigDecimal.ZERO);
 		
 		for(Order orderObj:orderList) {
-			order.setBusinessType(orderObj.getBusinessType());
 			order.setTotalMoney(orderObj.getTotalMoney()+order.getTotalMoney());
 			order.setWeight(orderObj.getWeight().add(order.getWeight()));
 			order.setPayment(orderObj.getPayment());
+			
+			order.setBusinessType(orderObj.getBusinessType());
+			order.setBuyerCardNo(orderObj.getBuyerCardNo());
+			order.setBuyerCertificateNumber(orderObj.getBuyerCertificateNumber());
+			order.setCode(orderObj.getCode());
+			order.setPayment(orderObj.getPayment());
+			order.setSellerCardNo(orderObj.getSellerCardNo());
+			order.setSellerCertificateNumber(orderObj.getSellerCertificateNumber());
 		}
 		return Arrays.asList(order);
 	}
@@ -164,12 +177,22 @@ public class OrderListener {
 			PointsDetail pointsDetail=DTOUtils.newDTO(PointsDetail.class); 
 			pointsDetail.setPoints(0);
 			pointsDetail.setSourceSystem(order.getSourceSystem());
-			pointsDetail.setOrder(order.getOrder());
+			//只有一个订单信息
+			if(orderList.size()==1) {
+				pointsDetail.setOrderCode(order.getCode());
+				pointsDetail.setOrderType("order");//settlementOrder结算单号,order主单	
+			}else {
+				pointsDetail.setOrderCode(order.getSettlementCode());
+				pointsDetail.setOrderType("settlementOrder");//settlementOrder结算单号,order主单
+			}
+			//buyer
 			if(isPurchase) {
 				pointsDetail.setCertificateNumber(order.getBuyerCertificateNumber());
 			}else {
 				pointsDetail.setCertificateNumber(order.getSellerCertificateNumber());
 			}
+			pointsDetail.setSourceSystem(order.getSourceSystem());
+			
 			//如果买家或者卖家的证件号为空,则不进行积分
 			if(StringUtils.isBlank(pointsDetail.getCertificateNumber())) {
 				break;
