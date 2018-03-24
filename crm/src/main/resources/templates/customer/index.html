@@ -132,8 +132,7 @@
             </div>
         </div> <!-- end of region="center" -->
     </div>
-<div id="dd" class="easyui-dialog" title="&nbsp;&nbsp;客户:&nbsp;<span id='c_name'></span> <span id='c_address'>&nbsp;&nbsp;所在城市:&nbsp;<input type='text' id='address_city' style='width:20%; height: 20px; line-height: 20px;border: 1px solid #d4d4d4;'/></span> <a id='nextLocationLink' style='vertical-align: sub;' href='javascript:void(0); '  onclick='previousLocation();'><img src='${contextPath}/resources/images/icon/previous.png'/></a>
-<a id='nextLocationLink' style='vertical-align: sub;' href='javascript:void(0);' onclick='nextLocation();'><img src='${contextPath}/resources/images/icon/next.png'/></a>" style="width:800px;height:400px;"
+<div id="dd" class="easyui-dialog" title="&nbsp;&nbsp;客户:&nbsp;<span id='c_name'></span> <span id='c_address'>&nbsp;&nbsp;所在城市:&nbsp;<input type='text' disabled id='address_city' style='width:30%; height: 20px; line-height: 20px;border: 1px solid #d4d4d4;'/></span>" style="width:800px;height:400px;"
         data-options="resizable:true,modal:true,closed:true,onClose:function(){clientLocationMap.customer=null;}">
 
   <div id="clientAddressMapDiv" style="width:100%;height:100%;" ></div>   
@@ -224,253 +223,66 @@
             });
         }
         // var markerClusterer=null;
-        var clientLocationMap={map:null,markers:[],clusterer:null,customer:null,clickable:true};
+        var clientLocationMap={map:null,customer:null};
         function initOrGetClientLocationMap(){
         	if(clientLocationMap.map==null){
                 var lat ="<#config name='map.lat' />";
-                
                 var lng ="<#config name='map.lng' />";
-                
            	    var map=new BMap.Map("clientAddressMapDiv");
            	    map.centerAndZoom(new BMap.Point(lng,lat), 13);
-           	    //map.centerAndZoom("哈尔滨市", 13);
            	    map.enableScrollWheelZoom();
-           	    var markers=[];
-                 var clusterer=new BMapLib.MarkerClusterer(map, {markers:markers});
-           	   clientLocationMap.map=map;
-           	   clientLocationMap.markers=markers;
-           	   clientLocationMap.clusterer=clusterer;
+                clientLocationMap.map=map;
         	}
         	return clientLocationMap;
         }
 
-		function nextLocation() {
-			if(clientLocationMap.clickable==false){
-				return;
-			}
-			clientLocationMap.clickable=false;
-			var customer=clientLocationMap.customer;
-			//使customer.centerIndex指向下一下位置索引
-			 if(customer!=null){
-			    if(customer.addresses.length>0){
-			      	var currentCenterIndex=customer.centerIndex;
-			      	if(currentCenterIndex>=customer.addresses.length-1){
-			      		currentCenterIndex=-1;
-			      	}
-			      	customer.centerIndex=currentCenterIndex+1;
-			      }
-				//调用方法显示位置信息
-				showMapDialog(customer);
-			 }
-		}
-		function previousLocation() {
-			if(clientLocationMap.clickable==false){
-				return;
-			}
-			clientLocationMap.clickable=false;
-			var customer=clientLocationMap.customer;
-			//使customer.centerIndex指向下一下位置索引
-			 if(customer!=null){
-			    if(customer.addresses.length>0){
-			      	var currentCenterIndex=customer.centerIndex;
-			      	if(currentCenterIndex<=0){
-			      		currentCenterIndex=customer.addresses.length;
-			      	}
-			      	customer.centerIndex=currentCenterIndex-1;
-			      }
-				//调用方法显示位置信息
-				showMapDialog(customer);
-			 }
-		}
-		
+		/**
+         * 显示客户地址，定位客户
+         */
         function showMapDialog(customer) {
-        	debugger;
-        	addresses=customer.addresses;
-        	centerAddress=addresses[customer.centerIndex];
+            var lat = customer.operatingLat;
+            var lng = customer.operatingLng;
+            if (null == lat || null == lng){
+                $.messager.alert('错误','未设置经营区域地址');
+                return;
+            }
         	$('#c_name').html(customer.name);
-            $('#address_city').val(centerAddress['cityId']);
-        	//绑定下一个位置事件
-
-              clientLocationMap.customer=customer;
-              var map=clientLocationMap.map;
-              map.setZoom(13);
-              var markerClusterer=clientLocationMap.clusterer;
-              //移除聚合点(保留图层)
-              for (var i = 0; i < clientLocationMap.markers.length; i++) {
-                  	 map.removeOverlay(clientLocationMap.markers[i]);
-	          }
-             // map.clearOverlays();    //清除地图上所有覆盖物
-              map.reset();
-              //移除聚合点(保留图层)
-              markerClusterer.clearMarkers();
-              
-              //设置中心位置
-              var lat = parseFloat(centerAddress['lat']);//126.608858;
-              var lng = parseFloat(centerAddress['lng']);//45.709509;
-           	  map.setCenter(new BMap.Point(lng,lat));
-           	  
-           	  
-              var markers = [];
-              var myIcon = new BMap.Icon("${contextPath}/resources/images/icon/pos-icon.png", new BMap.Size(23, 25), {
-                   // 指定定位位置。
-                   // 当标注显示在地图上时，其所指向的地理位置距离图标左上
-                   // 角各偏移7像素和20像素。
-                   anchor: new BMap.Size(7, 20)
-               });
-               
-              //遍历地址,添加聚合点
-                for(var i=0;i<addresses.length;i++){
-                	 var addr=addresses[i];
-                	 var pt = new BMap.Point(addr.lng, addr.lat);
-                     var marker =null;
-                     if(i==customer.centerIndex){
-                   	  	marker = new BMap.Marker(pt);//当前位置使用默认红色图标
-                      }else{
-                   	  	marker = new BMap.Marker(pt, {icon: myIcon});//其他位置使用自定义图标
-                      }
-                     //绑定自定义属性
-                     marker.meta={id:addr.id, name:customer.name,addr:addr};
-                     //对地图添加聚合点
-                     map.addOverlay(marker);
-                     if(i==customer.centerIndex){//当前位置使用动画特效
-                      	marker.setAnimation(BMAP_ANIMATION_BOUNCE);	
-                      }
-                     var label = new window.BMap.Label('', { offset: new window.BMap.Size(-7, 20) });
-                     label.setStyle({border:'0px',background: "transparent none repeat"});
-                     marker.setLabel(label);
-                     //鼠标悬停时显示
-                     marker.setTitle(marker.meta.name);
-                    //触发点击聚合点事件
-                     marker.addEventListener("click", function(e){
-                     	var p = new BMap.Point(e.point.lng,e.point.lat); //这里设置刚开始的点所在处
-                     	var gc = new BMap.Geocoder();  
-                     	var m=this;
-                     	gc.getLocation(p, function (rs) {
-
-                            //由于在getLocation函数返回信息之前，首先执行它下面的代码的，所以要把重新拖动后的代码放到它里面
-                           //获取并显示地址信息
-                            var addComp = rs.addressComponents;
-                            var province = addComp.province;//获取省份
-                            var city = addComp.city;//获取城市
-                            var district = addComp.district;//区
-                           // var street = addComp.street;//街
-                            var ad=province+city+district;
-                           
-                            
-                            //第三方InfoBox
-                            if (typeof(infoBoxTemp)!='undefined') {
-                                infoBoxTemp.close();
-                            }
-                            var currentAddr=m.meta.addr;
-                            var content = "<table style='margin-top: 20px;color:#118bde;'>";  
-                            content = content + "<tr><td> <strong>名称：</strong>"+(typeof(currentAddr['name'])=='undefined'?'':currentAddr['name'])+"</td></tr>";  
-                            content = content + "<tr><td> <strong>城市：</strong>"+ad+"</td></tr>";
-                            content = content + "<tr><td> <strong>地址：</strong>"+(typeof(currentAddr['address'])=='undefined'?'':currentAddr['address'])+"</td></tr>"; 
-                            content += "</table>";
-                            var infoBox = new BMapLib.InfoBox(map, content, {
-                                boxStyle:{
-                                    background: "white none repeat scroll 0% 0%"
-                            		,border:"1px solid #118bde"
-                                    // background:"url('${contextPath}/resources/images/bg.png') no-repeat center top",
-                                   , width: "480px"
-                                    ,height: "140px"
-                                }
-                                ,closeIconMargin: "1px 1px 0 0"
-                                ,offset: new BMap.Size(0, 18)
-                                ,closeIconUrl:"${contextPath}/resources/images/close24.png"
-                                ,enableAutoPan: true
-                                ,align: INFOBOX_AT_TOP
-                            });
-                            infoBoxTemp = infoBox;
-                            infoBox.open(m);
-                         	
-                     	});
-                       
-                     });
-   
-                     
-                   //添加聚合点到数组
-                     markers.push(marker);	
-                   //添加聚合点到图层
-                     //markerClusterer.addMarker(marker);
-                    
-                }
-                //保存聚合点到全局对象,用以下一次清空
-               clientLocationMap.markers=markers;
-               window.setTimeout(function(){  
-                	map.panTo(new BMap.Point(lng,lat)); 
-                    window.setTimeout(function(){  
-                    	clientLocationMap.clickable=true;
-                    }, 350);
-                }, 350);
-               
-                $('#dd').dialog('open',true);  
+            $('#address_city').val(customer.operatingArea);
+            clientLocationMap.customer=customer;
+            var map=clientLocationMap.map;
+            map.setZoom(13);
+            //设置中心位置
+            var point = new BMap.Point(lng,lat);
+            map.setCenter(point);
+            addOverlayForAddress(map,point);
+            window.setTimeout(function(){
+               map.panTo(point);
+            }, 100);
+            $('#dd').dialog('open',true);
         
         }  
         function locateCustomers(gridId){
         	//var rows=[];
         	var selected = $("#"+gridId).treegrid("getSelected");
             if (null == selected) {
-            	//rows.push($("#"+gridId).treegrid("getRows"));
-            	 //listDefaultAddressByCustomerIds
             	$.messager.alert('警告','请选中一条数据');
                 return;
             }else{
-                $.ajax({
-                    type: "POST",
-                    url: "${contextPath}/address/listPage",
-                    data: {customerId:selected.id},
-                    processData:true,
-                    dataType: "json",
-                    async : true,
-                    success: function (data) {
-                        debugger;
-                    	var defaultAddress=null;
-                    	var addresses=[];
-                    	$.each(data.rows,function(k,v){
-                    	  //判断地址经纬度是否存在
-                    	  if(typeof(v.lat)=='string'&&typeof(v.lat)=='string'){
-                   			 addresses.push(v);
-                   			if(v.isDefault==1&&defaultAddress==null){
-                    			defaultAddress=v;
-                    			//基于合法地址来定位默认地址(data的长度和addresses不一致)
-                    			selected.centerIndex=addresses.length-1;
-                    		}
-                       	  }
-                    	});
-                    	//设置所有可用地址
-                    	selected.addresses=addresses;
-                    	
-                    	if(defaultAddress==null){
-                    		//如果没有默认地址,就选择第一个地址做为首地址
-                    		if(selected.addresses.length>0){
-                    			selected.centerIndex=0;
-                            	showMapDialog(selected);
-                    		}else{
-                       		 	$.messager.alert('错误','选中客户没有地址信息');
-                    		 	return
-                    		}
-                    	}else{
-                    		showMapDialog(selected);
-                    	}
-                    	
-                        //if(data.code=="200"){
-                           // $("#grid").treegrid("reload");
-                           // $('#dlg').dialog('close');
-                       // }else{
-                        //    $.messager.alert('错误',data.result);
-                        //}
-                    },
-                    error: function(){
-                        $.messager.alert('错误','远程访问失败');
-                    }
-                });
-            	//rows.push(selected);
-            	//list
+                showMapDialog(selected);
             }
-            
-        	
-        };
+        }
+        /**
+         * 统一给地图添加 弹跳动画
+         * @param map 要添加动画的地图实例
+         * @param point 要添加动画的坐标点
+         */
+        function addOverlayForAddress(map,point) {
+            map.clearOverlays();    //清除地图上所有覆盖物
+            var marker = new BMap.Marker(point);  // 创建标注
+            map.addOverlay(marker);               // 将标注添加到地图中
+            marker.setAnimation(BMAP_ANIMATION_BOUNCE); //跳动的动画
+        }
+
         //加载完了必须要重设url，否则删除的时候可能会调用expand
         var onLoadSuccess = function(row, data) {
             $(this).treegrid("options").url = "${contextPath}/customer/listPage";
