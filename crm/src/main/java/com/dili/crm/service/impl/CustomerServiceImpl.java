@@ -7,6 +7,7 @@ import com.dili.crm.domain.Customer;
 import com.dili.crm.domain.Department;
 import com.dili.crm.domain.User;
 import com.dili.crm.domain.dto.*;
+import com.dili.crm.rpc.CustomerPointsRpc;
 import com.dili.crm.rpc.UserRpc;
 import com.dili.crm.service.CacheService;
 import com.dili.crm.service.ChartService;
@@ -50,6 +51,9 @@ public class CustomerServiceImpl extends BaseServiceImpl<Customer, Long> impleme
 
 	@Autowired
 	private UserRpc userRpc;
+
+	@Autowired
+	private CustomerPointsRpc customerPointsRpc;
 
     @Override
     public List<Customer> list(Customer condtion) {
@@ -186,15 +190,24 @@ public class CustomerServiceImpl extends BaseServiceImpl<Customer, Long> impleme
 			throw new RuntimeException("根据id["+id+"]找不到对应客户");
 		}
 		List<Map> list = ValueProviderUtils.buildDataByProvider(getCustomerMetadata(), Lists.newArrayList(customer));
-		Map userMap = list.get(0);
-		if(userMap.get("createdId") != null){
-			BaseOutput<User> userBaseOutput = userRpc.get(Long.parseLong(userMap.get("createdId").toString()));
+		Map customerMap = list.get(0);
+		if(customerMap.get("createdId") != null){
+			BaseOutput<User> userBaseOutput = userRpc.get(Long.parseLong(customerMap.get("createdId").toString()));
 			if(userBaseOutput.isSuccess()) {
-				userMap.put("createdName", userRpc.get(Long.parseLong(userMap.get("createdId").toString())).getData().getRealName());
+				customerMap.put("createdName", userRpc.get(Long.parseLong(customerMap.get("createdId").toString())).getData().getRealName());
 			}
 		}
-		modelMap.put("customerId", userMap.get("id"));
-		modelMap.put("customer", JSONObject.toJSONString(userMap));
+		//查询客户可用积分
+		CustomerPointsApiDTO customerPointsApiDTO = DTOUtils.newDTO(CustomerPointsApiDTO.class);
+		customerPointsApiDTO.setIds(Lists.newArrayList(customer.getId().toString()));
+		BaseOutput<List<CustomerPoints>> output = customerPointsRpc.listCustomerPoints(customerPointsApiDTO);
+		if(output.isSuccess() && !output.getData().isEmpty()){
+			customerMap.put("available", output.getData().get(0).getAvailable());
+		}else {
+			customerMap.put("available", 0);
+		}
+		modelMap.put("customerId", customerMap.get("id"));
+		modelMap.put("customer", JSONObject.toJSONString(customerMap));
 	    modelMap.put("startDate",this.calStartDate());
 	    modelMap.put("endDate",this.calEndDate());
 	    

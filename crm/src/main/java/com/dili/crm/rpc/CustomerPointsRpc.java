@@ -1,7 +1,7 @@
-package com.dili.points.rpc;
+package com.dili.crm.rpc;
 
-import com.dili.points.domain.Customer;
-import com.dili.points.domain.dto.CustomerApiDTO;
+import com.dili.crm.domain.dto.CustomerPoints;
+import com.dili.crm.domain.dto.CustomerPointsApiDTO;
 import com.dili.ss.domain.BaseOutput;
 import com.dili.ss.domain.EasyuiPageOutput;
 import com.dili.ss.retrofitful.annotation.POST;
@@ -16,14 +16,12 @@ import java.util.List;
  * 本软件源代码版权归农丰时代所有,未经许可不得任意复制与传播.<br />
  * <B>农丰时代科技有限公司</B>
  *
- * @author yuehongbo
- * @createTime 2018/3/21 14:29
+ * @author wangmi
+ * @createTime 2018/3/24 14:11
  */
-@Restful("${crm.contextPath}")
-public interface CustomerRpc {
+@Restful("${points.contextPath}")
+public interface CustomerPointsRpc {
 
-    @POST("/customerApi/list")
-    BaseOutput<List<Customer>> list(@VOBody CustomerApiDTO customer);
-    @POST("/customerApi/listPage")
-    BaseOutput<EasyuiPageOutput> listPage(@VOBody CustomerApiDTO customer);
+    @POST("/customerPointsApi/listCustomerPoints")
+    BaseOutput<List<CustomerPoints>> listCustomerPoints(@VOBody CustomerPointsApiDTO customer);
 }

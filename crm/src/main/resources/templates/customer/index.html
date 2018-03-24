@@ -51,7 +51,6 @@
                                 <a href="#" class="easyui-linkbutton" id="queryBtn" data-options="width:80" iconCls="icon-search"
                                    onclick="queryGrid()">查询</a>&nbsp;&nbsp;
                                 <a href="javascript:void(0)" class="easyui-linkbutton" data-options="width:80" iconCls="icon-clear" onclick="clearForm()">清除</a>
-
                             </td>
                         </tr>
                     </table>
@@ -117,11 +116,14 @@
                         <th data-options="field:'profession',  _provider:'dataDictionaryValueProvider', _queryParams:{'dd_id':'6'},  sortable:'true', order:'asc', align:'center', resizable:'true', fixed:'false'">
                             客户行业
                         </th>
-                        <th data-options="field:'operatingArea', _provider:'cityProvider',  sortable:'true', order:'asc', align:'center', resizable:'true', fixed:'false'">
+                        <th data-options="field:'operatingArea',   sortable:'true', order:'asc', align:'center', resizable:'true', fixed:'false'">
                             经营地区
                         </th>
                         <th data-options="field:'mainCategory',   sortable:'true', order:'asc', align:'center', resizable:'true', fixed:'false'">
                             主营品类
+                        </th>
+                        <th data-options="field:'availablePoints', formatter:availablePointsFormatter, _fkField:'id', _provider:'customerPointsProvider',  sortable:'true', order:'asc', align:'center', resizable:'true', fixed:'false'">
+                            可用积分
                         </th>
                         <th data-options="field:'created', _provider:'datetimeProvider',  sortable:'true', order:'asc', align:'center', resizable:'true', fixed:'false'">
                             创建时间
@@ -144,7 +146,10 @@
     <script type="text/javascript">
 
         // ============================   客户相关js st  ==============================
-
+        //客户积分格式化器，为空时显示0
+        function availablePointsFormatter(value,row,index) {
+            return (value == null || value == "") ? 0 : value;
+        }
         //加载完了必须要重设url，否则删除的时候可能会调用expand
 //        var onLoadSuccess = function(row, data) {
 //            $(this).treegrid("options").url = "${contextPath}/customer/listPage";
