@@ -120,11 +120,7 @@ public class PointsRuleController {
     @RequestMapping(value = "/insert", method = {RequestMethod.GET, RequestMethod.POST})
     public @ResponseBody
     BaseOutput insert(PointsRule pointsRule, String numberJson, String moneyJson, String payMethodJson) {
-        try {
-            pointsRuleService.insertPointRule(pointsRule, numberJson, moneyJson, payMethodJson);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        pointsRuleService.insertPointRule(pointsRule, numberJson, moneyJson, payMethodJson);
         return BaseOutput.success("新增成功");
     }
 

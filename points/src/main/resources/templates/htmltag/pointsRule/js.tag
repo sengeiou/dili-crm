@@ -120,7 +120,7 @@
 
     // 保存交易额，交易量
     function saveNumber() {
-        if (!$("#number_form").form('validate')) {
+        if (!$("#pay_form").form('validate')) {
             return;
         }
         var dg = $("#dg_" + $("#type").val());
@@ -141,7 +141,7 @@
             });
         }
         $('#dlg').dialog('close');
-        $('#number_form').form('clear');
+        $('#pay_form').form('clear');
     }
 
 

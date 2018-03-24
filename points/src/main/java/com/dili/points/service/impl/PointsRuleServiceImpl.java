@@ -46,6 +46,8 @@ public class PointsRuleServiceImpl extends BaseServiceImpl<PointsRule, Long> imp
     public void insertPointRule(PointsRule pointsRule, String numberJson, String moneyJson, String payMethodJson) {
         pointsRule.setCreatedId(SessionContext.getSessionContext().getUserTicket().getId());
         pointsRule.setYn(0);
+        pointsRule.setModifiedId(pointsRule.getCreatedId());
+        pointsRule.setModified(new Date());
         getActualDao().insertSelective(pointsRule);
         savelog(pointsRule.getId());
         makeRuleCondition(pointsRule, numberJson, moneyJson, payMethodJson);
