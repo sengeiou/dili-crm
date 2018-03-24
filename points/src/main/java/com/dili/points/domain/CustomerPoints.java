@@ -80,4 +80,13 @@ public interface CustomerPoints extends IBaseDomain {
     Date getModified();
 
     void setModified(Date modified);
+    
+
+    @Column(name = "`day_points`")
+    @FieldDef(label="当天积分总和")
+    @EditMode(editor = FieldEditor.Number, required = true)
+    Integer getDayPoints();
+
+    void setDayPoints(Integer dayPoints);
+    
 }

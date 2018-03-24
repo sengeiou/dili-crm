@@ -17,8 +17,8 @@ import java.util.UUID;
 @Configuration
 public class RabbitConfiguration {
 
-    public static final String DEFAULT_TOPIC_EXCHANGE = "diligrp.crm.topic";
-    public static final String TOPIC_ROUTE_KEY = "crm.customer";
+    public static final String DEFAULT_TOPIC_EXCHANGE = "diligrp.points.topicExchange";
+    public static final String TOPIC_ROUTE_KEY = "diligrp. points. syncOrderKey";
     public static final String TOPIC_QUEUE = "points-" + UUID.randomUUID();
 
     @Bean
