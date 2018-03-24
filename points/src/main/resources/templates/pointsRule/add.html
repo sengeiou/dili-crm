@@ -57,7 +57,10 @@
                             <td style="padding-top:10px;padding-left:10px;" width="25%">
                                 <input class="easyui-textbox inputWidth" name="code" id="code"
                                        panelWidth="auto" panelHeight="auto" label="&lowast;规则编码:" required="true"
-                                       data-options="labelAlign:'right',validType:'length[0,40]'"/>
+                                       data-options="invalidMessage:'编码必填，且不能重复',labelAlign:'right',validType:{
+		length:[1,20],
+		remote:['${contextPath}/pointsRule/checkCode','code']
+	}"/>
                             </td>
 
                         </tr>
