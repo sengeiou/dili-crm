@@ -36,10 +36,10 @@
         <!-- =========================================================表单========================================================= -->
         <div class="easyui-panel" style="width:96%;" align="left" border="false">
             <form id="form" class="easyui-form" method="post" fit="true">
-                <table style="padding:10px;">
+                <table style="padding:10px;width: 40%;">
                     <tr>
-                        <td style="padding:5px;">
-                            <input class="easyui-textbox" name="certificate_number" id="certificate_number" style="width:100%" labelAlign="right" data-options="label:'客户证件号:', validType:'length[0,19]'" />
+                        <td style="padding:5px;width: 60%;">
+                            <input class="easyui-textbox" name="certificate_number" id="certificate_number" style="width:100%" labelAlign="right" data-options="label:'客户证件号:'" />
                         </td>
                         <td style="padding:5px;">
                             <a href="#" class="easyui-linkbutton" iconCls="icon-search" id="queryBtn"
@@ -61,25 +61,25 @@
                 <input type="hidden" id="_organizationType" name="_organizationType">
                 <input type="hidden" id="_certificateType" name="_certificateType">
                 <input type="hidden" id="_type" name="_type">
-                <table width="94%" align="center">
+                <table width="100%" align="left">
                     <tr>
                         <td style="padding-top:10px;">
-                            <input class="easyui-textbox" name="_name" id="_name" style="width:80%"  data-options="labelAlign:'right',label:'客户姓名:',cls:'noborder',readonly:true, editable:false" />
+                            <input class="easyui-textbox" name="_name" id="_name" style="width:80%"  data-options="labelAlign:'left',label:'客户姓名:',cls:'noborder',readonly:true, editable:false" />
                         </td>
                     </tr>
                     <tr>
                         <td style="padding-top:10px;">
-                            <input class="easyui-textbox" name="_certificateNumber" id="_certificateNumber"  label="证件号:" style="width: 80%;" data-options="labelAlign:'right',cls:'noborder', readonly:true, editable:false" />
+                            <input class="easyui-textbox" name="_certificateNumber" id="_certificateNumber"  label="证件号:" style="width: 80%;" data-options="labelAlign:'left',cls:'noborder', readonly:true, editable:false" />
                         </td>
                     </tr>
                     <tr>
                         <td style="padding-top:10px;">
-                            <input class="easyui-textbox" name="_phone" id="_phone" style="width:80%" data-options="labelAlign:'right',label:'电话:',cls:'noborder', readonly:true, editable:false"/>
+                            <input class="easyui-textbox" name="_phone" id="_phone" style="width:80%" data-options="labelAlign:'left',label:'电话:',cls:'noborder', readonly:true, editable:false"/>
                         </td>
                     </tr>
                     <tr>
                         <td style="padding-top:10px;">
-                            <input class="easyui-textbox" name="_points" id="_points" style="width:90%"  data-options="labelAlign:'right',cls:'noborder',label:'积分余额:',readonly:true, editable:false" />
+                            <input class="easyui-textbox" name="_points" id="_points" style="width:90%"  data-options="labelAlign:'left',cls:'noborder',label:'积分余额:',readonly:true, editable:false" />
                         </td>
                     </tr>
                     <tr>
@@ -257,6 +257,17 @@
             });
         }
     }
+
+
+
+
+    $(function () {
+        $('#certificate_number').textbox('textbox').bind('keydown', function(e){
+            if (e.keyCode == 13){	// 当按下回车键时查询客户信息。
+                queryCustomer();
+            }
+        });
+    });
     
 </script>
 </#body>

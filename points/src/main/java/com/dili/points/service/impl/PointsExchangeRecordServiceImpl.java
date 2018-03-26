@@ -2,15 +2,18 @@ package com.dili.points.service.impl;
 
 import com.dili.points.dao.CustomerPointsMapper;
 import com.dili.points.dao.ExchangeCommoditiesMapper;
+import com.dili.points.dao.PointsDetailMapper;
 import com.dili.points.dao.PointsExchangeRecordMapper;
 import com.dili.points.domain.CustomerPoints;
 import com.dili.points.domain.ExchangeCommodities;
+import com.dili.points.domain.PointsDetail;
 import com.dili.points.domain.PointsExchangeRecord;
 import com.dili.points.service.PointsExchangeRecordService;
 import com.dili.ss.base.BaseServiceImpl;
 import com.dili.ss.dao.CommonMapper;
 import com.dili.ss.domain.BaseOutput;
 import com.dili.ss.domain.EasyuiPageOutput;
+import com.dili.ss.dto.DTOUtils;
 import com.dili.ss.exception.BusinessException;
 import com.dili.sysadmin.sdk.domain.UserTicket;
 import com.dili.sysadmin.sdk.session.SessionContext;
@@ -43,6 +46,8 @@ public class PointsExchangeRecordServiceImpl extends BaseServiceImpl<PointsExcha
     private ExchangeCommoditiesMapper exchangeCommoditiesMapper;
     @Autowired
     private CommonMapper commonMapper;
+    @Autowired
+    private PointsDetailMapper pointsDetailMapper;
 
     /**
      * 新增商品兑换记录
@@ -67,7 +72,7 @@ public class PointsExchangeRecordServiceImpl extends BaseServiceImpl<PointsExcha
         if (null == commodities || commodities.getAvailable().intValue() < pointsExchangeRecord.getQuantity().intValue()){
             return BaseOutput.failure("兑换失败，兑换商品不存在或数量不足");
         }
-        //重新设置客户积分信息，并修改
+        //重新设置客户可用积分信息，并修改
         customerPoints.setAvailable(customerPoints.getAvailable()-pointsExchangeRecord.getPoints());
         Example example = new Example(CustomerPoints.class);
         Example.Criteria criteria = example.createCriteria();
@@ -95,6 +100,21 @@ public class PointsExchangeRecordServiceImpl extends BaseServiceImpl<PointsExcha
         if (i < 1) {
             throw new BusinessException("error","兑换失败，商品数扣减失败，请重新操作");
         }
+        //客户积分明细表中，插入本次的兑换记录
+        PointsDetail pd = DTOUtils.newDTO(PointsDetail.class);
+        pd.setCertificateNumber(pointsExchangeRecord.getCertificateNumber());
+        pd.setPoints(pointsExchangeRecord.getPoints());
+        pd.setBalance(customerPoints.getAvailable());
+        //积分兑换
+        pd.setGenerateWay(30);
+        //支出
+        pd.setInOut(20);
+        //来源系统：积分系统
+        pd.setSourceSystem("points");
+        pd.setNotes("兑换"+commodities.getName());
+        pd.setCreatedId(userTicket.getId());
+        //保存客户积分明细信息
+        pointsDetailMapper.insertSelective(pd);
         //保存客户兑换信息
         pointsExchangeRecord.setCreatedId(userTicket.getId());
         insertSelective(pointsExchangeRecord);
@@ -123,9 +143,9 @@ public class PointsExchangeRecordServiceImpl extends BaseServiceImpl<PointsExcha
         List<Map> footers = Lists.newArrayList();
         Map footer = new HashMap(1);
         footer.put("name", "总使用积分:");
-        footer.put("certificateNumber", points);
-        footer.put("organizationType","总兑换数量:");
-        footer.put("certificateType",quantity);
+        footer.put("organizationType", points);
+        footer.put("certificateType","总兑换数量:");
+        footer.put("certificateNumber",quantity);
         footers.add(footer);
         easyuiPageOutput.setFooter(footers);
         return easyuiPageOutput;
