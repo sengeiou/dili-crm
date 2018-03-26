@@ -154,7 +154,8 @@
             $.messager.alert('警告','请选中一条数据');
             return;
         }
-        window.location.href="${contextPath}/pointsDetail/detail.html?certificateNumber="+selected["certificateNumber"];
+        var certificateNumber=encodeURIComponent(selected["certificateNumber"])
+        window.location.href="${contextPath}/pointsDetail/detail.html?certificateNumber="+certificateNumber;
     }
 
     function savePointsDetail(){
