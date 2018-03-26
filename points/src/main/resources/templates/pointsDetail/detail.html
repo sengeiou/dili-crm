@@ -44,18 +44,13 @@
     <!-- 中央布局 -->
     <!-- ====================================================================================================================== -->
     <!-- 表格 -->
-    <div style="width: 100%;height: 100%;" align="center" border="false">
-        <div class="easyui-panel" style="width:96%;height:100%;" border="false" title="积分明细">
-            <table>
-                <tr>
-                    <td style="width: 100%;"> <a href="#" class="easyui-linkbutton" id="queryBtn"
-                                                 onclick="queryGrid('in')">获得</a>&nbsp;&nbsp;
-                        <a href="#" class="easyui-linkbutton"  id="queryBtn"
-                           onclick="queryGrid('out')">使用</a>&nbsp;&nbsp;</td>
-                </tr>
-            </table>
-            <table class="easyui-datagrid" title="PointsDetail列表" id="grid" fitColumns="true" noheader="true"
-                   pagination="true" pageSize="30" pageNumber="1" pagePosition="top" rownumbers="true" remoteSort="false"
+    <div style="width: 100%;height: 90%;" align="center" border="false">
+        <div class="easyui-panel" style="width:96%;height:95%;" border="false" title="积分明细">
+        <div id="pointsTabs" class="easyui-tabs" style="width:100%;height:95%" data-options="onSelect:switchTab">   
+    <div title="获得" id="pointsIn" style="padding:0px;display:none;">   
+           
+            <table class="easyui-datagrid" title="获得积分列表" id="gridin" fitColumns="true" noheader="true"
+                   pagination="true" pageSize="30" pageNumber="1" pagePosition="top" rownumbers="false" remoteSort="false"
                    loadMsg="数据加载中..." singleSelect="true" method="post" multiSort="false" sortName="certificateNumber"
                    align="center" fit="true" striped="true" toolbar="#toolbar" idField="id" data-options="onDblClickRow:openUpdate, onHeaderContextMenu:headerContextMenu">
                 <thead>
@@ -83,6 +78,42 @@
                 </tr>
                 </thead>
             </table>
+    </div>   
+    <div title="使用"  id="pointsOut"  data-options="closable:false" style="overflow:auto;padding:0px;display:none;">   
+
+            <table class="easyui-datagrid" title="使用积分列表" id="gridout" fitColumns="true" noheader="true"
+                   pagination="true" pageSize="30" pageNumber="1" pagePosition="top" rownumbers="false" remoteSort="false"
+                   loadMsg="数据加载中..." singleSelect="true" method="post" multiSort="false" sortName="certificateNumber"
+                   align="center" fit="true" striped="true" toolbar="#toolbar" idField="id" data-options="onDblClickRow:openUpdate, onHeaderContextMenu:headerContextMenu">
+                <thead>
+                <tr>
+                    <th data-options="field:'certificateNumber',   sortable:true, order:'asc', align:'center', resizable:'true', fixed:'false'">
+                        客户证件号
+                    </th>
+                    <th data-options="field:'points',   sortable:true, order:'asc', align:'center', resizable:'true', fixed:'false'">
+                        积分
+                    </th>
+                    <th data-options="field:'balance',   sortable:true, order:'asc', align:'center', resizable:'true', fixed:'false'">
+                        积分余额
+                    </th>
+                    <th data-options="field:'generateWay',   _provider:'dataDictionaryValueProvider', _queryParams:{dd_id:17},  sortable:true, order:'asc', align:'center', resizable:'true', fixed:'false'">
+                        使用方式
+                    </th>
+
+                    <th data-options="field:'notes',   sortable:true, order:'asc', align:'center', resizable:'true', fixed:'false'">
+                        备注
+                    </th>
+                    <th data-options="field:'created',  _provider:'datetimeProvider', sortable:true, order:'asc', align:'center', resizable:'true', fixed:'false'">
+                        使用时间
+                    </th>
+
+                </tr>
+                </thead>
+            </table>
+    </div>   
+       
+</div>  
+           
             <!-- =========================================================表格========================================================= -->
 
             <!-- datagrid工具栏 -->
@@ -259,6 +290,15 @@
         });
 
     }
+    function switchTab(title,index){
+
+    	if(title=='获得'){
+    		queryGrid('in');
+    	}else if(title='使用'){
+    		queryGrid('out');
+    	}
+    	
+    }
     //表格查询
     function queryGrid(inOut) {
         if(typeof(inOut)!="undefined"){
@@ -268,26 +308,29 @@
         }else{
             inOut='in';
         }
-        var generateWaycolumn=$('#grid').datagrid('getColumnOption','generateWay');
+        //var generateWaycolumn=$('#grid').datagrid('getColumnOption','generateWay');
+       // var createdcolumn=$('#grid').datagrid('getColumnOption','created');
         if(inOut=='in')
         {
-            generateWaycolumn.title='来源';
+           // generateWaycolumn.title='来源';
+           // createdcolumn.title='获得时间';
             $("#inOut").combobox("setText", '收入');
             $("#inOut").combobox("setValue", '10');
         }
         else
         {
 
-            generateWaycolumn.title='使用方式';
+           // generateWaycolumn.title='使用方式';
+          //  createdcolumn.title='使用时间';
             $("#inOut").combobox("setText", '支出');
             $("#inOut").combobox("setValue", '20');
         }
 
-
-        var opts = $("#grid").datagrid("options");
+		var gridId='grid'+inOut
+        var opts = $('#'+gridId).datagrid("options");
         //重新渲染修改表格列
-        opts.url='';
-        $('#grid').datagrid();
+       // opts.url='';
+       // $('#grid').datagrid();
 
         if (null == opts.url || "" == opts.url) {
             opts.url = "${contextPath}/pointsDetail/listPage";
@@ -296,7 +339,7 @@
             return;
         }
 
-        $("#grid").datagrid("load", bindGridMeta2Form("grid", "form"));
+        $('#'+gridId).datagrid("load", bindGridMeta2Form(gridId, "form"));
     }
 
 
@@ -332,7 +375,25 @@
             }
         }
     }
+	function paginationGrid(gridId){
+		
+        var pager = $('#'+gridId).datagrid('getPager');    // get the pager of treegrid
+        pager.pagination({
+            <#controls_paginationOpts/>,
+            buttons:[
 
+            {
+                iconCls:'icon-export',
+                text:'导出',
+                handler:function(){
+                    doExport(gridId);
+                }
+            }
+        ]
+    });
+        //表格仅显示下边框
+        $('#'+gridId).datagrid('getPanel').removeClass('lines-both lines-no lines-right lines-bottom').addClass("lines-bottom");
+	}
     /**
      * 绑定页面回车事件，以及初始化页面时的光标定位
      * @formId
@@ -353,43 +414,9 @@
         } else {
             document.onkeyup = getKey;
         }
-        var pager = $('#grid').datagrid('getPager');    // get the pager of treegrid
-        pager.pagination({
-            <#controls_paginationOpts/>,
-            buttons:[
-            {
-                iconCls:'icon-add',
-                text:'新增',
-                handler:function(){
-                    openInsert();
-                }
-            },
-            {
-                iconCls:'icon-edit',
-                text:'修改',
-                handler:function(){
-                    openUpdate();
-                }
-            },
-            {
-                iconCls:'icon-remove',
-                text:'删除',
-                handler:function(){
-                    del();
-                }
-            },
-            {
-                iconCls:'icon-export',
-                text:'导出',
-                handler:function(){
-                    doExport('grid');
-                }
-            }
-        ]
-    });
-        //表格仅显示下边框
-        $('#grid').datagrid('getPanel').removeClass('lines-both lines-no lines-right lines-bottom').addClass("lines-bottom");
-        queryGrid();
+        paginationGrid('gridin');
+        paginationGrid('gridout');
+        //queryGrid();
     })
 </script>
 </#body>
