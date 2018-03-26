@@ -1,6 +1,7 @@
 package com.dili.points.component;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -35,6 +36,7 @@ import com.dili.points.service.PointsRuleService;
 import com.dili.points.service.RuleConditionService;
 import com.dili.ss.dto.DTO;
 import com.dili.ss.dto.DTOUtils;
+import com.google.common.collect.Lists;
 
 import okhttp3.internal.ws.RealWebSocket.Streams;
 
@@ -121,6 +123,97 @@ public class OrderListenerTest {
 //		
 //		
 //	}
+	@Test
+	public void findNotes() {
+		Order order=this.buildOrder();
+		List<OrderItem>orderItems=this.buildOrderItems();
+		
+		Map<Order,List<OrderItem>>orderMap=new HashMap<>();
+		orderMap.put(order, orderItems);
+		String notes=this.orderListener.findNotes(order, orderItems);
+		System.out.println(notes);
+	}
+	@Test
+	public void calculateWeight() {
+		// 等于 10,  大于等于 20 大于  30, 小于等于 40, 小于 50,区间: 60,
+		RuleCondition ruleCondition=DTOUtils.newDTO(RuleCondition.class);
+		
+		ruleCondition.setConditionType(10);
+		ruleCondition.setStartValue(null);
+		ruleCondition.setEndValue(null);
+		ruleCondition.setValue("10");
+		ruleCondition.setWeight(1.1F);
+		List<RuleCondition>ruleConditionList=Lists.newArrayList(ruleCondition);
+		BigDecimal weight=this.orderListener.calculateWeight(new BigDecimal("10"), ruleConditionList);
+		Assert.assertEquals(weight.subtract(new BigDecimal(ruleCondition.getWeight())).setScale(0, RoundingMode.HALF_EVEN), BigDecimal.ZERO);
+		
+		weight=this.orderListener.calculateWeight(new BigDecimal("9"), ruleConditionList);
+		Assert.assertEquals(weight, BigDecimal.ONE);
+		
+		
+		ruleCondition.setConditionType(20);
+		ruleCondition.setValue("20");
+		ruleCondition.setWeight(1.2F);
+		
+		weight=this.orderListener.calculateWeight(new BigDecimal("20"), ruleConditionList);
+		Assert.assertEquals(weight.subtract(new BigDecimal(ruleCondition.getWeight())).setScale(0, RoundingMode.HALF_EVEN), BigDecimal.ZERO);
+		weight=this.orderListener.calculateWeight(new BigDecimal("21"), ruleConditionList);
+		Assert.assertEquals(weight.subtract(new BigDecimal(ruleCondition.getWeight())).setScale(0, RoundingMode.HALF_EVEN), BigDecimal.ZERO);
+		
+		weight=this.orderListener.calculateWeight(new BigDecimal("19"), ruleConditionList);
+		Assert.assertEquals(weight, BigDecimal.ONE);
+		
+		ruleCondition.setConditionType(30);
+		ruleCondition.setValue("30");
+		ruleCondition.setWeight(1.3F);
+		weight=this.orderListener.calculateWeight(new BigDecimal("31"), ruleConditionList);
+		Assert.assertEquals(weight.subtract(new BigDecimal(ruleCondition.getWeight())).setScale(0, RoundingMode.HALF_EVEN), BigDecimal.ZERO);
+		
+		weight=this.orderListener.calculateWeight(new BigDecimal("30"), ruleConditionList);
+		Assert.assertEquals(weight, BigDecimal.ONE);
+		weight=this.orderListener.calculateWeight(new BigDecimal("29"), ruleConditionList);
+		Assert.assertEquals(weight, BigDecimal.ONE);
+		
+		
+		ruleCondition.setConditionType(40);
+		ruleCondition.setValue("40");
+		ruleCondition.setWeight(1.4F);
+		weight=this.orderListener.calculateWeight(new BigDecimal("40"), ruleConditionList);
+		Assert.assertEquals(weight.subtract(new BigDecimal(ruleCondition.getWeight())).setScale(0, RoundingMode.HALF_EVEN), BigDecimal.ZERO);
+		weight=this.orderListener.calculateWeight(new BigDecimal("39"), ruleConditionList);
+		Assert.assertEquals(weight.subtract(new BigDecimal(ruleCondition.getWeight())).setScale(0, RoundingMode.HALF_EVEN), BigDecimal.ZERO);
+		
+		weight=this.orderListener.calculateWeight(new BigDecimal("41"), ruleConditionList);
+		Assert.assertEquals(weight, BigDecimal.ONE);
+		
+		
+		ruleCondition.setConditionType(50);
+		ruleCondition.setValue("50");
+		ruleCondition.setWeight(1.5F);
+		weight=this.orderListener.calculateWeight(new BigDecimal("49"), ruleConditionList);
+		Assert.assertEquals(weight.subtract(new BigDecimal(ruleCondition.getWeight())).setScale(0, RoundingMode.HALF_EVEN), BigDecimal.ZERO);
+		
+		weight=this.orderListener.calculateWeight(new BigDecimal("50"), ruleConditionList);
+		Assert.assertEquals(weight, BigDecimal.ONE);
+		weight=this.orderListener.calculateWeight(new BigDecimal("51"), ruleConditionList);
+		Assert.assertEquals(weight, BigDecimal.ONE);
+		
+		ruleCondition.setConditionType(60);
+		ruleCondition.setStartValue("55");
+		ruleCondition.setValue(null);
+		ruleCondition.setEndValue("65");
+		ruleCondition.setWeight(1.6F);
+		weight=this.orderListener.calculateWeight(new BigDecimal("55"), ruleConditionList);
+		Assert.assertEquals(weight.subtract(new BigDecimal(ruleCondition.getWeight())).setScale(0, RoundingMode.HALF_EVEN), BigDecimal.ZERO);
+		weight=this.orderListener.calculateWeight(new BigDecimal("65"), ruleConditionList);
+		Assert.assertEquals(weight.subtract(new BigDecimal(ruleCondition.getWeight())).setScale(0, RoundingMode.HALF_EVEN), BigDecimal.ZERO);
+		
+		weight=this.orderListener.calculateWeight(new BigDecimal("54"), ruleConditionList);
+		Assert.assertEquals(weight, BigDecimal.ONE);
+		weight=this.orderListener.calculateWeight(new BigDecimal("66"), ruleConditionList);
+		Assert.assertEquals(weight, BigDecimal.ONE);
+	}
+	
 	@Test
 	public void calculateBasePoints() {
 		Order order=this.buildOrder();
