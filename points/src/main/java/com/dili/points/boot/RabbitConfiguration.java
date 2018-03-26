@@ -6,6 +6,7 @@ import org.springframework.amqp.core.Queue;
 import org.springframework.amqp.core.TopicExchange;
 import org.springframework.amqp.support.converter.Jackson2JsonMessageConverter;
 import org.springframework.amqp.support.converter.MessageConverter;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnExpression;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -15,6 +16,7 @@ import java.util.UUID;
  * Created by asiam on 2018/3/14 0014.
  */
 @Configuration
+@ConditionalOnExpression("'${mq.enable}'=='true'")
 public class RabbitConfiguration {
 
     public static final String DEFAULT_TOPIC_EXCHANGE = "diligrp.points.topicExchange";
