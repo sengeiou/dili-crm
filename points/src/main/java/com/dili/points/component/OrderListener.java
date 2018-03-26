@@ -248,13 +248,20 @@ public class OrderListener {
 		}
 		return basePoint;
 	}
+	protected boolean isSettlementOrder(Order order) {
+		if(StringUtils.isNoneBlank(order.getSettlementCode())) {
+			return true;
+		}else{
+			return false;
+		}
+	}
 	/**
 	 * 根据订单类型和订单号,以及订单列表,拼装备注信息
 	 * @param pointsDetail 积分详情
 	 * @param orderItemList 对应的订单列表
 	 * @return 返回备注信息
 	 */
-	protected String findNotes(PointsDetailDTO pointsDetail,List<OrderItem>orderItemList) {
+	protected String findNotes(Order order,List<OrderItem>orderItemList) {
 		
 		StringBuffer notesStr=new StringBuffer();
 
@@ -286,14 +293,13 @@ public class OrderListener {
 			notesStr.append("; ");
 		}
 		
-		String orderType=pointsDetail.getOrderType();
-		//settlementOrder结算单号,order主单
-		if("settlementOrder".equals(orderType)) {
-			notesStr.append("结算单号:");
+		if(this.isSettlementOrder(order)) {
+			notesStr.append("结算单号:").append(order.getSettlementCode());
 		}else {
-			notesStr.append("订单号:");
+			notesStr.append("订单号:").append(order.getCode());
 		}
-		notesStr.append(pointsDetail.getOrderCode());
+		
+		
 		return notesStr.toString();
 	}
 	protected boolean orderIsExists(Order order) {
@@ -338,16 +344,24 @@ public class OrderListener {
 			pointsDetail.setPoints(basePoint.intValue());
 			pointsDetail.setSourceSystem(order.getSourceSystem());
 			
-			//只有一个订单信息
-			if(StringUtils.isNoneBlank(order.getSettlementCode())) {
+			if(this.isSettlementOrder(order)) {
 				pointsDetail.setOrderCode(order.getSettlementCode());
 				pointsDetail.setOrderType("settlementOrder");//settlementOrder结算单号,order主单
-			}else{
+			}else {
 				pointsDetail.setOrderCode(order.getCode());
-				pointsDetail.setOrderType("order");//settlementOrder结算单号,order主单	
+				pointsDetail.setOrderType("order");//settlementOrder结算单号,order主单
 			}
-			String notes=this.findNotes(pointsDetail,orderItemList);
+//			
+//			if(StringUtils.isNoneBlank(order.getSettlementCode())) {
+//				pointsDetail.setOrderCode(order.getSettlementCode());
+//				pointsDetail.setOrderType("settlementOrder");//settlementOrder结算单号,order主单
+//			}else{
+//				pointsDetail.setOrderCode(order.getCode());
+//				pointsDetail.setOrderType("order");//settlementOrder结算单号,order主单	
+//			}
+			String notes=this.findNotes(order,orderItemList);
 			pointsDetail.setNotes(notes);
+			
 			String certificateNumber=null;
 			//buyer
 			if(isPurchase) {
@@ -362,7 +376,7 @@ public class OrderListener {
 
 			//如果买家或者卖家的证件号为空,则不进行积分
 			if(StringUtils.isBlank(certificateNumber)) {
-				break;
+				continue;
 			}
 			Long customerId=this.findIdByCertificateNumber(certificateNumber);
 			pointsDetail.setCustomerId(customerId);
