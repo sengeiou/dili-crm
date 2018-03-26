@@ -104,6 +104,7 @@ public class CustomerPointsServiceImpl extends BaseServiceImpl<CustomerPoints, L
 				cpdto.setProfession(c.getProfession());
 				cpdto.setType(c.getType());
 				cpdto.setCertificateType(c.getCertificateType());
+				cpdto.setPhone(c.getPhone());
 				return cpdto;
 			}).collect(Collectors.toList());
             //提供者转换
