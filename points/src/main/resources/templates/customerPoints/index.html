@@ -208,7 +208,7 @@
         formFocus("_form", "_certificateNumber");
         
         $('#_customerId').val(selected['id']);
-        
+        $('#_points').textbox('setValue','')
         var formData = $.extend({},selected);
         formData = addKeyStartWith(getOriginalData(formData),"_");
         $('#_form').form('load', formData);
