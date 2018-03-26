@@ -9,9 +9,13 @@
         <!-- ====================================================================================================================== -->
         <!-- 上方布局 -->
         <!-- ====================================================================================================================== -->
-        <div region="north" height="auto" align="center">
+        <div region="north" height="auto" align="center" border="false">
+            <div id="nav" style="padding-left:15px;padding-top:10px;position:fixed;z-index:2008;width:100%;height:30px;background-color:white" align="left">
+                <#nav/>
+            </div>
             <!-- =========================================================表单========================================================= -->
-            <div class="easyui-panel" style="width:100%;" align="left">
+            <div class="easyui-panel" style="width:100%;padding-top:40px" align="left" border="false">
+
                 <form id="form" class="easyui-form" method="post" fit="true">
                     <table style="padding:10px;">
                         <tr>
@@ -49,45 +53,46 @@
         <!-- 中央布局 -->
         <!-- ====================================================================================================================== -->
         <!-- 表格 -->
-        <div region="center" style="width:100%;" height="auto">
-            <!-- =========================================================表格========================================================= -->
-            <table class="easyui-datagrid" title="积分调整记录" id="grid" fitColumns="true" noheader="true"
-                   pagination="true" pageSize="30" pageNumber="1" pagePosition="top" rownumbers="true" remoteSort="false"
-                   loadMsg="数据加载中..." singleSelect="true" method="post" multiSort="false" sortName="certificateNumber"
-                   align="center" fit="true" striped="true" idField="id" data-options="onHeaderContextMenu:headerContextMenu">
-                <thead>
-                <tr>
-                    <th width="10%" data-options="field:'name', _provider:'customerNumberProvider', _escapeFileds:{name:'name', organizationType:'organizationType', certificateType:'certificateType'}, sortable:true, order:'asc', align:'center', resizable:'true', fixed:'false'">
-                        客户名称
-                    </th>
-                    <th width="10%" data-options="field:'organizationType',  _queryParams:'{dd_id:5}', _provider:'dataDictionaryValueProvider', sortable:true, order:'asc', align:'center', resizable:'true', fixed:'false'">
-                        组织类型
-                    </th>
-                    <th width="10%" data-options="field:'certificateType',  _provider:'dataDictionaryValueProvider',  _queryParams:'{dd_id:3}', sortable:true, order:'asc', align:'center', resizable:'true', fixed:'false'">
-                        证件类型
-                    </th>
-                    <th width="10%" data-options="field:'certificateNumber', sortable:true, order:'asc', align:'center', resizable:'true', fixed:'false'">
-                        证件号
-                    </th>
-                    <th width="10%" data-options="field:'points',   sortable:true, order:'asc', align:'center', resizable:'true', fixed:'false'">
-                        调整积分
-                    </th>
-                    <th width="10%" data-options="field:'balance',   sortable:true, order:'asc', align:'center', resizable:'true', fixed:'false'">
-                        积分余额
-                    </th>
-                    <th data-options="field:'createdId', width:'10%',  sortable:true, order:'asc', align:'center', resizable:'true', fixed:'false',_provider:'userProvider'">
-                        操作员
-                    </th>
-                    <th width="10%" data-options="field:'created',  _provider:'datetimeProvider', sortable:true, order:'asc', align:'center', resizable:'true', fixed:'false'">
-                        操作时间
-                    </th>
-                    <th width="20%" data-options="field:'notes',   sortable:true, order:'asc', align:'center', resizable:'true', fixed:'false'">
-                        备注
-                    </th>
-                </tr>
-                </thead>
-            </table>
-
+        <div region="center" style="width:100%;" align="center" height="auto" border="false">
+            <div class="easyui-panel" align="center" style="width:96%;height:100%;" border="false">
+                <!-- =========================================================表格========================================================= -->
+                <table class="easyui-datagrid" title="积分调整记录" id="grid" fitColumns="true" noheader="true"
+                       pagination="true" pageSize="30" pageNumber="1" pagePosition="top" rownumbers="true" remoteSort="false"
+                       loadMsg="数据加载中..." singleSelect="true" method="post" multiSort="false" sortName="certificateNumber"
+                       align="center" fit="true" striped="true" idField="id" data-options="onHeaderContextMenu:headerContextMenu">
+                    <thead>
+                    <tr>
+                        <th width="10%" data-options="field:'name', _provider:'customerNumberProvider', _escapeFileds:{name:'name', organizationType:'organizationType', certificateType:'certificateType'}, sortable:true, order:'asc', align:'center', resizable:'true', fixed:'false'">
+                            客户名称
+                        </th>
+                        <th width="10%" data-options="field:'organizationType',  _queryParams:'{dd_id:5}', _provider:'dataDictionaryValueProvider', sortable:true, order:'asc', align:'center', resizable:'true', fixed:'false'">
+                            组织类型
+                        </th>
+                        <th width="10%" data-options="field:'certificateType',  _provider:'dataDictionaryValueProvider',  _queryParams:'{dd_id:3}', sortable:true, order:'asc', align:'center', resizable:'true', fixed:'false'">
+                            证件类型
+                        </th>
+                        <th width="10%" data-options="field:'certificateNumber', sortable:true, order:'asc', align:'center', resizable:'true', fixed:'false'">
+                            证件号
+                        </th>
+                        <th width="10%" data-options="field:'points',   sortable:true, order:'asc', align:'center', resizable:'true', fixed:'false'">
+                            调整积分
+                        </th>
+                        <th width="10%" data-options="field:'balance',   sortable:true, order:'asc', align:'center', resizable:'true', fixed:'false'">
+                            积分余额
+                        </th>
+                        <th data-options="field:'createdId', width:'10%',  sortable:true, order:'asc', align:'center', resizable:'true', fixed:'false',_provider:'userProvider'">
+                            操作员
+                        </th>
+                        <th width="10%" data-options="field:'created',  _provider:'datetimeProvider', sortable:true, order:'asc', align:'center', resizable:'true', fixed:'false'">
+                            操作时间
+                        </th>
+                        <th width="20%" data-options="field:'notes',   sortable:true, order:'asc', align:'center', resizable:'true', fixed:'false'">
+                            备注
+                        </th>
+                    </tr>
+                    </thead>
+                </table>
+            </div>
         </div>
     </div>
 
