@@ -20,6 +20,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnExpression;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
@@ -52,6 +53,7 @@ import com.dili.ss.exception.AppException;
  * Created by asiamaster on 2017/11/7 0007.
  */
 @Component
+@ConditionalOnExpression("'${mq.enable}'=='true'")
 public class OrderListener {
 	private static final Logger logger=LoggerFactory.getLogger(OrderListener.class);
 	@Autowired OrderService orderService;

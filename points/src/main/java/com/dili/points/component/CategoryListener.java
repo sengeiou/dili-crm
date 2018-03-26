@@ -8,6 +8,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnExpression;
 import org.springframework.stereotype.Component;
 
 import com.dili.points.converter.DtoMessageConverter;
@@ -21,6 +22,7 @@ import com.dili.ss.dto.DTOUtils;
  * Created by asiamaster on 2017/11/7 0007.
  */
 @Component
+@ConditionalOnExpression("'${mq.enable}'=='true'")
 public class CategoryListener {
 	private static final Logger logger=LoggerFactory.getLogger(CategoryListener.class);
 	@Autowired private CategoryService categoryService;
