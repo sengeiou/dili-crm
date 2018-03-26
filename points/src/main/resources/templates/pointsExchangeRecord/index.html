@@ -58,7 +58,7 @@
         <div region="center" style="width:100%;" height="auto" align="center" border="false">
             <div style="width: 96%;height: 100%;" align="center">
             <!-- =========================================================表格========================================================= -->
-            <table class="easyui-datagrid" title="PointsExchangeRecord列表" id="grid" fitColumns="true" noheader="true"
+            <table class="easyui-datagrid" title="积分兑换列表" id="grid" fitColumns="true" noheader="true"
                    pagination="true" pageSize="30" pageNumber="1" pagePosition="top"  remoteSort="false"
                    loadMsg="数据加载中..." singleSelect="true" method="post" multiSort="false" sortName="name"
                    align="center" fit="true" striped="true" idField="id" data-options="onHeaderContextMenu:headerContextMenu,showFooter:true,view:footerView">
@@ -67,26 +67,23 @@
                         <th width="10%" data-options="field:'name',  sortable:true, order:'asc', align:'center', resizable:'true', fixed:'false'">
                             客户名称
                         </th>
-                        <th width="10%" data-options="field:'certificateNumber',   sortable:true, order:'asc', align:'center', resizable:'true', fixed:'false'">
-                            证件号
-                        </th>
                         <th width="10%" data-options="field:'organizationType',  _queryParams:'{dd_id:5}', _provider:'dataDictionaryValueProvider', sortable:true, order:'asc', align:'center', resizable:'true', fixed:'false'">
                             组织类型
                         </th>
                         <th width="10%" data-options="field:'certificateType',  _provider:'dataDictionaryValueProvider',  _queryParams:'{dd_id:3}', sortable:true, order:'asc', align:'center', resizable:'true', fixed:'false'">
                             证件类型
                         </th>
-                        <th width="10%" data-options="field:'type',  _provider:'dataDictionaryValueProvider',  _queryParams:'{dd_id:4}', sortable:true, order:'asc', align:'center', resizable:'true', fixed:'false'">
-                            客户类型
-                        </th>
-                        <th width="8%" data-options="field:'points',   sortable:true, order:'asc', align:'center', resizable:'true', fixed:'false'">
-                            使用积分
+                        <th width="15%" data-options="field:'certificateNumber',   sortable:true, order:'asc', align:'center', resizable:'true', fixed:'false'">
+                            证件号
                         </th>
                         <th width="10%" data-options="field:'exchangeCommoditiesId',_provider:'commodityProvider',sortable:true, order:'asc', align:'center', resizable:'true', fixed:'false'">
                             兑换商品
                         </th>
-                        <th width="8%" data-options="field:'quantity',   sortable:true, order:'asc', align:'center', resizable:'true', fixed:'false'">
+                        <th width="10%" data-options="field:'quantity',   sortable:true, order:'asc', align:'center', resizable:'true', fixed:'false'">
                             兑换数量
+                        </th>
+                        <th width="10%" data-options="field:'points',   sortable:true, order:'asc', align:'center', resizable:'true', fixed:'false'">
+                            使用积分
                         </th>
                         <th width="10%" data-options="field:'createdId', _provider:'userProvider',  sortable:true, order:'asc', align:'center', resizable:'true', fixed:'false'">
                             兑换操作员

@@ -45,6 +45,6 @@ public class CustomerApi {
     @RequestMapping(value = "/listPage", method = { RequestMethod.GET, RequestMethod.POST })
     public @ResponseBody
     BaseOutput<EasyuiPageOutput> listPage(CustomerApiDTO customer) throws Exception {
-        return BaseOutput.success().setData(customerService.listEasyuiPageByExample(customer, false));
+        return BaseOutput.success().setData(customerService.listEasyuiPageByExample(customer, true));
     }
 }

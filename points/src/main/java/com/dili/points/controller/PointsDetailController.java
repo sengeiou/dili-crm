@@ -43,6 +43,13 @@ public class PointsDetailController {
     public String index(ModelMap modelMap) {
         return "pointsDetail/index";
     }
+
+    @ApiOperation("跳转到积分明细页面")
+    @RequestMapping(value="/adjustRecord.html", method = RequestMethod.GET)
+    public String adjustRecord(ModelMap modelMap) {
+        return "pointsDetail/adjustRecord";
+    }
+
     @ApiOperation("跳转到detail页面")
     @RequestMapping(value="/detail.html", method = RequestMethod.GET)
     public String detail(ModelMap modelMap,String certificateNumber) {
@@ -69,7 +76,17 @@ public class PointsDetailController {
 		@ApiImplicitParam(name="PointsDetail", paramType="form", value = "PointsDetail的form信息", required = false, dataType = "string")
 	})
     @RequestMapping(value="/listPage", method = {RequestMethod.GET, RequestMethod.POST})
-    public @ResponseBody String listPage(PointsDetail pointsDetail) throws Exception {
+    public @ResponseBody String listPage(PointsDetailDTO pointsDetail) throws Exception {
+        return pointsDetailService.listEasyuiPageByExample(pointsDetail, true).toString();
+    }
+
+    @ApiOperation(value="分页查询调整记录", notes = "分页查询调整记录，返回easyui分页信息")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name="PointsDetail", paramType="form", value = "PointsDetailDTO的form信息", required = false, dataType = "string")
+    })
+    @RequestMapping(value="/listAdjustRecordPage", method = {RequestMethod.GET, RequestMethod.POST})
+    public @ResponseBody String listAdjustRecordPage(PointsDetailDTO pointsDetail) throws Exception {
+        pointsDetail.setGenerateWay(50);
         return pointsDetailService.listEasyuiPageByExample(pointsDetail, true).toString();
     }
 

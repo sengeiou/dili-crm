@@ -1,95 +1,102 @@
- <#body>
-    <div class="easyui-layout" fit="true">
-        <!-- ====================================================================================================================== -->
-        <!-- 上方布局 -->
-        <!-- ====================================================================================================================== -->
-        <div region="north" height="auto" align="center" border="false">
-            <div id="nav" style="padding-left:15px;padding-top:10px;" align="left">
+<#body>
+<div class="easyui-layout" fit="true">
+    <!-- ====================================================================================================================== -->
+    <!-- 上方布局 -->
+    <!-- ====================================================================================================================== -->
+    <div  height="auto" align="center" border="false">
+        <div id="nav" style="padding-left:15px;padding-top:10px;" align="left">
             <#nav/>
-            </div>
-            <!-- =========================================================表单========================================================= -->
-             <div class="easyui-panel" style="width:100%;border: 0px;" align="left" border="false">
-                <form id="form" class="easyui-form" method="post" fit="true">
-                    <table style="padding:10px;">
-                        <tr>
-                            <td style="padding:5px;">
-                                <input class="easyui-textbox" name="name" id="name" style="width:100%" labelAlign="right" data-options="label:'客户名称:',value:'${customerPoints.name}',cls:'noborder', editable:false, readonly:true,disabled:true,hasDownArrow:false, validType:'length[0,40]'" />
-                            </td>
-
-                             <td style="padding:5px;">
-                                <input class="easyui-textbox"  style="width:100%" labelAlign="right" data-options="label:'客户证件号:',value:'${customerPoints.certificateNumber}',                 cls:'noborder', editable:false, readonly:true,disabled:true,hasDownArrow:false, validType:'length[0,40]'" />
-                                <input type="hidden"  name="certificateNumber" id="certificateNumber" value="${customerPoints.certificateNumber}"/>
-                            </td>
-                            <td style="padding:5px;">
-                                <input class="easyui-textbox" name="phone" id="phone"                         style="width:100%" labelAlign="right" data-options="label:'电话:',value:'${customerPoints.phone}',                 cls:'noborder', editable:false, readonly:true,disabled:true,hasDownArrow:false, validType:'length[0,40]'" />
-                            </td>
-                            <td style="padding:5px;">
-                                <input class="easyui-numberbox" name="points" id="points" style="width:100%" labelAlign="right" data-options="label:'积分:',value:'${customerPoints.available}',cls:'noborder', editable:false, readonly:true,disabled:true,hasDownArrow:false, validType:'length[0,10]'" />
-                            </td>
-                       		<td style="padding:5px;display:none">
-                               <input name="inOut" id="inOut" style="width:100%;display:none" data-options="labelAlign:'right', editable:false,value:'10'" panelWidth="auto" panelHeight="auto" label=""/>
-                                <#comboProvider _id="inOut" _provider='dataDictionaryValueProvider' _queryParams='{dd_id:"18"}'/>
-                            </td>
-                            
-                        </tr>
-                        <tr>
-                            <td style="padding-left:28px;padding-top: 10px; padding-bottom: 10px;">
-                                <a href="#" class="easyui-linkbutton" id="queryBtn"
-                                   onclick="queryGrid('in')">获得</a>&nbsp;&nbsp;
-                                    <a href="#" class="easyui-linkbutton"  id="queryBtn"
-                                   onclick="queryGrid('out')">使用</a>&nbsp;&nbsp;
-                            </td>
-                        </tr>
-                    </table>
-                </form>
+            <div style="display: inline;float:right;padding-right: 40px;">
+                <a id="cancelBtn" href="${contextPath}/customerPoints/index.html" class="easyui-linkbutton"
+                   iconCls="icon-back" data-options="width:80">返回</a>
             </div>
         </div>
-        <!-- ====================================================================================================================== -->
-        <!-- 中央布局 -->
-        <!-- ====================================================================================================================== -->
-        <!-- 表格 -->
-            <div region="center" style="width: 100%;" height="auto"  align="center" border="false">
-        	<div class="easyui-panel" align="center" style="width:96%;height:100%;" border="false">
-            <!-- =========================================================表格========================================================= -->
+        <!-- =========================================================表单========================================================= -->
+        <div class="easyui-panel" title="客户基本信息" style="width:96%;border: 0px;" align="left" border="false">
+            <form id="form" class="easyui-form" method="post" fit="true">
+                <table style="padding:10px;">
+                    <tr>
+                        <td style="padding:5px;">
+                            <input class="easyui-textbox" name="name" id="name" style="width:100%" labelAlign="right" data-options="label:'客户名称:',value:'${customerPoints.name}',cls:'noborder', editable:false, readonly:true,hasDownArrow:false, validType:'length[0,40]'" />
+                        </td>
+
+                        <td style="padding:5px;">
+                            <input class="easyui-textbox"  style="width:100%" labelAlign="right" data-options="label:'客户证件号:',value:'${customerPoints.certificateNumber}',                 cls:'noborder', editable:false, readonly:true,hasDownArrow:false, validType:'length[0,40]'" />
+                            <input type="hidden"  name="certificateNumber" id="certificateNumber" value="${customerPoints.certificateNumber}"/>
+                        </td>
+                        <td style="padding:5px;">
+                            <input class="easyui-textbox" name="phone" id="phone"                         style="width:100%" labelAlign="right" data-options="label:'电话:',value:'${customerPoints.phone}',                 cls:'noborder', editable:false, readonly:true,hasDownArrow:false, validType:'length[0,40]'" />
+                        </td>
+                        <td style="padding:5px;">
+                            <input class="easyui-numberbox" name="points" id="points" style="width:100%" labelAlign="right" data-options="label:'积分:',value:'${customerPoints.available}',cls:'noborder', editable:false, readonly:true,hasDownArrow:false, validType:'length[0,10]'" />
+                        </td>
+                        <td style="padding:5px;display:none">
+                            <input name="inOut" id="inOut" style="width:100%;display:none" data-options="labelAlign:'right', editable:false,value:'10'" panelWidth="auto" panelHeight="auto" label=""/>
+                            <#comboProvider _id="inOut" _provider='dataDictionaryValueProvider' _queryParams='{dd_id:"18"}'/>
+                        </td>
+
+                    </tr>
+                </table>
+            </form>
+        </div>
+    </div>
+    <!-- ====================================================================================================================== -->
+    <!-- 中央布局 -->
+    <!-- ====================================================================================================================== -->
+    <!-- 表格 -->
+    <div style="width: 100%;height: 100%;" align="center" border="false">
+        <div class="easyui-panel" style="width:96%;height:100%;" border="false" title="积分明细">
+            <table>
+                <tr>
+                    <td style="width: 100%;"> <a href="#" class="easyui-linkbutton" id="queryBtn"
+                                                 onclick="queryGrid('in')">获得</a>&nbsp;&nbsp;
+                        <a href="#" class="easyui-linkbutton"  id="queryBtn"
+                           onclick="queryGrid('out')">使用</a>&nbsp;&nbsp;</td>
+                </tr>
+            </table>
             <table class="easyui-datagrid" title="PointsDetail列表" id="grid" fitColumns="true" noheader="true"
                    pagination="true" pageSize="30" pageNumber="1" pagePosition="top" rownumbers="true" remoteSort="false"
                    loadMsg="数据加载中..." singleSelect="true" method="post" multiSort="false" sortName="certificateNumber"
                    align="center" fit="true" striped="true" toolbar="#toolbar" idField="id" data-options="onDblClickRow:openUpdate, onHeaderContextMenu:headerContextMenu">
                 <thead>
-                    <tr>
-                        <th data-options="field:'certificateNumber',   sortable:true, order:'asc', align:'center', resizable:'true', fixed:'false'">
-                            客户证件号
-                        </th>
-                        <th data-options="field:'points',   sortable:true, order:'asc', align:'center', resizable:'true', fixed:'false'">
-                            积分
-                        </th>
-                        <th data-options="field:'balance',   sortable:true, order:'asc', align:'center', resizable:'true', fixed:'false'">
-                            积分余额
-                        </th>
-                        <th data-options="field:'generateWay',   _provider:'dataDictionaryValueProvider', _queryParams:{dd_id:17},  sortable:true, order:'asc', align:'center', resizable:'true', fixed:'false'">
-               	来源
-                        </th>
-                       
-                        <th data-options="field:'notes',   sortable:true, order:'asc', align:'center', resizable:'true', fixed:'false'">
-                            备注
-                        </th>
-                        <th data-options="field:'created',  _provider:'datetimeProvider', sortable:true, order:'asc', align:'center', resizable:'true', fixed:'false'">
-                            获得时间
-                        </th>
+                <tr>
+                    <th data-options="field:'certificateNumber',   sortable:true, order:'asc', align:'center', resizable:'true', fixed:'false'">
+                        客户证件号
+                    </th>
+                    <th data-options="field:'points',   sortable:true, order:'asc', align:'center', resizable:'true', fixed:'false'">
+                        积分
+                    </th>
+                    <th data-options="field:'balance',   sortable:true, order:'asc', align:'center', resizable:'true', fixed:'false'">
+                        积分余额
+                    </th>
+                    <th data-options="field:'generateWay',   _provider:'dataDictionaryValueProvider', _queryParams:{dd_id:17},  sortable:true, order:'asc', align:'center', resizable:'true', fixed:'false'">
+                        来源
+                    </th>
 
-                    </tr>
+                    <th data-options="field:'notes',   sortable:true, order:'asc', align:'center', resizable:'true', fixed:'false'">
+                        备注
+                    </th>
+                    <th data-options="field:'created',  _provider:'datetimeProvider', sortable:true, order:'asc', align:'center', resizable:'true', fixed:'false'">
+                        获得时间
+                    </th>
+                    <th data-options="field:'orderCode',   sortable:true, order:'asc', align:'center', resizable:'true', fixed:'false'">
+                        订单编号
+                    </th>
+                </tr>
                 </thead>
             </table>
+            <!-- =========================================================表格========================================================= -->
+
             <!-- datagrid工具栏 -->
             <div id="toolbar" style="padding:2px 5px;">
-               
-            </div>
+
             </div>
         </div>
     </div>
-    <!-- 隐藏编辑框 -->
-    <div id="dlg" class="easyui-dialog" resizable="false" constrain="true" shadow="true" draggable="false" title="PointsDetail信息" style="padding:20px" modal="true" border="thin" closed="true"
-         data-options="
+</div>
+<!-- 隐藏编辑框 -->
+<div id="dlg" class="easyui-dialog" resizable="false" constrain="true" shadow="true" draggable="false" title="PointsDetail信息" style="padding:20px" modal="true" border="thin" closed="true"
+     data-options="
 				iconCls: 'icon-save',
 				height: 480,
 				buttons: [{
@@ -144,8 +151,8 @@
             </tr>
             <tr>
                 <td style="padding:5px;">
-                    <input class="easyui-datetimebox" name="_created" id="_created" style="width:100%" editable="false" data-options="label:'获得时间:'" 
-                        required="true" />
+                    <input class="easyui-datetimebox" name="_created" id="_created" style="width:100%" editable="false" data-options="label:'获得时间:'"
+                           required="true" />
                 </td>
             </tr>
             <tr>
@@ -156,235 +163,235 @@
         </table>
     </form>
 
-    </div>
-    <!-- ====================================================================================================================== -->
-    <!-- style & script 分隔线 -->
-    <!-- ====================================================================================================================== -->
-    <script type="text/javascript">
+</div>
+<!-- ====================================================================================================================== -->
+<!-- style & script 分隔线 -->
+<!-- ====================================================================================================================== -->
+<script type="text/javascript">
     //$("#phone").textbox("setValue", "${customerPoints.phone}");
     //$("#name").textbox("setValue", "${customerPoints.name}");
     //$("#certificateNumber").textbox("setValue", "${customerPoints.certificateNumber}");
-   // $("#total").textbox("setValue", "${customerPoints.total}");
+    // $("#total").textbox("setValue", "${customerPoints.total}");
     //alert("${customerPoints.certificateNumber}")
-        //打开新增窗口
-        function openInsert(){
-            $('#dlg').dialog('open');
-            $('#dlg').dialog('center');
-            $('#_form').form('clear');
-            formFocus("_form", "_certificateNumber");
-        }
+    //打开新增窗口
+    function openInsert(){
+        $('#dlg').dialog('open');
+        $('#dlg').dialog('center');
+        $('#_form').form('clear');
+        formFocus("_form", "_certificateNumber");
+    }
 
-        //打开修改窗口
-        function openUpdate(){
-            var selected = $("#grid").datagrid("getSelected");
-            if (null == selected) {
-                $.messager.alert('警告','请选中一条数据');
-                return;
-            }
-            $('#dlg').dialog('open');
-            $('#dlg').dialog('center');
-            formFocus("_form", "_certificateNumber");
-            var formData = $.extend({},selected);
-            formData = addKeyStartWith(getOriginalData(formData),"_");
-            $('#_form').form('load', formData);
+    //打开修改窗口
+    function openUpdate(){
+        var selected = $("#grid").datagrid("getSelected");
+        if (null == selected) {
+            $.messager.alert('警告','请选中一条数据');
+            return;
         }
+        $('#dlg').dialog('open');
+        $('#dlg').dialog('center');
+        formFocus("_form", "_certificateNumber");
+        var formData = $.extend({},selected);
+        formData = addKeyStartWith(getOriginalData(formData),"_");
+        $('#_form').form('load', formData);
+    }
 
-        function saveOrUpdate(){
-            if(!$('#_form').form("validate")){
-                return;
-            }
-            var _formData = removeKeyStartWith($("#_form").serializeObject(),"_");
-            var _url = null;
-            //没有id就新增
-            if(_formData.id == null || _formData.id==""){
-                _url = "${contextPath}/pointsDetail/insert";
-            }else{//有id就修改
-                _url = "${contextPath}/pointsDetail/update";
-            }
-            $.ajax({
-                type: "POST",
-                url: _url,
-                data: _formData,
-                processData:true,
-                dataType: "json",
-                async : true,
-                success: function (data) {
-                    if(data.code=="200"){
-                        $("#grid").datagrid("reload");
-                        $('#dlg').dialog('close');
-                    }else{
-                        $.messager.alert('错误',data.result);
-                    }
-                },
-                error: function(){
-                    $.messager.alert('错误','远程访问失败');
+    function saveOrUpdate(){
+        if(!$('#_form').form("validate")){
+            return;
+        }
+        var _formData = removeKeyStartWith($("#_form").serializeObject(),"_");
+        var _url = null;
+        //没有id就新增
+        if(_formData.id == null || _formData.id==""){
+            _url = "${contextPath}/pointsDetail/insert";
+        }else{//有id就修改
+            _url = "${contextPath}/pointsDetail/update";
+        }
+        $.ajax({
+            type: "POST",
+            url: _url,
+            data: _formData,
+            processData:true,
+            dataType: "json",
+            async : true,
+            success: function (data) {
+                if(data.code=="200"){
+                    $("#grid").datagrid("reload");
+                    $('#dlg').dialog('close');
+                }else{
+                    $.messager.alert('错误',data.result);
                 }
-            });
-        }
-
-        //根据主键删除
-        function del() {
-            var selected = $("#grid").datagrid("getSelected");
-            if (null == selected) {
-                $.messager.alert('警告','请选中一条数据');
-                return;
+            },
+            error: function(){
+                $.messager.alert('错误','远程访问失败');
             }
-            $.messager.confirm('确认','您确认想要删除记录吗？',function(r){
-                if (r){
-                    $.ajax({
-                        type: "POST",
-                        url: "${contextPath}/pointsDetail/delete",
-                        data: {id:selected.id},
-                        processData:true,
-                        dataType: "json",
-                        async : true,
-                        success: function (data) {
-                            if(data.code=="200"){
-                                $("#grid").datagrid("reload");
-                                $('#dlg').dialog('close');
-                            }else{
-                                $.messager.alert('错误',data.result);
-                            }
-                        },
-                        error: function(){
-                            $.messager.alert('错误','远程访问失败');
+        });
+    }
+
+    //根据主键删除
+    function del() {
+        var selected = $("#grid").datagrid("getSelected");
+        if (null == selected) {
+            $.messager.alert('警告','请选中一条数据');
+            return;
+        }
+        $.messager.confirm('确认','您确认想要删除记录吗？',function(r){
+            if (r){
+                $.ajax({
+                    type: "POST",
+                    url: "${contextPath}/pointsDetail/delete",
+                    data: {id:selected.id},
+                    processData:true,
+                    dataType: "json",
+                    async : true,
+                    success: function (data) {
+                        if(data.code=="200"){
+                            $("#grid").datagrid("reload");
+                            $('#dlg').dialog('close');
+                        }else{
+                            $.messager.alert('错误',data.result);
                         }
-                    });
+                    },
+                    error: function(){
+                        $.messager.alert('错误','远程访问失败');
+                    }
+                });
+            }
+        });
+
+    }
+    //表格查询
+    function queryGrid(inOut) {
+        if(typeof(inOut)!="undefined"){
+            if(inOut!='in'&&inOut!='out'){
+                inOut='in';
+            }
+        }else{
+            inOut='in';
+        }
+        var generateWaycolumn=$('#grid').datagrid('getColumnOption','generateWay');
+        if(inOut=='in')
+        {
+            generateWaycolumn.title='来源';
+            $("#inOut").combobox("setText", '收入');
+            $("#inOut").combobox("setValue", '10');
+        }
+        else
+        {
+
+            generateWaycolumn.title='使用方式';
+            $("#inOut").combobox("setText", '支出');
+            $("#inOut").combobox("setValue", '20');
+        }
+
+
+        var opts = $("#grid").datagrid("options");
+        //重新渲染修改表格列
+        opts.url='';
+        $('#grid').datagrid();
+
+        if (null == opts.url || "" == opts.url) {
+            opts.url = "${contextPath}/pointsDetail/listPage";
+        }
+        if(!$('#form').form("validate")){
+            return;
+        }
+
+        $("#grid").datagrid("load", bindGridMeta2Form("grid", "form"));
+    }
+
+
+    //清空表单
+    function clearForm() {
+        // $('#form').form('clear');
+
+        $("#generateWay").textbox("setValue", "");
+        $("#inOut").combobox("setValue", "");
+        $("#orderCode").textbox("setValue", "");
+    }
+
+    //表格表头右键菜单
+    function headerContextMenu(e, field){
+        e.preventDefault();
+        if (!cmenu){
+            createColumnMenu("grid");
+        }
+        cmenu.menu('show', {
+            left:e.pageX,
+            top:e.pageY
+        });
+    }
+
+    //全局按键事件
+    function getKey(e){
+        e = e || window.event;
+        var keycode = e.which ? e.which : e.keyCode;
+        if(keycode == 46){ //如果按下删除键
+            var selected = $("#grid").datagrid("getSelected");
+            if(selected && selected!= null){
+                del();
+            }
+        }
+    }
+
+    /**
+     * 绑定页面回车事件，以及初始化页面时的光标定位
+     * @formId
+     *          表单ID
+     * @elementName
+     *          光标定位在指点表单元素的name属性的值
+     * @submitFun
+     *          表单提交需执行的任务
+     */
+    $(function () {
+        //$('#inOut').next(".combo").hide();
+        bindFormEvent("form", "certificateNumber", queryGrid);
+        bindFormEvent("_form", "_certificateNumber", saveOrUpdate, function (){$('#dlg').dialog('close');});
+        if (document.addEventListener) {
+            document.addEventListener("keyup",getKey,false);
+        } else if (document.attachEvent) {
+            document.attachEvent("onkeyup",getKey);
+        } else {
+            document.onkeyup = getKey;
+        }
+        var pager = $('#grid').datagrid('getPager');    // get the pager of treegrid
+        pager.pagination({
+            <#controls_paginationOpts/>,
+            buttons:[
+            {
+                iconCls:'icon-add',
+                text:'新增',
+                handler:function(){
+                    openInsert();
                 }
-            });
-
-        }
-        //表格查询
-        function queryGrid(inOut) {
-        	if(typeof(inOut)!="undefined"){
-        		if(inOut!='in'&&inOut!='out'){
-        			inOut='in';
-        		}
-        	}else{
-        		inOut='in';
-        	}
-        	var generateWaycolumn=$('#grid').datagrid('getColumnOption','generateWay');                            
-            if(inOut=='in')
-            {           
-            	generateWaycolumn.title='来源';
-               	$("#inOut").combobox("setText", '收入');
-            	$("#inOut").combobox("setValue", '10');
-            }
-            else
-            {  
-            	
-            	generateWaycolumn.title='使用方式';    
-            	$("#inOut").combobox("setText", '支出');
-            	$("#inOut").combobox("setValue", '20');
-            }
-            
-           
-            var opts = $("#grid").datagrid("options");
-            //重新渲染修改表格列
-            opts.url='';
-            $('#grid').datagrid();
-            
-            if (null == opts.url || "" == opts.url) {
-                opts.url = "${contextPath}/pointsDetail/listPage";
-            }
-            if(!$('#form').form("validate")){
-                return;
-            }
-           
-            $("#grid").datagrid("load", bindGridMeta2Form("grid", "form"));
-        }
-
-
-        //清空表单
-        function clearForm() {
-           // $('#form').form('clear');
-
-            $("#generateWay").textbox("setValue", "");
-            $("#inOut").combobox("setValue", "");
-            $("#orderCode").textbox("setValue", "");
-        }
-
-        //表格表头右键菜单
-        function headerContextMenu(e, field){
-            e.preventDefault();
-            if (!cmenu){
-                createColumnMenu("grid");
-            }
-            cmenu.menu('show', {
-                left:e.pageX,
-                top:e.pageY
-            });
-        }
-
-        //全局按键事件
-        function getKey(e){
-            e = e || window.event;
-            var keycode = e.which ? e.which : e.keyCode;
-            if(keycode == 46){ //如果按下删除键
-                var selected = $("#grid").datagrid("getSelected");
-                if(selected && selected!= null){
+            },
+            {
+                iconCls:'icon-edit',
+                text:'修改',
+                handler:function(){
+                    openUpdate();
+                }
+            },
+            {
+                iconCls:'icon-remove',
+                text:'删除',
+                handler:function(){
                     del();
                 }
+            },
+            {
+                iconCls:'icon-export',
+                text:'导出',
+                handler:function(){
+                    doExport('grid');
+                }
             }
-        }
-
-        /**
-         * 绑定页面回车事件，以及初始化页面时的光标定位
-         * @formId
-         *          表单ID
-         * @elementName
-         *          光标定位在指点表单元素的name属性的值
-         * @submitFun
-         *          表单提交需执行的任务
-         */
-        $(function () {
-        	//$('#inOut').next(".combo").hide();
-            bindFormEvent("form", "certificateNumber", queryGrid);
-            bindFormEvent("_form", "_certificateNumber", saveOrUpdate, function (){$('#dlg').dialog('close');});
-            if (document.addEventListener) {
-                document.addEventListener("keyup",getKey,false);
-            } else if (document.attachEvent) {
-                document.attachEvent("onkeyup",getKey);
-            } else {
-                document.onkeyup = getKey;
-            }
-            var pager = $('#grid').datagrid('getPager');    // get the pager of treegrid
-                pager.pagination({
-                    <#controls_paginationOpts/>,
-                    buttons:[
-                    {
-                        iconCls:'icon-add',
-                        text:'新增',
-                        handler:function(){
-                            openInsert();
-                        }
-                    },
-                    {
-                        iconCls:'icon-edit',
-                        text:'修改',
-                        handler:function(){
-                            openUpdate();
-                        }
-                    },
-                    {
-                        iconCls:'icon-remove',
-                        text:'删除',
-                        handler:function(){
-                            del();
-                        }
-                    },
-                    {
-                        iconCls:'icon-export',
-                        text:'导出',
-                        handler:function(){
-                            doExport('grid');
-                        }
-                    }
-                ]
-            });
-            //表格仅显示下边框
-            $('#grid').datagrid('getPanel').removeClass('lines-both lines-no lines-right lines-bottom').addClass("lines-bottom");
-            queryGrid();
-        })
-    </script>
+        ]
+    });
+        //表格仅显示下边框
+        $('#grid').datagrid('getPanel').removeClass('lines-both lines-no lines-right lines-bottom').addClass("lines-bottom");
+        queryGrid();
+    })
+</script>
 </#body>
