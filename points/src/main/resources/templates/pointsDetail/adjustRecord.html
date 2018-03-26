@@ -1,0 +1,158 @@
+<#body>
+    <script>
+        <#controls_user dlgId="userSelectDialog" controlId="createdId"/>
+        <#controls_customerNumber dlgId="customerSelectDialog" controlId="certificateNumber"/>
+    </script>
+    <div class="easyui-layout" fit="true">
+        <div id="userSelectDialog" style="display: none;"></div>
+        <div id="customerSelectDialog" style="display: none;"></div>
+        <!-- ====================================================================================================================== -->
+        <!-- 上方布局 -->
+        <!-- ====================================================================================================================== -->
+        <div region="north" height="auto" align="center">
+            <!-- =========================================================表单========================================================= -->
+            <div class="easyui-panel" style="width:100%;" align="left">
+                <form id="form" class="easyui-form" method="post" fit="true">
+                    <table style="padding:10px;">
+                        <tr>
+                            <td style="padding:5px;">
+                                <input class="easyui-textbox" name="certificateNumber" id="certificateNumber"  panelHeight="auto" label="客户:" style="width: 100%;"
+                                       data-options="labelAlign:'right',editable:false,
+									buttonText:'选择',
+									onClickButton:_selectCustomer,onChange:_changeTextboxShowClear" />
+                            </td>
+                            <td style="padding:5px;">
+                                <input class="easyui-textbox" name="createdId" id="createdId"  panelHeight="auto" label="操作人:" style="width: 100%;"
+                                       data-options="labelAlign:'right',editable:false,buttonText:'选择',onClickButton:_selectUser,onChange:_changeTextboxShowClear" />
+                            </td>
+                            <td style="padding:5px;">
+                                <input class="easyui-datetimebox" name="createdStart" id="createdStart" editable="false" style="width:100%" labelAlign="right" data-options="label:'操作时间:'" />
+                            </td>
+                            <td>
+                                <input class="easyui-datetimebox" name="createdEnd" id="createdEnd" editable="false" style="width:100%" labelAlign="center" data-options="label:'——'" />
+                            </td>
+
+                        </tr>
+
+                        <tr>
+                            <td style="padding-left:28px;padding-top: 10px; padding-bottom: 10px;">
+                                <a href="#" class="easyui-linkbutton" iconCls="icon-search" id="queryBtn"
+                                   onclick="queryGrid()">查询</a>&nbsp;&nbsp;
+                                <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-clear" onclick="clearForm()">清除</a>
+                            </td>
+                        </tr>
+                    </table>
+                </form>
+            </div>
+        </div>
+        <!-- ====================================================================================================================== -->
+        <!-- 中央布局 -->
+        <!-- ====================================================================================================================== -->
+        <!-- 表格 -->
+        <div region="center" style="width:100%;" height="auto">
+            <!-- =========================================================表格========================================================= -->
+            <table class="easyui-datagrid" title="积分调整记录" id="grid" fitColumns="true" noheader="true"
+                   pagination="true" pageSize="30" pageNumber="1" pagePosition="top" rownumbers="true" remoteSort="false"
+                   loadMsg="数据加载中..." singleSelect="true" method="post" multiSort="false" sortName="certificateNumber"
+                   align="center" fit="true" striped="true" idField="id" data-options="onHeaderContextMenu:headerContextMenu">
+                <thead>
+                <tr>
+                    <th width="10%" data-options="field:'name', _provider:'customerNumberProvider', _escapeFileds:{name:'name', organizationType:'organizationType', certificateType:'certificateType'}, sortable:true, order:'asc', align:'center', resizable:'true', fixed:'false'">
+                        客户名称
+                    </th>
+                    <th width="10%" data-options="field:'organizationType',  _queryParams:'{dd_id:5}', _provider:'dataDictionaryValueProvider', sortable:true, order:'asc', align:'center', resizable:'true', fixed:'false'">
+                        组织类型
+                    </th>
+                    <th width="10%" data-options="field:'certificateType',  _provider:'dataDictionaryValueProvider',  _queryParams:'{dd_id:3}', sortable:true, order:'asc', align:'center', resizable:'true', fixed:'false'">
+                        证件类型
+                    </th>
+                    <th width="10%" data-options="field:'certificateNumber', sortable:true, order:'asc', align:'center', resizable:'true', fixed:'false'">
+                        证件号
+                    </th>
+                    <th width="10%" data-options="field:'points',   sortable:true, order:'asc', align:'center', resizable:'true', fixed:'false'">
+                        调整积分
+                    </th>
+                    <th width="10%" data-options="field:'balance',   sortable:true, order:'asc', align:'center', resizable:'true', fixed:'false'">
+                        积分余额
+                    </th>
+                    <th data-options="field:'createdId', width:'10%',  sortable:true, order:'asc', align:'center', resizable:'true', fixed:'false',_provider:'userProvider'">
+                        操作员
+                    </th>
+                    <th width="10%" data-options="field:'created',  _provider:'datetimeProvider', sortable:true, order:'asc', align:'center', resizable:'true', fixed:'false'">
+                        操作时间
+                    </th>
+                    <th width="20%" data-options="field:'notes',   sortable:true, order:'asc', align:'center', resizable:'true', fixed:'false'">
+                        备注
+                    </th>
+                </tr>
+                </thead>
+            </table>
+
+        </div>
+    </div>
+
+    <!-- ====================================================================================================================== -->
+    <!-- style & script 分隔线 -->
+    <!-- ====================================================================================================================== -->
+    <script type="text/javascript">
+        //表格查询
+        function queryGrid() {
+            var opts = $("#grid").datagrid("options");
+            if (null == opts.url || "" == opts.url) {
+                opts.url = "${contextPath}/pointsDetail/listAdjustRecordPage";
+            }
+            if(!$('#form').form("validate")){
+                return;
+            }
+            $("#grid").datagrid("load", bindGridMeta2Form("grid", "form"));
+        }
+
+
+        //清空表单
+        function clearForm() {
+            $('#form').form('clear');
+        }
+
+        //表格表头右键菜单
+        function headerContextMenu(e, field){
+            e.preventDefault();
+            if (!cmenu){
+                createColumnMenu("grid");
+            }
+            cmenu.menu('show', {
+                left:e.pageX,
+                top:e.pageY
+            });
+        }
+
+
+        /**
+         * 绑定页面回车事件，以及初始化页面时的光标定位
+         * @formId
+         *          表单ID
+         * @elementName
+         *          光标定位在指点表单元素的name属性的值
+         * @submitFun
+         *          表单提交需执行的任务
+         */
+        $(function () {
+
+            var pager = $('#grid').datagrid('getPager');    // get the pager of treegrid
+            pager.pagination({
+                <#controls_paginationOpts/>
+//                ,buttons:[
+//                {
+//                    iconCls:'icon-export',
+//                    text:'导出',
+//                    handler:function(){
+//                        doExport('grid');
+//                    }
+//                }
+//            ]
+        });
+            //表格仅显示下边框
+            $('#grid').datagrid('getPanel').removeClass('lines-both lines-no lines-right lines-bottom').addClass("lines-bottom");
+            queryGrid();
+        })
+    </script>
+</#body>

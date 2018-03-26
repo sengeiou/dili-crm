@@ -42,6 +42,7 @@ public class CustomerPointsController {
         return "customerPoints/index";
     }
 
+
     @ApiOperation(value="查询CustomerPoints", notes = "查询CustomerPoints，返回列表信息")
     @ApiImplicitParams({
 		@ApiImplicitParam(name="CustomerPoints", paramType="form", value = "CustomerPoints的form信息", required = false, dataType = "string")

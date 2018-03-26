@@ -1,7 +1,6 @@
 package com.dili.points.provider;
 
 import com.dili.points.domain.Customer;
-import com.dili.points.domain.User;
 import com.dili.points.domain.dto.CustomerApiDTO;
 import com.dili.points.rpc.CustomerRpc;
 import com.dili.ss.domain.BaseOutput;
@@ -15,11 +14,11 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * 客户远程批量提供者
- * Created by asiamaster on 2018/3/22.
+ * 客户证件号远程批量提供者
+ * Created by asiamaster on 2018/3/26.
  */
 @Component
-public class CustomerProvider extends BatchDisplayTextProviderAdaptor {
+public class CustomerNumberProvider extends BatchDisplayTextProviderAdaptor {
 
 	@Autowired
 	private CustomerRpc customerRpc;
@@ -27,7 +26,7 @@ public class CustomerProvider extends BatchDisplayTextProviderAdaptor {
 	@Override
 	protected List getFkList(List<String> relationIds, Map metaMap) {
 		CustomerApiDTO customerApiDTO = DTOUtils.newDTO(CustomerApiDTO.class);
-		customerApiDTO.setIds(relationIds);
+		customerApiDTO.setCertificateNumbers(relationIds);
 		BaseOutput<List<Customer>> output = customerRpc.list(customerApiDTO);
 		return output.isSuccess() ? output.getData() : null;
 	}
@@ -44,4 +43,20 @@ public class CustomerProvider extends BatchDisplayTextProviderAdaptor {
 		}
 	}
 
+	/**
+	 * 关联(数据库)表的主键的字段名
+	 * 默认取id，子类可自行实现
+	 * @return
+	 */
+	@Override
+	protected String getRelationTablePkField(Map metaMap) {
+		return "certificateNumber";
+	}
+
+	@Override
+	protected String getFkField(Map metaMap) {
+		String field = (String)metaMap.get(FIELD_KEY);
+		String fkField = (String)metaMap.get(FK_FILED_KEY);
+		return fkField == null ? "certificateNumber" : fkField;
+	}
 }

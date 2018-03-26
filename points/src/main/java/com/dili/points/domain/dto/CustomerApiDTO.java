@@ -3,6 +3,9 @@ package com.dili.points.domain.dto;
 
 import com.dili.points.domain.Customer;
 import com.dili.ss.domain.annotation.Operator;
+import com.dili.ss.metadata.FieldEditor;
+import com.dili.ss.metadata.annotation.EditMode;
+import com.dili.ss.metadata.annotation.FieldDef;
 
 import javax.persistence.Column;
 import java.util.List;
@@ -17,5 +20,10 @@ public interface CustomerApiDTO extends Customer {
 	@Column(name = "`id`")
 	List<String> getIds();
 	void setIds(List<String> ids);
+
+	@Operator(Operator.IN)
+	@Column(name = "`certificate_number`")
+	List<String> getCertificateNumbers();
+	void setCertificateNumbers(List<String> certificateNumbers);
 
 }

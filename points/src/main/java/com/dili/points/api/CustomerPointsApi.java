@@ -47,10 +47,11 @@ public class CustomerPointsApi {
         CustomerPoints customerPoints = DTOUtils.newDTO(CustomerPoints.class);
         customerPoints.setCertificateNumber(jsonObject.getString("certificateNumber"));
         List<CustomerPoints> customerPointss = customerPointsService.listByExample(customerPoints);
-        if(customerPointss == null){
-            customerPointss = Lists.newArrayList();
+        CustomerPoints result = null;
+        if(customerPointss != null && !customerPointss.isEmpty()){
+            result = customerPointss.get(0);
         }
-        return BaseOutput.success().setData(customerPointss.get(0));
+        return BaseOutput.success().setData(result);
     }
 
     @ApiOperation(value = "根据客户证件号码查询客户积分明细", notes = "根据客户证件号码查询客户积分明细")
