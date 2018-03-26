@@ -154,7 +154,8 @@
             $.messager.alert('警告','请选中一条数据');
             return;
         }
-        window.location.href="${contextPath}/pointsDetail/detail.html?certificateNumber="+selected["certificateNumber"];
+        var certificateNumber=encodeURIComponent(selected["certificateNumber"])
+        window.location.href="${contextPath}/pointsDetail/detail.html?certificateNumber="+certificateNumber;
     }
 
     function savePointsDetail(){
@@ -208,7 +209,7 @@
         formFocus("_form", "_certificateNumber");
         
         $('#_customerId').val(selected['id']);
-        
+        $('#_points').textbox('setValue','')
         var formData = $.extend({},selected);
         formData = addKeyStartWith(getOriginalData(formData),"_");
         $('#_form').form('load', formData);

@@ -76,7 +76,7 @@ public class OrderListenerTest {
 	private List<OrderItem> buildOrderItems(){
 		List<OrderItem>orderItemList=new ArrayList<>();
 		OrderItem orderItem=DTOUtils.newDTO(OrderItem.class); 
-		orderItem.setCategoryId(100L);
+		orderItem.setCategoryId(1L);
 		orderItem.setTotalMoney(100L);
 		orderItem.setWeight(new BigDecimal("500"));
 		orderItemList.add(orderItem);
@@ -112,15 +112,15 @@ public class OrderListenerTest {
 //		orderMap.put(order, orderItemList);
 //		return orderMap;
 //	}
-	@Test
-	public void sumOrdersForPurchase() {
-		Map<Order,List<OrderItem>>orderMap=new HashMap<>();
-		orderMap.put(this.buildOrder(), this.buildOrderItems());
-		List<Order>list=this.orderListener.sumOrdersForPurchase(orderMap.keySet());
-		Assert.assertEquals(list.size(), 1);
-		
-		
-	}
+//	@Test
+//	public void sumOrdersForPurchase() {
+//		Map<Order,List<OrderItem>>orderMap=new HashMap<>();
+//		orderMap.put(this.buildOrder(), this.buildOrderItems());
+//		List<Order>list=this.orderListener.sumOrdersForPurchase(orderMap.keySet());
+//		Assert.assertEquals(list.size(), 1);
+//		
+//		
+//	}
 	@Test
 	public void calculateBasePoints() {
 		Order order=this.buildOrder();
@@ -205,15 +205,13 @@ public class OrderListenerTest {
 //	}
 	@Test
 	public void calPointsAndSaveData() {
-dd();
-	}
-	private void dd() {
+
 		Order order=this.buildOrder();
 		List<OrderItem>orderItems=this.buildOrderItems();
 		
 		Map<Order,List<OrderItem>>orderMap=new HashMap<>();
 		orderMap.put(order, orderItems);
-		this.orderListener.calPointsAndSaveData(orderMap);
+		this.orderListener.calAndSaveData(orderMap);
 		
 	}
 }

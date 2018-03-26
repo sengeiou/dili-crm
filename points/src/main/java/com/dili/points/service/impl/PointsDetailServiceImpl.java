@@ -71,6 +71,7 @@ public class PointsDetailServiceImpl extends BaseServiceImpl<PointsDetail, Long>
 			cp.setId(customerId);
 			cp.setCertificateNumber(pointsDetail.getCertificateNumber());
 			cp.setCreated(new Date());
+			cp.setModified(new Date());
 			cp.setFrozen(0);
 			cp.setTotal(0);
 			this.customerPointsMapper.insertExact(cp);
