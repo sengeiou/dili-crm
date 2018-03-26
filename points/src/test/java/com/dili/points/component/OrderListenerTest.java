@@ -205,15 +205,13 @@ public class OrderListenerTest {
 //	}
 	@Test
 	public void calPointsAndSaveData() {
-dd();
-	}
-	private void dd() {
+
 		Order order=this.buildOrder();
 		List<OrderItem>orderItems=this.buildOrderItems();
 		
 		Map<Order,List<OrderItem>>orderMap=new HashMap<>();
 		orderMap.put(order, orderItems);
-		this.orderListener.calPointsAndSaveData(orderMap);
+		this.orderListener.calAndSaveData(orderMap);
 		
 	}
 }
