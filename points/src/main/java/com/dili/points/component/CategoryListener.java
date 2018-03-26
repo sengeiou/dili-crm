@@ -26,28 +26,29 @@ public class CategoryListener {
 	@Autowired private CategoryService categoryService;
 	@RabbitListener(queues = "#{rabbitConfiguration.CATEGORY_TOPIC_QUEUE}")
 	public void processBootTask(String categoryJson) {
-		System.out.println("PointsListener:"+categoryJson);
+		//System.out.println("PointsListener:"+categoryJson);
+		//将Json转换为map
 		Map<String,Object>map=DtoMessageConverter.convertAsMap(categoryJson);
 		 if(map.isEmpty()) {
 			 logger.error("品类信息数据转换出错:"+categoryJson);
 			 return;
 		 }
 		 try {
+			 //取出action
 			 String action=String.valueOf(map.remove("action"));
+			 
+			 //将map转换为Category对象
 			 Category category=DTOUtils.proxy(new DTO(map), Category.class);
 			 if("add".equals(action)) {
-				// Category example=DTOUtils.newDTO(Category.class);
-				// example.setCategoryId(category.getCategoryId());
-				// example.setSourceSystem(category.getSourceSystem());
-				// Optional<Category>firstOne=this.categoryService.listByExample(example).stream().findFirst();
-				// Category categoryDto=firstOne.orElse(category);
-				 categoryService.saveOrUpdate(category);	
+				 categoryService.insertExact(category);	
 			 }else if("update".equals(action)) {
+				 //通过条件查询已有的Category
 				 Category example=DTOUtils.newDTO(Category.class);
 				 example.setCategoryId(category.getCategoryId());
 				 example.setSourceSystem(category.getSourceSystem());
 				 Optional<Category>firstOne=this.categoryService.listByExample(example).stream().findFirst();
 				 Category categoryDto=firstOne.orElse(category);
+				 //将查询到的id设置到传递过来的对象,以进行更新
 				 category.setId(categoryDto.getId());
 				 categoryService.saveOrUpdate(category);	
 			 }
