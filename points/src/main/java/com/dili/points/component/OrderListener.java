@@ -509,12 +509,12 @@ public class OrderListener {
 	}
 	/** 根据标准值和条件表表,选出条件的第一个权重值
 	 * @param conditionNumber
-	 * @param tradeWeightConditionList
+	 * @param ruleConditionList
 	 * @return
 	 */
-	protected BigDecimal calculateWeight(BigDecimal conditionNumber, List<RuleCondition>tradeWeightConditionList) {
+	protected BigDecimal calculateWeight(BigDecimal conditionNumber, List<RuleCondition>ruleConditionList) {
 		
-		for(RuleCondition ruleCondition:tradeWeightConditionList) {
+		for(RuleCondition ruleCondition:ruleConditionList) {
 			
 			Float conditionWeight=ruleCondition.getWeight();//权重
 			String startValue=ruleCondition.getStartValue();//开始值
@@ -524,7 +524,9 @@ public class OrderListener {
 			Integer conditonType=ruleCondition.getConditionType();//区间: 60,  大于等于 20 大于  30, 小于等于 40, 小于 50, 等于 10
 			//是否进行权重*积分的计算过程
 			boolean hitCondition=false;
-			if(conditonType.equals(60)&&(conditionNumber.compareTo(new BigDecimal(startValue))>=0&&conditionNumber.compareTo(new BigDecimal(endValue))<0)) {
+			
+			//区间包括两端的值
+			if(conditonType.equals(60)&&(conditionNumber.compareTo(new BigDecimal(startValue))>=0&&conditionNumber.compareTo(new BigDecimal(endValue))<=0)) {
 				hitCondition=true;
 			}else if(conditonType.equals(20)&&(conditionNumber.compareTo(new BigDecimal(value))>=0)) {
 				hitCondition=true;
