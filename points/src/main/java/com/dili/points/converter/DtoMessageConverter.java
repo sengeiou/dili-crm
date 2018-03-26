@@ -48,7 +48,7 @@ public class DtoMessageConverter {
 	 * @param clz   要进行转换的目标Map的类型
 	 * @return 返回转换后的Optional<Map>
 	 */
-	public static  Optional<Map<String,Object>> convertAsMap(String json) {
+	public static  Map<String,Object> convertAsMap(String json) {
 		if(StringUtils.isNoneBlank(json)) {
 			ObjectMapper gson = new ObjectMapper();
 			gson.setDateFormat(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss"));
@@ -56,12 +56,12 @@ public class DtoMessageConverter {
 			gson.configure(DeserializationFeature.FAIL_ON_IGNORED_PROPERTIES, false);
 			try {
 				HashMap<String, Object> map = gson.readValue(json, new TypeReference<HashMap<String, Object>>() {});
-				return Optional.ofNullable(map);
+				return map;
 			} catch (IOException e) {
 				throw new InternalException(e);
 			}
 		}
-		return Optional.empty();
+		return Collections.emptyMap();
 	}
 	/**
 	 * @param json 要进行转换为Map的原json字符串

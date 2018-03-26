@@ -1,0 +1,61 @@
+package com.dili.points.component;
+
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.amqp.rabbit.annotation.RabbitListener;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+
+import com.dili.points.converter.DtoMessageConverter;
+import com.dili.points.domain.Category;
+import com.dili.points.service.CategoryService;
+import com.dili.ss.dto.DTO;
+import com.dili.ss.dto.DTOUtils;
+
+/**
+ * 积分监听组件
+ * Created by asiamaster on 2017/11/7 0007.
+ */
+@Component
+public class CategoryListener {
+	private static final Logger logger=LoggerFactory.getLogger(CategoryListener.class);
+	@Autowired private CategoryService categoryService;
+	@RabbitListener(queues = "#{rabbitConfiguration.CATEGORY_TOPIC_QUEUE}")
+	public void processBootTask(String categoryJson) {
+		System.out.println("PointsListener:"+categoryJson);
+		Map<String,Object>map=DtoMessageConverter.convertAsMap(categoryJson);
+		 if(map.isEmpty()) {
+			 logger.error("品类信息数据转换出错:"+categoryJson);
+			 return;
+		 }
+		 try {
+			 String action=String.valueOf(map.remove("action"));
+			 Category category=DTOUtils.proxy(new DTO(map), Category.class);
+			 if("add".equals(action)) {
+				// Category example=DTOUtils.newDTO(Category.class);
+				// example.setCategoryId(category.getCategoryId());
+				// example.setSourceSystem(category.getSourceSystem());
+				// Optional<Category>firstOne=this.categoryService.listByExample(example).stream().findFirst();
+				// Category categoryDto=firstOne.orElse(category);
+				 categoryService.saveOrUpdate(category);	
+			 }else if("update".equals(action)) {
+				 Category example=DTOUtils.newDTO(Category.class);
+				 example.setCategoryId(category.getCategoryId());
+				 example.setSourceSystem(category.getSourceSystem());
+				 Optional<Category>firstOne=this.categoryService.listByExample(example).stream().findFirst();
+				 Category categoryDto=firstOne.orElse(category);
+				 category.setId(categoryDto.getId());
+				 categoryService.saveOrUpdate(category);	
+			 }
+			
+		}catch(Exception e) {
+			logger.error("处理品类信息"+categoryJson+"出错",e);
+		}
+		
+	}
+	
+}

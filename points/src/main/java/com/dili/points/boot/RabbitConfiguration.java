@@ -18,8 +18,10 @@ import java.util.UUID;
 public class RabbitConfiguration {
 
     public static final String DEFAULT_TOPIC_EXCHANGE = "diligrp.points.topicExchange";
-    public static final String TOPIC_ROUTE_KEY = "diligrp. points. syncOrderKey";
-    public static final String TOPIC_QUEUE = "points-" + UUID.randomUUID();
+    public static final String TOPIC_ORDER_ROUTE_KEY = "diligrp.points.syncOrderKey";
+    public static final String TOPIC_CATEGORY_ROUTE_KEY = "diligrp.points.syncCategoryKey";
+    public static final String ORDER_TOPIC_QUEUE = "points-" + UUID.randomUUID();
+    public static final String CATEGORY_TOPIC_QUEUE = "category-" + UUID.randomUUID();
 
     @Bean
     public MessageConverter messageConverter() {
@@ -33,12 +35,19 @@ public class RabbitConfiguration {
 
 
     @Bean
-    public Queue randomQueue() {
-        return new Queue(TOPIC_QUEUE, true, false, true);
+    public Queue randomOrderQueue() {
+        return new Queue(ORDER_TOPIC_QUEUE, true, false, true);
     }
-
     @Bean
-    public Binding topicBinding() {
-        return BindingBuilder.bind(randomQueue()).to(topicExchange()).with(TOPIC_ROUTE_KEY);
+    public Queue randomCategoryQueue() {
+        return new Queue(CATEGORY_TOPIC_QUEUE, true, false, true);
+    }
+    @Bean
+    public Binding orderTopicBinding() {
+        return BindingBuilder.bind(randomOrderQueue()).to(topicExchange()).with(TOPIC_ORDER_ROUTE_KEY);
+    }
+    @Bean
+    public Binding categoryTopicBinding() {
+        return BindingBuilder.bind(randomCategoryQueue()).to(topicExchange()).with(TOPIC_CATEGORY_ROUTE_KEY);
     }
 }

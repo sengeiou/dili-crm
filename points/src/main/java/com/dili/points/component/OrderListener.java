@@ -60,7 +60,7 @@ public class OrderListener {
 	@Autowired RuleConditionService ruleConditionService;
 	@Autowired PointsDetailService pointsDetailService;
 	@Autowired CustomerRpc customerRpc;
-	@RabbitListener(queues = "#{rabbitConfiguration.TOPIC_QUEUE}")
+	@RabbitListener(queues = "#{rabbitConfiguration.ORDER_TOPIC_QUEUE}")
 	public void processBootTask(String orderJson) {
 		try {
 			Map<Order,List<OrderItem>>orderMap=this.convertOrder(orderJson);
