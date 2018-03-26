@@ -40,7 +40,7 @@ public class PointsRuleController {
         return "pointsRule/index";
     }
 
-    @RequestMapping(value = "/add", method = RequestMethod.GET)
+    @RequestMapping(value = "/add.html", method = RequestMethod.GET)
     public String add() {
         return "pointsRule/add";
     }
@@ -52,8 +52,8 @@ public class PointsRuleController {
         return pointsRule;
     }
 
-    @RequestMapping(value = "/toUpdate/{id}", method = RequestMethod.GET)
-    public String toUpdate(ModelMap modelMap, @PathVariable("id") Long id) {
+    @RequestMapping(value = "/toUpdate.html", method = RequestMethod.GET)
+    public String toUpdate(ModelMap modelMap, Long id) {
         PointsRule pointsRule = pointsRuleService.get(id);
         // 启用或者不存在的规则直接跳转到列表页
         if (pointsRule == null || pointsRule.getYn() == 1) {
@@ -65,8 +65,8 @@ public class PointsRuleController {
         return "pointsRule/update";
     }
 
-    @RequestMapping(value = "/view/{id}", method = RequestMethod.GET)
-    public String view(ModelMap modelMap, @PathVariable("id") Long id) {
+    @RequestMapping(value = "/view.html", method = RequestMethod.GET)
+    public String view(ModelMap modelMap, Long id) {
         PointsRule pointsRule = pointsRuleService.get(id);
         if (pointsRule == null) {
             return "redirect:/pointsRule/index.html";
@@ -77,8 +77,8 @@ public class PointsRuleController {
         return "pointsRule/view";
     }
 
-    @RequestMapping(value = "/copy/{id}", method = RequestMethod.GET)
-    public String copy(ModelMap modelMap, @PathVariable("id") Long id) {
+    @RequestMapping(value = "/copy.html", method = RequestMethod.GET)
+    public String copy(ModelMap modelMap, Long id) {
         PointsRule pointsRule = pointsRuleService.get(id);
         // 启用或者不存在的规则直接跳转到列表页
         if (pointsRule == null ) {

@@ -16,6 +16,7 @@
         <div id="nav"
              style="padding-left:10px;padding-top:10px;position:fixed;z-index:2008;width:99%;height:30px;background-color:white"
              align="left">
+            <#nav/>
             <div style="display: inline;float:right;padding-right: 40px;">
                 <a id="saveBtn" href="#" class="easyui-linkbutton" iconCls="icon-save"
                    data-options="width:80" onclick="submitForm(this)">保存</a>&nbsp;&nbsp;
@@ -28,8 +29,8 @@
             <input type="hidden" name="moneyJson" id="moneyJson"/>
             <input type="hidden" name="payMethodJson" id="payMethodJson"/>
             <div align="center" style="margin-top:50px">
-                <div class="easyui-panel" style="width: 94%;" title="积分基础信息" border="false">
-                    <table align="center" width="94%">
+                <div class="easyui-panel" style="width: 96%;" title="积分基础信息" border="false">
+                    <table align="center" width="99%">
                         <tr>
                             <td style="padding-top:10px;" width="25%">
                                 <input class="easyui-combobox inputWidth" name="businessType" id="businessType" panelWidth="auto" panelHeight="auto"
@@ -66,9 +67,9 @@
                 </div>
             </div>
             <div align="center" style="margin-top:50px">
-                <div class="easyui-panel" style="width: 94%;" title="积分计算标准" border="false">
+                <div class="easyui-panel" style="width: 96%;" title="积分计算标准" border="false">
 
-                    <table align="center" width="94%">
+                    <table align="center" width="99%">
                         <tr>
                             <td style="padding-top:10px;" width="25%">
                                 <input class="easyui-combobox inputWidth" name="computingStandard"
@@ -93,7 +94,7 @@
             </div>
         </form>
         <div align="center" style="margin-top:50px">
-            <div class="easyui-panel" style="width: 94%;" title="积分权重" border="false">
+            <div class="easyui-panel" style="width: 96%;" title="积分权重" border="false">
                 <table width="100%">
                     <tr>
                         <td width="33%" valign="top" style="padding-right:6px;box-sizing: border-box;">
@@ -150,8 +151,14 @@
     </div>
 </div>
 
-<div id="dlg" class="easyui-dialog" title="交易量权重" data-options="iconCls:'icon-save'" modal="true" closed="true"
-     style="width:500px;height:230px;padding:10px">
+<div id="dlg" class="easyui-dialog" title="交易量权重" modal="true" closed="true"
+     style="width:330px;height:230px;padding:10px" data-options="
+				buttons: [{
+					text:'确认',
+					iconCls:'icon-ok',
+					handler:saveNumber
+				}]
+			">
     <form id="number_form" method="post" action="">
         <input type="hidden" id="type" value="0"/>
         <input type="hidden" id="edit_type" value="0"/>
@@ -187,17 +194,17 @@
             </tr>
         </table>
     </form>
-    <div style="text-align:center;padding:5px;">
-        <a href="javascript:void(0)" class="easyui-linkbutton" data-options="width:'80px'"
-           onclick="saveNumber()">确定</a>
-        <a href="javascript:void(0)" class="easyui-linkbutton" data-options="width:'80px'"
-           onclick="$('#dlg').dialog('close');">取消</a>
-    </div>
 </div>
 
 
-<div id="dlg_pay" class="easyui-dialog" title="支付方式" data-options="iconCls:'icon-save'" closed="true"
-     style="width:500px;height:200px;padding:10px">
+<div id="dlg_pay" class="easyui-dialog" title="支付方式" modal="true" closed="true"
+     style="width:330px;height:230px;padding:10px" data-options="
+				buttons: [{
+					text:'确认',
+					iconCls:'icon-ok',
+					handler:savePay
+				}]
+			">
     <form id="pay_form" method="post" action="">
         <input type="hidden" id="pay_edit_type" value="0"/>
         <table cellpadding="5" style="width: 100%">
@@ -219,12 +226,6 @@
             </tr>
         </table>
     </form>
-    <div style="text-align:center;padding:5px;">
-        <a href="javascript:void(0)" class="easyui-linkbutton" data-options="width:'80px'"
-           onclick="savePay()">确定</a>
-        <a href="javascript:void(0)" class="easyui-linkbutton" data-options="width:'80px'"
-           onclick="$('#dlg_pay').dialog('close');">取消</a>
-    </div>
 </div>
 <#pointsRule_js/>
 <script type="text/javascript">

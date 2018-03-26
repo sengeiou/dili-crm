@@ -4,11 +4,13 @@
         text: '新增',
         iconCls: 'icon-add',
         handler: function () {
+            $('#number_form').form('clear');
             $("#edit_type").val(0);
             $("#type").val(0);
             $('#dlg').dialog({
                 title: '交易量权重（公斤）'
             });
+            $('#dlg').dialog('center');
             $('#dlg').dialog('open');
         }
     }, {
@@ -26,6 +28,7 @@
             $('#dlg').dialog({
                 title: '交易量权重（公斤）'
             });
+            $('#dlg').dialog('center');
             $('#dlg').dialog('open');
         }
     }, {
@@ -46,11 +49,13 @@
         text: '新增',
         iconCls: 'icon-add',
         handler: function () {
+            $('#number_form').form('clear');
             $("#edit_type").val(0);
             $("#type").val(1);
             $('#dlg').dialog({
                 title: '交易额权重（元）'
             });
+            $('#dlg').dialog('center');
             $('#dlg').dialog('open');
         }
     }, {
@@ -68,6 +73,7 @@
             $('#dlg').dialog({
                 title: '交易额权重（元）'
             });
+            $('#dlg').dialog('center');
             $('#dlg').dialog('open');
         }
     }, {
@@ -88,7 +94,9 @@
         text: '新增',
         iconCls: 'icon-add',
         handler: function () {
+            $('#pay_form').form('clear');
             $("#pay_edit_type").val(0);
+            $('#dlg_pay').dialog('center');
             $('#dlg_pay').dialog('open');
         }
     }, {
@@ -102,6 +110,7 @@
             }
             $('#pay_form').form('load', row);
             $("#pay_edit_type").val(1);
+            $('#dlg_pay').dialog('center');
             $('#dlg_pay').dialog('open');
         }
     }, {
@@ -120,7 +129,7 @@
 
     // 保存交易额，交易量
     function saveNumber() {
-        if (!$("#pay_form").form('validate')) {
+        if (!$("#number_form").form('validate')) {
             return;
         }
         var dg = $("#dg_" + $("#type").val());
@@ -141,7 +150,7 @@
             });
         }
         $('#dlg').dialog('close');
-        $('#pay_form').form('clear');
+        $('#number_form').form('clear');
     }
 
 
