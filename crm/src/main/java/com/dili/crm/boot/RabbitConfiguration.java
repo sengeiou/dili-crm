@@ -29,8 +29,8 @@ public class RabbitConfiguration {
 //    public Binding fanoutBinding() {
 //        return BindingBuilder.bind(randomQueue()).to(fanoutExchange());
 //    }
-    public static final String DEFAULT_TOPIC_EXCHANGE = "diligrp.crm.topic";
-    public static final String TOPIC_ROUTE_KEY = "crm.customer";
+    public static final String DEFAULT_TOPIC_EXCHANGE = "diligrp.crm.topicExchange";
+    public static final String TOPIC_ROUTE_KEY = "diligrp.crm.addCustomerKey";
     public static final String TOPIC_QUEUE = "crm-" + UUID.randomUUID();
 
     @Bean

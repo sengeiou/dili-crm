@@ -81,14 +81,6 @@ public class PointsDetailController {
     @RequestMapping(value="/mannuallyInsert", method = {RequestMethod.GET, RequestMethod.POST})
     public @ResponseBody BaseOutput mannuallyInsert(PointsDetailDTO pointsDetail) {
     	//先进行基本属性判断
-    	//积分不能为空
-    	if(pointsDetail.getPoints()==null) {
-    		
-    	}
-    	//证件号码不能为空
-    	if(StringUtils.isBlank(pointsDetail.getCertificateNumber())) {
-    		
-    	}
     	
 		UserTicket userTicket = SessionContext.getSessionContext().getUserTicket();
 		if (userTicket == null) {
