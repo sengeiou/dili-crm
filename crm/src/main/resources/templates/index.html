@@ -121,7 +121,7 @@
 								<a class="linkmore" href="${contextPath}/customer/locations.html">查看更多&gt;</a>
 							</div>
 							<div id="mapDiv" style="width:99%;height:99%;"></div>
-							<div  style="position:absolute; top: 50px; left: 20px;">
+							<div  style="position:absolute; top: 60px; left: 20px;background-color: #cccccc;">
 								<%for(dd in ddList){ %>
 								<input  type="checkbox" name="type" checked value="${dd.value}" onclick="viewCustomerMap()">${dd.text}&nbsp;&nbsp;
 								<%}%>
@@ -309,7 +309,8 @@
                     });
                     for (var i = 0; i < customerAddresses.length; i++) {
                         var customerAddress = customerAddresses[i];
-                        if (null == customerAddress.type || $.inArray(customerAddress.type, chk_value) >=0 ){
+                        debugger;
+                        if ((null == customerAddress.type && $.inArray("other", chk_value) >=0) || $.inArray(customerAddress.type, chk_value) >=0 ){
                             var pt = new BMap.Point(customerAddress.operatingLng,customerAddress.operatingLat);
                             var marker = new BMap.Marker(pt, {icon: getLocationIcon(customerAddress.type)});
                             //绑定自定义属性
