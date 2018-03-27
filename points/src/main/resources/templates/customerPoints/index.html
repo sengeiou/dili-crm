@@ -192,29 +192,32 @@
     }
     
     //打开调整窗口窗口
-    function openDetailChange(){
-        var selected = $("#grid").treegrid("getSelected");
-        if (null == selected) {
-            $.messager.alert('警告','请选中一条数据');
-            return;
-        }
-        
-        var selected = $("#grid").datagrid("getSelected");
-        if (null == selected) {
-            $.messager.alert('警告','请选中一条数据');
-            return;
-        }
-        $('#dlg').dialog('open');
-        $('#dlg').dialog('center');
-        formFocus("_form", "_certificateNumber");
-        
-        $('#_customerId').val(selected['id']);
-        $('#_points').textbox('setValue','')
-        var formData = $.extend({},selected);
-        formData = addKeyStartWith(getOriginalData(formData),"_");
-        $('#_form').form('load', formData);
-        
-    }
+     <#resource code="changeCustomerPoints">
+     function openDetailChange(){
+         var selected = $("#grid").treegrid("getSelected");
+         if (null == selected) {
+             $.messager.alert('警告','请选中一条数据');
+             return;
+         }
+         
+         var selected = $("#grid").datagrid("getSelected");
+         if (null == selected) {
+             $.messager.alert('警告','请选中一条数据');
+             return;
+         }
+         $('#dlg').dialog('open');
+         $('#dlg').dialog('center');
+         formFocus("_form", "_certificateNumber");
+         
+         $('#_customerId').val(selected['id']);
+         $('#_points').textbox('setValue','')
+         var formData = $.extend({},selected);
+         formData = addKeyStartWith(getOriginalData(formData),"_");
+         $('#_form').form('load', formData);
+         
+     }              
+    </#resource>
+   
     
         //打开新增窗口
         function openInsert(){
@@ -369,42 +372,25 @@
                 pager.pagination({
                     <#controls_paginationOpts/>,
                     buttons:[
-                  	  {
-                            iconCls:'icon-detail',
-                            text:'明细',
-                                handler:function(){
-                                openDetail();
-                            }
-                        },
-                        {
-                            iconCls:'icon-detail',
-                            text:'积分调整',
-                                handler:function(){
-                                	openDetailChange();
-                            }
-                        },
-                    
-                    /*{
-                        iconCls:'icon-add',
-                        text:'新增',
-                        handler:function(){
-                            openInsert();
-                        }
-                    },
-                    {
-                        iconCls:'icon-edit',
-                        text:'修改',
-                        handler:function(){
-                            openUpdate();
-                        }
-                    },
-                    {
-                        iconCls:'icon-remove',
-                        text:'删除',
-                        handler:function(){
-                            del();
-                        }
-                    },*/
+                    	 <#resource code="customerPointsDetails">
+                    	 {
+                             iconCls:'icon-detail',
+                             text:'明细',
+                                 handler:function(){
+                                 openDetail();
+                             }
+                         },
+                     </#resource>
+                     <#resource code="changeCustomerPoints">
+                         {
+                             iconCls:'icon-detail',
+                             text:'积分调整',
+                                 handler:function(){
+                                 	openDetailChange();
+                             }
+                         },
+                     </#resource>
+                   
                     {
                         iconCls:'icon-export',
                         text:'导出',
