@@ -1,7 +1,7 @@
-<div  class="easyui-panel" style="width: 94%;" title="回访信息" border="false" >
+<div  class="easyui-panel" style="width: 96%;" title="回访信息" border="false" >
     <form id="_form" class="easyui-form" method="post" fit="true">
         <input name="_id" id="_id" type="hidden">
-        <table align="center" width="94%">
+        <table align="center" width="96%">
             <tr>
                 <td style="padding-top:10px;" width="33%">
                     <input class="easyui-textbox inputWidth" name="_code" id="_code"   data-options="labelAlign:'right',label:'回访编号:',disabled:true" />

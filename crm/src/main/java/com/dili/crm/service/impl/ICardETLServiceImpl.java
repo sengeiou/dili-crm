@@ -54,7 +54,7 @@ import com.mysql.fabric.xmlrpc.base.Array;
  * @author wangguofeng
  *
  */
-//@Component
+@Component
 public class ICardETLServiceImpl implements ICardETLService{
 	private static final Logger logger=LoggerFactory.getLogger(ICardETLServiceImpl.class);
 	@Autowired private IcardUserAccountService icardUserAccountService;
