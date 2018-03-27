@@ -127,7 +127,14 @@ public class PointsDetailServiceImpl extends BaseServiceImpl<PointsDetail, Long>
 					}
 				}
 			} else {
-				dayPoints = points;
+				//单次积分超过最大值
+				if(total<points) {
+					points=total;
+					dayPoints=total;
+				}else {
+					dayPoints = points;	
+				}
+				
 			}
 		}else {
 			// 如果上次修改积分的时间不是今天时,初始化积分上限到0
