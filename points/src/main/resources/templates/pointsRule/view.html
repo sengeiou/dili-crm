@@ -269,7 +269,16 @@
 
     $(function () {
         $('#_form').form('load', '${contextPath}/pointsRule/get/${id}');
-        $('input[class^=easyui-]').textbox("disable");
+
+        $('input[class^=easyui-]').textbox({
+            cls:'noborder'
+        });
+
+        $('input[class^=easyui-combobox]').combobox({
+            hasDownArrow:false
+        });
+
+        $('input[class^=easyui-]').textbox("readonly",true);
 
         // 操作日志
         var opts = $("#dg_log").datagrid("options");
