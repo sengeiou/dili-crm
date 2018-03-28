@@ -35,14 +35,14 @@
                         <tr>
                             <td style="padding-top:10px;" width="25%">
                                 <input class="easyui-combobox inputWidth" panelWidth="auto" panelHeight="auto" name="businessType" id="businessType"
-                                       data-options="required:true,editable:false,labelAlign:'right',label:'&lowast;交易类型:'"/>
+                                       data-options="cls:'noborder',hasDownArrow:false,required:true,editable:false,readonly:true,labelAlign:'right',label:'&lowast;交易类型:'"/>
                                 <#comboProvider _id="businessType" _provider='dataDictionaryValueProvider'
                                 _queryParams='{dd_id:"20"}'/>
 
                             </td>
                             <td style="padding-top:10px;" width="25%">
                                 <input class="easyui-combobox inputWidth" panelWidth="auto" panelHeight="auto" name="customerType" id="customerType"
-                                       data-options="required:true,editable:false,labelAlign:'right',label:'&lowast;生效对象:'"/>
+                                       data-options="cls:'noborder',hasDownArrow:false,required:true,editable:false,readonly:true,labelAlign:'right',label:'&lowast;生效对象:'"/>
                                 <#comboProvider _id="customerType" _provider='dataDictionaryValueProvider'
                                 _queryParams='{dd_id:"4"}'/>
                             </td>
