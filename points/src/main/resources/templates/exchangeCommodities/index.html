@@ -278,20 +278,25 @@
                 pager.pagination({
                     <#controls_paginationOpts/>,
                     buttons:[
-                    {
-                        iconCls:'icon-add',
-                        text:'新增',
-                        handler:function(){
-                            openInsert();
-                        }
-                    },
-                    {
-                        iconCls:'icon-edit',
-                        text:'修改',
-                        handler:function(){
-                            openUpdate();
-                        }
-                    },
+                        <#resource code="addCommodity">
+                            {
+                                iconCls:'icon-add',
+                                text:'新增',
+                                handler:function(){
+                                    openInsert();
+                                }
+                            },
+                        </#resource>
+                        <#resource code="updateCommodity">
+                            {
+                                iconCls:'icon-edit',
+                                text:'修改',
+                                handler:function(){
+                                    openUpdate();
+                                }
+                            },
+                        </#resource>
+
                     // {
                     //     iconCls:'icon-remove',
                     //     text:'删除',
