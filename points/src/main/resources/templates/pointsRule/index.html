@@ -112,6 +112,18 @@
 <!-- style & script 分隔线 -->
 <!-- ====================================================================================================================== -->
 <script type="text/javascript">
+
+    var has_view = false;
+    var has_update = false;
+
+    <#resource code="pr_view">
+    has_view = true;
+    </#resource>
+
+    <#resource code="pr_update">
+    has_update = true;
+    </#resource>
+
     //打开新增窗口
     function openInsert() {
         window.location.href = "${contextPath}/pointsRule/add.html";
@@ -119,6 +131,11 @@
 
     //打开修改窗口
     function openUpdate() {
+
+        if(!has_update){
+            return;
+        }
+
         var selected = $("#grid").datagrid("getSelected");
         if (null == selected) {
             $.messager.alert('警告', '请选中一条数据');
@@ -246,7 +263,13 @@
     }
 
     function formatview(value, row, index) {
-        return '<a href="${contextPath}/pointsRule/view.html?id=' + row.id + '">' + value + '</a>';
+
+        if(has_view){
+            return '<a href="${contextPath}/pointsRule/view.html?id=' + row.id + '">' + value + '</a>';
+        }else {
+            return value;
+        }
+
     }
 
 
@@ -296,6 +319,7 @@
         pager.pagination({
             <#controls_paginationOpts/>,
             buttons:[
+        <#resource code="pr_add">
             {
                 iconCls: 'icon-add',
                 text: '新增',
@@ -303,6 +327,8 @@
                     openInsert();
                 }
             },
+    </#resource>
+        <#resource code="pr_update">
             {
                 iconCls: 'icon-edit',
                 text: '修改',
@@ -310,6 +336,8 @@
                     openUpdate();
                 }
             },
+    </#resource>
+        <#resource code="pr_on">
             {
                 iconCls: 'icon-play',
                 text: '启用',
@@ -317,6 +345,8 @@
                     on();
                 }
             },
+    </#resource>
+        <#resource code="pr_off">
             {
                 iconCls: 'icon-stop',
                 text: '禁用',
@@ -324,6 +354,8 @@
                     off();
                 }
             },
+    </#resource>
+        <#resource code="pr_copy">
             {
                 iconCls: 'icon-export',
                 text: '复制',
@@ -331,6 +363,7 @@
                     copy();
                 }
             }
+            </#resource>
         ]
     });
         //表格仅显示下边框
