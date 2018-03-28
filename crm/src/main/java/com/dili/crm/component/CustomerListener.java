@@ -120,7 +120,7 @@ public class CustomerListener {
 	 */
 	private void processCustomer(String customerJson,Map<String,Object> customerObj,List<String> addressObjList,List<Map<String,Object>> extensionsObjList) {
 		Optional<Customer>customerOpt=this.convertAndValidateCustomer(customerJson,customerObj);
-		List<CustomerExtensions>extensionList=this.convertAndValidateExtension(extensionsObjList);
+		List<CustomerExtensions>extensionList=this.convertAndValidateExtension(customerOpt,extensionsObjList);
 		List<Address>addressList=this.convertAndValidateAddress(addressObjList);
 		
 		customerOpt.ifPresent(customer->{
@@ -165,11 +165,15 @@ public class CustomerListener {
 	 * @param extensionsObjList 转换为List<Map>的extension数据
 	 * @return 转换后的List<CustomerExtensions>
 	 */
-	private List<CustomerExtensions>convertAndValidateExtension(List<Map<String,Object>> extensionsObjList){
+	private List<CustomerExtensions>convertAndValidateExtension(Optional<Customer>customerOpt,List<Map<String,Object>> extensionsObjList){
 		List<CustomerExtensions>resultList=new ArrayList<>();
 		if(extensionsObjList!=null) {
 			for(Map<String,Object>map:extensionsObjList) {
 				CustomerExtensions customerExtensions=DTOUtils.proxy(new DTO(map), CustomerExtensions.class);
+				customerOpt.ifPresent(c->{
+					customerExtensions.setSystem(c.getSourceSystem());	
+				});
+				
 				resultList.add(customerExtensions);
 			}
 		}
