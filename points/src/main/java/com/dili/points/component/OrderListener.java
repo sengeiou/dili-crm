@@ -10,6 +10,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
+import java.util.function.BiConsumer;
 import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.StringUtils;
@@ -201,20 +202,34 @@ public class OrderListener {
 			List<PointsDetailDTO> purchasePointsDetails, List<PointsDetailDTO> salePointsDetails) {
 
 		// 保存订单信息
-		for (Order order : orderMap.keySet()) {
+		orderMap.forEach((order, orderItemList) -> {
 			if (this.orderIsExists(order)) {
 				throw new AppException("保存订单信息出错:当前订单号已经在数据库存在");
 			}
 			;
-			List<OrderItem> items = orderMap.get(order);
+//			List<OrderItem> items = orderMap.get(order);
 			this.orderService.insertSelective(order);
 
 			// 保存订单列表
-			for (OrderItem item : items) {
+			for (OrderItem item : orderItemList) {
 				item.setOrderCode(order.getCode());
 			}
-			this.orderItemService.batchInsert(items);
-		}
+			this.orderItemService.batchInsert(orderItemList);
+		});
+//		for (Order order : orderMap.keySet()) {
+//			if (this.orderIsExists(order)) {
+//				throw new AppException("保存订单信息出错:当前订单号已经在数据库存在");
+//			}
+//			;
+//			List<OrderItem> items = orderMap.get(order);
+//			this.orderService.insertSelective(order);
+//
+//			// 保存订单列表
+//			for (OrderItem item : items) {
+//				item.setOrderCode(order.getCode());
+//			}
+//			this.orderItemService.batchInsert(items);
+//		}
 
 		// 保存买家的积分详情
 		this.pointsDetailService.batchInsertPointsDetailDTO(purchasePointsDetails);
@@ -422,16 +437,24 @@ public class OrderListener {
 
 	}
 
+	protected boolean isPurchase(String customerType) {
+		if ("sale".equals(customerType)) {
+			return false;
+		} else {
+			return true;
+		}
+	}
+
 	// 卖家sale,买家purchase
 	private List<PointsDetailDTO> calPoints(Map<Order, List<OrderItem>> orderMap, String customerType) {
-		boolean isPurchase = false;
-		if ("sale".equals(customerType)) {
-			isPurchase = false;
-		} else if ("purchase".equals(customerType)) {
-			isPurchase = true;
-		} else {
-			return Collections.emptyList();
-		}
+		boolean isPurchase = this.isPurchase(customerType);
+//		if ("sale".equals(customerType)) {
+//			isPurchase = false;
+//		} else if ("purchase".equals(customerType)) {
+//			isPurchase = true;
+//		} else {
+//			return Collections.emptyList();
+//		}
 		PointsRule pointsRule = this.findPointsRule(customerType).orElse(null);
 		if (pointsRule == null) {
 			return Collections.emptyList();
@@ -445,168 +468,174 @@ public class OrderListener {
 		List<RuleCondition> tradeTypeConditionList = this.findRuleCondition(pointsRule.getId(), 40);
 
 		List<PointsDetailDTO> pointsDetailList = new ArrayList<>();
-		for (Order order : orderMap.keySet()) {
-			List<OrderItem> orderItemList = orderMap.get(order);
 
-			BigDecimal basePoint = this.calculateBasePoints(pointsRule, order);
+		orderMap.forEach((order, orderItemList) -> {
 
-			PointsDetailDTO pointsDetail = DTOUtils.newDTO(PointsDetailDTO.class);
-			pointsDetail.setPoints(basePoint.intValue());
-			pointsDetail.setSourceSystem(order.getSourceSystem());
+		
+		// for (Order order : orderMap.keySet()) {
+		//List<OrderItem> orderItemList = orderMap.get(order);
 
-			if (this.isSettlementOrder(order)) {
-				pointsDetail.setOrderCode(order.getSettlementCode());
-				pointsDetail.setOrderType("settlementOrder");// settlementOrder结算单号,order主单
-			} else {
-				pointsDetail.setOrderCode(order.getCode());
-				pointsDetail.setOrderType("order");// settlementOrder结算单号,order主单
-			}
-			//
-			// if(StringUtils.isNoneBlank(order.getSettlementCode())) {
-			// pointsDetail.setOrderCode(order.getSettlementCode());
-			// pointsDetail.setOrderType("settlementOrder");//settlementOrder结算单号,order主单
-			// }else{
-			// pointsDetail.setOrderCode(order.getCode());
-			// pointsDetail.setOrderType("order");//settlementOrder结算单号,order主单
-			// }
-			String notes = this.findNotes(order, orderItemList);
-			pointsDetail.setNotes(notes);
+		BigDecimal basePoint = this.calculateBasePoints(pointsRule, order);
 
-			String certificateNumber = null;
-			// buyer
-			if (isPurchase) {
-				certificateNumber = order.getBuyerCertificateNumber();
-			} else {
-				certificateNumber = order.getSellerCertificateNumber();
-			}
-			// 交易10 充值20 兑换礼品30 扣减:40 手工调整50
-			pointsDetail.setGenerateWay(10);// 积分产生方式(当前固定为交易)
-			pointsDetail.setCertificateNumber(certificateNumber);
-			pointsDetail.setSourceSystem(order.getSourceSystem());
+		PointsDetailDTO pointsDetail = DTOUtils.newDTO(PointsDetailDTO.class);
+		pointsDetail.setPoints(basePoint.intValue());
+		pointsDetail.setSourceSystem(order.getSourceSystem());
 
-			// 如果买家或者卖家的证件号为空,则不进行积分
-			if (StringUtils.isBlank(certificateNumber)) {
-				// pointsDetail.setCertificateNumber(certificateNumber);
-				// pointsDetail.setNeedRecover(0);
-				// pointsDetail.setPoints(0);
-				// pointsDetailList.add(pointsDetail);
-				continue;
-			}
-			// try {
-			Long customerId = this.findIdByCertificateNumber(certificateNumber);
-			if (customerId != null) {
-				pointsDetail.setCustomerId(customerId);
-			} else {
-				pointsDetail.setNeedRecover(1);// 将会保存到异常积分表,并在某个时间进行恢复
-			}
+		if (this.isSettlementOrder(order)) {
+			pointsDetail.setOrderCode(order.getSettlementCode());
+			pointsDetail.setOrderType("settlementOrder");// settlementOrder结算单号,order主单
+		} else {
+			pointsDetail.setOrderCode(order.getCode());
+			pointsDetail.setOrderType("order");// settlementOrder结算单号,order主单
+		}
+		//
+		// if(StringUtils.isNoneBlank(order.getSettlementCode())) {
+		// pointsDetail.setOrderCode(order.getSettlementCode());
+		// pointsDetail.setOrderType("settlementOrder");//settlementOrder结算单号,order主单
+		// }else{
+		// pointsDetail.setOrderCode(order.getCode());
+		// pointsDetail.setOrderType("order");//settlementOrder结算单号,order主单
+		// }
+		String notes = this.findNotes(order, orderItemList);
+		pointsDetail.setNotes(notes);
 
-			// }catch(Exception e){
+		String certificateNumber = null;
+		// buyer
+		if (isPurchase) {
+			certificateNumber = order.getBuyerCertificateNumber();
+		} else {
+			certificateNumber = order.getSellerCertificateNumber();
+		}
+		// 交易10 充值20 兑换礼品30 扣减:40 手工调整50
+		pointsDetail.setGenerateWay(10);// 积分产生方式(当前固定为交易)
+		pointsDetail.setCertificateNumber(certificateNumber);
+		pointsDetail.setSourceSystem(order.getSourceSystem());
 
-			// logger.warn("查询客户ID出错,当前积分详情将会被保存到异常积分!");
-			// }
-			BigDecimal orderWeight = order.getWeight();// 交易量
-			BigDecimal totalMoney = new BigDecimal(order.getTotalMoney());// 交易额
-			BigDecimal payment = new BigDecimal(order.getPayment());// 支付方式
-
-			// 三个量值与对应的条件列表匹配权重值
-			List<BigDecimal> weightList = Arrays.asList(this.calculateWeight(orderWeight, tradeWeightConditionList),
-					this.calculateWeight(totalMoney, tradeTotalMoneyConditionList),
-					this.calculateWeight(payment, tradeTypeConditionList));
-			// 计算积分值
-			BigDecimal points = weightList.stream().reduce(basePoint, (t, u) -> t.multiply(u));
-			// System.out.println(points.intValue());
-			/*
-			 * //根据交易量计算积分
-			 * 
-			 * for(RuleCondition ruleCondition:tradeWeightConditionList) {
-			 * 
-			 * Float conditionWeight=ruleCondition.getWeight();//权重 String
-			 * startValue=ruleCondition.getStartValue();//开始值 String
-			 * endValue=ruleCondition.getEndValue();//结束值 String
-			 * value=ruleCondition.getValue();//条件值
-			 * 
-			 * Integer conditonType=ruleCondition.getConditionType();//区间: 60, 大于等于 20 大于
-			 * 30, 小于等于 40, 小于 50, 等于 10 //是否进行权重*积分的计算过程 boolean hitCondition=false;
-			 * if(conditonType.equals(60)&&(orderWeight.compareTo(new
-			 * BigDecimal(startValue))>=0&&orderWeight.compareTo(new
-			 * BigDecimal(endValue))<0)) {//区间 hitCondition=true; }else
-			 * if(conditonType.equals(20)&&(orderWeight.compareTo(new
-			 * BigDecimal(value))>=0)) {//大于等于 hitCondition=true; }else
-			 * if(conditonType.equals(30)&&(orderWeight.compareTo(new BigDecimal(value))>0))
-			 * {//大于 hitCondition=true; }else
-			 * if(conditonType.equals(40)&&(orderWeight.compareTo(new
-			 * BigDecimal(value))<=0)) {//小于等于 hitCondition=true; }else
-			 * if(conditonType.equals(50)&&(orderWeight.compareTo(new BigDecimal(value))<0))
-			 * {// 小于 hitCondition=true; }else
-			 * if(conditonType.equals(10)&&(orderWeight.compareTo(new
-			 * BigDecimal(value))==0)) {//等于 hitCondition=true; }else { hitCondition=false;
-			 * } //对当前条件进行积分 if(hitCondition) { //如果有对上一个条件进行了积分,则当前积分:原来积分*权重*条件值,否则:权重*条件值
-			 * basePoint=new BigDecimal(conditionWeight).multiply(basePoint); break; } }
-			 * 
-			 * 
-			 * //根据交易额计算积分
-			 * 
-			 * // 交易量 10 交易额 20 商品 30 支付方式:40 for(RuleCondition
-			 * ruleCondition:tradeTotalMoneyConditionList) {
-			 * 
-			 * 
-			 * Float conditionWeight=ruleCondition.getWeight();//权重 String
-			 * startValue=ruleCondition.getStartValue();//开始值 String
-			 * endValue=ruleCondition.getEndValue();//结束值 String
-			 * value=ruleCondition.getValue();//条件值
-			 * 
-			 * Integer conditonType=ruleCondition.getConditionType();//区间: 60, 大于等于 20 大于
-			 * 30, 小于等于 40, 小于 50, 等于 10 //是否进行权重*积分的计算过程 boolean hitCondition=false;
-			 * if(conditonType.equals(60)&&(totalMoney.compareTo(new
-			 * BigDecimal(startValue))>=0&&totalMoney.compareTo(new
-			 * BigDecimal(endValue))<0)) { hitCondition=true; }else
-			 * if(conditonType.equals(20)&&(totalMoney.compareTo(new BigDecimal(value))>=0))
-			 * { hitCondition=true; }else
-			 * if(conditonType.equals(30)&&(totalMoney.compareTo(new BigDecimal(value))>0))
-			 * { hitCondition=true; }else
-			 * if(conditonType.equals(40)&&(totalMoney.compareTo(new BigDecimal(value))<=0))
-			 * { hitCondition=true; }else
-			 * if(conditonType.equals(50)&&(totalMoney.compareTo(new BigDecimal(value))<0))
-			 * { hitCondition=true; }else
-			 * if(conditonType.equals(10)&&(totalMoney.compareTo(new BigDecimal(value))==0))
-			 * { hitCondition=true; }else { hitCondition=false; }
-			 * 
-			 * if(hitCondition) { basePoint=new
-			 * BigDecimal(conditionWeight).multiply(basePoint); break; }
-			 * 
-			 * }
-			 * 
-			 * 
-			 * //根据支付方式计算积分
-			 * 
-			 * for(RuleCondition ruleCondition:tradeTypeConditionList) {
-			 * 
-			 * Float conditionWeight=ruleCondition.getWeight();//权重 String
-			 * startValue=ruleCondition.getStartValue();//开始值 String
-			 * endValue=ruleCondition.getEndValue();//结束值 String
-			 * value=ruleCondition.getValue();//条件值
-			 * 
-			 * Integer conditonType=ruleCondition.getConditionType();//区间: 60, 大于等于 20 大于
-			 * 30, 小于等于 40, 小于 50, 等于 10 //是否进行权重*积分的计算过程 boolean hitCondition=false;
-			 * if(conditonType.equals(60)&&(payment.compareTo(new
-			 * BigDecimal(startValue))>=0&&payment.compareTo(new BigDecimal(endValue))<0)) {
-			 * hitCondition=true; }else if(conditonType.equals(20)&&(payment.compareTo(new
-			 * BigDecimal(value))>=0)) { hitCondition=true; }else
-			 * if(conditonType.equals(30)&&(payment.compareTo(new BigDecimal(value))>0)) {
-			 * hitCondition=true; }else if(conditonType.equals(40)&&(payment.compareTo(new
-			 * BigDecimal(value))<=0)) { hitCondition=true; }else
-			 * if(conditonType.equals(50)&&(payment.compareTo(new BigDecimal(value))<0)) {
-			 * hitCondition=true; }else if(conditonType.equals(10)&&(payment.compareTo(new
-			 * BigDecimal(value))==0)) { hitCondition=true; }else { hitCondition=false; }
-			 * 
-			 * if(hitCondition) { basePoint=new
-			 * BigDecimal(conditionWeight).multiply(basePoint); break; } }
-			 */
-			pointsDetail.setPoints(points.intValue());
-			pointsDetailList.add(pointsDetail);
+		// 如果买家或者卖家的证件号为空,则不进行积分
+		if (StringUtils.isBlank(certificateNumber)) {
+			// pointsDetail.setCertificateNumber(certificateNumber);
+			// pointsDetail.setNeedRecover(0);
+			// pointsDetail.setPoints(0);
+			// pointsDetailList.add(pointsDetail);
+//			continue;
+			return;
+		}
+		// try {
+		Long customerId = this.findIdByCertificateNumber(certificateNumber);
+		if (customerId != null) {
+			pointsDetail.setCustomerId(customerId);
+		} else {
+			pointsDetail.setNeedRecover(1);// 将会保存到异常积分表,并在某个时间进行恢复
 		}
 
-		return pointsDetailList;
+		// }catch(Exception e){
+
+		// logger.warn("查询客户ID出错,当前积分详情将会被保存到异常积分!");
+		// }
+		BigDecimal orderWeight = order.getWeight();// 交易量
+		BigDecimal totalMoney = new BigDecimal(order.getTotalMoney());// 交易额
+		BigDecimal payment = new BigDecimal(order.getPayment());// 支付方式
+
+		// 三个量值与对应的条件列表匹配权重值
+		List<BigDecimal> weightList = Arrays.asList(this.calculateWeight(orderWeight, tradeWeightConditionList),
+				this.calculateWeight(totalMoney, tradeTotalMoneyConditionList),
+				this.calculateWeight(payment, tradeTypeConditionList));
+		// 计算积分值
+		BigDecimal points = weightList.stream().reduce(basePoint, (t, u) -> t.multiply(u));
+		// System.out.println(points.intValue());
+		/*
+		 * //根据交易量计算积分
+		 * 
+		 * for(RuleCondition ruleCondition:tradeWeightConditionList) {
+		 * 
+		 * Float conditionWeight=ruleCondition.getWeight();//权重 String
+		 * startValue=ruleCondition.getStartValue();//开始值 String
+		 * endValue=ruleCondition.getEndValue();//结束值 String
+		 * value=ruleCondition.getValue();//条件值
+		 * 
+		 * Integer conditonType=ruleCondition.getConditionType();//区间: 60, 大于等于 20 大于
+		 * 30, 小于等于 40, 小于 50, 等于 10 //是否进行权重*积分的计算过程 boolean hitCondition=false;
+		 * if(conditonType.equals(60)&&(orderWeight.compareTo(new
+		 * BigDecimal(startValue))>=0&&orderWeight.compareTo(new
+		 * BigDecimal(endValue))<0)) {//区间 hitCondition=true; }else
+		 * if(conditonType.equals(20)&&(orderWeight.compareTo(new
+		 * BigDecimal(value))>=0)) {//大于等于 hitCondition=true; }else
+		 * if(conditonType.equals(30)&&(orderWeight.compareTo(new BigDecimal(value))>0))
+		 * {//大于 hitCondition=true; }else
+		 * if(conditonType.equals(40)&&(orderWeight.compareTo(new
+		 * BigDecimal(value))<=0)) {//小于等于 hitCondition=true; }else
+		 * if(conditonType.equals(50)&&(orderWeight.compareTo(new BigDecimal(value))<0))
+		 * {// 小于 hitCondition=true; }else
+		 * if(conditonType.equals(10)&&(orderWeight.compareTo(new
+		 * BigDecimal(value))==0)) {//等于 hitCondition=true; }else { hitCondition=false;
+		 * } //对当前条件进行积分 if(hitCondition) { //如果有对上一个条件进行了积分,则当前积分:原来积分*权重*条件值,否则:权重*条件值
+		 * basePoint=new BigDecimal(conditionWeight).multiply(basePoint); break; } }
+		 * 
+		 * 
+		 * //根据交易额计算积分
+		 * 
+		 * // 交易量 10 交易额 20 商品 30 支付方式:40 for(RuleCondition
+		 * ruleCondition:tradeTotalMoneyConditionList) {
+		 * 
+		 * 
+		 * Float conditionWeight=ruleCondition.getWeight();//权重 String
+		 * startValue=ruleCondition.getStartValue();//开始值 String
+		 * endValue=ruleCondition.getEndValue();//结束值 String
+		 * value=ruleCondition.getValue();//条件值
+		 * 
+		 * Integer conditonType=ruleCondition.getConditionType();//区间: 60, 大于等于 20 大于
+		 * 30, 小于等于 40, 小于 50, 等于 10 //是否进行权重*积分的计算过程 boolean hitCondition=false;
+		 * if(conditonType.equals(60)&&(totalMoney.compareTo(new
+		 * BigDecimal(startValue))>=0&&totalMoney.compareTo(new
+		 * BigDecimal(endValue))<0)) { hitCondition=true; }else
+		 * if(conditonType.equals(20)&&(totalMoney.compareTo(new BigDecimal(value))>=0))
+		 * { hitCondition=true; }else
+		 * if(conditonType.equals(30)&&(totalMoney.compareTo(new BigDecimal(value))>0))
+		 * { hitCondition=true; }else
+		 * if(conditonType.equals(40)&&(totalMoney.compareTo(new BigDecimal(value))<=0))
+		 * { hitCondition=true; }else
+		 * if(conditonType.equals(50)&&(totalMoney.compareTo(new BigDecimal(value))<0))
+		 * { hitCondition=true; }else
+		 * if(conditonType.equals(10)&&(totalMoney.compareTo(new BigDecimal(value))==0))
+		 * { hitCondition=true; }else { hitCondition=false; }
+		 * 
+		 * if(hitCondition) { basePoint=new
+		 * BigDecimal(conditionWeight).multiply(basePoint); break; }
+		 * 
+		 * }
+		 * 
+		 * 
+		 * //根据支付方式计算积分
+		 * 
+		 * for(RuleCondition ruleCondition:tradeTypeConditionList) {
+		 * 
+		 * Float conditionWeight=ruleCondition.getWeight();//权重 String
+		 * startValue=ruleCondition.getStartValue();//开始值 String
+		 * endValue=ruleCondition.getEndValue();//结束值 String
+		 * value=ruleCondition.getValue();//条件值
+		 * 
+		 * Integer conditonType=ruleCondition.getConditionType();//区间: 60, 大于等于 20 大于
+		 * 30, 小于等于 40, 小于 50, 等于 10 //是否进行权重*积分的计算过程 boolean hitCondition=false;
+		 * if(conditonType.equals(60)&&(payment.compareTo(new
+		 * BigDecimal(startValue))>=0&&payment.compareTo(new BigDecimal(endValue))<0)) {
+		 * hitCondition=true; }else if(conditonType.equals(20)&&(payment.compareTo(new
+		 * BigDecimal(value))>=0)) { hitCondition=true; }else
+		 * if(conditonType.equals(30)&&(payment.compareTo(new BigDecimal(value))>0)) {
+		 * hitCondition=true; }else if(conditonType.equals(40)&&(payment.compareTo(new
+		 * BigDecimal(value))<=0)) { hitCondition=true; }else
+		 * if(conditonType.equals(50)&&(payment.compareTo(new BigDecimal(value))<0)) {
+		 * hitCondition=true; }else if(conditonType.equals(10)&&(payment.compareTo(new
+		 * BigDecimal(value))==0)) { hitCondition=true; }else { hitCondition=false; }
+		 * 
+		 * if(hitCondition) { basePoint=new
+		 * BigDecimal(conditionWeight).multiply(basePoint); break; } }
+		 */
+		pointsDetail.setPoints(points.intValue());
+		pointsDetailList.add(pointsDetail);
+	//}
+		});
+	return pointsDetailList;
+
 	}
 
 	/**
