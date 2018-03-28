@@ -88,5 +88,11 @@ public interface CustomerPoints extends IBaseDomain {
     Integer getDayPoints();
 
     void setDayPoints(Integer dayPoints);
+    @Column(name = "`reset_time`")
+    @FieldDef(label="修改时间")
+    @EditMode(editor = FieldEditor.Datetime, required = true)
+    Date getResetTime();
+
+    void setResetTime(Date resetTime);
     
 }

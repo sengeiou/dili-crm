@@ -89,15 +89,24 @@ public class CustomerListener {
 		try {
 			//将json转换为map结构
 			Optional<Map<String,Object>> mapOpt=	DtoMessageConverter.convertAsMap(customerJson);
-			mapOpt.ifPresent((map)->{
-				//获得address
-				List<String> addressObjList=(List<String>) map.remove("address");
-				//获得CustomerExtension
-				List<Map<String,Object>> extensionsObjList=(List<Map<String,Object>>) map.remove("extensions");
-				//map中其余信息为Customer信息
-				Map<String,Object> customerObj=map;
+			mapOpt.ifPresent((jsonMap)->{
 				
-				this.processCustomer(customerJson,customerObj, addressObjList, extensionsObjList);
+				String type = StringUtils.trimToNull(String.valueOf(jsonMap.get("type")));
+				if (type == null || type.equalsIgnoreCase("json")) {
+					Map<String,Object>dataMap=(Map<String, Object>) jsonMap.get("data");
+							
+					//获得address
+					List<String> addressObjList=(List<String>) dataMap.remove("address");
+					//获得CustomerExtension
+					List<Map<String,Object>> extensionsObjList=(List<Map<String,Object>>) dataMap.remove("extensions");
+					//map中其余信息为Customer信息
+					Map<String,Object> customerObj=dataMap;
+					
+					this.processCustomer(customerJson,customerObj, addressObjList, extensionsObjList);	
+				}else {
+					
+				}
+				
 			});
 		}catch(Exception e) {
 			logger.error("转换Customer对象: {} 出错 {}",customerJson,e);

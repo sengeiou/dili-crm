@@ -55,22 +55,23 @@
                    align="center" fit="true" striped="true" toolbar="#toolbar" idField="id" data-options="onHeaderContextMenu:headerContextMenu">
                 <thead>
                 <tr>
-                      <th data-options="field:'created',  _provider:'datetimeProvider', sortable:true, order:'desc', align:'center', resizable:'true', fixed:'false'">
+                      <th data-options="width:'12%',field:'created',  _provider:'datetimeProvider', sortable:true, order:'desc', align:'center', resizable:'true', fixed:'false'">
                         获得时间
                     </th>
-                    <th data-options="field:'points',   sortable:true, order:'asc', align:'center', resizable:'true', fixed:'false'">
+                    <th data-options="width:'10%',field:'points',   sortable:true, order:'asc', align:'center', resizable:'true', fixed:'false',formatter: pointsFormatter">
                         积分
                     </th>
-                      <th data-options="field:'generateWay',   _provider:'dataDictionaryValueProvider', _queryParams:{dd_id:17},  sortable:true, order:'asc', align:'center', resizable:'true', fixed:'false'">
+                      <th data-options="width:'10%',field:'generateWay',   _provider:'dataDictionaryValueProvider', _queryParams:{dd_id:17},  sortable:true, order:'asc', align:'center', resizable:'true', fixed:'false'">
                         来源
                     </th>
 
+                    <th data-options="width:'10%',field:'balance',   sortable:true, order:'asc', align:'center', resizable:'true', fixed:'false'">
+                        积分余额
+                    </th>
                     <th data-options="field:'notes',   sortable:true, order:'asc', align:'center', resizable:'true', fixed:'false'">
                         备注
                     </th>
-                    <th data-options="field:'balance',   sortable:true, order:'asc', align:'center', resizable:'true', fixed:'false'">
-                        积分余额
-                    </th>
+
                   
                   
 
@@ -86,22 +87,22 @@
                    align="center" fit="true" striped="true" toolbar="#toolbar" idField="id" data-options=" onHeaderContextMenu:headerContextMenu">
                 <thead>
                 <tr>
-                    <th data-options="field:'created',  _provider:'datetimeProvider', sortable:true, order:'desc', align:'center', resizable:'true', fixed:'false'">
+                    <th data-options="width:'12%',field:'created',  _provider:'datetimeProvider', sortable:true, order:'desc', align:'center', resizable:'true', fixed:'false'">
                         使用时间
                     </th>
-                    <th data-options="field:'points',   sortable:true, order:'asc', align:'center', resizable:'true', fixed:'false'">
+                    <th data-options="width:'10%',field:'points',   sortable:true, order:'asc', align:'center', resizable:'true', fixed:'false'">
                         积分
                     </th>
-                                   <th data-options="field:'generateWay',   _provider:'dataDictionaryValueProvider', _queryParams:{dd_id:17},  sortable:true, order:'asc', align:'center', resizable:'true', fixed:'false'">
+                     <th data-options="width:'10%',field:'generateWay',   _provider:'dataDictionaryValueProvider', _queryParams:{dd_id:17},  sortable:true, order:'asc', align:'center', resizable:'true', fixed:'false'">
                         使用方式
                     </th>
-                    
+                    <th data-options="width:'10%',field:'balance',   sortable:true, order:'asc', align:'center', resizable:'true', fixed:'false'">
+                        积分余额
+                    </th>                    
                     <th data-options="field:'notes',   sortable:true, order:'asc', align:'center', resizable:'true', fixed:'false'">
                         备注
                     </th>
-                    <th data-options="field:'balance',   sortable:true, order:'asc', align:'center', resizable:'true', fixed:'false'">
-                        积分余额
-                    </th>
+
      
 
                    
@@ -386,6 +387,13 @@
     });
         //表格仅显示下边框
         $('#'+gridId).datagrid('getPanel').removeClass('lines-both lines-no lines-right lines-bottom').addClass("lines-bottom");
+	}
+	function pointsFormatter(value,row,index){
+			if (value>0){
+				return "+"+value;
+			} else {
+				return value;
+			}
 	}
     /**
      * 绑定页面回车事件，以及初始化页面时的光标定位

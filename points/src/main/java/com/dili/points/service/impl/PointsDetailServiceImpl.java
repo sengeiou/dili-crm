@@ -2,9 +2,11 @@ package com.dili.points.service.impl;
 
 import com.dili.points.dao.CustomerPointsMapper;
 import com.dili.points.dao.PointsDetailMapper;
+import com.dili.points.dao.PointsExceptionMapper;
 import com.dili.points.domain.Customer;
 import com.dili.points.domain.CustomerPoints;
 import com.dili.points.domain.PointsDetail;
+import com.dili.points.domain.PointsException;
 import com.dili.points.domain.SystemConfig;
 import com.dili.points.domain.dto.CustomerApiDTO;
 import com.dili.points.domain.dto.PointsDetailDTO;
@@ -22,6 +24,8 @@ import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -38,24 +42,36 @@ public class PointsDetailServiceImpl extends BaseServiceImpl<PointsDetail, Long>
 		return (PointsDetailMapper) getDao();
 	}
 
-	@Autowired
-	CustomerPointsMapper customerPointsMapper;
-	@Autowired
-	CustomerRpc customerRpc;
-
+	@Autowired CustomerPointsMapper customerPointsMapper;
+	@Autowired CustomerRpc customerRpc;
+	@Autowired PointsExceptionMapper pointsExceptionMapper; 
 	@Autowired
 	SystemConfigRpc systemConfigRpc;
 
 	@Transactional(propagation = Propagation.REQUIRED)
 	public int batchInsertPointsDetailDTO(List<PointsDetailDTO> pointsDetail) {
-		pointsDetail.forEach(p -> {
+		Map<Boolean,List<PointsDetailDTO>>map=pointsDetail.stream().collect(Collectors.partitioningBy(t -> t.getCustomerId()!=null));
+		//保存积分详情
+		map.get(true).forEach(p -> {
 			this.insert(p);
+		});
+		//保存积分异常详情
+		map.get(false).forEach(p -> {
+			this.insertPointsException(p);//insert error pointsdetails
 		});
 		return pointsDetail.size();
 	}
-
+	//@Transactional(propagation = Propagation.REQUIRED)
+	private int insertPointsException(PointsDetailDTO pointsDetail) {
+		//转换对象,并进行保存
+		PointsException exceptionalPoints=DTOUtils.as(pointsDetail, PointsException.class);
+		if(exceptionalPoints.getNeedRecover()==null) {
+			exceptionalPoints.setNeedRecover(0);
+		}
+		return pointsExceptionMapper.insertExact(exceptionalPoints);
+	}
 	@Transactional(propagation = Propagation.REQUIRED)
-	public int insert(PointsDetailDTO pointsDetail) {
+	public int insert(PointsDetailDTO pointsDetail) { 
 		Long customerId = pointsDetail.getCustomerId();
 		CustomerPoints example = DTOUtils.newDTO(CustomerPoints.class);
 		example.setCertificateNumber(pointsDetail.getCertificateNumber());
@@ -72,6 +88,7 @@ public class PointsDetailServiceImpl extends BaseServiceImpl<PointsDetail, Long>
 			cp.setCertificateNumber(pointsDetail.getCertificateNumber());
 			cp.setCreated(new Date());
 			cp.setModified(new Date());
+			cp.setResetTime(new Date());
 			cp.setFrozen(0);
 			cp.setTotal(0);
 			this.customerPointsMapper.insertExact(cp);
@@ -79,19 +96,16 @@ public class PointsDetailServiceImpl extends BaseServiceImpl<PointsDetail, Long>
 			// }
 			// return null;
 		});
-		// 无法找到客户信息
-		if (customerPoints == null) {
-			return 0;
-		}
+		
 		Integer points = pointsDetail.getPoints();
 		if (points == null) {
 			pointsDetail.setPoints(0);
 			points = 0;
 		}
-		if (points >= 0) {
-			pointsDetail.setInOut(10);// 收入
-		} else {
-			pointsDetail.setInOut(20);// 支出
+		if (pointsDetail.getInOut().equals(10)) {//收入
+			points=Math.abs(points);
+		} else {//支出
+			points=0-Math.abs(points);
 		}
 		BaseOutput<SystemConfig>output=this.systemConfigRpc.getByCode("customerPoints.day.limits");
 		if(!output.isSuccess()||output.getData()==null) {
@@ -102,17 +116,17 @@ public class PointsDetailServiceImpl extends BaseServiceImpl<PointsDetail, Long>
 		
 		Integer dayPoints = customerPoints.getDayPoints();// 当天积分总和
 		//修改时间
-		 Instant instant = customerPoints.getModified().toInstant();
+		 Instant instant = customerPoints.getResetTime().toInstant();
 		 ZoneId defaultZoneId = ZoneId.systemDefault();
-	     LocalDate modifiedDate = instant.atZone(defaultZoneId).toLocalDate();
+	     LocalDate resetDate = instant.atZone(defaultZoneId).toLocalDate();
 		//当前时间
 		LocalDate currentDate = LocalDate.now();
 		
 		
-		if(!pointsDetail.getGenerateWay().equals(50)) {//50手工调整(对于手工调整,不做累加不做判断)
+		if(!pointsDetail.getGenerateWay().equals(50)&&points>0) {//50手工调整(对于手工调整,不做累加不做判断)
 	
-			// 如果上次修改积分的时间为今天时,进行积分上限处理
-			if (modifiedDate.isEqual(currentDate)) {
+			// 如果上次累积积分的时间为今天时,进行积分上限处理
+			if (resetDate.isEqual(currentDate)) {
 				// 如果当天积分总和已经超过上限,当前积分详情的积分归为0,当天积分总和分为total
 				if (dayPoints >= total) {
 					points = 0;
@@ -138,29 +152,37 @@ public class PointsDetailServiceImpl extends BaseServiceImpl<PointsDetail, Long>
 			}
 		}else {
 			// 如果上次修改积分的时间不是今天时,初始化积分上限到0
-			if (!modifiedDate.isEqual(currentDate)) {
+			if (!resetDate.isEqual(currentDate)) {
 				dayPoints = 0;
 			} 
 		}
 		
-
+		customerPoints.setResetTime(new Date());
 		customerPoints.setModified(new Date());
 		customerPoints.setDayPoints(dayPoints);
 
-		// 计算用户可用积分和总积分
-		customerPoints.setAvailable(customerPoints.getAvailable() + points);
-		// // 如果可用积分小于0,则重设置为0
-		// if (customerPoints.getAvailable() < 0) {
-		// customerPoints.setAvailable(0);
-		// }
-		customerPoints.setTotal(customerPoints.getAvailable() + customerPoints.getFrozen());
+		
+		if(points!=0) {
+			// 计算用户可用积分和总积分
+			customerPoints.setAvailable(customerPoints.getAvailable() + points);
+			// // 如果可用积分小于0,则重设置为0
+			// if (customerPoints.getAvailable() < 0) {
+			// customerPoints.setAvailable(0);
+			// }
+			customerPoints.setTotal(customerPoints.getAvailable() + customerPoints.getFrozen());
 
-		pointsDetail.setBalance(customerPoints.getTotal());
-		// pointsDetail.setId(System.currentTimeMillis());
-		this.customerPointsMapper.updateByPrimaryKey(customerPoints);
-		// return 0;
-		// pointsDetail.setId(null);
-		return super.insertSelective(pointsDetail);
+			pointsDetail.setBalance(customerPoints.getTotal());
+			// pointsDetail.setId(System.currentTimeMillis());
+			this.customerPointsMapper.updateByPrimaryKey(customerPoints);
+			// return 0;
+			// pointsDetail.setId(null);
+			return super.insertSelective(pointsDetail);			
+		}else {
+			//异常积分信息保存
+			return this.insertPointsException(pointsDetail);
+		}
+		
+
 	}
 
 	public PointsDetail manullyGeneratePointsDetail(PointsDetail pointsDetail) {

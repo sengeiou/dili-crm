@@ -135,7 +135,7 @@
             </tr>
            <tr>
                 <td style="padding:5px;">
-                    <input class="easyui-textbox" name="_notes" id="_notes" style="width:100%" data-options="label:'备注:',height:80, validType:'length[0,120]'" />
+                    <input class="easyui-textbox" name="_notes" id="_notes" style="width:100%" data-options="label:'备注:',height:80, validType:'length[0,120]'" required="true" />
                 </td>
             </tr>
           
@@ -211,6 +211,7 @@
          
          $('#_customerId').val(selected['id']);
          $('#_points').textbox('setValue','')
+         $('#_notes').textbox('setValue','')
          var formData = $.extend({},selected);
          formData = addKeyStartWith(getOriginalData(formData),"_");
          $('#_form').form('load', formData);

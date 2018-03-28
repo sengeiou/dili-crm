@@ -1,7 +1,10 @@
 package com.dili.crm.controller;
 
 import java.util.HashMap;
+import java.util.concurrent.atomic.AtomicBoolean;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.amqp.core.AmqpTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -19,7 +22,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 @Controller
 @RequestMapping("/adminManagement")
 public class AdminManagementController {
-	
+	private static final AtomicBoolean ETLISRUNNING=new AtomicBoolean(false);//同步客户数据的服务是否正在执行
+	private static final Logger LOG=LoggerFactory.getLogger(AdminManagementController.class);
 	 @Autowired AmqpTemplate amqpTemplate;
 	 @Autowired ICardETLService icardETLService;
     @RequestMapping(value="/index.html", method = RequestMethod.GET)
@@ -52,22 +56,34 @@ public class AdminManagementController {
     public  @ResponseBody BaseOutput  loadCustomers() throws Exception {
     	
     	try {
-    		Thread t=new Thread(()->{
-    			while(true) {
-        			boolean value=icardETLService.transIncrementData(null, 100);
-        			if(!value) {
-        				break;
-        			}
-        		}
-    		});
-    		t.start();
+    		if(ETLISRUNNING.compareAndSet(false, true)) {
+        		Thread t=new Thread(()->{
+        			
+        			try {
+        				while(true) {
+        					boolean value=icardETLService.transIncrementData(null, 100);
+                			if(!value) {
+                				break;
+                			}	
+                		}
+    				}catch(Exception e) {
+    					LOG.error("手动触发客户信息同步出错:"+e.getMessage(),e);
+    				}
+        			ETLISRUNNING.set(false);
+        		});
+        		t.start();
+    			
+    		}else {
+    			return BaseOutput.success("客户信息已经在同步,请稍后重试");		
+    		}
+
     	
     	}catch(Exception e) {
     		return BaseOutput.failure("程序错误");
     	}
     	
     	
-        return BaseOutput.success("正在同步");
+        return BaseOutput.success("同步客户信息任务已经启动");
     }
     
 }

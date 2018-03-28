@@ -17,6 +17,12 @@ public interface PointsDetailDTO extends PointsDetail {
 	@Transient
 	Long getCustomerId();
 	void setCustomerId(Long customerId);
+	
+    //是否需要恢复(0否,1是)
+	@Transient
+	Integer getNeedRecover();
+    void setNeedRecover(Integer needRecover);
+    
 
 	@Column(name = "`created`")
 	@FieldDef(label="查询条件-开始时间")

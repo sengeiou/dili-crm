@@ -98,13 +98,25 @@ public class PointsDetailController {
     @RequestMapping(value="/mannuallyInsert", method = {RequestMethod.GET, RequestMethod.POST})
     public @ResponseBody BaseOutput mannuallyInsert(PointsDetailDTO pointsDetail) {
     	//先进行基本属性判断
-    	
+    	if(pointsDetail.getPoints()==null||pointsDetail.getPoints()==0) {
+    		return BaseOutput.failure("调整积分不能为0");
+    	}
+    	if(StringUtils.trimToNull(pointsDetail.getNotes())==null) {
+    		return BaseOutput.failure("备注不能为空");
+    	}
 		UserTicket userTicket = SessionContext.getSessionContext().getUserTicket();
 		if (userTicket == null) {
 			throw new RuntimeException("未登录");
 		}
 		pointsDetail.setCreatedId(userTicket.getId());//操作人
     	pointsDetail.setGenerateWay(50);//50 手工调整
+    	
+		if(pointsDetail.getPoints() > 0) {
+			pointsDetail.setInOut(10);// 收入
+		} else {
+			pointsDetail.setInOut(20);// 支出
+		}
+
         pointsDetailService.insert(pointsDetail);
         return BaseOutput.success("新增成功");
     }

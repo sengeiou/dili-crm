@@ -26,6 +26,8 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
 
+import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
 import com.dili.PointsApplication;
 import com.dili.points.domain.Order;
 import com.dili.points.domain.OrderItem;
@@ -36,6 +38,8 @@ import com.dili.points.service.PointsRuleService;
 import com.dili.points.service.RuleConditionService;
 import com.dili.ss.dto.DTO;
 import com.dili.ss.dto.DTOUtils;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.collect.Lists;
 
 import okhttp3.internal.ws.RealWebSocket.Streams;
@@ -59,7 +63,7 @@ public class OrderListenerTest {
 	private Order buildOrder() {
 
 		Order order=DTOUtils.newDTO(Order.class); 
-		order.setCode("123");
+		order.setCode("12345");
 		order.setSellerCardNo(1111L);
 		order.setSellerCertificateNumber("230106197601090813");
 		order.setBuyerCardNo(2222L);
@@ -71,7 +75,7 @@ public class OrderListenerTest {
 		order.setPayment(20);
 		order.setBusinessType(10);
 		order.setSourceSystem("settlement");
-		order.setSettlementCode("9999999");
+		order.setSettlementCode("77777");
 		return order;
 		
 	}
@@ -305,6 +309,28 @@ public class OrderListenerTest {
 		Map<Order,List<OrderItem>>orderMap=new HashMap<>();
 		orderMap.put(order, orderItems);
 		this.orderListener.calAndSaveData(orderMap);
+		
+	}
+	@Test
+	public void convertOrder() throws JsonProcessingException {
+
+		Order order=this.buildOrder();
+		List<OrderItem>orderItems=this.buildOrderItems();
+		
+		
+		Map<String,Object>data=DTOUtils.go(order);
+		data.put("orderItems", orderItems);
+		
+		
+		List<Map<String,Object>>list=new ArrayList<>();
+		list.add(data);
+		
+		ObjectMapper objMapper=new ObjectMapper();
+		Map<String,Object> jsonObj=new HashMap<>();
+		jsonObj.put("type", "json");
+jsonObj.put("data", list);
+System.out.println(objMapper.writeValueAsString(jsonObj));
+		this.orderListener.convertOrder(objMapper.writeValueAsString(jsonObj));
 		
 	}
 }

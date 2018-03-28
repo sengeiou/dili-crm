@@ -57,8 +57,8 @@
             <div class="easyui-panel" align="center" style="width:96%;height:100%;" border="false">
                 <!-- =========================================================表格========================================================= -->
                 <table class="easyui-datagrid" title="积分调整记录" id="grid" fitColumns="true" noheader="true"
-                       pagination="true" pageSize="30" pageNumber="1" pagePosition="top" rownumbers="false" remoteSort="false"
-                       loadMsg="数据加载中..." singleSelect="true" method="post" multiSort="false" sortName="certificateNumber"
+                       pagination="true" pageSize="30" pageNumber="1" pagePosition="top" rownumbers="false" remoteSort="true"
+                       loadMsg="数据加载中..." singleSelect="true" method="post" multiSort="false"  sortName="created"  sortOrder="desc"
                        align="center" fit="true" striped="true" idField="id" data-options="onHeaderContextMenu:headerContextMenu">
                     <thead>
                     <tr>
@@ -74,7 +74,7 @@
                         <th width="10%" data-options="field:'certificateNumber', sortable:true, order:'asc', align:'center', resizable:'true', fixed:'false'">
                             证件号
                         </th>
-                        <th width="10%" data-options="field:'points',   sortable:true, order:'asc', align:'center', resizable:'true', fixed:'false'">
+                        <th width="10%" data-options="field:'points',   sortable:true, order:'asc', align:'center', resizable:'true', fixed:'false',formatter:pointsFormatter">
                             调整积分
                         </th>
                         <th width="10%" data-options="field:'balance',   sortable:true, order:'asc', align:'center', resizable:'true', fixed:'false'">
@@ -100,6 +100,13 @@
     <!-- style & script 分隔线 -->
     <!-- ====================================================================================================================== -->
     <script type="text/javascript">
+	function pointsFormatter(value,row,index){
+		if (row.inOut==10){//收入
+			return "+"+value;
+		} else {
+			return value;
+		}
+}
         //表格查询
         function queryGrid() {
             var opts = $("#grid").datagrid("options");
