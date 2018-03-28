@@ -139,7 +139,8 @@
                                     <#comboProvider _id="_department" _provider='departmentProvider'/>
                                 </td>
                                 <td style="padding-top:10px;padding-left:15px;">
-                                    <input name="_available" class="easyui-textbox" id="_available" style="width:96%;" data-options="label:'可用积分:', labelAlign:'right', cls:'noborder', editable:false, readonly:true" />
+                                    <!--<input name="_available" class="easyui-textbox" id="_available" style="width:96%;" data-options="label:'可用积分:', labelAlign:'right', cls:'noborder', editable:false, readonly:true" />-->
+                                    可用积分: <a href="<#config name="points.contextPath"/>/pointsDetail/detail.html?certificateNumber=${certificateNumber}">${available}</a>
                                 </td>
                             </tr>
                             <tr>

@@ -203,10 +203,13 @@ public class CustomerServiceImpl extends BaseServiceImpl<Customer, Long> impleme
 		BaseOutput<List<CustomerPoints>> output = customerPointsRpc.listCustomerPoints(customerPointsApiDTO);
 		if(output.isSuccess() && !output.getData().isEmpty()){
 			customerMap.put("available", output.getData().get(0).getAvailable());
+			modelMap.put("available", output.getData().get(0).getAvailable());
 		}else {
 			customerMap.put("available", 0);
+			modelMap.put("available", 0);
 		}
 		modelMap.put("customerId", customerMap.get("id"));
+		modelMap.put("certificateNumber", customerMap.get("certificateNumber"));
 		modelMap.put("customer", JSONObject.toJSONString(customerMap));
 	    modelMap.put("startDate",this.calStartDate());
 	    modelMap.put("endDate",this.calEndDate());
