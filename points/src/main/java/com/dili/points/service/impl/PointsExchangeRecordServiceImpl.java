@@ -103,7 +103,7 @@ public class PointsExchangeRecordServiceImpl extends BaseServiceImpl<PointsExcha
         //客户积分明细表中，插入本次的兑换记录
         PointsDetail pd = DTOUtils.newDTO(PointsDetail.class);
         pd.setCertificateNumber(pointsExchangeRecord.getCertificateNumber());
-        pd.setPoints(pointsExchangeRecord.getPoints());
+        pd.setPoints(0-pointsExchangeRecord.getPoints());
         pd.setBalance(customerPoints.getAvailable());
         //积分兑换
         pd.setGenerateWay(30);
