@@ -53,7 +53,7 @@
         	<div class="easyui-panel" align="center" style="width:96%;height:100%;" border="false">
             <!-- =========================================================表格========================================================= -->
             <table class="easyui-datagrid" title="客户积分" id="grid" fitColumns="true" noheader="true"
-                   pagination="true" pageSize="30" pageNumber="1" pagePosition="top" rownumbers="false" remoteSort="false"
+                   pagination="true" pageSize="30" pageNumber="1" pagePosition="top" rownumbers="false" remoteSort="true"
                    loadMsg="数据加载中..." singleSelect="true" method="post" multiSort="false" sortName="certificateNumber"
                     align="center" fit="true" striped="true"   toolbar="#toolbar" idField="id" data-options="onDblClickRow:openDetailChange, onHeaderContextMenu:headerContextMenu,showFooter:true,view:footerView">
                 <thead>
@@ -73,7 +73,7 @@
                         <th width="20%" data-options="field:'certificateNumber',   sortable:true, order:'asc', align:'center', resizable:'true', fixed:'false'">
                             证件号
                         </th>
-                        <th width="10%" data-options="field:'available',   sortable:true, order:'asc', align:'center', resizable:'true', fixed:'false'">
+                        <th width="10%" data-options="field:'available', sortable:false,  order:'asc', align:'center', resizable:'true', fixed:'false'">
                             可用积分
                         </th>
 
