@@ -24,6 +24,8 @@ import com.dili.ss.metadata.ValueProviderUtils;
 import com.google.common.collect.Lists;
 
 import org.apache.commons.beanutils.BeanUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -32,6 +34,7 @@ import org.springframework.stereotype.Service;
  */
 @Service
 public class CustomerPointsServiceImpl extends BaseServiceImpl<CustomerPoints, Long> implements CustomerPointsService {
+	private static final Logger LOG=LoggerFactory.getLogger(CustomerPointsServiceImpl.class);
 	@Autowired
 	CustomerRpc customerRpc;
 
@@ -93,7 +96,7 @@ public class CustomerPointsServiceImpl extends BaseServiceImpl<CustomerPoints, L
 					try {
 						BeanUtils.copyProperties(cpdto, cp);
 					} catch (Exception e) {
-						
+						  LOG.error("查询客户积分出错",e);
 					}
 				}
 				
@@ -108,11 +111,11 @@ public class CustomerPointsServiceImpl extends BaseServiceImpl<CustomerPoints, L
 				return cpdto;
 			}).collect(Collectors.toList());
             //提供者转换
-            List<Map> datas = null;
+            List<Map> datas = new ArrayList<>();
             try {
                 datas = ValueProviderUtils.buildDataByProvider(customer, resultList);
             } catch (Exception e) {
-                e.printStackTrace();
+               LOG.error("查询客户积分出错",e);
             }
             EasyuiPageOutput easyuiPageOutput = new EasyuiPageOutput(baseOut.getData().getTotal(), datas);
 
