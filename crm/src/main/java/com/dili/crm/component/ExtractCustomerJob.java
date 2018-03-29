@@ -43,7 +43,7 @@ public class ExtractCustomerJob implements ApplicationListener<ContextRefreshedE
 	 * @param scheduleMessage
 	 */
 	public void scan(ScheduleMessage scheduleMessage) {
-		System.out.println("抽取客户");
+//		System.out.println("抽取客户");
 //    	while(true) {
 //    		boolean v=service.transIncrementData(null, 1000);
 //    		if(!v) {
