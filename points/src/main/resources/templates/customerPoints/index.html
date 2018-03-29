@@ -55,7 +55,7 @@
             <table class="easyui-datagrid" title="客户积分" id="grid" fitColumns="true" noheader="true"
                    pagination="true" pageSize="30" pageNumber="1" pagePosition="top" rownumbers="false" remoteSort="false"
                    loadMsg="数据加载中..." singleSelect="true" method="post" multiSort="false" sortName="certificateNumber"
-                    align="center" fit="true" striped="true"   toolbar="#toolbar" idField="id" data-options="onDblClickRow:openUpdate, onHeaderContextMenu:headerContextMenu">
+                    align="center" fit="true" striped="true"   toolbar="#toolbar" idField="id" data-options="onDblClickRow:openDetailChange, onHeaderContextMenu:headerContextMenu">
                 <thead>
                     <tr>
                         <th width="10%" data-options="field:'id', sortable:true, order:'asc', align:'center', resizable:'true', fixed:'false'">
@@ -192,9 +192,10 @@
     }
     
     //打开调整窗口窗口
-     <#resource code="changeCustomerPoints">
+     
      function openDetailChange(){
-         var selected = $("#grid").treegrid("getSelected");
+    	 <#resource code="changeCustomerPoints">
+    	var selected = $("#grid").treegrid("getSelected");
          if (null == selected) {
              $.messager.alert('警告','请选中一条数据');
              return;
@@ -215,9 +216,9 @@
          var formData = $.extend({},selected);
          formData = addKeyStartWith(getOriginalData(formData),"_");
          $('#_form').form('load', formData);
-         
+         </#resource>     
      }              
-    </#resource>
+    
    
     
         //打开新增窗口
