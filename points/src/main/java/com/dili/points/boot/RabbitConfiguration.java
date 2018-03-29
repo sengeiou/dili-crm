@@ -22,8 +22,8 @@ public class RabbitConfiguration {
     public static final String DEFAULT_TOPIC_EXCHANGE = "diligrp.points.topicExchange";
     public static final String TOPIC_ORDER_ROUTE_KEY = "diligrp.points.syncOrderKey";
     public static final String TOPIC_CATEGORY_ROUTE_KEY = "diligrp.points.syncCategoryKey";
-    public static final String ORDER_TOPIC_QUEUE = "points-" + UUID.randomUUID();
-    public static final String CATEGORY_TOPIC_QUEUE = "category-" + UUID.randomUUID();
+    public static final String ORDER_TOPIC_QUEUE = "points.queue";
+    public static final String CATEGORY_TOPIC_QUEUE = "category.queue";
 
     @Bean
     public MessageConverter messageConverter() {
