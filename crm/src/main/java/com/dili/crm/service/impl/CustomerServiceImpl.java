@@ -31,6 +31,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.ui.ModelMap;
 import tk.mybatis.mapper.entity.Example;
 
+import java.net.URLEncoder;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
@@ -209,7 +210,7 @@ public class CustomerServiceImpl extends BaseServiceImpl<Customer, Long> impleme
 			modelMap.put("available", 0);
 		}
 		modelMap.put("customerId", customerMap.get("id"));
-		modelMap.put("certificateNumber", customerMap.get("certificateNumber"));
+		modelMap.put("certificateNumber", URLEncoder.encode(customerMap.get("certificateNumber").toString(), "utf-8"));
 		modelMap.put("customer", JSONObject.toJSONString(customerMap));
 	    modelMap.put("startDate",this.calStartDate());
 	    modelMap.put("endDate",this.calEndDate());
