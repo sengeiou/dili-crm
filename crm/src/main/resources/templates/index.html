@@ -309,7 +309,6 @@
                     });
                     for (var i = 0; i < customerAddresses.length; i++) {
                         var customerAddress = customerAddresses[i];
-                        debugger;
                         if ((null == customerAddress.type && $.inArray("other", chk_value) >=0) || $.inArray(customerAddress.type, chk_value) >=0 ){
                             var pt = new BMap.Point(customerAddress.operatingLng,customerAddress.operatingLat);
                             var marker = new BMap.Marker(pt, {icon: getLocationIcon(customerAddress.type)});
