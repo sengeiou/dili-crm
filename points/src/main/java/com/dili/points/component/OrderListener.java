@@ -348,7 +348,7 @@ public class OrderListener {
 	protected BigDecimal calculateBasePoints(PointsRule pointsRule, Order order) {
 		BigDecimal orderWeight = order.getWeight();// 交易量
 
-		BigDecimal totalMoney = new BigDecimal(order.getTotalMoney());// 交易额
+		BigDecimal totalMoney = new BigDecimal(order.getTotalMoney()).divide(new BigDecimal("100"));// 交易额(除以100,转换单位为元)
 
 		Integer computingStandard = pointsRule.getComputingStandard();
 		Float computingParameter = pointsRule.getComputingParameter();
@@ -533,7 +533,7 @@ public class OrderListener {
 		// logger.warn("查询客户ID出错,当前积分详情将会被保存到异常积分!");
 		// }
 		BigDecimal orderWeight = order.getWeight();// 交易量
-		BigDecimal totalMoney = new BigDecimal(order.getTotalMoney());// 交易额
+		BigDecimal totalMoney = new BigDecimal(order.getTotalMoney()).divide(new BigDecimal("100"));// 交易额
 		BigDecimal payment = new BigDecimal(order.getPayment());// 支付方式
 
 		// 三个量值与对应的条件列表匹配权重值
