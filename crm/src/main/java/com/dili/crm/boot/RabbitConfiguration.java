@@ -31,7 +31,7 @@ public class RabbitConfiguration {
 //    }
     public static final String DEFAULT_TOPIC_EXCHANGE = "diligrp.crm.topicExchange";
     public static final String TOPIC_ROUTE_KEY = "diligrp.crm.addCustomerKey";
-    public static final String TOPIC_QUEUE = "crm-" + UUID.randomUUID();
+    public static final String TOPIC_QUEUE = "crm.queue";
 
     @Bean
     public MessageConverter messageConverter() {
