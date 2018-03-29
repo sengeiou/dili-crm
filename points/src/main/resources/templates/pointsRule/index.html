@@ -1,4 +1,21 @@
 <#body>
+<style>
+    .datagrid-view a:link {
+        font-size: 14px;
+        color: #0001ee;
+        text-decoration: none;
+    }
+    .datagrid-view a:visited {
+        font-size: 14px;
+        color: #0001ee;
+        text-decoration: none;
+    }
+    .datagrid-view a:hover {
+        font-size: 14px;
+        color: #999999;
+        text-decoration: underline;
+    }
+</style>
 <div class="easyui-layout" fit="true">
     <!-- ====================================================================================================================== -->
     <!-- 上方布局 -->
@@ -265,7 +282,7 @@
     function formatview(value, row, index) {
 
         if(has_view){
-            return '<a href="${contextPath}/pointsRule/view.html?id=' + row.id + '">' + value + '</a>';
+            return '<a class="view" href="${contextPath}/pointsRule/view.html?id=' + row.id + '">' + value + '</a>';
         }else {
             return value;
         }
