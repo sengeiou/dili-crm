@@ -315,7 +315,7 @@ public class OrderListener {
 		// 多个订单进行数据合计(金额,重量)
 		for (Order orderObj : orderList) {
 			order.setTotalMoney(orderObj.getTotalMoney() + order.getTotalMoney());
-			order.setWeight(orderObj.getWeight().add(order.getWeight()));
+			order.setWeight(order.getWeight().add(orderObj.getWeight()));
 			order.setPayment(orderObj.getPayment());
 
 			order.setBusinessType(orderObj.getBusinessType());

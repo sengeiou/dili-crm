@@ -19,9 +19,11 @@ import com.dili.ss.dto.DTOUtils;
 import com.dili.ss.exception.AppException;
 import com.dili.ss.exception.BusinessException;
 
+import java.time.Duration;
 import java.time.Instant;
 import java.time.LocalDate;
 import java.time.ZoneId;
+import java.time.temporal.TemporalAmount;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -116,7 +118,16 @@ public class PointsDetailServiceImpl extends BaseServiceImpl<PointsDetail, Long>
 		
 		Integer dayPoints = customerPoints.getDayPoints();// 当天积分总和
 		//修改时间
-		 Instant instant = customerPoints.getResetTime().toInstant();
+		Instant instant=Instant.now();
+		if(customerPoints.getResetTime()!=null) {
+			instant = customerPoints.getResetTime().toInstant();
+		}else {
+			//如果RestTime为空则把当前时间减少一天,做为resttime
+			TemporalAmount tm=Duration.ofDays(1);
+			instant =instant.minus(tm); 
+		}
+		 
+		
 		 ZoneId defaultZoneId = ZoneId.systemDefault();
 	     LocalDate resetDate = instant.atZone(defaultZoneId).toLocalDate();
 		//当前时间

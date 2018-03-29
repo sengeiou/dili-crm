@@ -50,18 +50,55 @@ public class ProxyTest {
 	
 	@Test
 	public void calculateWeight() {
-Map<Order,List<OrderItem>>map=new HashMap<>();
-map.put(DTOUtils.newDTO(Order.class), new ArrayList<>());
-map.put(DTOUtils.newDTO(Order.class), new ArrayList<>());
-map.put(DTOUtils.newDTO(Order.class), new ArrayList<>());
-map.put(DTOUtils.newDTO(Order.class), new ArrayList<>());
-map.put(DTOUtils.newDTO(Order.class), new ArrayList<>());
-map.put(DTOUtils.newDTO(Order.class), new ArrayList<>());
-for(Order order:map.keySet()) {
-	List<OrderItem>list=map.get(order);
-	System.out.println(list);
-}
+Map<Order,List<OrderItem>>map=new HashMap<>(100);
+List<OrderItem>items=new ArrayList<>();
+OrderItem item=DTOUtils.newDTO(OrderItem.class);
+item.setTotalMoney(100L);
+items.add(item);
+Order o=DTOUtils.newDTO(Order.class);
+o.setBusinessType(12345);
+o.setBuyerCardNo(111L);
+o.setBuyerCertificateNumber("2222");
+o.setCode("3333");
+o.setCreated(new Date());
+o.setPayDate(new Date());
+o.setPayment(1);
+o.setSellerCardNo(257L);
+o.setSellerCertificateNumber("5555555555");
+o.setSettlementCode("66666");
+o.setSourceSystem("toll");
+o.setTotalMoney(23L);
+o.setWeight(new BigDecimal("144"));
+map.put(o, items);
+int count=0;
+System.out.println(o.hashCode());
+o.setBusinessType(123);
+System.out.println(o.hashCode());
+o.setBusinessType(456);
+System.out.println(o.hashCode());
 
+
+	for(Order order:map.keySet()) {
+		
+		List<OrderItem>list=map.get(order);
+
+		BigDecimal orderWeight = order.getWeight();// 交易量
+
+		BigDecimal totalMoney = new BigDecimal(order.getTotalMoney());// 交易额
+		System.out.println(list);
+	}
+BigDecimal a=new BigDecimal("123");
+BigDecimal b=new BigDecimal("456");
+BigDecimal c=a.add(b);
+
+System.out.println(a.toPlainString());
+System.out.println(b.toPlainString());
+System.out.println(c.toPlainString());
+//for(Order order:map.keySet()) {
+//	//order.getBusinessType();
+//	List<OrderItem>list=map.get(order);
+//	System.out.println(list);
+//}
 
 
 	}
