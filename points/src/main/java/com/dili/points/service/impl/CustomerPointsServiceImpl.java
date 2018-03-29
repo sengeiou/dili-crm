@@ -75,13 +75,26 @@ public class CustomerPointsServiceImpl extends BaseServiceImpl<CustomerPoints, L
 
 			CustomerPointsDTO example = DTOUtils.newDTO(CustomerPointsDTO.class);
 			example.setCertificateNumbers(certificateNumbers);
+
+			// 计算总可用积分
+			AtomicInteger totalAvailablePoints=new AtomicInteger(0);
+			try {
+				this.listPageByExample(example).
+						getDatas().
+						stream().
+						filter(cp -> cp.getAvailable() != null).
+						forEach(customerPoints -> totalAvailablePoints.addAndGet(customerPoints.getAvailable()));
+			} catch (Exception e) {
+				LOG.error("计算总可用积分出错", e);
+			}
+
 			example.setPage(customer.getPage());
 			example.setRows(customer.getRows());
 			BasePage<CustomerPoints> basePage = this.listPageByExample(example);
 			
 			Map<String, CustomerPoints> map = basePage.getDatas().stream()
 					.collect(Collectors.toMap(CustomerPoints::getCertificateNumber, cp -> cp));
-			AtomicInteger totalAvailablePoints=new AtomicInteger(0);
+
 			List<CustomerPointsDTO> resultList = customerList.stream().map(c -> {
 				CustomerPoints cp = map.get(c.getCertificateNumber());
 				// 如果客户没有对应的积分信息,则创建一个新的默认积分信息显示到页面
@@ -100,7 +113,7 @@ public class CustomerPointsServiceImpl extends BaseServiceImpl<CustomerPoints, L
 					}
 				}
 				
-				totalAvailablePoints.addAndGet(cpdto.getAvailable());
+
 				// 将客户的其他信息(名字,组织类型等信息附加到积分信息)
 				cpdto.setName(c.getName());
 				cpdto.setOrganizationType(c.getOrganizationType());
@@ -110,6 +123,8 @@ public class CustomerPointsServiceImpl extends BaseServiceImpl<CustomerPoints, L
 				cpdto.setPhone(c.getPhone());
 				return cpdto;
 			}).collect(Collectors.toList());
+
+
             //提供者转换
             List<Map> datas = new ArrayList<>();
             try {
