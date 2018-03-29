@@ -72,4 +72,37 @@
     </set>
     where id = #{id,jdbcType=BIGINT}
   </update>
+  
+  <select id="statistics" parameterType="com.dili.points.domain.dto.PointsExchangeRecordDTO" resultMap="statisticsMap">
+      SELECT SUM(quantity) AS quantity,SUM(points) AS points FROM points_exchange_record per
+      <where>
+        1 = 1
+        <if test="name !=null">
+          and name like concat('%', #{name}, '%')
+        </if>
+        <if test="certificateNumber !=null">
+          and certificate_number=#{certificateNumber}
+        </if>
+        <if test="certificateType !=null">
+          and certificate_type=#{certificateType}
+        </if>
+        <if test="exchangeCommoditiesId !=null">
+          and exchange_commodities_id=#{exchangeCommoditiesId}
+        </if>
+        <if test="createdStart !=null">
+          and created >= #{createdStart}
+        </if>
+        <if test="createdEnd !=null">
+          <![CDATA[
+              and created <= #{createdStart}
+          ]]>
+        </if>
+      </where>
+
+  </select>
+  
+  <resultMap id="statisticsMap" type="java.util.HashMap">
+      <result column="quantity" property="quantity" />
+      <result column="points" property="points" />
+  </resultMap>
 </mapper>

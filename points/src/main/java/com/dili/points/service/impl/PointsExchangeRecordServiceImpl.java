@@ -10,7 +10,6 @@ import com.dili.points.domain.PointsDetail;
 import com.dili.points.domain.PointsExchangeRecord;
 import com.dili.points.service.PointsExchangeRecordService;
 import com.dili.ss.base.BaseServiceImpl;
-import com.dili.ss.dao.CommonMapper;
 import com.dili.ss.domain.BaseOutput;
 import com.dili.ss.domain.EasyuiPageOutput;
 import com.dili.ss.dto.DTOUtils;
@@ -24,6 +23,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 import tk.mybatis.mapper.entity.Example;
 
+import java.math.BigDecimal;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -37,15 +37,13 @@ import java.util.Map;
 public class PointsExchangeRecordServiceImpl extends BaseServiceImpl<PointsExchangeRecord, Long> implements PointsExchangeRecordService {
 
     public PointsExchangeRecordMapper getActualDao() {
-        return (PointsExchangeRecordMapper)getDao();
+        return (PointsExchangeRecordMapper) getDao();
     }
 
     @Autowired
     private CustomerPointsMapper customerPointsMapper;
     @Autowired
     private ExchangeCommoditiesMapper exchangeCommoditiesMapper;
-    @Autowired
-    private CommonMapper commonMapper;
     @Autowired
     private PointsDetailMapper pointsDetailMapper;
 
@@ -59,51 +57,51 @@ public class PointsExchangeRecordServiceImpl extends BaseServiceImpl<PointsExcha
     @Transactional(rollbackFor = Exception.class)
     public BaseOutput insertSelectiveWithOutput(PointsExchangeRecord pointsExchangeRecord) throws Exception {
         UserTicket userTicket = SessionContext.getSessionContext().getUserTicket();
-        if(userTicket == null){
+        if (userTicket == null) {
             return BaseOutput.failure("兑换失败，登录超时");
         }
         //查询客户的积分信息
         CustomerPoints customerPoints = customerPointsMapper.selectByPrimaryKey(pointsExchangeRecord.getCustomerId());
-        if (null == customerPoints || customerPoints.getAvailable().intValue() < pointsExchangeRecord.getPoints().intValue()){
+        if (null == customerPoints || customerPoints.getAvailable().intValue() < pointsExchangeRecord.getPoints().intValue()) {
             return BaseOutput.failure("兑换失败，客户可用积分不足");
         }
         //查询可兑换的商品
         ExchangeCommodities commodities = exchangeCommoditiesMapper.selectByPrimaryKey(pointsExchangeRecord.getExchangeCommoditiesId());
-        if (null == commodities || commodities.getAvailable().intValue() < pointsExchangeRecord.getQuantity().intValue()){
+        if (null == commodities || commodities.getAvailable().intValue() < pointsExchangeRecord.getQuantity().intValue()) {
             return BaseOutput.failure("兑换失败，兑换商品不存在或数量不足");
         }
         //重新设置客户可用积分信息，并修改
-        customerPoints.setAvailable(customerPoints.getAvailable()-pointsExchangeRecord.getPoints());
+        customerPoints.setAvailable(customerPoints.getAvailable() - pointsExchangeRecord.getPoints());
         Example example = new Example(CustomerPoints.class);
         Example.Criteria criteria = example.createCriteria();
-        criteria.andEqualTo("id",customerPoints.getId());
-        if (null != customerPoints.getModified()){
-            criteria.andEqualTo("modified",customerPoints.getModified());
+        criteria.andEqualTo("id", customerPoints.getId());
+        if (null != customerPoints.getModified()) {
+            criteria.andEqualTo("modified", customerPoints.getModified());
         }
         customerPoints.setModified(new Date());
         customerPoints.setModifiedId(userTicket.getId());
-        int i= customerPointsMapper.updateByExample(customerPoints,example);
+        int i = customerPointsMapper.updateByExample(customerPoints, example);
         if (i < 1) {
             return BaseOutput.failure("兑换失败，客户积分扣减失败，请重新操作");
         }
         //扣减商品的可兑换量
-        commodities.setAvailable(commodities.getAvailable()-pointsExchangeRecord.getQuantity());
+        commodities.setAvailable(commodities.getAvailable() - pointsExchangeRecord.getQuantity());
         Example commodityExample = new Example(ExchangeCommodities.class);
         Example.Criteria commodityCriteria = commodityExample.createCriteria();
-        commodityCriteria.andEqualTo("id",commodities.getId());
-        if (null != customerPoints.getModified()){
-            commodityCriteria.andEqualTo("modified",commodities.getModified());
+        commodityCriteria.andEqualTo("id", commodities.getId());
+        if (null != customerPoints.getModified()) {
+            commodityCriteria.andEqualTo("modified", commodities.getModified());
         }
         commodities.setModified(new Date());
         commodities.setModifiedId(userTicket.getId());
-        i= exchangeCommoditiesMapper.updateByExample(commodities,commodityExample);
+        i = exchangeCommoditiesMapper.updateByExample(commodities, commodityExample);
         if (i < 1) {
-            throw new BusinessException("error","兑换失败，商品数扣减失败，请重新操作");
+            throw new BusinessException("error", "兑换失败，商品数扣减失败，请重新操作");
         }
         //客户积分明细表中，插入本次的兑换记录
         PointsDetail pd = DTOUtils.newDTO(PointsDetail.class);
         pd.setCertificateNumber(pointsExchangeRecord.getCertificateNumber());
-        pd.setPoints(0-pointsExchangeRecord.getPoints());
+        pd.setPoints(0 - pointsExchangeRecord.getPoints());
         pd.setBalance(customerPoints.getAvailable());
         //积分兑换
         pd.setGenerateWay(30);
@@ -111,7 +109,7 @@ public class PointsExchangeRecordServiceImpl extends BaseServiceImpl<PointsExcha
         pd.setInOut(20);
         //来源系统：积分系统
         pd.setSourceSystem("points");
-        pd.setNotes("兑换"+commodities.getName());
+        pd.setNotes("兑换" + commodities.getName());
         pd.setCreatedId(userTicket.getId());
         //保存客户积分明细信息
         pointsDetailMapper.insertSelective(pd);
@@ -132,20 +130,19 @@ public class PointsExchangeRecordServiceImpl extends BaseServiceImpl<PointsExcha
     public EasyuiPageOutput listEasyuiPageByExample(PointsExchangeRecord domain, boolean useProvider) throws Exception {
         EasyuiPageOutput easyuiPageOutput = super.listEasyuiPageByExample(domain, useProvider);
         //查询总使用积分和总兑换量
-        List<Map> maps = commonMapper.selectMap("SELECT SUM(quantity) AS quantity,SUM(points) AS points FROM points_exchange_record");
-        String points = "0";
-        String quantity = "0";
-        Map map = maps.get(0);
-        if(!CollectionUtils.isEmpty(map)){
-            points = map.get("points").toString();
-            quantity = map.get("quantity").toString();
+        Map<Object, BigDecimal> statistics = getActualDao().statistics(domain);
+        BigDecimal points = new BigDecimal(0);
+        BigDecimal quantity = new BigDecimal(0);
+        if (!CollectionUtils.isEmpty(statistics)) {
+            points = statistics.get("points");
+            quantity = statistics.get("quantity");
         }
         List<Map> footers = Lists.newArrayList();
         Map footer = new HashMap(1);
         footer.put("name", "总使用积分:");
         footer.put("organizationType", points);
-        footer.put("certificateType","总兑换数量:");
-        footer.put("certificateNumber",quantity);
+        footer.put("certificateType", "总兑换数量:");
+        footer.put("certificateNumber", quantity);
         footers.add(footer);
         easyuiPageOutput.setFooter(footers);
         return easyuiPageOutput;
