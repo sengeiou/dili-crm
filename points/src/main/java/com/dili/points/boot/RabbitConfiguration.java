@@ -22,8 +22,13 @@ public class RabbitConfiguration {
     public static final String DEFAULT_TOPIC_EXCHANGE = "diligrp.points.topicExchange";
     public static final String TOPIC_ORDER_ROUTE_KEY = "diligrp.points.syncOrderKey";
     public static final String TOPIC_CATEGORY_ROUTE_KEY = "diligrp.points.syncCategoryKey";
+<<<<<<< HEAD
     public static final String ORDER_TOPIC_QUEUE = "points.queue";
     public static final String CATEGORY_TOPIC_QUEUE = "category.queue";
+=======
+    public static final String ORDER_TOPIC_QUEUE = "points";
+    public static final String CATEGORY_TOPIC_QUEUE = "category";
+>>>>>>> branch 'master' of http://git3.nong12.com/dili-crm/dili-crm.git
 
     @Bean
     public MessageConverter messageConverter() {
