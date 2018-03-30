@@ -16,8 +16,8 @@
                                 <input class="easyui-textbox" name="name" id="name" style="width:100%" labelAlign="right" data-options="label:'商品名称:', validType:'length[0,20]'" />
                             </td>
                             <td style="padding:5px;">
-                                <input class="easyui-datetimebox" name="modifiedStart" id="modifiedStart" editable="false" style="width:49%" labelAlign="right" data-options="label:'操作日期:'" />
-                                <input class="easyui-datetimebox" name="modifiedEnd" id="modifiedEnd" editable="false" style="width:50%" labelAlign="center" data-options="label:'——'" />
+                                <input class="easyui-datetimebox" name="modifiedStart" id="modifiedStart" editable="false" style="width:270px;" labelAlign="right" data-options="label:'操作日期:'" />
+                                &nbsp;-&nbsp;<input class="easyui-datetimebox" name="modifiedEnd" id="modifiedEnd" editable="false" style="width:180px;" />
                             </td>
                             <td style="padding-left:28px;padding-top: 10px; padding-bottom: 10px;">
                                 <a href="#" class="easyui-linkbutton" iconCls="icon-search" id="queryBtn"
@@ -51,7 +51,7 @@
                             <th width="13%" data-options="field:'available',sortable:true, order:'asc', align:'center', resizable:'true', fixed:'false'">
                                 可兑换
                             </th>
-                            <th width="13%" data-options="field:'exchanged',formatter:exchangedFormatter,sortable:true, order:'asc', align:'center', resizable:'true', fixed:'false'">
+                            <th width="13%" data-options="field:'exchanged',_provider:'exchangeCommodityProvider',sortable:true, order:'asc', align:'center', resizable:'true', fixed:'false'">
                                 已兑换
                             </th>
                             <th width="13%" data-options="field:'total',   sortable:true, order:'asc', align:'center', resizable:'true', fixed:'false'">
