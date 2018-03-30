@@ -290,6 +290,9 @@ public class OrderListener {
 		RuleCondition condition = DTOUtils.newDTO(RuleCondition.class);
 		condition.setConditionType(conditionType);// 交易量 10 交易额 20 商品 30 支付方式:40
 		condition.setPointRuleId(pointsRuleId);
+		condition.setSort("modified");
+		condition.setOrder("DESC");
+		
 		List<RuleCondition> list = ruleConditionService.listByExample(condition);
 		return list;
 	}
