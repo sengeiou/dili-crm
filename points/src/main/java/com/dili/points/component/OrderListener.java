@@ -300,7 +300,7 @@ public class OrderListener {
 	/**
 	 * 将多个订单的金额,重量 等计量信息合计
 	 * 
-	 * @param orderList
+	 * @param orderMap
 	 *            多个订单信息
 	 * @return 合计订单
 	 */
@@ -354,7 +354,7 @@ public class OrderListener {
 		BigDecimal totalMoney = new BigDecimal(order.getTotalMoney()).divide(new BigDecimal("100"));// 交易额(除以100,转换单位为元)
 
 		Integer computingStandard = pointsRule.getComputingStandard();
-		Double computingParameter = pointsRule.getComputingParameter();
+		String computingParameter = pointsRule.getComputingParameter();
 		// 根据基准设置,计算基础积分值
 		BigDecimal basePoint = BigDecimal.ZERO;
 
@@ -383,7 +383,7 @@ public class OrderListener {
 	/**
 	 * 根据订单类型和订单号,以及订单列表,拼装备注信息
 	 * 
-	 * @param pointsDetail
+	 * @param order
 	 *            积分详情
 	 * @param orderItemList
 	 *            对应的订单列表

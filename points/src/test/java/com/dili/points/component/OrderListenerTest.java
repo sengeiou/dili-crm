@@ -222,7 +222,7 @@ public class OrderListenerTest {
 		PointsRule pr=DTOUtils.newDTO(PointsRule.class);  
 		pr.setId(1L);
 		pr.setComputingStandard(172);//172 交易量,173 交易额,174 固定值
-		pr.setComputingParameter(0.1D);
+		pr.setComputingParameter("0.1");
 		
 	
 		doReturn(Optional.of(pr)).when(orderListener).findPointsRule("sale");
@@ -234,7 +234,7 @@ public class OrderListenerTest {
 		PointsRule pr2=DTOUtils.newDTO(PointsRule.class);  
 		pr2.setId(2L);
 		pr2.setComputingStandard(173);//172 交易量,173 交易额,174 固定值
-		pr2.setComputingParameter(0.3D);
+		pr2.setComputingParameter("0.3");
 		
 		//when(pointsRuleService.listByExample(pointsRuleEx)).thenReturn(Stream.of(pr).collect(Collectors.toList()));
 		doReturn(Optional.of(pr2)).when(orderListener).findPointsRule("purchase");
