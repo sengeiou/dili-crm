@@ -156,6 +156,9 @@
 
 
     function savePay() {
+        if (!$("#pay_form").form('validate')) {
+            return;
+        }
         var dg = $("#dg_2");
         var row = {
             value: $("#payConditionType").combobox("getValue"),
