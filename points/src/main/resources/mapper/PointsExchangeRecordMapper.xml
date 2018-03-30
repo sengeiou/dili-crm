@@ -83,8 +83,11 @@
         <if test="certificateNumber !=null">
           and certificate_number=#{certificateNumber}
         </if>
-        <if test="certificateType !=null">
-          and certificate_type=#{certificateType}
+        <if test="type !=null">
+          and type=#{type}
+        </if>
+        <if test="organizationType != null">
+          and organization_type = #{organizationType}
         </if>
         <if test="exchangeCommoditiesId !=null">
           and exchange_commodities_id=#{exchangeCommoditiesId}
