@@ -9,6 +9,7 @@ import com.dili.points.domain.dto.CustomerPointsDTO;
 import com.dili.points.rpc.CustomerRpc;
 import com.dili.points.service.CustomerPointsService;
 import com.dili.ss.base.BaseServiceImpl;
+import com.dili.ss.dao.CommonMapper;
 import com.dili.ss.domain.BaseOutput;
 import com.dili.ss.domain.BasePage;
 import com.dili.ss.domain.EasyuiPageOutput;
@@ -16,12 +17,16 @@ import com.dili.ss.dto.DTO;
 import com.dili.ss.dto.DTOUtils;
 
 import java.lang.reflect.InvocationTargetException;
+import java.math.BigDecimal;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 
 import com.dili.ss.metadata.ValueProviderUtils;
+import com.github.pagehelper.PageHelper;
 import com.google.common.collect.Lists;
+
+import tk.mybatis.mapper.entity.Example;
 
 import org.apache.commons.beanutils.BeanUtils;
 import org.slf4j.Logger;
@@ -37,11 +42,18 @@ public class CustomerPointsServiceImpl extends BaseServiceImpl<CustomerPoints, L
 	private static final Logger LOG=LoggerFactory.getLogger(CustomerPointsServiceImpl.class);
 	@Autowired
 	CustomerRpc customerRpc;
+	@Autowired CommonMapper commonMapper;
 
 	public CustomerPointsMapper getActualDao() {
 		return (CustomerPointsMapper) getDao();
 	}
-
+	// 计算总可用积分
+	private Long calculateTotalPoints() {
+	
+		BigDecimal totalAvailablePoints=commonMapper.selectMap("select sum(available) as available from customer_points").stream().map(m->{return (BigDecimal)m.get("available");}).findFirst().orElse(BigDecimal.ZERO);
+		
+		return totalAvailablePoints.longValue();
+	}
 	@Override
     public CustomerPointsDTO findCustomerPointsByCertificateNumber(String certificateNumber) {
 		CustomerApiDTO dto = DTOUtils.newDTO(CustomerApiDTO.class);
@@ -75,21 +87,11 @@ public class CustomerPointsServiceImpl extends BaseServiceImpl<CustomerPoints, L
 
 			CustomerPointsDTO example = DTOUtils.newDTO(CustomerPointsDTO.class);
 			example.setCertificateNumbers(certificateNumbers);
-
-			// 计算总可用积分
-			AtomicInteger totalAvailablePoints=new AtomicInteger(0);
-			try {
-				this.listPageByExample(example).
-						getDatas().
-						stream().
-						filter(cp -> cp.getAvailable() != null).
-						forEach(customerPoints -> totalAvailablePoints.addAndGet(customerPoints.getAvailable()));
-			} catch (Exception e) {
-				LOG.error("计算总可用积分出错", e);
-			}
-
 			example.setPage(customer.getPage());
 			example.setRows(customer.getRows());
+			// 计算总可用积分
+			Long totalAvailablePoints=this.calculateTotalPoints();
+
 			BasePage<CustomerPoints> basePage = this.listPageByExample(example);
 			
 			Map<String, CustomerPoints> map = basePage.getDatas().stream()
@@ -134,10 +136,10 @@ public class CustomerPointsServiceImpl extends BaseServiceImpl<CustomerPoints, L
             }
             EasyuiPageOutput easyuiPageOutput = new EasyuiPageOutput(baseOut.getData().getTotal(), datas);
 
-            List<Map> footers = Lists.newArrayList();
-            Map footer = new HashMap(1);
+            List<Map<String,Object>> footers = Lists.newArrayList();
+            Map<String,Object>footer = new HashMap<>(2);
             footer.put("name", "总可用积分");
-            footer.put("organizationType", totalAvailablePoints.get());
+            footer.put("organizationType", totalAvailablePoints);
             footers.add(footer);
             easyuiPageOutput.setFooter(footers);
             return easyuiPageOutput;
