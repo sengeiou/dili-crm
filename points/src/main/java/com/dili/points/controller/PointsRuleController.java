@@ -147,7 +147,7 @@ public class PointsRuleController {
     public @ResponseBody
     BaseOutput checkPointsRule(PointsRule pointsRule) {
         List<PointsRule> ruleList = pointsRuleService.listByExample(pointsRule);
-        return CollectionUtils.isNotEmpty(ruleList) ? BaseOutput.failure("已有相同类型规则 [编码]:" + ruleList.get(0).getCode() + " [名称]:" + ruleList.get(0).getName() + " 请先禁用才能启用此规则!") : BaseOutput.success();
+        return CollectionUtils.isNotEmpty(ruleList) ? BaseOutput.failure("已启用相同类型规则 [编码]:" + ruleList.get(0).getCode() + " [名称]:" + ruleList.get(0).getName() + " 请先禁用才能启用此规则!") : BaseOutput.success();
     }
 
     @RequestMapping(value = "/checkName")
