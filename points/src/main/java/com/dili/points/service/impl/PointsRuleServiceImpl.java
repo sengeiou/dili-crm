@@ -75,12 +75,13 @@ public class PointsRuleServiceImpl extends BaseServiceImpl<PointsRule, Long> imp
 
     private void makeRuleCondition(PointsRule pointsRule, List<RuleCondition> numberRuleConditions, int weightTypeNumber) {
         for (RuleCondition numberRuleCondition : numberRuleConditions) {
-            numberRuleCondition.setCreatedId(pointsRule.getCreatedId());
+            numberRuleCondition.setCreatedId(SessionContext.getSessionContext().getUserTicket().getId());
+            numberRuleCondition.setModifiedId(SessionContext.getSessionContext().getUserTicket().getId());
             numberRuleCondition.setPointRuleId(pointsRule.getId());
             numberRuleCondition.setWeightType(weightTypeNumber);
 
             // fix id
-            if(numberRuleCondition.getId()!=null){
+            if (numberRuleCondition.getId() != null) {
                 numberRuleCondition.setId(null);
             }
 

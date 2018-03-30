@@ -354,7 +354,7 @@ public class OrderListener {
 		BigDecimal totalMoney = new BigDecimal(order.getTotalMoney()).divide(new BigDecimal("100"));// 交易额(除以100,转换单位为元)
 
 		Integer computingStandard = pointsRule.getComputingStandard();
-		Float computingParameter = pointsRule.getComputingParameter();
+		Double computingParameter = pointsRule.getComputingParameter();
 		// 根据基准设置,计算基础积分值
 		BigDecimal basePoint = BigDecimal.ZERO;
 

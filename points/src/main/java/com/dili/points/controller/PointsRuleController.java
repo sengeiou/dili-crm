@@ -143,6 +143,13 @@ public class PointsRuleController {
         return BaseOutput.success("成功");
     }
 
+    @RequestMapping(value = "/checkPointsRule", method = {RequestMethod.GET, RequestMethod.POST})
+    public @ResponseBody
+    BaseOutput checkPointsRule(PointsRule pointsRule) {
+        List<PointsRule> ruleList = pointsRuleService.listByExample(pointsRule);
+        return CollectionUtils.isNotEmpty(ruleList) ? BaseOutput.failure("已有相同类型规则 [编码]:" + ruleList.get(0).getCode() + " [名称]:" + ruleList.get(0).getName() + " 请先禁用才能启用此规则!") : BaseOutput.success();
+    }
+
     @RequestMapping(value = "/checkName")
     public @ResponseBody
     Object checkName(String name, String org) {

@@ -121,7 +121,8 @@
 								<a class="linkmore" href="${contextPath}/customer/locations.html">查看更多&gt;</a>
 							</div>
 							<div id="mapDiv" style="width:99%;height:99%;"></div>
-							<div  style="position:absolute; top: 60px; left: 20px;background-color: #cccccc;">
+							<div  style="position:absolute; top: 60px; left: 20px;background-color: #fff;  box-shadow: 1px 3px 4px #a09797;font-size: large;padding: 3px;">
+								&nbsp;
 								<%for(dd in ddList){ %>
 								<input  type="checkbox" name="type" checked value="${dd.value}" onclick="viewCustomerMap()">${dd.text}&nbsp;&nbsp;
 								<%}%>

@@ -138,12 +138,13 @@
             value: $("#value").val(),
             startValue: $("#startValue").val(),
             endValue: $("#endValue").val(),
-            weight: $("#weight").val()
+            weight: $("#weight").val(),
+            modified: new Date()
         };
         if ($("#edit_type").val() == 0) {
             dg.datagrid('appendRow', row);
         } else {
-            var index = dg.datagrid('getRowIndex');
+            var index = dg.datagrid('getRowIndex',dg.datagrid('getSelected'));
             dg.datagrid('updateRow', {
                 index: index,
                 row: row
@@ -160,12 +161,13 @@
             value: $("#payConditionType").combobox("getValue"),
             weight: $("#payWeight").numberbox('getValue'),
             conditionType: $("#payConditionType").combobox("getValue"),
-            displayText: $("#payConditionType").combobox("getText")
+            displayText: $("#payConditionType").combobox("getText"),
+            modified: new Date()
         };
         if ($("#pay_edit_type").val() == 0) {
             dg.datagrid('appendRow', row);
         } else {
-            var index = dg.datagrid('getRowIndex');
+            var index = dg.datagrid('getRowIndex',dg.datagrid('getSelected'));
             dg.datagrid('updateRow', {
                 index: index,
                 row: row
@@ -224,6 +226,18 @@
                 return parseFloat(value) > parseFloat($(param[0]).val());
             },
             message: '必须大于起始值'
+        }
+    });
+
+    $.extend($.fn.validatebox.defaults.rules, {
+        notZero: {
+            validator: function (value) {
+                if(parseFloat(value) <=0){
+                    return false;
+                }
+                return true;
+            },
+            message: '计算参数需大于0'
         }
     });
     $(function () {
