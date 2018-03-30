@@ -77,9 +77,9 @@
 
                             <td style="padding-top:10px;padding-left:10px;" width="25%">
                                 <input class="easyui-numberbox inputWidth" name="computingParameter"
-                                       id="computingParameter"
-                                       data-options="min:0.1,precision:2
-,labelAlign:'right',label:'计算参数:'"
+                                       id="computingParameter"  validType="notZero"
+                                       data-options="formatter:cutZeroFormatter,precision:10
+,labelAlign:'right',label:'&lowast;计算参数:'"
                                        required="true"/>
                             </td>
                             <td style="padding-top:10px;" width="25%"></td>

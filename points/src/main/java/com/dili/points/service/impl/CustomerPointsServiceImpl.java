@@ -9,25 +9,22 @@ import com.dili.points.domain.dto.CustomerPointsDTO;
 import com.dili.points.rpc.CustomerRpc;
 import com.dili.points.service.CustomerPointsService;
 import com.dili.ss.base.BaseServiceImpl;
+import com.dili.ss.dao.CommonMapper;
 import com.dili.ss.domain.BaseOutput;
 import com.dili.ss.domain.BasePage;
 import com.dili.ss.domain.EasyuiPageOutput;
 import com.dili.ss.dto.DTO;
 import com.dili.ss.dto.DTOUtils;
-
-import java.lang.reflect.InvocationTargetException;
-import java.util.*;
-import java.util.concurrent.atomic.AtomicInteger;
-import java.util.stream.Collectors;
-
 import com.dili.ss.metadata.ValueProviderUtils;
 import com.google.common.collect.Lists;
-
 import org.apache.commons.beanutils.BeanUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * 由MyBatis Generator工具自动生成 This file was generated on 2018-03-20 11:29:30.
@@ -37,6 +34,9 @@ public class CustomerPointsServiceImpl extends BaseServiceImpl<CustomerPoints, L
 	private static final Logger LOG=LoggerFactory.getLogger(CustomerPointsServiceImpl.class);
 	@Autowired
 	CustomerRpc customerRpc;
+
+	@Autowired
+	private CommonMapper commonMapper;
 
 	public CustomerPointsMapper getActualDao() {
 		return (CustomerPointsMapper) getDao();
@@ -76,17 +76,6 @@ public class CustomerPointsServiceImpl extends BaseServiceImpl<CustomerPoints, L
 			CustomerPointsDTO example = DTOUtils.newDTO(CustomerPointsDTO.class);
 			example.setCertificateNumbers(certificateNumbers);
 
-			// 计算总可用积分
-			AtomicInteger totalAvailablePoints=new AtomicInteger(0);
-			try {
-				this.listPageByExample(example).
-						getDatas().
-						stream().
-						filter(cp -> cp.getAvailable() != null).
-						forEach(customerPoints -> totalAvailablePoints.addAndGet(customerPoints.getAvailable()));
-			} catch (Exception e) {
-				LOG.error("计算总可用积分出错", e);
-			}
 
 			example.setPage(customer.getPage());
 			example.setRows(customer.getRows());
@@ -135,9 +124,16 @@ public class CustomerPointsServiceImpl extends BaseServiceImpl<CustomerPoints, L
             EasyuiPageOutput easyuiPageOutput = new EasyuiPageOutput(baseOut.getData().getTotal(), datas);
 
             List<Map> footers = Lists.newArrayList();
-            Map footer = new HashMap(1);
+            Object total = 0;
+			try {
+				List<Map> maps = commonMapper.selectMap("SELECT SUM(available) as total FROM customer_points");
+				total = maps.stream().findFirst().get().get("total");
+			} catch (Exception e) {
+				LOG.error("查询客户总可用积分出错", e);
+			}
+			Map footer = new HashMap(1);
             footer.put("id", "总可用积分");
-            footer.put("organizationType", totalAvailablePoints.get());
+            footer.put("organizationType", total);
             footers.add(footer);
             easyuiPageOutput.setFooter(footers);
             return easyuiPageOutput;

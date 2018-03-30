@@ -1,50 +1,31 @@
 package com.dili.points.component;
 
-import java.math.BigDecimal;
-import java.math.RoundingMode;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
-
-import org.assertj.core.util.Arrays;
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
-import org.mockito.junit.MockitoJUnit;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
-import org.springframework.test.context.web.WebAppConfiguration;
-
-import com.alibaba.fastjson.JSONArray;
-import com.alibaba.fastjson.JSONObject;
 import com.dili.PointsApplication;
 import com.dili.points.domain.Order;
 import com.dili.points.domain.OrderItem;
 import com.dili.points.domain.PointsRule;
 import com.dili.points.domain.RuleCondition;
-import com.dili.points.service.OrderService;
-import com.dili.points.service.PointsRuleService;
-import com.dili.points.service.RuleConditionService;
-import com.dili.ss.dto.DTO;
 import com.dili.ss.dto.DTOUtils;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.collect.Lists;
+import org.junit.Assert;
+import org.junit.Before;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.mockito.InjectMocks;
+import org.mockito.MockitoAnnotations;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.test.context.web.WebAppConfiguration;
 
-import okhttp3.internal.ws.RealWebSocket.Streams;
+import java.math.BigDecimal;
+import java.math.RoundingMode;
+import java.util.*;
 
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.doReturn;
+import static org.mockito.Mockito.spy;
 @RunWith(SpringJUnit4ClassRunner.class)
 // @SpringApplicationConfiguration(classes = Application.class)
 @WebAppConfiguration
@@ -241,7 +222,7 @@ public class OrderListenerTest {
 		PointsRule pr=DTOUtils.newDTO(PointsRule.class);  
 		pr.setId(1L);
 		pr.setComputingStandard(172);//172 交易量,173 交易额,174 固定值
-		pr.setComputingParameter(0.1F);
+		pr.setComputingParameter(0.1D);
 		
 	
 		doReturn(Optional.of(pr)).when(orderListener).findPointsRule("sale");
@@ -253,7 +234,7 @@ public class OrderListenerTest {
 		PointsRule pr2=DTOUtils.newDTO(PointsRule.class);  
 		pr2.setId(2L);
 		pr2.setComputingStandard(173);//172 交易量,173 交易额,174 固定值
-		pr2.setComputingParameter(0.3F);
+		pr2.setComputingParameter(0.3D);
 		
 		//when(pointsRuleService.listByExample(pointsRuleEx)).thenReturn(Stream.of(pr).collect(Collectors.toList()));
 		doReturn(Optional.of(pr2)).when(orderListener).findPointsRule("purchase");

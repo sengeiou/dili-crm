@@ -49,6 +49,11 @@
                             _queryParams='{dd_id:"20"}'/>
                         </td>
                         <td style="padding:5px;">
+                            <input class="easyui-combobox" name="yn" panelWidth="auto" panelHeight="auto" editable="false" id="yn" style="width:100%"
+                                   labelAlign="right" data-options="label:'状态:'"/>
+                            <#comboProvider _id="yn" _provider='ynProvider' />
+                        </td>
+                        <td style="padding:5px;">
                             <input class="easyui-datetimebox" name="startCreated" editable="false" id="startCreated"
                                    labelAlign="right" data-options="label:'创建时间:'" style="width: 250px;"/>
                             - <input class="easyui-datetimebox" editable="false" name="endCreated" id="endCreated"
@@ -184,32 +189,54 @@
             $.messager.alert('警告', '该规则已启用，无需重复启用!');
             return;
         }
-        $.messager.confirm('确认', '您确认想要启用规则吗？', function (r) {
-            if (r) {
-                $.ajax({
-                    type: "POST",
-                    url: "${contextPath}/pointsRule/startPointsRule",
-                    data: {
-                        id: selected.id,
-                        customerType: selected.$_customerType,
-                        businessType: selected.$_businessType,
-                        status: 1
-                    },
-                    processData: true,
-                    dataType: "json",
-                    async: true,
-                    success: function (data) {
-                        if (data.code == "200") {
-                            $("#grid").datagrid("reload");
-                            $('#dlg').dialog('close');
-                        } else {
-                            $.messager.alert('错误', data.result);
+
+        $.ajax({
+            type: "POST",
+            url: "${contextPath}/pointsRule/checkPointsRule",
+            data: {
+                customerType: selected.$_customerType,
+                businessType: selected.$_businessType,
+                yn: 1
+            },
+            processData: true,
+            dataType: "json",
+            async: false,
+            success: function (data) {
+                if (data.code == "200") {
+                    $.messager.confirm('确认', '您确认想要启用规则吗？', function (r) {
+                        if (r) {
+                            $.ajax({
+                                type: "POST",
+                                url: "${contextPath}/pointsRule/startPointsRule",
+                                data: {
+                                    id: selected.id,
+                                    customerType: selected.$_customerType,
+                                    businessType: selected.$_businessType,
+                                    status: 1
+                                },
+                                processData: true,
+                                dataType: "json",
+                                async: true,
+                                success: function (result) {
+                                    if (data.result == "200") {
+                                        $("#grid").datagrid("reload");
+                                        $('#dlg').dialog('close');
+                                    } else {
+                                        $.messager.alert('错误', result.result);
+                                    }
+                                },
+                                error: function () {
+                                    $.messager.alert('错误', '远程访问失败');
+                                }
+                            });
                         }
-                    },
-                    error: function () {
-                        $.messager.alert('错误', '远程访问失败');
-                    }
-                });
+                    });
+                } else {
+                    $.messager.alert('错误', data.result);
+                }
+            },
+            error: function () {
+                $.messager.alert('错误', '远程访问失败');
             }
         });
     }
@@ -269,7 +296,7 @@
     }
 
     function computingStandard(value, row, index) {
-        return row.computingStandard + "*" + row.computingParameter;
+        return row.computingStandard + "*" + parseFloat(row.computingParameter);
     }
 
     function status(value, row, index) {
