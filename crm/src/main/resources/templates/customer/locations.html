@@ -187,7 +187,8 @@
     </div>
     <!--<div class="mapwrap"  style="position: relative">-->
         <div id="mapDiv" style="width:100%;height:100%; "></div>
-        <div  style="position:absolute; top: 50px; left: 20px;background-color: #cccccc;">
+        <div  style="position:absolute; top: 50px; left: 20px;background-color: #fff;  box-shadow: 1px 3px 4px #a09797;font-size: large;padding: 3px;">
+            &nbsp;
             <%for(dd in ddList){ %>
                 <input  type="checkbox" name="type" value="${dd.value}" onclick="queryByType()">${dd.text}&nbsp;&nbsp;
             <%}%>
