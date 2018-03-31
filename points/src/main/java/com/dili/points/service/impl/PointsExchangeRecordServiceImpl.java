@@ -72,6 +72,7 @@ public class PointsExchangeRecordServiceImpl extends BaseServiceImpl<PointsExcha
         }
         //重新设置客户可用积分信息，并修改
         customerPoints.setAvailable(customerPoints.getAvailable() - pointsExchangeRecord.getPoints());
+        customerPoints.setTotal(customerPoints.getTotal()-pointsExchangeRecord.getPoints());
         Example example = new Example(CustomerPoints.class);
         Example.Criteria criteria = example.createCriteria();
         criteria.andEqualTo("id", customerPoints.getId());
