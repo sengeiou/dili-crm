@@ -74,6 +74,9 @@ public class CustomerPointsServiceImpl extends BaseServiceImpl<CustomerPoints, L
 
 	@Override
     public EasyuiPageOutput listCustomerPointsByCustomer(CustomerApiDTO customer) {
+		customer.setSort("created");
+		customer.setOrder("DESC");
+		
 		BaseOutput<EasyuiPageOutput> baseOut = customerRpc.listPage(customer);
 		if (baseOut.isSuccess()) {
 			List<JSONObject> jsonList = baseOut.getData().getRows();

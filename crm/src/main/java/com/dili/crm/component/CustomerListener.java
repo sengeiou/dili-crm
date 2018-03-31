@@ -235,8 +235,10 @@ public class CustomerListener {
 			if(customerItem.getSyncTime()==null) {
 				customerItem.setSyncTime(customerItem.getCreated());
 			}
-			
-			if(customerItem.getSyncTime()!=null&&customerItem.getSyncTime().before(customer.getSyncTime())) {
+			if(customer.getSyncTime()==null) {
+				customer.setSyncTime(new Date());
+			}
+			if(customerItem.getSyncTime().before(customer.getSyncTime())) {
 				String name=StringUtils.trimToEmpty(customer.getName());
 				String phone=StringUtils.trimToEmpty(customer.getPhone());
 				String sex=StringUtils.trimToEmpty(customer.getSex());

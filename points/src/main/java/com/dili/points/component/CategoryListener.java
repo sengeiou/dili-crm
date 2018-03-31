@@ -47,9 +47,9 @@ public class CategoryListener {
 
 				// 将map转换为Category对象
 				Category category = DTOUtils.proxy(new DTO(dataMap), Category.class);
-				if ("add".equals(action)) {
-					categoryService.insertExact(category);
-				} else if ("update".equals(action)) {
+				//if ("add".equals(action)) {
+				//	categoryService.insertExact(category);
+				//} else if ("update".equals(action)) {
 					// 通过条件查询已有的Category
 					Category example = DTOUtils.newDTO(Category.class);
 					example.setCategoryId(category.getCategoryId());
@@ -59,7 +59,7 @@ public class CategoryListener {
 					// 将查询到的id设置到传递过来的对象,以进行更新
 					category.setId(categoryDto.getId());
 					categoryService.saveOrUpdate(category);
-				}
+				//}
 
 			} else {
 				logger.error("数据类型不正确:"+categoryJson);
