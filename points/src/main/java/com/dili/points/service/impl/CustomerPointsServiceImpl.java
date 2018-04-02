@@ -79,6 +79,7 @@ public class CustomerPointsServiceImpl extends BaseServiceImpl<CustomerPoints, L
     public EasyuiPageOutput listCustomerPointsByCustomer(CustomerApiDTO customer) {
 		customer.setSort("created");
 		customer.setOrder("DESC");
+		customer.setYn(1);
 		
 		BaseOutput<EasyuiPageOutput> baseOut = customerRpc.listPage(customer);
 		if (baseOut.isSuccess()) {
