@@ -49,9 +49,12 @@ public class CustomerPointsServiceImpl extends BaseServiceImpl<CustomerPoints, L
 	}
 	// 计算总可用积分
 	private Long calculateTotalPoints() {
-	
-		BigDecimal totalAvailablePoints=commonMapper.selectMap("select sum(available) as available from customer_points").stream().map(m->{return (BigDecimal)m.get("available");}).findFirst().orElse(BigDecimal.ZERO);
-		
+
+		BigDecimal totalAvailablePoints=commonMapper.selectMap("select sum(available) as available from customer_points").stream()
+				.filter(m->m!=null&&m.containsKey("available"))
+				.map(m->{return (BigDecimal)m.get("available");})
+				.findFirst()
+				.orElse(BigDecimal.ZERO);
 		return totalAvailablePoints.longValue();
 	}
 	@Override
