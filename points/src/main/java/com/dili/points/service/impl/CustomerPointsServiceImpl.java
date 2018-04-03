@@ -145,7 +145,7 @@ public class CustomerPointsServiceImpl extends BaseServiceImpl<CustomerPoints, L
 
             List<Map<String,Object>> footers = Lists.newArrayList();
             Map<String,Object>footer = new HashMap<>(2);
-            footer.put("name", "总可用积分");
+            footer.put("name", "总可用积分:");
             footer.put("organizationType", totalAvailablePoints);
             footers.add(footer);
             easyuiPageOutput.setFooter(footers);
