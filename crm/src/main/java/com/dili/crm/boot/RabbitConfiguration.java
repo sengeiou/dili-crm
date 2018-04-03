@@ -40,13 +40,13 @@ public class RabbitConfiguration {
 
     @Bean
     public TopicExchange topicExchange() {
-        return new TopicExchange(DEFAULT_TOPIC_EXCHANGE, true, true);
+        return new TopicExchange(DEFAULT_TOPIC_EXCHANGE, true, false);
     }
 
 
     @Bean
     public Queue randomQueue() {
-        return new Queue(TOPIC_QUEUE, true, false, true);
+        return new Queue(TOPIC_QUEUE, true, false, false);
     }
 
     @Bean

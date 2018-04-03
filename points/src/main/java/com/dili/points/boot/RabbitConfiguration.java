@@ -32,17 +32,17 @@ public class RabbitConfiguration {
 
     @Bean
     public TopicExchange topicExchange() {
-        return new TopicExchange(DEFAULT_TOPIC_EXCHANGE, true, true);
+        return new TopicExchange(DEFAULT_TOPIC_EXCHANGE, true, false);
     }
 
 
     @Bean
     public Queue randomOrderQueue() {
-        return new Queue(ORDER_TOPIC_QUEUE, true, false, true);
+        return new Queue(ORDER_TOPIC_QUEUE, true, false, false);
     }
     @Bean
     public Queue randomCategoryQueue() {
-        return new Queue(CATEGORY_TOPIC_QUEUE, true, false, true);
+        return new Queue(CATEGORY_TOPIC_QUEUE, true, false, false);
     }
     @Bean
     public Binding orderTopicBinding() {
