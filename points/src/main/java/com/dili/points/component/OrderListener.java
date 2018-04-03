@@ -247,6 +247,7 @@ public class OrderListener {
 	 */
 	protected Long findIdByCertificateNumber(String certificateNumber) {
 		CustomerApiDTO dto = DTOUtils.newDTO(CustomerApiDTO.class);
+		dto.setYn(1);
 		dto.setCertificateNumber(certificateNumber);
 		try {
 			BaseOutput<List<Customer>> baseOut = this.customerRpc.list(dto);
@@ -258,6 +259,7 @@ public class OrderListener {
 		} catch (Exception e) {
 			// throw new AppException("查询客户信息出错:"+certificateNumber,e);
 		}
+		logger.warn("未能查询到客户信息.证件号:"+certificateNumber);
 		return null;
 
 	}
@@ -479,7 +481,7 @@ public class OrderListener {
 		//List<OrderItem> orderItemList = orderMap.get(order);
 
 		BigDecimal basePoint = this.calculateBasePoints(pointsRule, order);
-
+		logger.info("基本积分为:"+basePoint.toPlainString());
 		PointsDetailDTO pointsDetail = DTOUtils.newDTO(PointsDetailDTO.class);
 		pointsDetail.setPoints(basePoint.intValue());
 		pointsDetail.setSourceSystem(order.getSourceSystem());
@@ -543,8 +545,10 @@ public class OrderListener {
 		List<BigDecimal> weightList = Arrays.asList(this.calculateWeight(orderWeight, tradeWeightConditionList),
 				this.calculateWeight(totalMoney, tradeTotalMoneyConditionList),
 				this.calculateWeight(payment, tradeTypeConditionList));
+		logger.info("三个积分权重分别为:"+weightList);
 		// 计算积分值
 		BigDecimal points = weightList.stream().reduce(basePoint, (t, u) -> t.multiply(u));
+		logger.info("最终积分为:"+points);
 		// System.out.println(points.intValue());
 		/*
 		 * //根据交易量计算积分
