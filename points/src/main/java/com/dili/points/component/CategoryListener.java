@@ -1,5 +1,6 @@
 package com.dili.points.component;
 
+import java.io.UnsupportedEncodingException;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -7,6 +8,7 @@ import java.util.Optional;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.amqp.core.Message;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnExpression;
@@ -29,8 +31,10 @@ public class CategoryListener {
 	private CategoryService categoryService;
 
 	@RabbitListener(queues = "#{rabbitConfiguration.CATEGORY_TOPIC_QUEUE}")
-	public void processBootTask(String categoryJson) {
-		// System.out.println("PointsListener:"+categoryJson);
+	public void processBootTask(Message message) throws UnsupportedEncodingException {
+		
+		logger.info("收到消息: "+message);
+		String categoryJson=new String(message.getBody(),"UTF-8");
 		// 将Json转换为map
 		Map<String, Object> map = DtoMessageConverter.convertAsMap(categoryJson);
 		if (map.isEmpty()) {

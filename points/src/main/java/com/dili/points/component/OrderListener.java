@@ -1,5 +1,6 @@
 package com.dili.points.component;
 
+import java.io.UnsupportedEncodingException;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -19,6 +20,7 @@ import org.apache.commons.lang3.tuple.Pair;
 import org.apache.commons.lang3.tuple.Triple;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.amqp.core.Message;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnExpression;
@@ -74,7 +76,10 @@ public class OrderListener {
 	CategoryService categoryService;
 
 	@RabbitListener(queues = "#{rabbitConfiguration.ORDER_TOPIC_QUEUE}")
-	public void processBootTask(String orderJson) {
+	public void processBootTask(Message message) throws UnsupportedEncodingException {
+		
+		logger.info("收到消息: "+message);
+		String orderJson=new String(message.getBody(),"UTF-8");
 		try {
 			Map<Order, List<OrderItem>> orderMap = this.convertOrder(orderJson);
 			if (orderMap.isEmpty()) {
@@ -656,7 +661,8 @@ public class OrderListener {
 	 * @return
 	 */
 	protected BigDecimal calculateWeight(BigDecimal conditionNumber, List<RuleCondition> ruleConditionList) {
-
+		//ruleConditionList.stream().collect(Collectors.groupingBy(r->{return r.getConditionType()}));
+		logger.info("conditionNumber="+conditionNumber);
 		for (RuleCondition ruleCondition : ruleConditionList) {
 
 			Float conditionWeight = ruleCondition.getWeight();// 权重
@@ -667,7 +673,7 @@ public class OrderListener {
 			Integer conditonType = ruleCondition.getConditionType();// 区间: 60, 大于等于 20 大于 30, 小于等于 40, 小于 50, 等于 10
 			// 是否进行权重*积分的计算过程
 			boolean hitCondition = false;
-
+			logger.info("startValue="+startValue+",value="+value+",endValue="+endValue+",conditonType="+conditonType+",ruleCondition.getId()="+ruleCondition.getId());
 			// 区间包括两端的值
 			if (conditonType.equals(60) && (conditionNumber.compareTo(new BigDecimal(startValue)) >= 0
 					&& conditionNumber.compareTo(new BigDecimal(endValue)) <= 0)) {

@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.alibaba.fastjson.JSONObject;
 import com.dili.crm.domain.BizNumber;
 import com.dili.crm.service.ICardETLService;
 import com.dili.ss.domain.BaseOutput;
@@ -36,18 +37,18 @@ public class AdminManagementController {
     	try {
     		ObjectMapper objMapper=new ObjectMapper();
     		HashMap<String, Object> map = objMapper.readValue(json, new TypeReference<HashMap<String, Object>>() {});
-    		
+        	if("customer".equals(type)) {
+        		amqpTemplate.convertAndSend("diligrp.crm.topicExchange", "diligrp.crm.addCustomerKey", map);
+        	}else if("order".equals(type)) {
+        		amqpTemplate.convertAndSend("diligrp.points.topicExchange", "diligrp.points.syncOrderKey", map);
+        	}else if("category".equals(type)) {
+        		amqpTemplate.convertAndSend("diligrp.points.topicExchange", "diligrp.points.syncCategoryKey", map);
+        	}else {
+        		return BaseOutput.failure("数据类型错误");
+        	}
+        	
     	}catch(Exception e) {
     		return BaseOutput.failure("json格式错误");
-    	}
-    	if("customer".equals(type)) {
-    		amqpTemplate.convertAndSend("diligrp.crm.topicExchange", "diligrp.crm.addCustomerKey", json);
-    	}else if("order".equals(type)) {
-    		amqpTemplate.convertAndSend("diligrp.points.topicExchange", "diligrp.points.syncOrderKey", json);
-    	}else if("category".equals(type)) {
-    		amqpTemplate.convertAndSend("diligrp.points.topicExchange", "diligrp.points.syncCategoryKey", json);
-    	}else {
-    		return BaseOutput.failure("数据类型错误");
     	}
     	
         return BaseOutput.success("发送成功");

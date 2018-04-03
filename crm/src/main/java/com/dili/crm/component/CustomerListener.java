@@ -24,6 +24,7 @@ import com.dili.ss.util.SystemConfigUtils;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import java.io.UnsupportedEncodingException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -36,6 +37,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.amqp.core.AmqpTemplate;
+import org.springframework.amqp.core.Message;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationListener;
@@ -84,10 +86,12 @@ public class CustomerListener {
 	}
 	*/
 	@RabbitListener(queues = "#{rabbitConfiguration.TOPIC_QUEUE}")
-	public void processBootTask(String customerJson) {
-		
+	public void processBootTask(Message message) throws UnsupportedEncodingException {
+		//if(message.getBody()) {}
+		logger.info("收到消息: "+message);
+		String customerJson=new String(message.getBody(),"UTF-8");
 		try {
-			//将json转换为map结构
+			
 			Optional<Map<String,Object>> mapOpt=	DtoMessageConverter.convertAsMap(customerJson);
 			mapOpt.ifPresent((jsonMap)->{
 				
@@ -109,7 +113,7 @@ public class CustomerListener {
 				
 			});
 		}catch(Exception e) {
-			logger.error("转换Customer对象: {} 出错 {}",customerJson,e);
+			logger.error("转换Customer对象: {} 出错 {}",message,e);
 		}
 	}
 	/** 进行对象转换和验证并将数据插入(更新到数据库)
