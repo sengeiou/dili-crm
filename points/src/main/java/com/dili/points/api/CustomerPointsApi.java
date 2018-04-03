@@ -45,6 +45,7 @@ public class CustomerPointsApi {
     BaseOutput<CustomerPoints> getCustomerPoints(@RequestBody String paramJson) {
         JSONObject jsonObject = JSONObject.parseObject(paramJson);
         CustomerPoints customerPoints = DTOUtils.newDTO(CustomerPoints.class);
+        customerPoints.setYn(1);
         customerPoints.setCertificateNumber(jsonObject.getString("certificateNumber"));
         List<CustomerPoints> customerPointss = customerPointsService.listByExample(customerPoints);
         CustomerPoints result = null;
@@ -71,6 +72,24 @@ public class CustomerPointsApi {
     @RequestMapping(value = "/listCustomerPoints", method = { RequestMethod.POST })
     public @ResponseBody
     BaseOutput<List<CustomerPoints>> listCustomerPoints(CustomerPointsApiDTO customerPointsApiDTO) {
+    	customerPointsApiDTO.setYn(1);
         return BaseOutput.success().setData(customerPointsService.listByExample(customerPointsApiDTO));
+    }
+    
+    
+    @ApiOperation(value = "根据客户ID逻辑删除客户积分信息", notes = "根据客户ID逻辑删除客户积分信息")
+    @ApiImplicitParams({ @ApiImplicitParam(name = "customerId Long", paramType = "form", value = "客户ID", dataType = "Long") })
+    @RequestMapping(value = "/deleteCustomerPoints", method = { RequestMethod.POST })
+    public @ResponseBody
+    BaseOutput<CustomerPoints> deleteCustomerPoints(@RequestBody Long customerId) {
+    	CustomerPoints customerPoints=customerPointsService.get(customerId);
+    	if(customerPoints!=null&&Integer.valueOf(1).equals(customerPoints.getYn())) {
+    		customerPoints.setYn(0);
+    		this.customerPointsService.update(customerPoints);
+    		 return BaseOutput.success().setData(customerPoints);
+    	}
+    	 return BaseOutput.failure("更新客户积分信息失败");
+        
+       
     }
 }

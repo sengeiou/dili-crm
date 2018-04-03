@@ -95,4 +95,11 @@ public interface CustomerPoints extends IBaseDomain {
 
     void setResetTime(Date resetTime);
     
+    @Column(name = "`yn`")
+    @FieldDef(label="是否可用")
+    @EditMode(editor = FieldEditor.Number, required = false)
+    Integer getYn();
+
+    void setYn(Integer yn);
+
 }
