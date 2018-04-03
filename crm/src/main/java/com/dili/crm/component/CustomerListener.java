@@ -226,7 +226,7 @@ public class CustomerListener {
 		Customer customerQueryCondition=DTOUtils.newDTO(Customer.class);
 		customerQueryCondition.setCertificateNumber(customer.getCertificateNumber());
 		customerQueryCondition.setCertificateType(customer.getCertificateType());
-		customerQueryCondition.setOrganizationType(customer.getOrganizationType());
+//		customerQueryCondition.setOrganizationType(customer.getOrganizationType());
 		//用身份证号在crm系统查询用户信息
 		List<Customer>list=this.customerService.list(customerQueryCondition);
 		if(list!=null&&list.size()==1) {
