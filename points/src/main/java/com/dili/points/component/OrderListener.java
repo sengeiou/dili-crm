@@ -284,13 +284,13 @@ public class OrderListener {
 	 * 
 	 * @param pointsRuleId
 	 *            规则id
-	 * @param conditionType
-	 *            条件类型(交易量 10 交易额 20 商品 30 支付方式:40)
+	 * @param weightType
+	 *            权重类型(交易量 10 交易额 20 商品 30 支付方式:40)
 	 * @return 返回可用的条件
 	 */
-	protected List<RuleCondition> findRuleCondition(Long pointsRuleId, Integer conditionType) {
+	protected List<RuleCondition> findRuleCondition(Long pointsRuleId, Integer weightType) {
 		RuleCondition condition = DTOUtils.newDTO(RuleCondition.class);
-		condition.setConditionType(conditionType);// 交易量 10 交易额 20 商品 30 支付方式:40
+		condition.setWeightType(weightType);// 交易量 10 交易额 20 商品 30 支付方式:40
 		condition.setPointRuleId(pointsRuleId);
 		condition.setSort("modified");
 		condition.setOrder("DESC");
