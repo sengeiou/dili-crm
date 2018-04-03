@@ -247,6 +247,7 @@ public class OrderListener {
 	 */
 	protected Long findIdByCertificateNumber(String certificateNumber) {
 		CustomerApiDTO dto = DTOUtils.newDTO(CustomerApiDTO.class);
+		dto.setYn(1);
 		dto.setCertificateNumber(certificateNumber);
 		try {
 			BaseOutput<List<Customer>> baseOut = this.customerRpc.list(dto);
@@ -258,6 +259,7 @@ public class OrderListener {
 		} catch (Exception e) {
 			// throw new AppException("查询客户信息出错:"+certificateNumber,e);
 		}
+		logger.warn("未能查询到客户信息.证件号:"+certificateNumber);
 		return null;
 
 	}
@@ -473,17 +475,17 @@ public class OrderListener {
 		List<PointsDetailDTO> pointsDetailList = new ArrayList<>();
 
 		orderMap.forEach((order, orderItemList) -> {
-
+		
 		
 		// for (Order order : orderMap.keySet()) {
 		//List<OrderItem> orderItemList = orderMap.get(order);
 
 		BigDecimal basePoint = this.calculateBasePoints(pointsRule, order);
-
+		
 		PointsDetailDTO pointsDetail = DTOUtils.newDTO(PointsDetailDTO.class);
 		pointsDetail.setPoints(basePoint.intValue());
 		pointsDetail.setSourceSystem(order.getSourceSystem());
-
+		pointsDetail.setInOut(10);//收入
 		if (this.isSettlementOrder(order)) {
 			pointsDetail.setOrderCode(order.getSettlementCode());
 			pointsDetail.setOrderType("settlementOrder");// settlementOrder结算单号,order主单
@@ -506,9 +508,12 @@ public class OrderListener {
 		// buyer
 		if (isPurchase) {
 			certificateNumber = order.getBuyerCertificateNumber();
+			logger.info("对买家["+certificateNumber+"]进行积分计算");
 		} else {
 			certificateNumber = order.getSellerCertificateNumber();
+			logger.info("对卖家["+certificateNumber+"]进行积分");
 		}
+		logger.info("基本积分值为:"+basePoint.toPlainString());
 		// 交易10 充值20 兑换礼品30 扣减:40 手工调整50
 		pointsDetail.setGenerateWay(10);// 积分产生方式(当前固定为交易)
 		pointsDetail.setCertificateNumber(certificateNumber);
@@ -543,8 +548,10 @@ public class OrderListener {
 		List<BigDecimal> weightList = Arrays.asList(this.calculateWeight(orderWeight, tradeWeightConditionList),
 				this.calculateWeight(totalMoney, tradeTotalMoneyConditionList),
 				this.calculateWeight(payment, tradeTypeConditionList));
+		logger.info("三个积分权重分别为:"+weightList);
 		// 计算积分值
 		BigDecimal points = weightList.stream().reduce(basePoint, (t, u) -> t.multiply(u));
+		logger.info("最终积分为:"+points);
 		// System.out.println(points.intValue());
 		/*
 		 * //根据交易量计算积分
@@ -680,6 +687,7 @@ public class OrderListener {
 			}
 			// 如果有匹配的权重就返回否则返回1
 			if (hitCondition) {
+				logger.info("命中积分规则:"+ruleCondition.getId());
 				return new BigDecimal(conditionWeight);
 			}
 		}
