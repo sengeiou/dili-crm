@@ -56,7 +56,7 @@ public class CustomerNumberProvider extends BatchDisplayTextProviderAdaptor {
 
 	@Override
 	protected String getFkField(Map metaMap) {
-		String field = (String)metaMap.get(FIELD_KEY);
+//		String field = (String)metaMap.get(FIELD_KEY);
 		String fkField = (String)metaMap.get(FK_FILED_KEY);
 		return fkField == null ? "certificateNumber" : fkField;
 	}
