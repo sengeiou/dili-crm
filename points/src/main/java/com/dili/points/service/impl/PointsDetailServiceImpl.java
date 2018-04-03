@@ -93,6 +93,7 @@ public class PointsDetailServiceImpl extends BaseServiceImpl<PointsDetail, Long>
 			cp.setResetTime(new Date());
 			cp.setFrozen(0);
 			cp.setTotal(0);
+			cp.setYn(1);
 			this.customerPointsMapper.insertExact(cp);
 			return cp;
 			// }
@@ -183,6 +184,7 @@ public class PointsDetailServiceImpl extends BaseServiceImpl<PointsDetail, Long>
 			customerPoints.setTotal(customerPoints.getAvailable() + customerPoints.getFrozen());
 
 			pointsDetail.setBalance(customerPoints.getTotal());
+
 			// pointsDetail.setId(System.currentTimeMillis());
 			this.customerPointsMapper.updateByPrimaryKey(customerPoints);
 			// return 0;
