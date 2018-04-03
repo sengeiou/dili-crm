@@ -28,6 +28,7 @@ public class CustomerProvider extends BatchDisplayTextProviderAdaptor {
 	protected List getFkList(List<String> relationIds, Map metaMap) {
 		CustomerApiDTO customerApiDTO = DTOUtils.newDTO(CustomerApiDTO.class);
 		customerApiDTO.setIds(relationIds);
+		customerApiDTO.setYn(1);
 		BaseOutput<List<Customer>> output = customerRpc.list(customerApiDTO);
 		return output.isSuccess() ? output.getData() : null;
 	}
