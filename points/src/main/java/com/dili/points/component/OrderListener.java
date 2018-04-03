@@ -464,7 +464,7 @@ public class OrderListener {
 		if (pointsRule == null) {
 			return Collections.emptyList();
 		}
-
+		logger.info("基于积分规则进行积分 code: "+pointsRule.getCode());
 		// 根据 交易量,交易额 ,支付方式 的权重计算总积分
 
 		// 交易量 10 交易额 20 商品 30 支付方式:40
