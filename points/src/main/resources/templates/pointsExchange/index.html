@@ -113,7 +113,7 @@
             </tr>
             <tr>
                 <td style="padding:5px;">
-                    <input class="easyui-numberbox" name="_exchange_price" id="_exchange_price" style="width:80%" labelAlign="right" min="0" required data-options="label:'&lowast;售价:',onChange:calcTotal" />积分
+                    <input class="easyui-numberbox" name="_exchange_price" id="_exchange_price" style="width:80%" labelAlign="right" min="0" required data-options="label:'&lowast;售价:',onChange:calcTotal,parser:cutZeroFormatter" />积分
                 </td>
             </tr>
             <tr>
@@ -258,7 +258,7 @@
                         $('#_customerForm').form('load', formData);
                         $('#customerDiv').panel("open");
                     }else{
-                        $.messager.alert('系统错误',ret.result);
+                        $.messager.alert('错误',ret.result);
                         $('#customerDiv').panel("close");
                     }
                     disableEasyUiControl('queryBtn',false);

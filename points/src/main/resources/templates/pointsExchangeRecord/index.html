@@ -192,13 +192,16 @@
                     //         del();
                     //     }
                     // },
-                    {
-                        iconCls:'icon-export',
-                        text:'导出',
-                        handler:function(){
-                            doExport('grid');
-                        }
-                    }
+                        <#resource code="exportPointsExchange">
+                            {
+                                iconCls:'icon-export',
+                                text:'导出',
+                                handler:function(){
+                                    doExport('grid');
+                                }
+                            },
+                        </#resource>
+
                 ]
             });
             //表格仅显示下边框

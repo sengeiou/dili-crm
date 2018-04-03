@@ -24,4 +24,7 @@ public interface CustomerPointsRpc {
 
     @POST("/customerPointsApi/listCustomerPoints")
     BaseOutput<List<CustomerPoints>> listCustomerPoints(@VOBody CustomerPointsApiDTO customer);
+    @POST("/customerPointsApi/deleteCustomerPoints")
+    BaseOutput<CustomerPoints> deleteCustomerPoints(@VOBody Long customerId);
+
 }

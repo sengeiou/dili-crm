@@ -55,6 +55,7 @@ public class PointsExchangeController {
         }
         CustomerApiDTO dto = DTOUtils.newDTO(CustomerApiDTO.class);
         dto.setCertificateNumber(idCard);
+        dto.setYn(1);
         BaseOutput<List<Customer>> baseOutput = customerRpc.list(dto);
         if (baseOutput.isSuccess() && CollectionUtils.isNotEmpty(baseOutput.getData())){
             JSONObject object = JSONObject.parseObject(JSON.toJSONString(baseOutput.getData().get(0)));

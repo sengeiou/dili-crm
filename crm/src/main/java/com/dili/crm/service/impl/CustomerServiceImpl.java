@@ -28,6 +28,7 @@ import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.ModelMap;
 import tk.mybatis.mapper.entity.Example;
 
@@ -142,6 +143,7 @@ public class CustomerServiceImpl extends BaseServiceImpl<Customer, Long> impleme
 	}
 
     @Override
+	@Transactional(rollbackFor = Exception.class)
     public BaseOutput deleteWithOutput(Long id) throws Exception {
         UserTicket userTicket = SessionContext.getSessionContext().getUserTicket();
         if(userTicket == null){
@@ -159,6 +161,8 @@ public class CustomerServiceImpl extends BaseServiceImpl<Customer, Long> impleme
         condtion.setYn(0);
         condtion.setId(id);
         super.updateSelective(condtion);
+        //远程删除客户积分信息
+		customerPointsRpc.deleteCustomerPoints(condtion.getId());
         return BaseOutput.success("删除成功");
     }
 
