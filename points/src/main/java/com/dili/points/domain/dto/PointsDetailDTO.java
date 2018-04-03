@@ -23,6 +23,11 @@ public interface PointsDetailDTO extends PointsDetail {
 	Integer getNeedRecover();
     void setNeedRecover(Integer needRecover);
     
+    //是否异常(0否,1是)
+   	@Transient
+   	Integer getException();
+       void setException(Integer exception);
+    
 
 	@Column(name = "`created`")
 	@FieldDef(label="查询条件-开始时间")

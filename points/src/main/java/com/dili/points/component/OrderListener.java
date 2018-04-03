@@ -538,6 +538,7 @@ public class OrderListener {
 		if (customerId != null) {
 			pointsDetail.setCustomerId(customerId);
 		} else {
+			pointsDetail.setException(1);
 			pointsDetail.setNeedRecover(1);// 将会保存到异常积分表,并在某个时间进行恢复
 		}
 

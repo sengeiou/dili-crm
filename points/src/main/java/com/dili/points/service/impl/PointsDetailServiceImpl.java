@@ -52,14 +52,8 @@ public class PointsDetailServiceImpl extends BaseServiceImpl<PointsDetail, Long>
 
 	@Transactional(propagation = Propagation.REQUIRED)
 	public int batchInsertPointsDetailDTO(List<PointsDetailDTO> pointsDetail) {
-		Map<Boolean,List<PointsDetailDTO>>map=pointsDetail.stream().collect(Collectors.partitioningBy(t -> t.getCustomerId()!=null));
-		//保存积分详情
-		map.get(true).forEach(p -> {
-			this.insert(p);
-		});
-		//保存积分异常详情
-		map.get(false).forEach(p -> {
-			this.insertPointsException(p);//insert error pointsdetails
+		pointsDetail.stream().forEach(p->{
+			this.insert(p);//insert error pointsdetails
 		});
 		return pointsDetail.size();
 	}
@@ -174,7 +168,10 @@ public class PointsDetailServiceImpl extends BaseServiceImpl<PointsDetail, Long>
 		customerPoints.setDayPoints(dayPoints);
 
 		
-		if(points!=0) {
+		if(pointsDetail.getException()!=null&&pointsDetail.getException().equals(1)) {
+			//异常积分信息保存
+			return this.insertPointsException(pointsDetail);
+		}else {
 			// 计算用户可用积分和总积分
 			customerPoints.setAvailable(customerPoints.getAvailable() + points);
 			// // 如果可用积分小于0,则重设置为0
@@ -189,10 +186,7 @@ public class PointsDetailServiceImpl extends BaseServiceImpl<PointsDetail, Long>
 			this.customerPointsMapper.updateByPrimaryKey(customerPoints);
 			// return 0;
 			// pointsDetail.setId(null);
-			return super.insertSelective(pointsDetail);			
-		}else {
-			//异常积分信息保存
-			return this.insertPointsException(pointsDetail);
+			return super.insertSelective(pointsDetail);		
 		}
 		
 
