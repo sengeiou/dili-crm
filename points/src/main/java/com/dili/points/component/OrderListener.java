@@ -483,7 +483,7 @@ public class OrderListener {
 		PointsDetailDTO pointsDetail = DTOUtils.newDTO(PointsDetailDTO.class);
 		pointsDetail.setPoints(basePoint.intValue());
 		pointsDetail.setSourceSystem(order.getSourceSystem());
-
+		pointsDetail.setInOut(10);//收入
 		if (this.isSettlementOrder(order)) {
 			pointsDetail.setOrderCode(order.getSettlementCode());
 			pointsDetail.setOrderType("settlementOrder");// settlementOrder结算单号,order主单
