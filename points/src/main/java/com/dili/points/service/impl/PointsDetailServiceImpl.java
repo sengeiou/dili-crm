@@ -182,7 +182,7 @@ public class PointsDetailServiceImpl extends BaseServiceImpl<PointsDetail, Long>
 			// customerPoints.setAvailable(0);
 			// }
 			customerPoints.setTotal(customerPoints.getAvailable() + customerPoints.getFrozen());
-
+			pointsDetail.setPoints(points);
 			pointsDetail.setBalance(customerPoints.getTotal());
 
 			// pointsDetail.setId(System.currentTimeMillis());
