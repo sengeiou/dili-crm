@@ -258,6 +258,7 @@ public class OrderListener {
 		} catch (Exception e) {
 			// throw new AppException("查询客户信息出错:"+certificateNumber,e);
 		}
+		logger.warn("未能查询到客户信息.证件号:"+certificateNumber);
 		return null;
 
 	}
