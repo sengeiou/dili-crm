@@ -1,8 +1,12 @@
 package com.dili.points.component;
 
+import java.io.UnsupportedEncodingException;
+
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
+import org.springframework.amqp.core.Message;
+import org.springframework.amqp.core.MessageProperties;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
@@ -22,7 +26,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 public class CategoryListenerTest {
 	 @InjectMocks @Autowired CategoryListener categoryListener;
 	 @Test
-	 public void test() throws JsonProcessingException {
+	 public void test() throws JsonProcessingException, UnsupportedEncodingException {
 		 Category category=DTOUtils.newDTO(Category.class);
 		 category.setCategoryId("1");
 		 category.setParentCategoryId(null);
@@ -31,8 +35,8 @@ public class CategoryListenerTest {
 		 DTO map= DTOUtils.go(category);
 		 map.put("action", "update");
 		 ObjectMapper objMapper=new ObjectMapper();
-		 String categoryJson=objMapper.writeValueAsString(map);
-		 this.categoryListener.processBootTask(categoryJson);
+		 Message message=new Message(objMapper.writeValueAsBytes(map), new MessageProperties());
+		 this.categoryListener.processBootTask(message);
 		 
 		 
 	 }
