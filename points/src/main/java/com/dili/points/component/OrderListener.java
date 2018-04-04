@@ -386,7 +386,15 @@ public class OrderListener {
 			return false;
 		}
 	}
-
+	private Optional<Category> findCategory(Long categoryId,String sourceSystem) {
+		if(categoryId==null||StringUtils.trimToNull(sourceSystem)==null) {
+			return Optional.empty();
+		}
+		Category example=DTOUtils.newDTO(Category.class);
+		example.setCategoryId(String.valueOf(categoryId));
+		example.setSourceSystem(sourceSystem);
+		return this.categoryService.listByExample(example).stream().findFirst();
+	}
 	/**
 	 * 根据订单类型和订单号,以及订单列表,拼装备注信息
 	 * 
@@ -409,10 +417,11 @@ public class OrderListener {
 			}
 
 			// 查询品类
-			Category category = categoryService.get(orderItem.getCategoryId());
-			if (category != null) {
-				categoryNameList.add(category.getName());
+			Optional<Category>opt=this.findCategory(orderItem.getCategoryId(), order.getSourceSystem());
+			if(opt.isPresent()) {
+				categoryNameList.add(opt.get().getName());
 			}
+		
 		}
 		if (!categoryNameList.isEmpty()) {
 			notesStr.append("交易");
