@@ -22,6 +22,36 @@
 		<version>2.0.0</version>
 	</parent>
 
+	<profiles>
+		<profile>
+			<id>dev</id>
+			<activation>
+				<activeByDefault>true</activeByDefault>
+			</activation>
+			<properties>
+				<build.profile.id>dev</build.profile.id>
+			</properties>
+		</profile>
+		<profile>
+			<id>test</id>
+			<properties>
+				<build.profile.id>test</build.profile.id>
+			</properties>
+		</profile>
+		<profile>
+			<id>pre</id>
+			<properties>
+				<build.profile.id>pre</build.profile.id>
+			</properties>
+		</profile>
+		<profile>
+			<id>prod</id>
+			<properties>
+				<build.profile.id>prod</build.profile.id>
+			</properties>
+		</profile>
+	</profiles>
+
 	<build>
 		<plugins>
 			<plugin>
