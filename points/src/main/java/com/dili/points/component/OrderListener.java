@@ -95,6 +95,15 @@ public class OrderListener {
 			this.calAndSaveData(orderMap);
 		} catch (Exception e) {
 			logger.error("根据订单信息" + orderJson + ",计算积分出错", e);
+			PointsDetailDTO detailDTO=DTOUtils.newDTO(PointsDetailDTO.class);
+			detailDTO.setNotes("异常信息:"+e.getMessage()+",数据:"+orderJson);
+			detailDTO.setException(1);
+			detailDTO.setNeedRecover(0);
+			try {
+				this.pointsDetailService.insert(detailDTO);
+			}catch(Exception e2) {
+				logger.error("保存异常信息出错:"+e2.getMessage(),e2);	
+			}
 		}
 	}
 	protected List<PointsDetailDTO> exceptionalPointsDetails(Map<Order, List<OrderItem>> orderMap,String orderJson) {
