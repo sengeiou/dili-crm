@@ -619,7 +619,7 @@ public class OrderListener {
 		logger.info("conditionNumber="+conditionNumber);
 		for (RuleCondition ruleCondition : ruleConditionList) {
 
-			Float conditionWeight = ruleCondition.getWeight();// 权重
+			String conditionWeight = ruleCondition.getWeight();// 权重
 			String startValue = ruleCondition.getStartValue();// 开始值
 			String endValue = ruleCondition.getEndValue();// 结束值
 			String value = ruleCondition.getValue();// 条件值

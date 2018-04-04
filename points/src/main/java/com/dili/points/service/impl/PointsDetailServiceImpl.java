@@ -170,6 +170,7 @@ public class PointsDetailServiceImpl extends BaseServiceImpl<PointsDetail, Long>
 				dayPoints = 0;
 			} 
 		}
+
 		
 		customerPoints.setResetTime(new Date());
 		customerPoints.setModified(new Date());
@@ -186,12 +187,16 @@ public class PointsDetailServiceImpl extends BaseServiceImpl<PointsDetail, Long>
 		customerPoints.setTotal(customerPoints.getAvailable() + customerPoints.getFrozen());
 		pointsDetail.setPoints(points);
 		pointsDetail.setBalance(customerPoints.getTotal());
-
-		// pointsDetail.setId(System.currentTimeMillis());
-		this.customerPointsMapper.updateByPrimaryKey(customerPoints);
-		// return 0;
-		// pointsDetail.setId(null);
-		return super.insertSelective(pointsDetail);		
+		if(points==0) {
+			return this.insertPointsException(pointsDetail);
+		}else {
+			// pointsDetail.setId(System.currentTimeMillis());
+			this.customerPointsMapper.updateByPrimaryKey(customerPoints);
+			// return 0;
+			// pointsDetail.setId(null);
+			return super.insertSelective(pointsDetail);		
+				
+		}
 		
 		
 

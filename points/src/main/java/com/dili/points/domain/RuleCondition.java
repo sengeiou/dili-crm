@@ -72,9 +72,9 @@ public interface RuleCondition extends IBaseDomain {
     @Column(name = "`weight`")
     @FieldDef(label="权重")
     @EditMode(editor = FieldEditor.Text, required = false)
-    Float getWeight();
+    String getWeight();
 
-    void setWeight(Float weight);
+    void setWeight(String weight);
 
     @Column(name = "`created_id`")
     @FieldDef(label="创建人")
