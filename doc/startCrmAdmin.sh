@@ -1,2 +1,2 @@
-nohup java -jar crmadmin-1.0.0.RELEASE.jar > admin-cmd.out 2>&1 &
-echo Start Success!
+nohup java -jar crmadmin-2.0.0.jar > crmadmin-cmd.out 2>&1 &
+echo crmadmin Start Success!

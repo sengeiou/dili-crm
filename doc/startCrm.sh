@@ -1,2 +1,2 @@
-nohup java -jar crm-1.0.0.RELEASE.jar > crm-cmd.out 2>&1 &
-echo Start Success!
+nohup java -jar crm-2.0.0.jar > crm-cmd.out 2>&1 &
+echo crm Start Success!
