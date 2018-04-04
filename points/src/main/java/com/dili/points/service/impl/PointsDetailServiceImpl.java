@@ -89,6 +89,7 @@ public class PointsDetailServiceImpl extends BaseServiceImpl<PointsDetail, Long>
 			cp.setCreated(new Date());
 			cp.setModified(new Date());
 			cp.setResetTime(new Date());
+			cp.setDayPoints(0);
 			cp.setFrozen(0);
 			cp.setTotal(0);
 			cp.setYn(1);
@@ -116,6 +117,9 @@ public class PointsDetailServiceImpl extends BaseServiceImpl<PointsDetail, Long>
 		
 		
 		Integer dayPoints = customerPoints.getDayPoints();// 当天积分总和
+		if(dayPoints==null) {
+			dayPoints=0;
+		}
 		//修改时间
 		Instant instant=Instant.now();
 		if(customerPoints.getResetTime()!=null) {
