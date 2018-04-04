@@ -68,6 +68,10 @@ public class PointsDetailServiceImpl extends BaseServiceImpl<PointsDetail, Long>
 	}
 	@Transactional(propagation = Propagation.REQUIRED)
 	public int insert(PointsDetailDTO pointsDetail) { 
+		if(pointsDetail.getException()!=null&&pointsDetail.getException().equals(1)) {
+			//异常积分信息保存
+			return this.insertPointsException(pointsDetail);
+		}
 		Long customerId = pointsDetail.getCustomerId();
 		CustomerPoints example = DTOUtils.newDTO(CustomerPoints.class);
 		example.setCertificateNumber(pointsDetail.getCertificateNumber());
@@ -168,26 +172,23 @@ public class PointsDetailServiceImpl extends BaseServiceImpl<PointsDetail, Long>
 		customerPoints.setDayPoints(dayPoints);
 
 		
-		if(pointsDetail.getException()!=null&&pointsDetail.getException().equals(1)) {
-			//异常积分信息保存
-			return this.insertPointsException(pointsDetail);
-		}else {
-			// 计算用户可用积分和总积分
-			customerPoints.setAvailable(customerPoints.getAvailable() + points);
-			// // 如果可用积分小于0,则重设置为0
-			// if (customerPoints.getAvailable() < 0) {
-			// customerPoints.setAvailable(0);
-			// }
-			customerPoints.setTotal(customerPoints.getAvailable() + customerPoints.getFrozen());
-			pointsDetail.setPoints(points);
-			pointsDetail.setBalance(customerPoints.getTotal());
 
-			// pointsDetail.setId(System.currentTimeMillis());
-			this.customerPointsMapper.updateByPrimaryKey(customerPoints);
-			// return 0;
-			// pointsDetail.setId(null);
-			return super.insertSelective(pointsDetail);		
-		}
+		// 计算用户可用积分和总积分
+		customerPoints.setAvailable(customerPoints.getAvailable() + points);
+		// // 如果可用积分小于0,则重设置为0
+		// if (customerPoints.getAvailable() < 0) {
+		// customerPoints.setAvailable(0);
+		// }
+		customerPoints.setTotal(customerPoints.getAvailable() + customerPoints.getFrozen());
+		pointsDetail.setPoints(points);
+		pointsDetail.setBalance(customerPoints.getTotal());
+
+		// pointsDetail.setId(System.currentTimeMillis());
+		this.customerPointsMapper.updateByPrimaryKey(customerPoints);
+		// return 0;
+		// pointsDetail.setId(null);
+		return super.insertSelective(pointsDetail);		
+		
 		
 
 	}

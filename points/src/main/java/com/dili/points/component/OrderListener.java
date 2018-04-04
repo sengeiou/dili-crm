@@ -88,12 +88,33 @@ public class OrderListener {
 			}
 			if (!this.checkData(orderMap)) {
 				logger.error("收到的交易订单信息数据错误: " + orderJson);
+				List<PointsDetailDTO> list=this.exceptionalPointsDetails(orderMap, orderJson);
+				this.pointsDetailService.batchInsertPointsDetailDTO(list);
 				return;
 			}
 			this.calAndSaveData(orderMap);
 		} catch (Exception e) {
 			logger.error("根据订单信息" + orderJson + ",计算积分出错", e);
 		}
+	}
+	protected List<PointsDetailDTO> exceptionalPointsDetails(Map<Order, List<OrderItem>> orderMap,String orderJson) {
+		List<PointsDetailDTO>list=new ArrayList<>();
+		orderMap.forEach((order,item)->{
+			PointsDetailDTO detailDTO=DTOUtils.newDTO(PointsDetailDTO.class);
+			
+			if(this.isSettlementOrder(order)) {
+				detailDTO.setOrderCode(order.getSettlementCode());
+			}else {
+				detailDTO.setOrderCode(order.getCode());
+			}
+			detailDTO.setSourceSystem(order.getSourceSystem());
+			detailDTO.setException(1);
+			detailDTO.setNotes("数据格式错误:"+orderJson);
+			detailDTO.setNeedRecover(0);
+			list.add(detailDTO);
+		});
+		return list;
+		
 	}
 
 	protected boolean checkData(Map<Order, List<OrderItem>> orderMap) {
@@ -545,6 +566,7 @@ public class OrderListener {
 			if (customerId != null) {
 				pointsDetail.setCustomerId(customerId);
 			} else {
+				pointsDetail.setNotes("未能通过证件号["+certificateNumber+"]查询到客户信息");
 				pointsDetail.setException(1);
 				pointsDetail.setNeedRecover(1);// 将会保存到异常积分表,并在某个时间进行恢复
 			}
