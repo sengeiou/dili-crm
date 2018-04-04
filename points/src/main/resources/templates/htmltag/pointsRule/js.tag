@@ -163,7 +163,7 @@
         var row = {
             value: $("#payConditionType").combobox("getValue"),
             weight: $("#payWeight").numberbox('getValue'),
-            conditionType: $("#payConditionType").combobox("getValue"),
+            conditionType: 10,
             displayText: $("#payConditionType").combobox("getText"),
             modified: new Date()
         };
