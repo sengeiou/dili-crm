@@ -101,6 +101,12 @@
 			</properties>
 		</profile>
 		<profile>
+			<id>pre</id>
+			<properties>
+				<build.profile.id>pre</build.profile.id>
+			</properties>
+		</profile>
+		<profile>
 			<id>prod</id>
 			<properties>
 				<build.profile.id>prod</build.profile.id>
