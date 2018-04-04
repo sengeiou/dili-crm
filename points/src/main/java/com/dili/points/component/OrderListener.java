@@ -117,12 +117,12 @@ public class OrderListener {
 			if (order.getTotalMoney() == null) {
 				return false;
 			}
-			if (order.getBuyerCardNo() == null) {
-				return false;
-			}
-			if (order.getSellerCardNo() == null) {
-				return false;
-			}
+//			if (order.getBuyerCardNo() == null) {
+//				return false;
+//			}
+//			if (order.getSellerCardNo() == null) {
+//				return false;
+//			}
 			if (StringUtils.trimToNull(order.getSellerCertificateNumber()) == null) {
 				return false;
 			}
