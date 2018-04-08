@@ -286,38 +286,39 @@
                 if (ck.length == 0){
                     //目前发现，clearOverlays貌似不能正常清除自定义覆盖物
                     // map.clearOverlays();
-                    var overlays = map.getOverlays();
-                    if(overlays.length > 0){
-                        for (i = 0; i < overlays.length; i++) {
-                            // overlays[i].hide();
-                            map.removeOverlay(overlays[i]);
-                        }
-                    }
-                    //标记
-                    if (markerClusterer) {
-                        // markerClusterer.clearMarkers();
-                        var mcs = markerClusterer.getMarkers();
-                        if(mcs.length > 0){
-                            markerClusterer.removeMarkers(mcs);
-                        }
-                    }
-
+                    markerClusterer.clearMarkers();
+//                    var overlays = map.getOverlays();
+//                    if(overlays.length > 0){
+//                        for (i = 0; i < overlays.length; i++) {
+//                            // overlays[i].hide();
+//                            map.removeOverlay(overlays[i]);
+//                        }
+//                    }
+//                    //标记
+//                    if (markerClusterer) {
+//                        // markerClusterer.clearMarkers();
+//                        var mcs = markerClusterer.getMarkers();
+//                        if(mcs.length > 0){
+//                            markerClusterer.removeMarkers(mcs);
+//                        }
+//                    }
                 }else{
                     var markers = [];
                     var chk_value =[];//定义一个数组
                     ck.each(function(){//遍历
                         chk_value.push($(this).val());//将选中的值添加到数组chk_value中
                     });
+                    var pt, marker, label;
                     for (var i = 0; i < customerAddresses.length; i++) {
                         var customerAddress = customerAddresses[i];
                         if ((null == customerAddress.type && $.inArray("other", chk_value) >=0) || $.inArray(customerAddress.type, chk_value) >=0 ){
-                            var pt = new BMap.Point(customerAddress.operatingLng,customerAddress.operatingLat);
-                            var marker = new BMap.Marker(pt, {icon: getLocationIcon(customerAddress.type)});
+                            pt = new BMap.Point(customerAddress.operatingLng,customerAddress.operatingLat);
+                            marker = new BMap.Marker(pt, {icon: getLocationIcon(customerAddress.type)});
                             //绑定自定义属性
                             marker.meta={id:customerAddress.id, name:customerAddress.name};
-                            map.addOverlay(marker);
+//                            map.addOverlay(marker);
                             //标签显示在图标下方
-                            var label = new window.BMap.Label(customerAddress.name, { offset: new window.BMap.Size(-10, 25) });
+                            label = new window.BMap.Label(customerAddress.name, { offset: new window.BMap.Size(-10, 25) });
                             label.setStyle({border:'0px',background: "transparent none repeat"});
                             marker.setLabel(label);
                             //鼠标悬停时显示
@@ -352,6 +353,7 @@
                             markers.push(marker);
                         }
                     }
+//                    alert(markers.length);
                     //最简单的用法，生成一个marker数组，然后调用markerClusterer类即可。
                     markerClusterer = new BMapLib.MarkerClusterer(map, {markers:markers});
                 }

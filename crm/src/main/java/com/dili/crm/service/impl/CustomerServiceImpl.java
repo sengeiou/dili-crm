@@ -35,6 +35,7 @@ import tk.mybatis.mapper.entity.Example;
 import java.net.URLEncoder;
 import java.text.SimpleDateFormat;
 import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * 由MyBatis Generator工具自动生成
@@ -349,7 +350,24 @@ public class CustomerServiceImpl extends BaseServiceImpl<Customer, Long> impleme
 			condition.append(" )");
 			criteria.andCondition(condition.toString());
 		}
-		return getActualDao().selectByExample(example);
+		return getActualDao().selectByExample(example)
+				.parallelStream()
+				.map(customer -> {
+					DTO dto = DTOUtils.go(customer);
+					String name = customer.getName();
+					Long id = customer.getId();
+					String type = customer.getType();
+					String operatingLat = customer.getOperatingLat();
+					String operatingLng = customer.getOperatingLng();
+					dto.clear();
+					customer.setId(id);
+					customer.setType(type);
+					customer.setOperatingLat(operatingLat);
+					customer.setOperatingLng(operatingLng);
+					customer.setName(name);
+					return customer;
+				})
+				.collect(Collectors.toList());
 	}
 
 
