@@ -294,11 +294,11 @@
         }
         //客户表格查询
         function queryGrid() {
-            var opts = $("#grid").treegrid("options").url = "${contextPath}/customer/listPage";
+            $("#grid").treegrid("options").url = "${contextPath}/customer/listPage";
             if(!$('#form').form("validate")){
                 return;
             }
-            $("#grid").treegrid("load", bindGridMeta2Form("grid", "form"));
+            $("#grid").treegrid("load", bindTreegridMeta2Form("grid", "form"));
         }
 
 
