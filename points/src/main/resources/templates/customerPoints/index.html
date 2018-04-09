@@ -320,6 +320,9 @@
             if(!$('#form').form("validate")){
                 return;
             }
+            //查询时重置排序
+            opts.sortName = "created";
+            opts.sortOrder = "desc";
             $("#grid").datagrid("load", bindGridMeta2Form("grid", "form"));
         }
 

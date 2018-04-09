@@ -23,6 +23,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
+import com.dili.ss.exception.AppException;
 import com.dili.ss.metadata.ValueProviderUtils;
 import com.github.pagehelper.PageHelper;
 import com.google.common.collect.Lists;
@@ -82,19 +83,84 @@ public class CustomerPointsServiceImpl extends BaseServiceImpl<CustomerPoints, L
 		//这里先记录下来，后面会用于积分表的排序
 		String sort = customer.getSort();
 		String order = customer.getOrder();
+		//记录每页条数和页数
+		Integer rows = customer.getRows();
+		Integer page = customer.getPage();
+		//记录列表总数
+		int total = 0;
+		//客户表不能按可用积分列表，所以要去掉
 		if("available".equals(sort)){
 			customer.setSort(null);
 			customer.setOrder(null);
 		}
 		customer.setYn(1);
-		
+
+		if ("available".equalsIgnoreCase(sort)) {
+			//关联积分表只能全查客户
+			customer.setRows(null);
+			customer.setPage(null);
+		}
 		BaseOutput<EasyuiPageOutput> baseOut = customerRpc.listPage(customer);
-		if (baseOut.isSuccess()) {
-			List<JSONObject> jsonList = baseOut.getData().getRows();
-			List<Customer> customerList = jsonList.stream().map(json -> {
-				return (Customer) DTOUtils.as(new DTO(json), Customer.class);
+		if (!baseOut.isSuccess()) {
+			throw new AppException("远程调用失败:"+baseOut.getResult());
+//			return new EasyuiPageOutput(0, Collections.emptyList());
+		}
+		List<JSONObject> jsonList = baseOut.getData().getRows();
+		//构建客户列表
+		List<Customer> customerList = jsonList.stream().map(json -> {
+			return (Customer) DTOUtils.as(new DTO(json), Customer.class);
+		}).collect(Collectors.toList());
+		//客户积分列表的最终结果
+		List<CustomerPointsDTO> resultList = Lists.newArrayList();
+		//如果按可用积分排序，需要以客户积分表为主表，否则以客户表为主表
+		if ("available".equalsIgnoreCase(sort)) {
+			//构建客户积分查询条件
+			CustomerPointsDTO example = DTOUtils.newDTO(CustomerPointsDTO.class);
+			example.setPage(customer.getPage());
+			example.setRows(customer.getRows());
+			example.setOrder(order);
+			example.setSort("available");
+			List<CustomerPoints> customerPointsList = this.listByExample(example);
+			//构建客户证件号为key，客户积分为value的Map
+			Map<String, CustomerPoints> certificateNumber2CustomerPointsMap = customerPointsList.stream()
+					.collect(Collectors.toMap(CustomerPoints::getCertificateNumber, c -> c));
+			//先根据客户积分表的数据构建客户积分结果列表
+			resultList = customerList.stream().map(c -> {
+				CustomerPointsDTO cpdto = DTOUtils.newDTO(CustomerPointsDTO.class);
+				CustomerPoints customerPoints = certificateNumber2CustomerPointsMap.get(c.getCertificateNumber());
+				if (customerPoints == null) {
+					cpdto.setId(c.getId());
+					cpdto.setCertificateNumber(c.getCertificateNumber());
+					cpdto.setAvailable(0);
+					cpdto.setFrozen(0);
+					cpdto.setTotal(0);
+				} else {
+					cpdto = DTOUtils.as(customerPoints, CustomerPointsDTO.class);
+				}
+				// 将客户的其他信息(名字,组织类型等信息附加到积分信息)
+				cpdto.setName(c.getName());
+				cpdto.setOrganizationType(c.getOrganizationType());
+				cpdto.setProfession(c.getProfession());
+				cpdto.setType(c.getType());
+				cpdto.setCertificateType(c.getCertificateType());
+				cpdto.setPhone(c.getPhone());
+				return cpdto;
 			}).collect(Collectors.toList());
-			
+			//排序
+			if("desc".equalsIgnoreCase(order)){
+				resultList.sort(Comparator.comparingInt(CustomerPointsDTO::getAvailable).reversed());
+			}else{
+				resultList.sort(Comparator.comparingInt(CustomerPointsDTO::getAvailable));
+			}
+			if(rows != null && page != null) {
+				//根据分页信息进行本地分页
+				int startIndex = (page - 1) * rows;
+				resultList.subList(startIndex, startIndex + rows);
+			}
+		} else {
+			//先设置总数
+			total = baseOut.getData().getTotal();
+			//客户列表的证件号码
 			List<String> certificateNumbers = customerList.stream()
 					.map(Customer::getCertificateNumber)
 					.collect(Collectors.toList());
@@ -103,23 +169,24 @@ public class CustomerPointsServiceImpl extends BaseServiceImpl<CustomerPoints, L
 			example.setCertificateNumbers(certificateNumbers);
 			example.setPage(customer.getPage());
 			example.setRows(customer.getRows());
-//			example.setOrder(order);
-//			example.setSort(sort);
+			if ("available".equalsIgnoreCase(sort)) {
+				example.setOrder(order);
+				example.setSort("available");
+			}
 			List<CustomerPoints> customerPointss = this.listByExample(example);
 			Map<String, CustomerPoints> certificateNumber2CustomerPointsMap = customerPointss.stream()
 					.collect(Collectors.toMap(CustomerPoints::getCertificateNumber, cp -> cp));
-
-			List<CustomerPointsDTO> resultList = customerList.stream().map(c -> {
+			resultList = customerList.stream().map(c -> {
 				CustomerPoints cp = certificateNumber2CustomerPointsMap.get(c.getCertificateNumber());
 				// 如果客户没有对应的积分信息,则创建一个新的默认积分信息显示到页面
-				CustomerPointsDTO cpdto =DTOUtils.newDTO(CustomerPointsDTO.class);
+				CustomerPointsDTO cpdto = DTOUtils.newDTO(CustomerPointsDTO.class);
 				if (cp == null) {
 					cpdto.setId(c.getId());
 					cpdto.setCertificateNumber(c.getCertificateNumber());
 					cpdto.setAvailable(0);
 					cpdto.setFrozen(0);
 					cpdto.setTotal(0);
-				}else {
+				} else {
 					cpdto = DTOUtils.link(cpdto, cp, CustomerPointsDTO.class);
 				}
 				// 将客户的其他信息(名字,组织类型等信息附加到积分信息)
@@ -132,14 +199,8 @@ public class CustomerPointsServiceImpl extends BaseServiceImpl<CustomerPoints, L
 				return cpdto;
 			})
 			.collect(Collectors.toList());
-			//如果按可用积分排序
-			if("available".equalsIgnoreCase(sort)){
-				if("desc".equalsIgnoreCase(order)){
-					resultList.sort(Comparator.comparingInt(CustomerPointsDTO::getAvailable).reversed());
-				}else{
-					resultList.sort(Comparator.comparingInt(CustomerPointsDTO::getAvailable));
-				}
-			}
+
+		}
 
             //提供者转换
             List<Map> datas = new ArrayList<>();
@@ -148,8 +209,8 @@ public class CustomerPointsServiceImpl extends BaseServiceImpl<CustomerPoints, L
             } catch (Exception e) {
                LOG.error("查询客户积分出错",e);
             }
-            EasyuiPageOutput easyuiPageOutput = new EasyuiPageOutput(baseOut.getData().getTotal(), datas);
-
+            EasyuiPageOutput easyuiPageOutput = new EasyuiPageOutput(total, datas);
+			//页脚汇总
             List<Map<String,Object>> footers = Lists.newArrayList();
             Map<String,Object>footer = new HashMap<>(2);
             footer.put("name", "总可用积分:");
@@ -157,8 +218,8 @@ public class CustomerPointsServiceImpl extends BaseServiceImpl<CustomerPoints, L
             footers.add(footer);
             easyuiPageOutput.setFooter(footers);
             return easyuiPageOutput;
-		}
-		return new EasyuiPageOutput(0, Collections.emptyList());
+
+
 
 	}
 }
