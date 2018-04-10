@@ -200,7 +200,7 @@ public class ICardETLServiceImpl implements ICardETLService{
 		SystemConfig systemConfig=DTOUtils.newDTO(SystemConfig.class);
 		systemConfig.setCode("toll_latest_time");
 		List<SystemConfig>list=this.systemConfigService.list(systemConfig);
-		if(list!=null&&list.size()==1) {
+		if(list!=null&&list.size()>=1) {
 			systemConfig=list.get(0);
 		}else {
 			systemConfig.setName("最后一个同步的神农客户信息的时间");
@@ -220,7 +220,7 @@ public class ICardETLServiceImpl implements ICardETLService{
 		systemConfig.setCode("settlement_latest_time");
 		
 		List<SystemConfig>list=this.systemConfigService.list(systemConfig);
-		if(list!=null&&list.size()==1) {
+		if(list!=null&&list.size()>=1) {
 			systemConfig=list.get(0);
 		}else {
 			systemConfig.setName("最后一个同步的电子结算客户信息的时间");
