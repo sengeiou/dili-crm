@@ -306,11 +306,11 @@ public class OrderListener {
 	 *            (卖家sale,买家purchase)
 	 * @return 返回规则
 	 */
-	protected Optional<PointsRule> findPointsRule(String customerType) {
+	protected Optional<PointsRule> findPointsRule(String customerType, Integer businessType) {
 		PointsRule pointsRuleEx = DTOUtils.newDTO(PointsRule.class);
 		pointsRuleEx.setYn(1);
 		pointsRuleEx.setCustomerType(customerType);
-		pointsRuleEx.setBusinessType(10);// 10交易,20充值,30开卡
+		pointsRuleEx.setBusinessType(businessType);// 10交易,20充值,30开卡
 		return this.pointsRuleService.listByExample(pointsRuleEx).stream().findFirst();
 	}
 
@@ -504,21 +504,22 @@ public class OrderListener {
 //		} else {
 //			return Collections.emptyList();
 //		}
-		PointsRule pointsRule = this.findPointsRule(customerType).orElse(null);
-		if (pointsRule == null) {
-			return Collections.emptyList();
-		}
-		logger.info("基于积分规则进行积分 code: "+pointsRule.getCode());
-		// 根据 交易量,交易额 ,支付方式 的权重计算总积分
 
-		// 交易量 10 交易额 20 商品 30 支付方式:40
-		List<RuleCondition> tradeWeightConditionList = this.findRuleCondition(pointsRule.getId(), 10);
-		List<RuleCondition> tradeTotalMoneyConditionList = this.findRuleCondition(pointsRule.getId(), 20);
-		List<RuleCondition> tradeTypeConditionList = this.findRuleCondition(pointsRule.getId(), 40);
 
 		List<PointsDetailDTO> pointsDetailList = new ArrayList<>();
 
 		orderMap.forEach((order, orderItemList) -> {
+			PointsRule pointsRule = this.findPointsRule(customerType,order.getBusinessType()).orElse(null);
+			if (pointsRule == null) {
+				return ;
+			}
+			logger.info("基于积分规则进行积分 code: "+pointsRule.getCode());
+			// 根据 交易量,交易额 ,支付方式 的权重计算总积分
+
+			// 交易量 10 交易额 20 商品 30 支付方式:40
+			List<RuleCondition> tradeWeightConditionList = this.findRuleCondition(pointsRule.getId(), 10);
+			List<RuleCondition> tradeTotalMoneyConditionList = this.findRuleCondition(pointsRule.getId(), 20);
+			List<RuleCondition> tradeTypeConditionList = this.findRuleCondition(pointsRule.getId(), 40);
 			// for (Order order : orderMap.keySet()) {
 			//List<OrderItem> orderItemList = orderMap.get(order);
 	
