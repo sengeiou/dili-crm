@@ -1,5 +1,6 @@
 package com.dili.crm.controller;
 
+import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.dili.crm.domain.Customer;
@@ -9,6 +10,7 @@ import com.dili.crm.rpc.MapRpc;
 import com.dili.crm.rpc.UserRpc;
 import com.dili.crm.service.CustomerService;
 import com.dili.ss.domain.BaseOutput;
+import com.dili.ss.domain.EasyuiPageOutput;
 import com.dili.ss.metadata.ValuePair;
 import com.dili.ss.metadata.ValueProviderUtils;
 import com.dili.sysadmin.sdk.domain.UserTicket;
@@ -166,7 +168,11 @@ public class CustomerController {
 	    if(StringUtils.isNotBlank(sessionId)){
 		    customer.setYn(1);
 	    }
-	    return customerService.listEasyuiPageByExample(customer, true).toString();
+		EasyuiPageOutput easyuiPageOutput = customerService.listEasyuiPageByExample(customer, true);
+		if(easyuiPageOutput.getTotal() <=0){
+			return "{\"rows\":[],\"total\":\"0\"}";
+		}
+		return easyuiPageOutput.toString();
     }
 
     @ApiOperation("新增Customer")
