@@ -225,7 +225,7 @@ public class OrderListenerTest {
 		pr.setComputingParameter("0.1");
 		
 	
-		doReturn(Optional.of(pr)).when(orderListener).findPointsRule("sale");
+		doReturn(Optional.of(pr)).when(orderListener).findPointsRule("sale",10);
 		
 		
 		
@@ -237,7 +237,7 @@ public class OrderListenerTest {
 		pr2.setComputingParameter("0.3");
 		
 		//when(pointsRuleService.listByExample(pointsRuleEx)).thenReturn(Stream.of(pr).collect(Collectors.toList()));
-		doReturn(Optional.of(pr2)).when(orderListener).findPointsRule("purchase");
+		doReturn(Optional.of(pr2)).when(orderListener).findPointsRule("purchase", 10);
 		BigDecimal basePoints=	this.orderListener.calculateBasePoints(pr,order);
 		System.out.println(basePoints);
 		Assert.assertEquals(basePoints.intValue(), 50);
