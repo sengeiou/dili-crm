@@ -140,6 +140,10 @@ public class CustomerListener {
 		List<Address>resultList=new ArrayList<>();
 		if(addressObjList!=null) {
 			for(String addr:addressObjList) {
+				//跳过空地址
+				if(StringUtils.isBlank(addr)) {
+					continue;
+				}
 				Address address=DTOUtils.newDTO(Address.class);
 				address.setAddress(addr);
 				//设置经纬度
