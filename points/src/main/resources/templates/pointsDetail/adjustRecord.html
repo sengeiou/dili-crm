@@ -125,6 +125,8 @@
         //清空表单
         function clearForm() {
             $('#form').form('clear');
+            $("#certificateNumber").textbox("initValue", null);
+            $("#created").textbox("initValue", null);
         }
 
         //表格表头右键菜单
