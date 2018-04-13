@@ -44,5 +44,5 @@ function showCustomerDlg(id) {
 			});
 }
 $(function() {
-$('#${controlId}').textbox('addClearBtn', 'icon-clear');
+	$('#${controlId}').textbox('addClearBtn', 'icon-clear');
 })
