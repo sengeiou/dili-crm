@@ -13,6 +13,7 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
@@ -44,9 +45,13 @@ public class CustomerPointsApi {
     public @ResponseBody
     BaseOutput<CustomerPoints> getCustomerPoints(@RequestBody String paramJson) {
         JSONObject jsonObject = JSONObject.parseObject(paramJson);
+        String certificateNumber = jsonObject.getString("certificateNumber");
+        if(StringUtils.isBlank(certificateNumber)){
+            return BaseOutput.success();
+        }
         CustomerPoints customerPoints = DTOUtils.newDTO(CustomerPoints.class);
         customerPoints.setYn(1);
-        customerPoints.setCertificateNumber(jsonObject.getString("certificateNumber"));
+        customerPoints.setCertificateNumber(certificateNumber);
         List<CustomerPoints> customerPointss = customerPointsService.listByExample(customerPoints);
         CustomerPoints result = null;
         if(customerPointss != null && !customerPointss.isEmpty()){
@@ -62,7 +67,11 @@ public class CustomerPointsApi {
     BaseOutput<CustomerPoints> listPointsDetail(@RequestBody String paramJson) {
         JSONObject jsonObject = JSONObject.parseObject(paramJson);
         PointsDetail pointsDetail = DTOUtils.newDTO(PointsDetail.class);
-        pointsDetail.setCertificateNumber(jsonObject.getString("certificateNumber"));
+        String certificateNumber = jsonObject.getString("certificateNumber");
+        if(StringUtils.isBlank(certificateNumber)){
+            return BaseOutput.success();
+        }
+        pointsDetail.setCertificateNumber(certificateNumber);
         List<PointsDetail> pointsDetails = pointsDetailService.listByExample(pointsDetail);
         return BaseOutput.success().setData(pointsDetails);
     }
