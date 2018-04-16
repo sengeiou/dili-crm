@@ -116,7 +116,7 @@ public class PointsDetailController {
 		} else {
 			pointsDetail.setInOut(20);// 支出
 		}
-
+        pointsDetail.setSourceSystem("points");
         pointsDetailService.insert(pointsDetail);
         return BaseOutput.success("新增成功");
     }
