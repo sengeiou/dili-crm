@@ -71,7 +71,21 @@ public class CustomerPointsApi {
         if(StringUtils.isBlank(certificateNumber)){
             return BaseOutput.success();
         }
+        String page = jsonObject.getString("page");
+        if(StringUtils.isBlank(page)){
+            pointsDetail.setPage(1);
+        }else{
+            pointsDetail.setPage(Integer.parseInt(page));
+        }
+        String rows = jsonObject.getString("rows");
+        if(StringUtils.isBlank(rows)){
+            pointsDetail.setRows(50);
+        }else{
+            pointsDetail.setRows(Integer.parseInt(rows));
+        }
         pointsDetail.setCertificateNumber(certificateNumber);
+        pointsDetail.setOrder("desc");
+        pointsDetail.setSort("`created`");
         List<PointsDetail> pointsDetails = pointsDetailService.listByExample(pointsDetail);
         return BaseOutput.success().setData(pointsDetails);
     }
