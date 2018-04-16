@@ -53,7 +53,7 @@ public class CustomerPointsApi {
         customerPoints.setYn(1);
         customerPoints.setCertificateNumber(certificateNumber);
         List<CustomerPoints> customerPointss = customerPointsService.listByExample(customerPoints);
-        CustomerPoints result = null;
+        CustomerPoints result = DTOUtils.newDTO(CustomerPoints.class);
         if(customerPointss != null && !customerPointss.isEmpty()){
             result = customerPointss.get(0);
         }
