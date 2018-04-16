@@ -71,12 +71,12 @@ public class CustomerPointsServiceImpl extends BaseServiceImpl<CustomerPoints, L
 	@Override
     public EasyuiPageOutput listCustomerPointsByCustomer(CustomerApiDTO customer) {
 		List<CustomerPointsDTO> resultList = Lists.newArrayList();
-		int total;
+		EasyuiPageOutput easyuiPageOutput;
 		//如果按可用积分排序，需要以客户积分表为主表，否则以客户表为主表
 		if ("available".equalsIgnoreCase(customer.getSort())) {
-			total = sortByAvailable(customer, resultList);
+			easyuiPageOutput = sortByAvailable(customer, resultList);
 		} else {
-			total = sortByNoneAvailable(customer, resultList);
+			easyuiPageOutput = sortByNoneAvailable(customer, resultList);
 		}
 		//提供者转换
 //		List<Map> datas = new ArrayList<>();
@@ -85,7 +85,6 @@ public class CustomerPointsServiceImpl extends BaseServiceImpl<CustomerPoints, L
 //		} catch (Exception e) {
 //		   LOG.error("查询客户积分出错",e);
 //		}
-		EasyuiPageOutput easyuiPageOutput = new EasyuiPageOutput(total, resultList);
 		//页脚汇总
 		List<Map<String,Object>> footers = Lists.newArrayList();
 		Map<String,Object>footer = new HashMap<>(2);
@@ -102,7 +101,7 @@ public class CustomerPointsServiceImpl extends BaseServiceImpl<CustomerPoints, L
 	 * @param resultList 客户积分列表的最终结果
 	 * @return	返回总记录数
 	 */
-	private int sortByNoneAvailable(CustomerApiDTO customer, List<CustomerPointsDTO> resultList){
+	private EasyuiPageOutput sortByNoneAvailable(CustomerApiDTO customer, List<CustomerPointsDTO> resultList){
 		//如果是可用积分排序，需要去掉，因为RPC调用CRM的客户时，会因为客户表没有available字段而报错
 		//这里先记录下来，后面会用于积分表的排序
 		String sort = customer.getSort();
@@ -154,16 +153,16 @@ public class CustomerPointsServiceImpl extends BaseServiceImpl<CustomerPoints, L
 			return cpdto;
 		})
 		.collect(Collectors.toList()));
-		return total;
+		return new EasyuiPageOutput(total, resultList);
 	}
 
 	/**
 	 * 根据可用积分排序的查询
 	 * @param customer
 	 * @param resultList 客户积分列表的最终结果
-	 * @return	返回总记录数
+	 * @return	返回EasyuiPageOutput
 	 */
-	private int sortByAvailable(CustomerApiDTO customer, List<CustomerPointsDTO> resultList){
+	private EasyuiPageOutput sortByAvailable(CustomerApiDTO customer, List<CustomerPointsDTO> resultList){
 		//如果是可用积分排序，需要去掉，因为RPC调用CRM的客户时，会因为客户表没有available字段而报错
 		//这里先记录下来，后面会用于积分表的排序
 		String sort = customer.getSort();
@@ -233,8 +232,11 @@ public class CustomerPointsServiceImpl extends BaseServiceImpl<CustomerPoints, L
 		if(rows != null && page != null) {
 			//根据分页信息进行本地分页
 			int startIndex = (page - 1) * rows;
-			resultList.subList(startIndex, startIndex + rows);
+			if(rows > total){
+				rows = total;
+			}
+			return new EasyuiPageOutput(total, resultList.subList(startIndex, startIndex + rows));
 		}
-		return total;
+		return new EasyuiPageOutput(total, resultList);
 	}
 }
