@@ -102,4 +102,18 @@ public interface CustomerPoints extends IBaseDomain {
 
     void setYn(Integer yn);
 
+    @Column(name = "`buyer_points`")
+    @FieldDef(label="买方积分")
+    @EditMode(editor = FieldEditor.Number, required = false)
+    Integer getBuyerPoints();
+
+    void setBuyerPoints(Integer buyerPoints);
+
+    @Column(name = "`seller_points`")
+    @FieldDef(label="卖方积分")
+    @EditMode(editor = FieldEditor.Number, required = false)
+    Integer getSellerPoints();
+
+    void setSellerPoints(Integer sellerPoints);
+
 }
