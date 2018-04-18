@@ -104,4 +104,12 @@ public interface PointsDetail extends IBaseDomain {
     Long getCreatedId();
 
     void setCreatedId(Long createdId);
+
+    @Column(name = "`customer_type`")
+    @FieldDef(label="订单客户类型", maxLength = 20)
+    @EditMode(editor = FieldEditor.Combo, required = false, params="{\"provider\":\"customerTypeProvider\"}")
+    String getCustomerType();
+
+    void setCustomerType(String customerType);
+
 }
