@@ -64,7 +64,9 @@
                       <th data-options="width:'10%',field:'generateWay',   _provider:'dataDictionaryValueProvider', _queryParams:{dd_id:17},  sortable:true, order:'asc', align:'center', resizable:'true', fixed:'false'">
                         来源
                     </th>
-
+                    <th data-options="formatter: customerTypeFormatter,width:'10%',field:'customerType',   _provider:'dataDictionaryValueProvider', _queryParams:{dd_id:4},  sortable:true, order:'asc', align:'center', resizable:'true', fixed:'false'">
+                        订单客户类型
+                    </th>
                     <th data-options="width:'10%',field:'balance',   sortable:true, order:'asc', align:'center', resizable:'true', fixed:'false'">
                         积分余额
                     </th>
@@ -395,6 +397,14 @@
 				return value;
 			}
 	}
+
+    function customerTypeFormatter(value,row,index){
+        if (value == "" || value == undefined){
+            return "无";
+        } else {
+            return value;
+        }
+    }
     /**
      * 绑定页面回车事件，以及初始化页面时的光标定位
      * @formId
