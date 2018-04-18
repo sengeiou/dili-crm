@@ -190,10 +190,10 @@ public class PointsDetailServiceImpl extends BaseServiceImpl<PointsDetail, Long>
 		pointsDetail.setPoints(points);
 		pointsDetail.setBalance(customerPoints.getTotal());
 		
-		//1:采购,2:销售
-		if("1".equals(pointsDetail.getCustomerType())) {
+		//10:采购,20:销售
+		if("purchase".equals(pointsDetail.getCustomerType())) {
 			customerPoints.setBuyerPoints((customerPoints.getBuyerPoints()==null?0:customerPoints.getBuyerPoints())+points);
-		}else if("2".equals(pointsDetail.getCustomerType())) {
+		}else if("sale".equals(pointsDetail.getCustomerType())) {
 			customerPoints.setSellerPoints((customerPoints.getSellerPoints()==null?0:customerPoints.getSellerPoints())+points);
 		}
 		

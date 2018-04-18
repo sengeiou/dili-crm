@@ -221,9 +221,9 @@ public class OrderListener {
 		Map<Order, List<OrderItem>> saleOrdersMap = orderMap;
 
 		// 计算买家积分
-		List<PointsDetailDTO> purchasePointsDetails = this.calPoints(purchaseOrdersMap, "buyer");
+		List<PointsDetailDTO> purchasePointsDetails = this.calPoints(purchaseOrdersMap, "purchase");
 		// 计算卖家积分
-		List<PointsDetailDTO> salePointsDetails = this.calPoints(saleOrdersMap, "seller");
+		List<PointsDetailDTO> salePointsDetails = this.calPoints(saleOrdersMap, "sale");
 		this.saveOrdersAndPointsDetailsData(orderMap, purchasePointsDetails, salePointsDetails);
 	}
 
@@ -487,7 +487,7 @@ public class OrderListener {
 	}
 
 	protected boolean isBuyer(String customerType) {
-		if ("seller".equals(customerType)) {
+		if ("sale".equals(customerType)) {
 			return false;
 		} else {
 			return true;
@@ -549,13 +549,12 @@ public class OrderListener {
 	
 			String certificateNumber = null;
 			// buyer
+			pointsDetail.setCustomerType(customerType);
 			if (isBuyer) {
 				certificateNumber = order.getBuyerCertificateNumber();
-				pointsDetail.setCustomerType("1");//1:采购,2:销售
 				logger.info("对买家["+certificateNumber+"]进行积分计算");
 			} else {
 				certificateNumber = order.getSellerCertificateNumber();
-				pointsDetail.setCustomerType("2");
 				logger.info("对卖家["+certificateNumber+"]进行积分");
 			}
 			logger.info("基本积分值为:"+basePoint.toPlainString());
