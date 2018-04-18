@@ -221,9 +221,9 @@ public class OrderListener {
 		Map<Order, List<OrderItem>> saleOrdersMap = orderMap;
 
 		// 计算买家积分
-		List<PointsDetailDTO> purchasePointsDetails = this.calPoints(purchaseOrdersMap, "buyer");
+		List<PointsDetailDTO> purchasePointsDetails = this.calPoints(purchaseOrdersMap, "purchase");
 		// 计算卖家积分
-		List<PointsDetailDTO> salePointsDetails = this.calPoints(saleOrdersMap, "seller");
+		List<PointsDetailDTO> salePointsDetails = this.calPoints(saleOrdersMap, "sale");
 		this.saveOrdersAndPointsDetailsData(orderMap, purchasePointsDetails, salePointsDetails);
 	}
 
@@ -487,7 +487,7 @@ public class OrderListener {
 	}
 
 	protected boolean isBuyer(String customerType) {
-		if ("seller".equals(customerType)) {
+		if ("sale".equals(customerType)) {
 			return false;
 		} else {
 			return true;
