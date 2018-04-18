@@ -92,6 +92,8 @@ public class PointsDetailServiceImpl extends BaseServiceImpl<PointsDetail, Long>
 			cp.setDayPoints(0);
 			cp.setFrozen(0);
 			cp.setTotal(0);
+			cp.setBuyerPoints(0);
+			cp.setSellerPoints(0);
 			cp.setYn(1);
 			this.customerPointsMapper.insertExact(cp);
 			return cp;
@@ -187,6 +189,14 @@ public class PointsDetailServiceImpl extends BaseServiceImpl<PointsDetail, Long>
 		customerPoints.setTotal(customerPoints.getAvailable() + customerPoints.getFrozen());
 		pointsDetail.setPoints(points);
 		pointsDetail.setBalance(customerPoints.getTotal());
+		
+		//1:采购,2:销售
+		if("1".equals(pointsDetail.getCustomerType())) {
+			customerPoints.setBuyerPoints((customerPoints.getBuyerPoints()==null?0:customerPoints.getBuyerPoints())+points);
+		}else if("2".equals(pointsDetail.getCustomerType())) {
+			customerPoints.setSellerPoints((customerPoints.getSellerPoints()==null?0:customerPoints.getSellerPoints())+points);
+		}
+		
 		if(points==0) {
 			return this.insertPointsException(pointsDetail);
 		}else {

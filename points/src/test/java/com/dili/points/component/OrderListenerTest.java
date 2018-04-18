@@ -309,8 +309,8 @@ public class OrderListenerTest {
 		ObjectMapper objMapper=new ObjectMapper();
 		Map<String,Object> jsonObj=new HashMap<>();
 		jsonObj.put("type", "json");
-jsonObj.put("data", list);
-System.out.println(objMapper.writeValueAsString(jsonObj));
+		jsonObj.put("data", list);
+		System.out.println(objMapper.writeValueAsString(jsonObj));
 		this.orderListener.convertOrder(objMapper.writeValueAsString(jsonObj));
 		
 	}
