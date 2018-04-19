@@ -41,7 +41,7 @@ public class CustomerPointsApi {
 
     @ApiOperation(value = "根据客户证件号码查询客户积分信息", notes = "根据客户证件号码查询客户积分信息")
     @ApiImplicitParams({ @ApiImplicitParam(name = "certificateNumber JSON", paramType = "form", value = "证件号码JSON信息", dataType = "string") })
-    @RequestMapping(value = "/getCustomerPoints", method = { RequestMethod.POST })
+    @RequestMapping(value = "/getCustomerPoints", method = { RequestMethod.POST }, produces = "application/json;charset=utf-8")
     public @ResponseBody
     BaseOutput<CustomerPoints> getCustomerPoints(@RequestBody String paramJson) {
         JSONObject jsonObject = JSONObject.parseObject(paramJson);
@@ -62,7 +62,7 @@ public class CustomerPointsApi {
 
     @ApiOperation(value = "根据客户证件号码查询客户积分明细", notes = "根据客户证件号码查询客户积分明细")
     @ApiImplicitParams({ @ApiImplicitParam(name = "certificateNumber JSON", paramType = "form", value = "证件号码JSON信息", dataType = "string") })
-    @RequestMapping(value = "/listPointsDetail", method = { RequestMethod.POST })
+    @RequestMapping(value = "/listPointsDetail", method = { RequestMethod.POST }, produces = "application/json;charset=utf-8")
     public @ResponseBody
     BaseOutput<CustomerPoints> listPointsDetail(@RequestBody String paramJson) {
         JSONObject jsonObject = JSONObject.parseObject(paramJson);
