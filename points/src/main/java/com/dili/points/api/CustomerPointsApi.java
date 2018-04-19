@@ -7,15 +7,15 @@ import com.dili.points.domain.dto.CustomerPointsApiDTO;
 import com.dili.points.service.CustomerPointsService;
 import com.dili.points.service.PointsDetailService;
 import com.dili.ss.domain.BaseOutput;
+import com.dili.ss.domain.EasyuiPageOutput;
 import com.dili.ss.dto.DTOUtils;
-import com.google.common.collect.Lists;
+import com.github.pagehelper.Page;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -87,7 +87,10 @@ public class CustomerPointsApi {
         pointsDetail.setOrder("desc");
         pointsDetail.setSort("`created`");
         List<PointsDetail> pointsDetails = pointsDetailService.listByExample(pointsDetail);
-        return BaseOutput.success().setData(pointsDetails);
+        EasyuiPageOutput easyuiPageOutput = new EasyuiPageOutput();
+        easyuiPageOutput.setRows(pointsDetails);
+        easyuiPageOutput.setTotal(Integer.parseInt(String.valueOf(((Page)pointsDetails).getTotal())));
+        return BaseOutput.success().setData(easyuiPageOutput);
     }
 
     @ApiOperation(value = "根据客户证件号码查询客户积分信息", notes = "根据客户证件号码查询客户积分信息")
