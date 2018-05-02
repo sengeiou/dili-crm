@@ -127,6 +127,7 @@ public class CustomerPointsServiceImpl extends BaseServiceImpl<CustomerPoints, L
 		example.setCertificateNumbers(certificateNumbers);
 		example.setPage(customer.getPage());
 		example.setRows(customer.getRows());
+		example.setYn(1);
 		List<CustomerPoints> customerPointss = this.listByExample(example);
 		Map<String, CustomerPoints> certificateNumber2CustomerPointsMap = customerPointss.stream()
 				.collect(Collectors.toMap(CustomerPoints::getCertificateNumber, cp -> cp));
@@ -196,6 +197,7 @@ public class CustomerPointsServiceImpl extends BaseServiceImpl<CustomerPoints, L
 		example.setRows(customer.getRows());
 		example.setOrder(order);
 		example.setSort("available");
+		example.setYn(1);
 		List<CustomerPoints> customerPointsList = this.listByExample(example);
 		//构建客户证件号为key，客户积分为value的Map
 		Map<String, CustomerPoints> certificateNumber2CustomerPointsMap = customerPointsList.stream()
