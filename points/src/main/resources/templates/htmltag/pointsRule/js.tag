@@ -1,5 +1,11 @@
 <script type="text/javascript">
-    var rangeCode = 60; //区间条件CODE
+    var pointRuleObj = {
+        rangeCode: 60, //区间条件CODE
+        computingStandardCache: [],
+        computingStandardTypeOneCache: [],
+        computingStandardTypeTwoCache: [],
+        finish: false
+    };
     var toolbar = [{
         text: '新增',
         iconCls: 'icon-add',
@@ -144,7 +150,7 @@
         if ($("#edit_type").val() == 0) {
             dg.datagrid('appendRow', row);
         } else {
-            var index = dg.datagrid('getRowIndex',dg.datagrid('getSelected'));
+            var index = dg.datagrid('getRowIndex', dg.datagrid('getSelected'));
             dg.datagrid('updateRow', {
                 index: index,
                 row: row
@@ -170,7 +176,7 @@
         if ($("#pay_edit_type").val() == 0) {
             dg.datagrid('appendRow', row);
         } else {
-            var index = dg.datagrid('getRowIndex',dg.datagrid('getSelected'));
+            var index = dg.datagrid('getRowIndex', dg.datagrid('getSelected'));
             dg.datagrid('updateRow', {
                 index: index,
                 row: row
@@ -191,10 +197,10 @@
     }
 
     function setDisplay(value) {
-        if (value == rangeCode) {
+        if (value == pointRuleObj.rangeCode) {
             $("#number_range").show();
             $("#value").numberbox('disable');
-            $("#value").numberbox('setValue','');
+            $("#value").numberbox('setValue', '');
             $("#startValue").numberbox('enable');
             $("#endValue").numberbox('enable');
             $("#number_other").hide();
@@ -202,26 +208,26 @@
             $("#number_range").hide();
             $("#value").numberbox('enable');
             $("#startValue").numberbox('disable');
-            $("#startValue").numberbox('setValue','');
+            $("#startValue").numberbox('setValue', '');
             $("#endValue").numberbox('disable');
-            $("#endValue").numberbox('setValue','');
+            $("#endValue").numberbox('setValue', '');
             $("#number_other").show();
         }
     }
+
     function formatDisplay(value, row, index) {
-        if (row.conditionType == rangeCode) {
+        if (row.conditionType == pointRuleObj.rangeCode) {
             return row.startValue + " - " + row.endValue;
-        } else{
-           var data =  $("#conditionType").combobox("getData");
-            for(var d in data){
-                if(data[d].value == row.conditionType ){
+        } else {
+            var data = $("#conditionType").combobox("getData");
+            for (var d in data) {
+                if (data[d].value == row.conditionType) {
                     return data[d].text + "" + row.value;
                 }
             }
             return "";
         }
     }
-
 
     $.extend($.fn.validatebox.defaults.rules, {
         big: {
@@ -235,7 +241,7 @@
     $.extend($.fn.validatebox.defaults.rules, {
         notZero: {
             validator: function (value) {
-                if(parseFloat(value) <=0){
+                if (parseFloat(value) <= 0) {
                     return false;
                 }
                 return true;
@@ -243,6 +249,8 @@
             message: '计算参数需大于0'
         }
     });
+
+
     $(function () {
         var _comboProviderParamObj_conditionType = {};
         _comboProviderParamObj_conditionType.provider = 'dataDictionaryValueProvider';
@@ -260,6 +268,36 @@
 
         //注意，这里只能取到value属性中的值，而无法取到combobox的当前值，因为还没有渲染，渲染以后应该使用getValue方法取值
         _comboProviderParamObj_conditionType.value = $("#conditionType").val();
+        $("#computingStandard").combobox({
+            onLoadSuccess: function () {
+
+                if (pointRuleObj.finish) {
+                    return;
+                }
+
+                pointRuleObj.computingStandardCache = $("#computingStandard").combobox('getData');
+                $.extend(pointRuleObj.computingStandardTypeOneCache, pointRuleObj.computingStandardCache);
+                pointRuleObj.computingStandardTypeOneCache.splice(3, 1);
+
+                $.extend(pointRuleObj.computingStandardTypeTwoCache, pointRuleObj.computingStandardCache);
+                pointRuleObj.computingStandardTypeTwoCache.splice(1, 2);
+
+                pointRuleObj.finish = true;
+
+            }
+        });
+        $("#businessType").combobox({
+            onChange: function (newValue) {
+                $("#computingStandard").combobox('clear');
+                if (newValue == undefined) {
+                    $("#computingStandard").combobox('loadData', pointRuleObj.computingStandardCache);
+                } else if (newValue == 10) {
+                    $("#computingStandard").combobox('loadData', pointRuleObj.computingStandardTypeOneCache);
+                } else if (newValue == 20 || newValue == 30) {
+                    $("#computingStandard").combobox('loadData', pointRuleObj.computingStandardTypeTwoCache);
+                }
+            }
+        });
         $("#conditionType").combobox({
             onLoadSuccess: function () {
                 success();

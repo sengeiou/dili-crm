@@ -29,10 +29,12 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+import com.dili.sysadmin.sdk.session.SessionContext;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
+import tk.mybatis.mapper.entity.Example;
 
 /**
  * 由MyBatis Generator工具自动生成 This file was generated on 2018-03-20 11:29:31.
@@ -46,7 +48,7 @@ public class PointsDetailServiceImpl extends BaseServiceImpl<PointsDetail, Long>
 
 	@Autowired CustomerPointsMapper customerPointsMapper;
 	@Autowired CustomerRpc customerRpc;
-	@Autowired PointsExceptionMapper pointsExceptionMapper; 
+	@Autowired PointsExceptionMapper pointsExceptionMapper;
 	@Autowired
 	SystemConfigRpc systemConfigRpc;
 
@@ -67,7 +69,7 @@ public class PointsDetailServiceImpl extends BaseServiceImpl<PointsDetail, Long>
 		return pointsExceptionMapper.insertExact(exceptionalPoints);
 	}
 	@Transactional(propagation = Propagation.REQUIRED)
-	public int insert(PointsDetailDTO pointsDetail) { 
+	public int insert(PointsDetailDTO pointsDetail) {
 		if(pointsDetail.getException()!=null&&pointsDetail.getException().equals(1)) {
 			//异常积分信息保存
 			return this.insertPointsException(pointsDetail);
@@ -100,7 +102,7 @@ public class PointsDetailServiceImpl extends BaseServiceImpl<PointsDetail, Long>
 			// }
 			// return null;
 		});
-		
+
 		Integer points = pointsDetail.getPoints();
 		if (points == null) {
 			pointsDetail.setPoints(0);
@@ -116,8 +118,8 @@ public class PointsDetailServiceImpl extends BaseServiceImpl<PointsDetail, Long>
 			throw new AppException("远程查询积分上限出错!");
 		}
 		int total = Integer.parseInt(output.getData().getValue());// 积分上限
-		
-		
+
+
 		Integer dayPoints = customerPoints.getDayPoints();// 当天积分总和
 		if(dayPoints==null) {
 			dayPoints=0;
@@ -129,18 +131,18 @@ public class PointsDetailServiceImpl extends BaseServiceImpl<PointsDetail, Long>
 		}else {
 			//如果RestTime为空则把当前时间减少一天,做为resttime
 			TemporalAmount tm=Duration.ofDays(1);
-			instant =instant.minus(tm); 
+			instant =instant.minus(tm);
 		}
-		 
-		
+
+
 		 ZoneId defaultZoneId = ZoneId.systemDefault();
 	     LocalDate resetDate = instant.atZone(defaultZoneId).toLocalDate();
 		//当前时间
 		LocalDate currentDate = LocalDate.now();
-		
-		
+
+
 		if(!pointsDetail.getGenerateWay().equals(50)&&points>0) {//50手工调整(对于手工调整,不做累加不做判断)
-	
+
 			// 如果上次累积积分的时间为今天时,进行积分上限处理
 			if (resetDate.isEqual(currentDate)) {
 				// 如果当天积分总和已经超过上限,当前积分详情的积分归为0,当天积分总和分为total
@@ -162,23 +164,23 @@ public class PointsDetailServiceImpl extends BaseServiceImpl<PointsDetail, Long>
 					points=total;
 					dayPoints=total;
 				}else {
-					dayPoints = points;	
+					dayPoints = points;
 				}
-				
+
 			}
 		}else {
 			// 如果上次修改积分的时间不是今天时,初始化积分上限到0
 			if (!resetDate.isEqual(currentDate)) {
 				dayPoints = 0;
-			} 
+			}
 		}
 
-		
+
 		customerPoints.setResetTime(new Date());
 		customerPoints.setModified(new Date());
 		customerPoints.setDayPoints(dayPoints);
 
-		
+
 
 		// 计算用户可用积分和总积分
 		customerPoints.setAvailable(customerPoints.getAvailable() + points);
@@ -189,14 +191,14 @@ public class PointsDetailServiceImpl extends BaseServiceImpl<PointsDetail, Long>
 		customerPoints.setTotal(customerPoints.getAvailable() + customerPoints.getFrozen());
 		pointsDetail.setPoints(points);
 		pointsDetail.setBalance(customerPoints.getTotal());
-		
+
 		//10:采购,20:销售
 		if("purchase".equals(pointsDetail.getCustomerType())) {
 			customerPoints.setBuyerPoints((customerPoints.getBuyerPoints()==null?0:customerPoints.getBuyerPoints())+points);
 		}else if("sale".equals(pointsDetail.getCustomerType())) {
 			customerPoints.setSellerPoints((customerPoints.getSellerPoints()==null?0:customerPoints.getSellerPoints())+points);
 		}
-		
+
 		if(points==0) {
 			return this.insertPointsException(pointsDetail);
 		}else {
@@ -204,12 +206,36 @@ public class PointsDetailServiceImpl extends BaseServiceImpl<PointsDetail, Long>
 			this.customerPointsMapper.updateByPrimaryKey(customerPoints);
 			// return 0;
 			// pointsDetail.setId(null);
-			return super.insertSelective(pointsDetail);		
-				
-		}
-		
-		
+			return super.insertSelective(pointsDetail);
 
+		}
+
+
+
+	}
+
+    @Override
+    @Transactional(propagation = Propagation.REQUIRED)
+	public int clear(String notes) {
+		PointsDetail detail = DTOUtils.newDTO(PointsDetail.class);
+		detail.setNotes("积分清零:" + notes + "");
+		detail.setGenerateWay(50);
+		detail.setCreatedId(SessionContext.getSessionContext().getUserTicket().getId());
+		this.insert(detail);
+
+		CustomerPoints customerPoints = DTOUtils.newDTO(CustomerPoints.class);
+		customerPoints.setAvailable(0);
+		customerPoints.setFrozen(0);
+		customerPoints.setTotal(0);
+		customerPoints.setDayPoints(0);
+		customerPoints.setBuyerPoints(0);
+		customerPoints.setSellerPoints(0);
+
+		Example example = new Example(CustomerPoints.class);
+		Example.Criteria criteria = example.createCriteria();
+		criteria.andIsNotNull("id");
+		customerPointsMapper.updateByExampleSelective(customerPoints, example);
+		return 1;
 	}
 
 	public PointsDetail manullyGeneratePointsDetail(PointsDetail pointsDetail) {

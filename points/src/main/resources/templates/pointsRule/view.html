@@ -246,7 +246,7 @@
     }
 
     function formatUpdateDisplay(value, row, index) {
-        if (row.conditionType == rangeCode) {
+        if (row.conditionType == pointRuleObj.rangeCode) {
             return row.startValue + " - " + row.endValue;
         } else {
             for (var d in conditionTypeJson) {

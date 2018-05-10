@@ -1,23 +1,17 @@
 package com.dili.points.controller;
 
-import com.dili.points.domain.CustomerPoints;
 import com.dili.points.domain.PointsDetail;
 import com.dili.points.domain.dto.CustomerPointsDTO;
 import com.dili.points.domain.dto.PointsDetailDTO;
 import com.dili.points.service.CustomerPointsService;
 import com.dili.points.service.PointsDetailService;
 import com.dili.ss.domain.BaseOutput;
-import com.dili.ss.dto.DTO;
-import com.dili.ss.dto.DTOUtils;
 import com.dili.sysadmin.sdk.domain.UserTicket;
 import com.dili.sysadmin.sdk.session.SessionContext;
-
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
-import java.util.List;
-
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -25,6 +19,8 @@ import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
+
+import java.util.List;
 
 /**
  * 由MyBatis Generator工具自动生成
@@ -118,6 +114,27 @@ public class PointsDetailController {
 		}
         pointsDetail.setSourceSystem("points");
         pointsDetailService.insert(pointsDetail);
+        return BaseOutput.success("新增成功");
+    }
+
+    /**
+     * 客户积分清零
+     * @param notes
+     * @return
+     */
+    @RequestMapping(value="/clearPoints", method = {RequestMethod.GET, RequestMethod.POST})
+    public @ResponseBody BaseOutput clearPoints(String notes) {
+
+        if(StringUtils.trimToNull(notes)==null) {
+            return BaseOutput.failure("备注不能为空");
+        }
+        UserTicket userTicket = SessionContext.getSessionContext().getUserTicket();
+        if (userTicket == null) {
+            throw new RuntimeException("未登录");
+        }
+
+
+        pointsDetailService.clear(notes);
         return BaseOutput.success("新增成功");
     }
     
