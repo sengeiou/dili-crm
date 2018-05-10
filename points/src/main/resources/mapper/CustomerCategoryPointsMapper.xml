@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.dili.points.dao.CustomerCategoryPointsMapper">
+  <resultMap id="BaseResultMap" type="com.dili.points.domain.CustomerCategoryPoints">
+    <!--
+      WARNING - @mbg.generated
+    -->
+    <id column="id" jdbcType="BIGINT" property="id" />
+    <result column="name" jdbcType="VARCHAR" property="name" />
+    <result column="certificate_number" jdbcType="VARCHAR" property="certificateNumber" />
+    <result column="certificate_type" jdbcType="VARCHAR" property="certificateType" />
+    <result column="organization_type" jdbcType="VARCHAR" property="organizationType" />
+    <result column="available" jdbcType="INTEGER" property="available" />
+    <result column="created" jdbcType="TIMESTAMP" property="created" />
+    <result column="buyer_points" jdbcType="INTEGER" property="buyerPoints" />
+    <result column="seller_points" jdbcType="INTEGER" property="sellerPoints" />
+    <result column="source_system" jdbcType="VARCHAR" property="sourceSystem" />
+    <result column="category1_id" jdbcType="BIGINT" property="category1Id" />
+    <result column="category1_name" jdbcType="VARCHAR" property="category1Name" />
+    <result column="category2_id" jdbcType="BIGINT" property="category2Id" />
+    <result column="category2_name" jdbcType="VARCHAR" property="category2Name" />
+    <result column="category3_id" jdbcType="BIGINT" property="category3Id" />
+    <result column="category3_name" jdbcType="VARCHAR" property="category3Name" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    <!--
+      WARNING - @mbg.generated
+    -->
+    id, name, certificate_number, certificate_type, organization_type, available, created, 
+    buyer_points, seller_points, source_system, category1_id, category1_name, category2_id, 
+    category2_name, category3_id, category3_name
+  </sql>
+  <select id="selectBy" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    <!--
+      WARNING - @mbg.generated
+    -->
+    select 
+    <include refid="Base_Column_List" />
+    from customer_category_points
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <update id="updateBy" parameterType="com.dili.points.domain.CustomerCategoryPoints">
+    <!--
+      WARNING - @mbg.generated
+    -->
+    update customer_category_points
+    <set>
+      <if test="name != null">
+        name = #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="certificateNumber != null">
+        certificate_number = #{certificateNumber,jdbcType=VARCHAR},
+      </if>
+      <if test="certificateType != null">
+        certificate_type = #{certificateType,jdbcType=VARCHAR},
+      </if>
+      <if test="organizationType != null">
+        organization_type = #{organizationType,jdbcType=VARCHAR},
+      </if>
+      <if test="available != null">
+        available = #{available,jdbcType=INTEGER},
+      </if>
+      <if test="created != null">
+        created = #{created,jdbcType=TIMESTAMP},
+      </if>
+      <if test="buyerPoints != null">
+        buyer_points = #{buyerPoints,jdbcType=INTEGER},
+      </if>
+      <if test="sellerPoints != null">
+        seller_points = #{sellerPoints,jdbcType=INTEGER},
+      </if>
+      <if test="sourceSystem != null">
+        source_system = #{sourceSystem,jdbcType=VARCHAR},
+      </if>
+      <if test="category1Id != null">
+        category1_id = #{category1Id,jdbcType=BIGINT},
+      </if>
+      <if test="category1Name != null">
+        category1_name = #{category1Name,jdbcType=VARCHAR},
+      </if>
+      <if test="category2Id != null">
+        category2_id = #{category2Id,jdbcType=BIGINT},
+      </if>
+      <if test="category2Name != null">
+        category2_name = #{category2Name,jdbcType=VARCHAR},
+      </if>
+      <if test="category3Id != null">
+        category3_id = #{category3Id,jdbcType=BIGINT},
+      </if>
+      <if test="category3Name != null">
+        category3_name = #{category3Name,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+</mapper>
