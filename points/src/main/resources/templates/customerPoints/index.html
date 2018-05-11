@@ -268,7 +268,7 @@
     //打开调整窗口窗口
      
      function openDetailChange(){
-    	 <#resource; code="changeCustomerPoints">;
+    	 <#resource code="changeCustomerPoints">
     	var selected = $("#grid").datagrid("getSelected");
          if (null == selected) {
              $.messager.alert('警告','请选中一条数据');
@@ -293,7 +293,7 @@
 
 
         function openClear(){
-        <#resource; code="clearPoints">
+        <#resource code="clearPoints">
 
                 $.messager.confirm('确认', '此操作将清空所有客户积分，是否继续？', function (r) {
                         if (r) {
@@ -458,44 +458,44 @@
             }
             var pager = $('#grid').datagrid('getPager');    // get the pager of treegrid
                 pager.pagination({
-                    <;#controls_paginationOpts/>,
-                    buttons;:[
-                    	 <;#resource; code="customerPointsDetails">
+                    <#controls_paginationOpts/>,
+                    buttons:[
+                    	 <#resource code="customerPointsDetails">
                     	 {
                              iconCls:'icon-detail',
                              text:'明细',
                                  handler:function(){
                                  openDetail();
                              }
-                         },;
+                         },
                      </#resource>
-                     <;#resource; code="changeCustomerPoints">
+                     <#resource code="changeCustomerPoints">
                          {
                              iconCls:'icon-detail',
                              text:'积分调整',
                                  handler:function(){
                                  	openDetailChange();
                              }
-                         },;
+                         },
                      </#resource>
-                    <;#resource; code="clearPoints">
+                    <#resource code="clearPoints">
                          {
                              iconCls:'icon-detail',
                              text:'积分清零',
                                  handler:function(){
                                      openClear();
                              }
-                         },;
+                         },
                      </#resource>
-                <;#resource; code="exportCustomerPoints">
+                <#resource code="exportCustomerPoints">
                 {
                     iconCls:'icon-export',
                     text:'导出',
                     handler:function(){
                         doExport('grid');
                     }
-                },;
-                </#resource>;
+                },
+                </#resource>
                    
 //                    {
 //                        iconCls:'icon-export',
