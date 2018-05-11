@@ -70,8 +70,17 @@ public class PointsDetailServiceImpl extends BaseServiceImpl<PointsDetail, Long>
 			pointsDetailDTO.ifPresent((p)->{
 				//对总积分按照百分比(金额或者重量)进行分配
 				List<CustomerCategoryPoints>categoryList=this.reCalculateCategoryPoints(p, entry.getValue());
-				if(!categoryList.isEmpty()) {
-					customerCategoryPointsMapper.insertList(categoryList);
+				Map<Boolean,List<CustomerCategoryPoints>>groupedList=categoryList.stream().collect(Collectors.partitioningBy((c)->{return c.getId()!=null;}));
+				List<CustomerCategoryPoints>updateList=groupedList.get(Boolean.TRUE);
+				List<CustomerCategoryPoints>insertList=groupedList.get(Boolean.FALSE);
+				if(!insertList.isEmpty()) {
+					customerCategoryPointsMapper.insertList(insertList);
+				}
+				if(!updateList.isEmpty()) {
+					updateList.stream().forEach((c)->{
+						customerCategoryPointsMapper.updateByPrimaryKey(c);	
+					});
+					
 				}
 			});
 		}
@@ -90,22 +99,41 @@ public class PointsDetailServiceImpl extends BaseServiceImpl<PointsDetail, Long>
 		CustomerCategoryPointsDTO total=DTOUtils.newDTO(CustomerCategoryPointsDTO.class);
 		total.setTotalMoney(0L);
 		total.setWeight(BigDecimal.ZERO);
+		total.setBuyerPoints(0);
+		total.setSellerPoints(0);
 		for(CustomerCategoryPointsDTO dto:categoryList) {
 			total.setTotalMoney(total.getTotalMoney()+dto.getTotalMoney());
 			total.setWeight(total.getWeight().add(dto.getWeight()));
 		}
-
-		//totalExceptLastOne 用于累加除最后一个之外的积分和
-		CustomerCategoryPointsDTO totalExceptLastOne=DTOUtils.newDTO(CustomerCategoryPointsDTO.class);
-		totalExceptLastOne.setTotalMoney(0L);
-		totalExceptLastOne.setWeight(BigDecimal.ZERO);
-		totalExceptLastOne.setBuyerPoints(0);
-		totalExceptLastOne.setSellerPoints(0);
 		
-		
+		List<CustomerCategoryPoints>resultList=new ArrayList<>();
 		//将总积分按百分比分配
 		for(CustomerCategoryPointsDTO dto:categoryList) {
 			//// 交易量 10 交易额 20 商品 30 支付方式:40
+			
+			
+			Long category3Id=dto.getCategory3Id();
+			String certificateNumber=dto.getCertificateNumber();
+			
+			CustomerCategoryPoints condition=DTOUtils.newDTO(CustomerCategoryPoints.class);
+			condition.setCategory3Id(category3Id);
+			condition.setCertificateNumber(certificateNumber);
+			
+			CustomerCategoryPoints result=this.customerCategoryPointsMapper.selectOne(condition);
+			if(result==null) {
+				result=dto;
+				result.setAvailable(0);
+				result.setBuyerPoints(0);
+				result.setSellerPoints(0);
+			}else {
+				result.setCategory1Id(dto.getCategory1Id());
+				result.setCategory1Name(dto.getCategory1Name());
+				result.setCategory2Id(dto.getCategory2Id());
+				result.setCategory2Name(dto.getCategory2Name());
+				result.setCategory3Id(dto.getCategory3Id());
+				result.setCategory3Name(dto.getCategory3Name());
+			}
+			
 			BigDecimal percentage=BigDecimal.ZERO;
 			if(pointsDetail.getWeightType().equals(10)) {
 				percentage=dto.getWeight().divide(total.getWeight(),4,RoundingMode.HALF_EVEN);
@@ -114,27 +142,31 @@ public class PointsDetailServiceImpl extends BaseServiceImpl<PointsDetail, Long>
 			}else {
 				continue;
 			}
+			
 			int points=percentage.multiply(new BigDecimal(totalPoints)).intValue();
 			//10:采购,20:销售
 			if("purchase".equals(pointsDetail.getCustomerType())) {
-				dto.setBuyerPoints((dto.getBuyerPoints()==null?0:dto.getBuyerPoints())+points);
+				result.setBuyerPoints(result.getBuyerPoints()+points);
 				total.setBuyerPoints(total.getBuyerPoints()+points);
 			}else if("sale".equals(pointsDetail.getCustomerType())) {
-				dto.setSellerPoints((dto.getSellerPoints()==null?0:dto.getSellerPoints())+points);
+				result.setSellerPoints(result.getSellerPoints()+points);
 				total.setSellerPoints(total.getBuyerPoints()+points);
 			}
+			result.setAvailable(result.getAvailable()+points);
+			
+			resultList.add(result);
 		}
 		
 		//对积分进行修正(最后一个的积分等于总积分减去前面积分之和)
-		if(!categoryList.isEmpty()) {
-			CustomerCategoryPointsDTO lastCategoryPointsDTO=categoryList.get(categoryList.size()-1);
-			//if("purchase".equals(pointsDetail.getCustomerType())) {
-				lastCategoryPointsDTO.setBuyerPoints(totalPoints-totalExceptLastOne.getBuyerPoints());
-			//}else if("sale".equals(pointsDetail.getCustomerType())) {
-				lastCategoryPointsDTO.setSellerPoints(totalPoints-totalExceptLastOne.getSellerPoints());
-			//}
+		if(!resultList.isEmpty()) {
+			CustomerCategoryPoints lastCategoryPointsDTO=categoryList.get(categoryList.size()-1);
+			if("purchase".equals(pointsDetail.getCustomerType())) {
+				lastCategoryPointsDTO.setBuyerPoints(totalPoints-(total.getBuyerPoints()-lastCategoryPointsDTO.getBuyerPoints()));
+			}else if("sale".equals(pointsDetail.getCustomerType())) {
+				lastCategoryPointsDTO.setSellerPoints(totalPoints-total.getSellerPoints()-lastCategoryPointsDTO.getSellerPoints());
+			}
 		}
-		return new ArrayList<>(categoryList);
+		return resultList;
 	}
 	@Transactional(propagation = Propagation.REQUIRED)
 	public int batchInsertPointsDetailDTO(List<PointsDetailDTO> pointsDetail) {

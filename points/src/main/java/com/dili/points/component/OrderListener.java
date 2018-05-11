@@ -515,7 +515,13 @@ public class OrderListener {
 
 		orderMap.forEach((order, orderItemList) -> {
 			PointsRule pointsRule = this.findPointsRule(customerType,order.getBusinessType()).orElse(null);
+			if (isBuyer) {
+				logger.info("对买家["+order.getBuyerCertificateNumber()+"]进行积分计算");
+			} else {
+				logger.info("对卖家["+order.getSellerCertificateNumber()+"]进行积分");
+			}
 			if (pointsRule == null) {
+				logger.info("没有找到积分规则 customerType {},businessType {}",customerType,order.getBusinessType());
 				return ;
 			}
 			logger.info("基于积分规则进行积分 code: "+pointsRule.getCode());
@@ -663,7 +669,7 @@ public class OrderListener {
 			Long categoryId=item.getCategoryId();
 			
 			//进行数据对象的转换
-			CustomerCategoryPointsDTO dto=DTOUtils.cast(item, CustomerCategoryPointsDTO.class);
+			CustomerCategoryPointsDTO dto=DTOUtils.newDTO(CustomerCategoryPointsDTO.class);
 			dto.setCertificateNumber(customer.getCertificateNumber());
 			dto.setCertificateType(customer.getCertificateType());
 			dto.setName(customer.getName());
@@ -675,7 +681,9 @@ public class OrderListener {
 			dto.setWeight(item.getWeight());
 			dto.setCategory3Id(categoryId);
 			dto.setCategory3Name("未知");
-			
+			dto.setBuyerPoints(0);
+			dto.setSellerPoints(0);
+			dto.setAvailable(0);
 			Category category3Condition=DTOUtils.newDTO(Category.class);
 			category3Condition.setCategoryId(String.valueOf(categoryId));
 			category3Condition.setSourceSystem(pointsDetail.getSourceSystem());
