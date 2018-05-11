@@ -1,14 +1,17 @@
 package com.dili.points.service.impl;
 
+import com.dili.points.dao.CustomerCategoryPointsMapper;
 import com.dili.points.dao.CustomerPointsMapper;
 import com.dili.points.dao.PointsDetailMapper;
 import com.dili.points.dao.PointsExceptionMapper;
 import com.dili.points.domain.Customer;
+import com.dili.points.domain.CustomerCategoryPoints;
 import com.dili.points.domain.CustomerPoints;
 import com.dili.points.domain.PointsDetail;
 import com.dili.points.domain.PointsException;
 import com.dili.points.domain.SystemConfig;
 import com.dili.points.domain.dto.CustomerApiDTO;
+import com.dili.points.domain.dto.CustomerCategoryPointsDTO;
 import com.dili.points.domain.dto.PointsDetailDTO;
 import com.dili.points.rpc.CustomerRpc;
 import com.dili.points.rpc.SystemConfigRpc;
@@ -19,14 +22,20 @@ import com.dili.ss.dto.DTOUtils;
 import com.dili.ss.exception.AppException;
 import com.dili.ss.exception.BusinessException;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.time.Duration;
 import java.time.Instant;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.time.temporal.TemporalAmount;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import com.dili.sysadmin.sdk.session.SessionContext;
@@ -48,10 +57,85 @@ public class PointsDetailServiceImpl extends BaseServiceImpl<PointsDetail, Long>
 
 	@Autowired CustomerPointsMapper customerPointsMapper;
 	@Autowired CustomerRpc customerRpc;
-	@Autowired PointsExceptionMapper pointsExceptionMapper;
+	@Autowired PointsExceptionMapper pointsExceptionMapper; 
+	@Autowired CustomerCategoryPointsMapper customerCategoryPointsMapper;
 	@Autowired
 	SystemConfigRpc systemConfigRpc;
+	@Transactional(propagation = Propagation.REQUIRED)
+	public int batchInsertPointsDetailDTO(Map<PointsDetailDTO,List<CustomerCategoryPointsDTO>> pointsDetailMap) {
+		for(Entry<PointsDetailDTO, List<CustomerCategoryPointsDTO>> entry:pointsDetailMap.entrySet()) {
+			PointsDetailDTO pointsDetail=entry.getKey();
+			
+			Optional<PointsDetailDTO> pointsDetailDTO=this.insert(pointsDetail);
+			pointsDetailDTO.ifPresent((p)->{
+				//对总积分按照百分比(金额或者重量)进行分配
+				List<CustomerCategoryPoints>categoryList=this.reCalculateCategoryPoints(p, entry.getValue());
+				if(!categoryList.isEmpty()) {
+					customerCategoryPointsMapper.insertList(categoryList);
+				}
+			});
+		}
+		return pointsDetailMap.size();
+	}
+	private List<CustomerCategoryPoints>reCalculateCategoryPoints(PointsDetailDTO pointsDetail,List<CustomerCategoryPointsDTO>categoryList){
+		if(pointsDetail.getWeightType()==null) {
+			return Collections.emptyList();
+		}
+		Integer totalPoints=pointsDetail.getPoints();
+		if(totalPoints==null||totalPoints<0) {
+			totalPoints=0;
+		}
+		
+		//累加进行总金额总重量计算
+		CustomerCategoryPointsDTO total=DTOUtils.newDTO(CustomerCategoryPointsDTO.class);
+		total.setTotalMoney(0L);
+		total.setWeight(BigDecimal.ZERO);
+		for(CustomerCategoryPointsDTO dto:categoryList) {
+			total.setTotalMoney(total.getTotalMoney()+dto.getTotalMoney());
+			total.setWeight(total.getWeight().add(dto.getWeight()));
+		}
 
+		//totalExceptLastOne 用于累加除最后一个之外的积分和
+		CustomerCategoryPointsDTO totalExceptLastOne=DTOUtils.newDTO(CustomerCategoryPointsDTO.class);
+		totalExceptLastOne.setTotalMoney(0L);
+		totalExceptLastOne.setWeight(BigDecimal.ZERO);
+		totalExceptLastOne.setBuyerPoints(0);
+		totalExceptLastOne.setSellerPoints(0);
+		
+		
+		//将总积分按百分比分配
+		for(CustomerCategoryPointsDTO dto:categoryList) {
+			//// 交易量 10 交易额 20 商品 30 支付方式:40
+			BigDecimal percentage=BigDecimal.ZERO;
+			if(pointsDetail.getWeightType().equals(10)) {
+				percentage=dto.getWeight().divide(total.getWeight(),4,RoundingMode.HALF_EVEN);
+			}else if(pointsDetail.getWeightType().equals(20)) {
+				percentage=new BigDecimal(dto.getTotalMoney()).divide(total.getWeight(),4,RoundingMode.HALF_EVEN);
+			}else {
+				continue;
+			}
+			int points=percentage.multiply(new BigDecimal(totalPoints)).intValue();
+			//10:采购,20:销售
+			if("purchase".equals(pointsDetail.getCustomerType())) {
+				dto.setBuyerPoints((dto.getBuyerPoints()==null?0:dto.getBuyerPoints())+points);
+				total.setBuyerPoints(total.getBuyerPoints()+points);
+			}else if("sale".equals(pointsDetail.getCustomerType())) {
+				dto.setSellerPoints((dto.getSellerPoints()==null?0:dto.getSellerPoints())+points);
+				total.setSellerPoints(total.getBuyerPoints()+points);
+			}
+		}
+		
+		//对积分进行修正(最后一个的积分等于总积分减去前面积分之和)
+		if(!categoryList.isEmpty()) {
+			CustomerCategoryPointsDTO lastCategoryPointsDTO=categoryList.get(categoryList.size()-1);
+			//if("purchase".equals(pointsDetail.getCustomerType())) {
+				lastCategoryPointsDTO.setBuyerPoints(totalPoints-totalExceptLastOne.getBuyerPoints());
+			//}else if("sale".equals(pointsDetail.getCustomerType())) {
+				lastCategoryPointsDTO.setSellerPoints(totalPoints-totalExceptLastOne.getSellerPoints());
+			//}
+		}
+		return new ArrayList<>(categoryList);
+	}
 	@Transactional(propagation = Propagation.REQUIRED)
 	public int batchInsertPointsDetailDTO(List<PointsDetailDTO> pointsDetail) {
 		pointsDetail.stream().forEach(p->{
@@ -69,10 +153,11 @@ public class PointsDetailServiceImpl extends BaseServiceImpl<PointsDetail, Long>
 		return pointsExceptionMapper.insertExact(exceptionalPoints);
 	}
 	@Transactional(propagation = Propagation.REQUIRED)
-	public int insert(PointsDetailDTO pointsDetail) {
+	public Optional<PointsDetailDTO> insert(PointsDetailDTO pointsDetail) { 
 		if(pointsDetail.getException()!=null&&pointsDetail.getException().equals(1)) {
 			//异常积分信息保存
-			return this.insertPointsException(pointsDetail);
+			 this.insertPointsException(pointsDetail);
+			 return Optional.empty();
 		}
 		Long customerId = pointsDetail.getCustomerId();
 		CustomerPoints example = DTOUtils.newDTO(CustomerPoints.class);
@@ -102,7 +187,7 @@ public class PointsDetailServiceImpl extends BaseServiceImpl<PointsDetail, Long>
 			// }
 			// return null;
 		});
-
+		
 		Integer points = pointsDetail.getPoints();
 		if (points == null) {
 			pointsDetail.setPoints(0);
@@ -118,8 +203,8 @@ public class PointsDetailServiceImpl extends BaseServiceImpl<PointsDetail, Long>
 			throw new AppException("远程查询积分上限出错!");
 		}
 		int total = Integer.parseInt(output.getData().getValue());// 积分上限
-
-
+		
+		
 		Integer dayPoints = customerPoints.getDayPoints();// 当天积分总和
 		if(dayPoints==null) {
 			dayPoints=0;
@@ -131,18 +216,18 @@ public class PointsDetailServiceImpl extends BaseServiceImpl<PointsDetail, Long>
 		}else {
 			//如果RestTime为空则把当前时间减少一天,做为resttime
 			TemporalAmount tm=Duration.ofDays(1);
-			instant =instant.minus(tm);
+			instant =instant.minus(tm); 
 		}
-
-
+		 
+		
 		 ZoneId defaultZoneId = ZoneId.systemDefault();
 	     LocalDate resetDate = instant.atZone(defaultZoneId).toLocalDate();
 		//当前时间
 		LocalDate currentDate = LocalDate.now();
-
-
+		
+		
 		if(!pointsDetail.getGenerateWay().equals(50)&&points>0) {//50手工调整(对于手工调整,不做累加不做判断)
-
+	
 			// 如果上次累积积分的时间为今天时,进行积分上限处理
 			if (resetDate.isEqual(currentDate)) {
 				// 如果当天积分总和已经超过上限,当前积分详情的积分归为0,当天积分总和分为total
@@ -164,23 +249,23 @@ public class PointsDetailServiceImpl extends BaseServiceImpl<PointsDetail, Long>
 					points=total;
 					dayPoints=total;
 				}else {
-					dayPoints = points;
+					dayPoints = points;	
 				}
-
+				
 			}
 		}else {
 			// 如果上次修改积分的时间不是今天时,初始化积分上限到0
 			if (!resetDate.isEqual(currentDate)) {
 				dayPoints = 0;
-			}
+			} 
 		}
 
-
+		
 		customerPoints.setResetTime(new Date());
 		customerPoints.setModified(new Date());
 		customerPoints.setDayPoints(dayPoints);
 
-
+		
 
 		// 计算用户可用积分和总积分
 		customerPoints.setAvailable(customerPoints.getAvailable() + points);
@@ -191,26 +276,28 @@ public class PointsDetailServiceImpl extends BaseServiceImpl<PointsDetail, Long>
 		customerPoints.setTotal(customerPoints.getAvailable() + customerPoints.getFrozen());
 		pointsDetail.setPoints(points);
 		pointsDetail.setBalance(customerPoints.getTotal());
-
+		
 		//10:采购,20:销售
 		if("purchase".equals(pointsDetail.getCustomerType())) {
 			customerPoints.setBuyerPoints((customerPoints.getBuyerPoints()==null?0:customerPoints.getBuyerPoints())+points);
 		}else if("sale".equals(pointsDetail.getCustomerType())) {
 			customerPoints.setSellerPoints((customerPoints.getSellerPoints()==null?0:customerPoints.getSellerPoints())+points);
 		}
-
+		
 		if(points==0) {
-			return this.insertPointsException(pointsDetail);
+			this.insertPointsException(pointsDetail);
 		}else {
 			// pointsDetail.setId(System.currentTimeMillis());
 			this.customerPointsMapper.updateByPrimaryKey(customerPoints);
 			// return 0;
 			// pointsDetail.setId(null);
-			return super.insertSelective(pointsDetail);
-
+			super.insertSelective(pointsDetail);	
+			return Optional.ofNullable(pointsDetail);
+				
 		}
-
-
+		return Optional.empty();
+		
+		
 
 	}
 

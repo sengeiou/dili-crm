@@ -44,5 +44,12 @@ public interface PointsDetailDTO extends PointsDetail {
 	Date getCreatedEnd();
 
 	void setCreatedEnd(Date createdEnd);
+	
+	
+    //计算权限的类型(交易量 10 交易额 20 商品 30 支付方式:40)
+	@Transient
+	Integer getWeightType();
+	void setWeightType(Integer weightType);
+	
 
 }

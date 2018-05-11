@@ -2,6 +2,7 @@ package com.dili.points.component;
 
 import java.io.UnsupportedEncodingException;
 import java.math.BigDecimal;
+import java.util.AbstractMap;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -9,9 +10,12 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
 import java.util.function.BiConsumer;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.StringUtils;
@@ -37,6 +41,7 @@ import com.dili.points.domain.PointsDetail;
 import com.dili.points.domain.PointsRule;
 import com.dili.points.domain.RuleCondition;
 import com.dili.points.domain.dto.CustomerApiDTO;
+import com.dili.points.domain.dto.CustomerCategoryPointsDTO;
 import com.dili.points.domain.dto.PointsDetailDTO;
 import com.dili.points.provider.DataDictionaryValueProvider;
 import com.dili.points.rpc.CustomerRpc;
@@ -221,9 +226,9 @@ public class OrderListener {
 		Map<Order, List<OrderItem>> saleOrdersMap = orderMap;
 
 		// 计算买家积分
-		List<PointsDetailDTO> purchasePointsDetails = this.calPoints(purchaseOrdersMap, "purchase");
+		 Map<PointsDetailDTO,List<CustomerCategoryPointsDTO>> purchasePointsDetails = this.calPoints(purchaseOrdersMap, "purchase");
 		// 计算卖家积分
-		List<PointsDetailDTO> salePointsDetails = this.calPoints(saleOrdersMap, "sale");
+		 Map<PointsDetailDTO,List<CustomerCategoryPointsDTO>> salePointsDetails = this.calPoints(saleOrdersMap, "sale");
 		this.saveOrdersAndPointsDetailsData(orderMap, purchasePointsDetails, salePointsDetails);
 	}
 
@@ -234,7 +239,7 @@ public class OrderListener {
 	 */
 	@Transactional(timeout = 90, propagation = Propagation.REQUIRED)
 	public void saveOrdersAndPointsDetailsData(Map<Order, List<OrderItem>> orderMap,
-			List<PointsDetailDTO> purchasePointsDetails, List<PointsDetailDTO> salePointsDetails) {
+			Map<PointsDetailDTO,List<CustomerCategoryPointsDTO>> purchasePointsDetails, Map<PointsDetailDTO,List<CustomerCategoryPointsDTO>> salePointsDetails) {
 
 		// 保存订单信息
 		orderMap.forEach((order, orderItemList) -> {
@@ -280,14 +285,14 @@ public class OrderListener {
 	 *            证件号
 	 * @return
 	 */
-	protected Long findIdByCertificateNumber(String certificateNumber) {
+	protected Customer findIdByCertificateNumber(String certificateNumber) {
 		CustomerApiDTO dto = DTOUtils.newDTO(CustomerApiDTO.class);
 		dto.setYn(1);
 		dto.setCertificateNumber(certificateNumber);
 		try {
 			BaseOutput<List<Customer>> baseOut = this.customerRpc.list(dto);
 			if (baseOut.isSuccess() && !baseOut.getData().isEmpty()) {
-				return baseOut.getData().get(0).getId();
+				return baseOut.getData().get(0);
 			} /*
 				 * else { throw new AppException("根据证件号:"+certificateNumber+",没有查询到客户信息"); }
 				 */
@@ -495,7 +500,7 @@ public class OrderListener {
 	}
 
 	// 卖家sale,买家purchase
-	private List<PointsDetailDTO> calPoints(Map<Order, List<OrderItem>> orderMap, String customerType) {
+	private Map<PointsDetailDTO,List<CustomerCategoryPointsDTO>> calPoints(Map<Order, List<OrderItem>> orderMap, String customerType) {
 		boolean isBuyer = this.isBuyer(customerType);
 //		if ("sale".equals(customerType)) {
 //			isPurchase = false;
@@ -506,7 +511,7 @@ public class OrderListener {
 //		}
 
 
-		List<PointsDetailDTO> pointsDetailList = new ArrayList<>();
+		Map<PointsDetailDTO,List<CustomerCategoryPointsDTO>> pointsDetailListMap = new HashMap<>();
 
 		orderMap.forEach((order, orderItemList) -> {
 			PointsRule pointsRule = this.findPointsRule(customerType,order.getBusinessType()).orElse(null);
@@ -573,9 +578,9 @@ public class OrderListener {
 				return;
 			}
 			// try {
-			Long customerId = this.findIdByCertificateNumber(certificateNumber);
-			if (customerId != null) {
-				pointsDetail.setCustomerId(customerId);
+			Customer customer=this.findIdByCertificateNumber(certificateNumber);
+			if (customer != null&&customer.getId()!=null) {
+				pointsDetail.setCustomerId(customer.getId());
 			} else {
 				pointsDetail.setNotes("未能通过证件号["+certificateNumber+"]查询到客户信息");
 				pointsDetail.setException(1);
@@ -586,14 +591,27 @@ public class OrderListener {
 	
 			// logger.warn("查询客户ID出错,当前积分详情将会被保存到异常积分!");
 			// }
-			BigDecimal orderWeight = order.getWeight();// 交易量
-			BigDecimal totalMoney = new BigDecimal(order.getTotalMoney()).divide(new BigDecimal("100"));// 交易额
-			BigDecimal payment = new BigDecimal(order.getPayment());// 支付方式
+			BigDecimal orderWeightValue = order.getWeight();// 交易量
+			BigDecimal totalMoneyValue = new BigDecimal(order.getTotalMoney()).divide(new BigDecimal("100"));// 交易额
+			BigDecimal paymentValue = new BigDecimal(order.getPayment());// 支付方式
 	
 			// 三个量值与对应的条件列表匹配权重值
-			List<BigDecimal> weightList = Arrays.asList(this.calculateWeight(orderWeight, tradeWeightConditionList),
-					this.calculateWeight(totalMoney, tradeTotalMoneyConditionList),
-					this.calculateWeight(payment, tradeTypeConditionList));
+			Entry<Boolean,BigDecimal>tradeWeightEntry=this.calculateWeight(orderWeightValue, tradeWeightConditionList);
+			Entry<Boolean,BigDecimal>totalMoneyEntry=this.calculateWeight(totalMoneyValue, tradeTotalMoneyConditionList);
+			Entry<Boolean,BigDecimal>paymentEntry=this.calculateWeight(paymentValue, tradeTypeConditionList);
+			
+			// 交易量 10 交易额 20 商品 30 支付方式:40
+			if(tradeWeightEntry.getKey()) {
+				pointsDetail.setWeightType(10);
+			}
+			if(totalMoneyEntry.getKey()) {
+				pointsDetail.setWeightType(20);
+			}
+			
+			
+			List<BigDecimal> weightList = Arrays.asList(tradeWeightEntry.getValue(),
+					totalMoneyEntry.getValue(),
+					paymentEntry.getValue());
 			logger.info("三个积分权重分别为:"+weightList);
 			// 计算积分值
 			BigDecimal points = weightList.stream().reduce(basePoint, (t, u) -> t.multiply(u));
@@ -602,13 +620,97 @@ public class OrderListener {
 			//只保存积分值大于0的积分明细
 			if(points.intValue()>0) {
 				pointsDetail.setPoints(points.intValue());
-				pointsDetailList.add(pointsDetail);
+				List<CustomerCategoryPointsDTO>itemList=this.combineOrderItemByCategory(customer,pointsDetail,orderItemList);
+				pointsDetailListMap.put(pointsDetail,itemList);
 			}
 		});
-		return pointsDetailList;
+		return pointsDetailListMap;
 
 	}
-
+	private List<CustomerCategoryPointsDTO>combineOrderItemByCategory(Customer customer,PointsDetailDTO pointsDetail,List<OrderItem>orderItemList){
+		List<CustomerCategoryPointsDTO>list= orderItemList
+		.stream()
+		//过滤空对象及Id为空的对象
+		.filter(item->{return (item!=null&&item.getCategoryId()!=null);})
+		.map(item->{
+			//对重量和金额进行初始化防止为空
+			if(item.getTotalMoney()==null||item.getTotalMoney()<0) {
+				item.setTotalMoney(0L);
+			}
+			if(item.getWeight()==null||item.getWeight().compareTo(BigDecimal.ZERO)<0) {
+				item.setWeight(BigDecimal.ZERO);
+			}
+			return item;
+		})
+		//按照Id进行分组
+		.collect(Collectors.groupingBy(OrderItem::getCategoryId))
+		.values()
+		.stream()
+		//对分组后的集合进行数据合并计算
+		.map((itemList)->{
+			return itemList.stream()
+				.reduce((t,u)->{
+					//进行金额和重量累加
+					t.setTotalMoney(t.getTotalMoney()+u.getTotalMoney());
+					t.setWeight(t.getWeight().add(u.getWeight()));
+					return t;
+				});
+			})
+		.map(Optional::get)
+		.filter(item->item!=null)
+		//对象类型转换
+		.map(item->{
+			Long categoryId=item.getCategoryId();
+			
+			//进行数据对象的转换
+			CustomerCategoryPointsDTO dto=DTOUtils.cast(item, CustomerCategoryPointsDTO.class);
+			dto.setCertificateNumber(customer.getCertificateNumber());
+			dto.setCertificateType(customer.getCertificateType());
+			dto.setName(customer.getName());
+			dto.setOrder(item.getOrder());
+			dto.setOrganizationType(customer.getOrganizationType());
+			dto.setSourceSystem(pointsDetail.getSourceSystem());
+			dto.setOrderCode(item.getOrderCode());
+			dto.setTotalMoney(item.getTotalMoney());
+			dto.setWeight(item.getWeight());
+			dto.setCategory3Id(categoryId);
+			dto.setCategory3Name("未知");
+			
+			Category category3Condition=DTOUtils.newDTO(Category.class);
+			category3Condition.setCategoryId(String.valueOf(categoryId));
+			category3Condition.setSourceSystem(pointsDetail.getSourceSystem());
+			//查询并设置第三级品类ID和名称
+			this.categoryService.list(category3Condition).stream().findFirst().ifPresent(c3->{
+				dto.setCategory3Id(categoryId);
+				dto.setCategory3Name(c3.getName());
+				if(c3.getParentCategoryId()!=null) {
+					Category category2Condition=DTOUtils.newDTO(Category.class);
+					category2Condition.setCategoryId(String.valueOf(c3.getParentCategoryId()));
+					category2Condition.setSourceSystem(pointsDetail.getSourceSystem());
+					//查询并设置第二级品类ID和名称
+					this.categoryService.list(category3Condition).stream().findFirst().ifPresent(c2->{
+						dto.setCategory2Id(Long.valueOf(c2.getCategoryId()));
+						dto.setCategory2Name(c2.getName());
+						if(c2.getParentCategoryId()!=null) {
+							Category category1Condition=DTOUtils.newDTO(Category.class);
+							category1Condition.setCategoryId(String.valueOf(c2.getParentCategoryId()));
+							category1Condition.setSourceSystem(pointsDetail.getSourceSystem());
+							//查询并设置第一级品类ID和名称
+							this.categoryService.list(category1Condition).stream().findFirst().ifPresent(c->{
+								dto.setCategory1Id(Long.valueOf(c.getCategoryId()));
+								dto.setCategory1Name(c.getName());
+							});
+						}
+					});
+				}
+			});
+			return dto;
+		
+		})
+		.collect(Collectors.toList());
+		
+		return list;
+	}
 	/**
 	 * 根据标准值和条件表表,选出条件的第一个权重值
 	 * 
@@ -616,9 +718,10 @@ public class OrderListener {
 	 * @param ruleConditionList
 	 * @return
 	 */
-	protected BigDecimal calculateWeight(BigDecimal conditionNumber, List<RuleCondition> ruleConditionList) {
+	protected Entry<Boolean,BigDecimal> calculateWeight(BigDecimal conditionNumber, List<RuleCondition> ruleConditionList) {
 		//ruleConditionList.stream().collect(Collectors.groupingBy(r->{return r.getConditionType()}));
 		logger.info("conditionNumber="+conditionNumber);
+	
 		for (RuleCondition ruleCondition : ruleConditionList) {
 
 			String conditionWeight = ruleCondition.getWeight();// 权重
@@ -650,11 +753,10 @@ public class OrderListener {
 			// 如果有匹配的权重就返回否则返回1
 			if (hitCondition) {
 				logger.info("命中积分规则:"+ruleCondition.getId());
-				return new BigDecimal(conditionWeight);
+				return new AbstractMap.SimpleEntry<>(hitCondition, new BigDecimal(conditionWeight));
 			}
 		}
-
-		return BigDecimal.ONE;
+		return new AbstractMap.SimpleEntry<>(false, BigDecimal.ONE);
 	}
 
 }

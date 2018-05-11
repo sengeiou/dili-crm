@@ -23,6 +23,7 @@ import org.springframework.test.context.web.WebAppConfiguration;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.*;
+import java.util.Map.Entry;
 
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.spy;
@@ -129,8 +130,8 @@ public class OrderListenerTest {
 		ruleCondition.setValue("10");
 		ruleCondition.setWeight("1.1");
 		List<RuleCondition>ruleConditionList=Lists.newArrayList(ruleCondition);
-		BigDecimal weight=this.orderListener.calculateWeight(new BigDecimal("10"), ruleConditionList);
-		Assert.assertEquals(weight.subtract(new BigDecimal(ruleCondition.getWeight())).setScale(0, RoundingMode.HALF_EVEN), BigDecimal.ZERO);
+		Entry<Boolean,BigDecimal> weight=this.orderListener.calculateWeight(new BigDecimal("10"), ruleConditionList);
+		Assert.assertEquals(weight.getValue().subtract(new BigDecimal(ruleCondition.getWeight())).setScale(0, RoundingMode.HALF_EVEN), BigDecimal.ZERO);
 		
 		weight=this.orderListener.calculateWeight(new BigDecimal("9"), ruleConditionList);
 		Assert.assertEquals(weight, BigDecimal.ONE);
@@ -141,9 +142,9 @@ public class OrderListenerTest {
 		ruleCondition.setWeight("1.2");
 		
 		weight=this.orderListener.calculateWeight(new BigDecimal("20"), ruleConditionList);
-		Assert.assertEquals(weight.subtract(new BigDecimal(ruleCondition.getWeight())).setScale(0, RoundingMode.HALF_EVEN), BigDecimal.ZERO);
+		Assert.assertEquals(weight.getValue().subtract(new BigDecimal(ruleCondition.getWeight())).setScale(0, RoundingMode.HALF_EVEN), BigDecimal.ZERO);
 		weight=this.orderListener.calculateWeight(new BigDecimal("21"), ruleConditionList);
-		Assert.assertEquals(weight.subtract(new BigDecimal(ruleCondition.getWeight())).setScale(0, RoundingMode.HALF_EVEN), BigDecimal.ZERO);
+		Assert.assertEquals(weight.getValue().subtract(new BigDecimal(ruleCondition.getWeight())).setScale(0, RoundingMode.HALF_EVEN), BigDecimal.ZERO);
 		
 		weight=this.orderListener.calculateWeight(new BigDecimal("19"), ruleConditionList);
 		Assert.assertEquals(weight, BigDecimal.ONE);
@@ -152,7 +153,7 @@ public class OrderListenerTest {
 		ruleCondition.setValue("30");
 		ruleCondition.setWeight("1.3");
 		weight=this.orderListener.calculateWeight(new BigDecimal("31"), ruleConditionList);
-		Assert.assertEquals(weight.subtract(new BigDecimal(ruleCondition.getWeight())).setScale(0, RoundingMode.HALF_EVEN), BigDecimal.ZERO);
+		Assert.assertEquals(weight.getValue().subtract(new BigDecimal(ruleCondition.getWeight())).setScale(0, RoundingMode.HALF_EVEN), BigDecimal.ZERO);
 		
 		weight=this.orderListener.calculateWeight(new BigDecimal("30"), ruleConditionList);
 		Assert.assertEquals(weight, BigDecimal.ONE);
@@ -164,9 +165,9 @@ public class OrderListenerTest {
 		ruleCondition.setValue("40");
 		ruleCondition.setWeight("1.4");
 		weight=this.orderListener.calculateWeight(new BigDecimal("40"), ruleConditionList);
-		Assert.assertEquals(weight.subtract(new BigDecimal(ruleCondition.getWeight())).setScale(0, RoundingMode.HALF_EVEN), BigDecimal.ZERO);
+		Assert.assertEquals(weight.getValue().subtract(new BigDecimal(ruleCondition.getWeight())).setScale(0, RoundingMode.HALF_EVEN), BigDecimal.ZERO);
 		weight=this.orderListener.calculateWeight(new BigDecimal("39"), ruleConditionList);
-		Assert.assertEquals(weight.subtract(new BigDecimal(ruleCondition.getWeight())).setScale(0, RoundingMode.HALF_EVEN), BigDecimal.ZERO);
+		Assert.assertEquals(weight.getValue().subtract(new BigDecimal(ruleCondition.getWeight())).setScale(0, RoundingMode.HALF_EVEN), BigDecimal.ZERO);
 		
 		weight=this.orderListener.calculateWeight(new BigDecimal("41"), ruleConditionList);
 		Assert.assertEquals(weight, BigDecimal.ONE);
@@ -176,7 +177,7 @@ public class OrderListenerTest {
 		ruleCondition.setValue("50");
 		ruleCondition.setWeight("1.5");
 		weight=this.orderListener.calculateWeight(new BigDecimal("49"), ruleConditionList);
-		Assert.assertEquals(weight.subtract(new BigDecimal(ruleCondition.getWeight())).setScale(0, RoundingMode.HALF_EVEN), BigDecimal.ZERO);
+		Assert.assertEquals(weight.getValue().subtract(new BigDecimal(ruleCondition.getWeight())).setScale(0, RoundingMode.HALF_EVEN), BigDecimal.ZERO);
 		
 		weight=this.orderListener.calculateWeight(new BigDecimal("50"), ruleConditionList);
 		Assert.assertEquals(weight, BigDecimal.ONE);
@@ -189,9 +190,9 @@ public class OrderListenerTest {
 		ruleCondition.setEndValue("65");
 		ruleCondition.setWeight("1.6");
 		weight=this.orderListener.calculateWeight(new BigDecimal("55"), ruleConditionList);
-		Assert.assertEquals(weight.subtract(new BigDecimal(ruleCondition.getWeight())).setScale(0, RoundingMode.HALF_EVEN), BigDecimal.ZERO);
+		Assert.assertEquals(weight.getValue().subtract(new BigDecimal(ruleCondition.getWeight())).setScale(0, RoundingMode.HALF_EVEN), BigDecimal.ZERO);
 		weight=this.orderListener.calculateWeight(new BigDecimal("65"), ruleConditionList);
-		Assert.assertEquals(weight.subtract(new BigDecimal(ruleCondition.getWeight())).setScale(0, RoundingMode.HALF_EVEN), BigDecimal.ZERO);
+		Assert.assertEquals(weight.getValue().subtract(new BigDecimal(ruleCondition.getWeight())).setScale(0, RoundingMode.HALF_EVEN), BigDecimal.ZERO);
 		
 		weight=this.orderListener.calculateWeight(new BigDecimal("54"), ruleConditionList);
 		Assert.assertEquals(weight, BigDecimal.ONE);
