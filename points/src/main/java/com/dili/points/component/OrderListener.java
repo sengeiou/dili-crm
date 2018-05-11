@@ -634,6 +634,9 @@ public class OrderListener {
 
 	}
 	private List<CustomerCategoryPointsDTO>combineOrderItemByCategory(Customer customer,PointsDetailDTO pointsDetail,List<OrderItem>orderItemList){
+		if(customer==null){
+			return Collections.emptyList();
+		}
 		List<CustomerCategoryPointsDTO>list= orderItemList
 		.stream()
 		//过滤空对象及Id为空的对象
