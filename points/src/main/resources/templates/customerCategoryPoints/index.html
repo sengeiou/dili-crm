@@ -242,20 +242,20 @@
             }
             var pager = $('#grid').datagrid('getPager');    // get the pager of treegrid
                 pager.pagination({
-                    <;#controls_paginationOpts/>,
-                    buttons;:[
-            <;#resource; code="exportCategoryPoints">
-                {
-                iconCls:'icon-export',
-                text:'导出',
-                handler:function(){
-                    doExport('grid');
-                }
-            }
-        </#resource>;
+                    <#controls_paginationOpts/>,
+                    buttons:[
+                    <#resource code="exportCategoryPoints">
+                        {
+                            iconCls:'icon-export',
+                            text:'导出',
+                            handler:function(){
+                                doExport('grid');
+                            }
+                        }
+                    </#resource>
 
-                ]
-        })
+                        ]
+                })
             //表格仅显示下边框
             $('#grid').datagrid('getPanel').removeClass('lines-both lines-no lines-right lines-bottom').addClass("lines-bottom");
             queryGrid();
