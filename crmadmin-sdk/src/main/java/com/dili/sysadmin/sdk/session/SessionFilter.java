@@ -169,7 +169,7 @@ public class SessionFilter implements Filter {
      * @param pc
      */
     private void setNavAttr(PermissionContext pc){
-        BaseOutput<List<Menu>> list = menuRpc.getParentMenusByUrl(pc.getUrl());
+        BaseOutput<List<Menu>> list = menuRpc.getParentMenusByUrl(pc.getUrl().trim());
         if(list == null || list.getData() == null || list.getData().isEmpty()){
             WebContent.getRequest().setAttribute("parentMenus", Lists.newArrayList());
         }else {
