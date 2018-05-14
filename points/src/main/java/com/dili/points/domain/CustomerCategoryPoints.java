@@ -19,12 +19,18 @@ public interface CustomerCategoryPoints extends IBaseDomain {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "`id`")
-    @FieldDef(label="客户ID")
+    @FieldDef(label="ID")
     @EditMode(editor = FieldEditor.Number, required = true)
     Long getId();
 
     void setId(Long id);
 
+    @Column(name = "`customer_id`")
+    @FieldDef(label="客户ID")
+    @EditMode(editor = FieldEditor.Number, required = true)
+	Long getCustomerId();
+	void setCustomerId(Long customerId);
+	
     @Column(name = "`name`")
     @FieldDef(label="客户名称", maxLength = 40)
     @Like(value = Like.BOTH)
