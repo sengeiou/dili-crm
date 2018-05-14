@@ -72,8 +72,8 @@ public class PointsDetailServiceImpl extends BaseServiceImpl<PointsDetail, Long>
 	public int batchInsertPointsDetailDTO(Map<PointsDetailDTO,List<CustomerCategoryPointsDTO>> pointsDetailMap) {
 		for(Entry<PointsDetailDTO, List<CustomerCategoryPointsDTO>> entry:pointsDetailMap.entrySet()) {
 			PointsDetailDTO pointsDetail=entry.getKey();
-			
 			Optional<PointsDetailDTO> pointsDetailDTO=this.insert(pointsDetail);
+			logger.info("是否进行积分分配{}: CertificateNumber {},CustomerType {},totalPoints: {}",pointsDetailDTO.isPresent(),pointsDetail.getCertificateNumber(),pointsDetail.getCustomerType());
 			pointsDetailDTO.ifPresent((p)->{
 				//对总积分按照百分比(金额或者重量)进行分配
 				List<CustomerCategoryPoints>categoryList=this.reCalculateCategoryPoints(p, entry.getValue());
@@ -95,6 +95,7 @@ public class PointsDetailServiceImpl extends BaseServiceImpl<PointsDetail, Long>
 	}
 	private List<CustomerCategoryPoints>reCalculateCategoryPoints(PointsDetailDTO pointsDetail,List<CustomerCategoryPointsDTO>categoryList){
 		if(pointsDetail.getWeightType()==null) {
+			logger.info("权重计算方式为空不进行品类计算 CertificateNumber {},CustomerType {}",pointsDetail.getCertificateNumber(),pointsDetail.getCustomerType());
 			return Collections.emptyList();
 		}
 		Integer totalPoints=pointsDetail.getPoints();
@@ -140,25 +141,28 @@ public class PointsDetailServiceImpl extends BaseServiceImpl<PointsDetail, Long>
 //				result.setCategory3Id(dto.getCategory3Id());
 //				result.setCategory3Name(dto.getCategory3Name());
 //			}
-//			
+			logger.info("CertificateNumber {},Weight{},Money:{},TotalWeight {},TotalMoney {},Category1Id {},Category1Name {}"
+					,pointsDetail.getCertificateNumber(),dto.getWeight().toPlainString(),dto.getTotalMoney(),total.getWeight().toPlainString()
+					,total.getTotalMoney(),dto.getCategory3Id(),dto.getCategory3Name());
 			BigDecimal percentage=BigDecimal.ZERO;
 			if(pointsDetail.getWeightType().equals(10)) {
-				percentage=dto.getWeight().divide(total.getWeight(),4,RoundingMode.HALF_EVEN);
+				percentage=dto.getWeight().divide(total.getWeight(),10,RoundingMode.HALF_EVEN);
 			}else if(pointsDetail.getWeightType().equals(20)) {
-				percentage=new BigDecimal(dto.getTotalMoney()).divide(total.getWeight(),4,RoundingMode.HALF_EVEN);
+				percentage=new BigDecimal(dto.getTotalMoney()).divide(new BigDecimal(total.getTotalMoney()),10,RoundingMode.HALF_EVEN);
 			}else {
 				continue;
 			}
 			
 			int points=percentage.multiply(new BigDecimal(totalPoints)).intValue();
-			logger.info("CertificateNumber {},CustomerType {},Category1Id {},Category1Name {},Points: {}",pointsDetail.getCertificateNumber(),pointsDetail.getCustomerType(),dto.getCategory3Id(),dto.getCategory3Name(),points);
+			logger.info("CertificateNumber {},CustomerType {},Category1Id {},Category1Name {},TotalPoints,{},Percentage:{},Points: {}"
+					,pointsDetail.getCertificateNumber(),pointsDetail.getCustomerType(),dto.getCategory3Id(),dto.getCategory3Name(),totalPoints,percentage.toPlainString(),points);
 			//10:采购,20:销售
 			if("purchase".equals(pointsDetail.getCustomerType())) {
 				dto.setBuyerPoints(dto.getBuyerPoints()+points);
 				total.setBuyerPoints(total.getBuyerPoints()+points);
 			}else if("sale".equals(pointsDetail.getCustomerType())) {
 				dto.setSellerPoints(dto.getSellerPoints()+points);
-				total.setSellerPoints(total.getBuyerPoints()+points);
+				total.setSellerPoints(total.getSellerPoints()+points);
 			}
 			dto.setAvailable(dto.getAvailable()+points);
 			logger.info("按百分比进行计算后的品类积分为:CertificateNumber {},CustomerType {},BuyerPoints {},SellerPoints {},Available: {}",pointsDetail.getCertificateNumber(),pointsDetail.getCustomerType(),dto.getBuyerPoints(),dto.getSellerPoints(),dto.getAvailable());
@@ -185,6 +189,7 @@ public class PointsDetailServiceImpl extends BaseServiceImpl<PointsDetail, Long>
 			condition.setCertificateNumber(dto.getCertificateNumber());
 			CustomerCategoryPoints result=this.customerCategoryPointsMapper.selectOne(condition);
 			if(result!=null) {
+				dto.setId(result.getId());
 				dto.setBuyerPoints(dto.getBuyerPoints()+result.getBuyerPoints());
 				dto.setSellerPoints(dto.getSellerPoints()+result.getSellerPoints());
 				dto.setAvailable(dto.getAvailable()+result.getAvailable());
