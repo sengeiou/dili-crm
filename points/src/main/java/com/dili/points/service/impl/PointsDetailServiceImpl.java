@@ -116,28 +116,28 @@ public class PointsDetailServiceImpl extends BaseServiceImpl<PointsDetail, Long>
 			//// 交易量 10 交易额 20 商品 30 支付方式:40
 			
 			
-			Long category3Id=dto.getCategory3Id();
-			String certificateNumber=dto.getCertificateNumber();
+//			Long category3Id=dto.getCategory3Id();
+//			String certificateNumber=dto.getCertificateNumber();
+//			
+//			CustomerCategoryPoints condition=DTOUtils.newDTO(CustomerCategoryPoints.class);
+//			condition.setCategory3Id(category3Id);
+//			condition.setCertificateNumber(certificateNumber);
 			
-			CustomerCategoryPoints condition=DTOUtils.newDTO(CustomerCategoryPoints.class);
-			condition.setCategory3Id(category3Id);
-			condition.setCertificateNumber(certificateNumber);
-			
-			CustomerCategoryPoints result=this.customerCategoryPointsMapper.selectOne(condition);
-			if(result==null) {
-				result=dto;
-				result.setAvailable(0);
-				result.setBuyerPoints(0);
-				result.setSellerPoints(0);
-			}else {
-				result.setCategory1Id(dto.getCategory1Id());
-				result.setCategory1Name(dto.getCategory1Name());
-				result.setCategory2Id(dto.getCategory2Id());
-				result.setCategory2Name(dto.getCategory2Name());
-				result.setCategory3Id(dto.getCategory3Id());
-				result.setCategory3Name(dto.getCategory3Name());
-			}
-			
+//			CustomerCategoryPoints result=this.customerCategoryPointsMapper.selectOne(condition);
+//			if(result==null) {
+//				result=dto;
+//				result.setAvailable(0);
+//				result.setBuyerPoints(0);
+//				result.setSellerPoints(0);
+//			}else {
+//				result.setCategory1Id(dto.getCategory1Id());
+//				result.setCategory1Name(dto.getCategory1Name());
+//				result.setCategory2Id(dto.getCategory2Id());
+//				result.setCategory2Name(dto.getCategory2Name());
+//				result.setCategory3Id(dto.getCategory3Id());
+//				result.setCategory3Name(dto.getCategory3Name());
+//			}
+//			
 			BigDecimal percentage=BigDecimal.ZERO;
 			if(pointsDetail.getWeightType().equals(10)) {
 				percentage=dto.getWeight().divide(total.getWeight(),4,RoundingMode.HALF_EVEN);
@@ -151,15 +151,15 @@ public class PointsDetailServiceImpl extends BaseServiceImpl<PointsDetail, Long>
 			logger.info("CertificateNumber {},CustomerType {},Category1Id {},Category1Name {},Points: {}",pointsDetail.getCertificateNumber(),pointsDetail.getCustomerType(),dto.getCategory3Id(),dto.getCategory3Name(),points);
 			//10:采购,20:销售
 			if("purchase".equals(pointsDetail.getCustomerType())) {
-				result.setBuyerPoints(result.getBuyerPoints()+points);
+				dto.setBuyerPoints(dto.getBuyerPoints()+points);
 				total.setBuyerPoints(total.getBuyerPoints()+points);
 			}else if("sale".equals(pointsDetail.getCustomerType())) {
-				result.setSellerPoints(result.getSellerPoints()+points);
+				dto.setSellerPoints(dto.getSellerPoints()+points);
 				total.setSellerPoints(total.getBuyerPoints()+points);
 			}
-			result.setAvailable(result.getAvailable()+points);
-			logger.info("按百分比进行计算后的品类积分为:CertificateNumber {},CustomerType {},BuyerPoints {},SellerPoints {},Available: {}",pointsDetail.getCertificateNumber(),pointsDetail.getCustomerType(),result.getBuyerPoints(),result.getSellerPoints(),result.getAvailable());
-			resultList.add(result);
+			dto.setAvailable(dto.getAvailable()+points);
+			logger.info("按百分比进行计算后的品类积分为:CertificateNumber {},CustomerType {},BuyerPoints {},SellerPoints {},Available: {}",pointsDetail.getCertificateNumber(),pointsDetail.getCustomerType(),dto.getBuyerPoints(),dto.getSellerPoints(),dto.getAvailable());
+			resultList.add(dto);
 		}
 		
 		//对积分进行修正(最后一个的积分等于总积分减去前面积分之和)
@@ -168,10 +168,25 @@ public class PointsDetailServiceImpl extends BaseServiceImpl<PointsDetail, Long>
 			if("purchase".equals(pointsDetail.getCustomerType())) {
 				lastCategoryPointsDTO.setBuyerPoints(totalPoints-(total.getBuyerPoints()-lastCategoryPointsDTO.getBuyerPoints()));
 			}else if("sale".equals(pointsDetail.getCustomerType())) {
-				lastCategoryPointsDTO.setSellerPoints(totalPoints-total.getSellerPoints()-lastCategoryPointsDTO.getSellerPoints());
+				lastCategoryPointsDTO.setSellerPoints(totalPoints-(total.getSellerPoints()-lastCategoryPointsDTO.getSellerPoints()));
 			}
 			lastCategoryPointsDTO.setAvailable(lastCategoryPointsDTO.getBuyerPoints()+lastCategoryPointsDTO.getSellerPoints());
 			logger.info("最后一条数据修:CertificateNumber {},CustomerType {},BuyerPoints{},SellerPoints{},Available: {}",pointsDetail.getCertificateNumber(),pointsDetail.getCustomerType(),lastCategoryPointsDTO.getBuyerPoints(),lastCategoryPointsDTO.getSellerPoints(),lastCategoryPointsDTO.getAvailable());
+		}
+		
+		//将当前积分累加到已有的积分数据(如果存在)
+		for(CustomerCategoryPoints dto:resultList) {
+			
+			CustomerCategoryPoints condition=DTOUtils.newDTO(CustomerCategoryPoints.class);
+			condition.setCategory3Id(dto.getCategory3Id());
+			condition.setCertificateNumber(dto.getCertificateNumber());
+			CustomerCategoryPoints result=this.customerCategoryPointsMapper.selectOne(condition);
+			if(result!=null) {
+				dto.setBuyerPoints(dto.getBuyerPoints()+result.getBuyerPoints());
+				dto.setSellerPoints(dto.getSellerPoints()+result.getSellerPoints());
+				dto.setAvailable(dto.getAvailable()+result.getAvailable());
+			}
+			
 		}
 		return resultList;
 	}
