@@ -149,14 +149,16 @@
         //清空表单
         function clearForm() {
             $('#form').form('clear');
-            resetCategory();
+            resetCategory(false);
             queryGrid();
         }
 
-        function resetCategory() {
+        function resetCategory(second) {
             var resetUrl = '${contextPath}/category/list?parentCategoryId=-1';
-            $('#category2Id').combobox('reload', resetUrl);
-            $('#category2Id').combobox('clear');
+            if (!second) {
+                $('#category2Id').combobox('reload', resetUrl);
+                $('#category2Id').combobox('clear');
+            }
             $('#category3Id').combobox('reload', resetUrl);
             $('#category3Id').combobox('clear');
         }
@@ -201,7 +203,7 @@
                 valueField:'categoryId',
                 textField:'name',
                 onSelect:function(record){
-                    resetCategory();
+                    resetCategory(false);
                     $('#category2Id').combobox({
                         url:'${contextPath}/category/list?parentCategoryId=' + record.categoryId,
                         valueField:'categoryId',
@@ -210,13 +212,20 @@
                             $('#category3Id').combobox({
                                 url:'${contextPath}/category/list?parentCategoryId=' + record.categoryId,
                                 valueField:'categoryId',
-                                textField:'name',
-                                onSelect:function(record){
-                                    console.log(record.categoryId);
-                                }
+                                textField:'name'
                             });
+                        },
+                        onChange:function (newValue,oldValue) {
+                            if(newValue == undefined){
+                                resetCategory(true);
+                            }
                         }
                     });
+                },
+                onChange:function (newValue,oldValue) {
+                    if(newValue == undefined){
+                        resetCategory(false);
+                    }
                 }
             });
 

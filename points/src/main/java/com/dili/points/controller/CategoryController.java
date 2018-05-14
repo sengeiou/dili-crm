@@ -3,17 +3,21 @@ package com.dili.points.controller;
 import com.dili.points.domain.Category;
 import com.dili.points.service.CategoryService;
 import com.dili.ss.domain.BaseOutput;
+import com.dili.ss.dto.DTOUtils;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
-import java.util.List;
+import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * 由MyBatis Generator工具自动生成
@@ -38,7 +42,15 @@ public class CategoryController {
 	})
     @RequestMapping(value="/list", method = {RequestMethod.GET, RequestMethod.POST})
     public @ResponseBody List<Category> list(Category category) {
-        return categoryService.list(category);
+        List<Category> list = categoryService.list(category);
+        if (CollectionUtils.isEmpty(list)) {
+            list = new ArrayList<>();
+        }
+        Category defaultValue = DTOUtils.newDTO(Category.class);
+        defaultValue.setCategoryId(null);
+        defaultValue.setName("-- 请选择 --");
+        list.add(0, defaultValue);
+        return list;
     }
 
     @ApiOperation(value="分页查询Category", notes = "分页查询Category，返回easyui分页信息")
