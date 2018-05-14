@@ -18,7 +18,7 @@ import java.util.List;
  * @author wangmi
  * @createTime 2018/3/24 14:11
  */
-@Restful("http://127.0.0.1:8086")
+@Restful("${points.contextPath}")
 public interface CustomerPointsRpc {
 
     @POST("/customerPointsApi/listCustomerPoints")
