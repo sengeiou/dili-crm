@@ -8,4 +8,6 @@ import com.dili.ss.base.BaseService;
  * This file was generated on 2018-05-09 17:35:45.
  */
 public interface CustomerCategoryPointsService extends BaseService<CustomerCategoryPoints, Long> {
+
+    int updateCustomerName(String name,Long id);
 }

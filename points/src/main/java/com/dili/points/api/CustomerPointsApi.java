@@ -1,9 +1,11 @@
 package com.dili.points.api;
 
+import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.dili.points.domain.CustomerPoints;
 import com.dili.points.domain.PointsDetail;
 import com.dili.points.domain.dto.CustomerPointsApiDTO;
+import com.dili.points.service.CustomerCategoryPointsService;
 import com.dili.points.service.CustomerPointsService;
 import com.dili.points.service.PointsDetailService;
 import com.dili.ss.domain.BaseOutput;
@@ -38,6 +40,9 @@ public class CustomerPointsApi {
     private CustomerPointsService customerPointsService;
     @Autowired
     private PointsDetailService pointsDetailService;
+
+    @Autowired
+    private CustomerCategoryPointsService customerCategoryPointsService;
 
     @ApiOperation(value = "根据客户证件号码查询客户积分信息", notes = "根据客户证件号码查询客户积分信息")
     @ApiImplicitParams({ @ApiImplicitParam(name = "certificateNumber JSON", paramType = "form", value = "证件号码JSON信息", dataType = "string") })
@@ -101,8 +106,8 @@ public class CustomerPointsApi {
     	customerPointsApiDTO.setYn(1);
         return BaseOutput.success().setData(customerPointsService.listByExample(customerPointsApiDTO));
     }
-    
-    
+
+
     @ApiOperation(value = "根据客户ID逻辑删除客户积分信息", notes = "根据客户ID逻辑删除客户积分信息")
     @ApiImplicitParams({ @ApiImplicitParam(name = "customerId Long", paramType = "form", value = "客户ID", dataType = "Long") })
     @RequestMapping(value = "/deleteCustomerPoints", method = { RequestMethod.POST })
@@ -115,7 +120,14 @@ public class CustomerPointsApi {
     		 return BaseOutput.success().setData(customerPoints);
     	}
     	 return BaseOutput.failure("更新客户积分信息失败");
-        
-       
+    }
+
+    @ApiOperation(value = "同步修改客户品类积分名字", notes = "同步修改客户品类积分名字")
+    @ApiImplicitParams({ @ApiImplicitParam(name = "customerInfo json", paramType = "form", value = "json", dataType = "json") })
+    @RequestMapping(value = "/updateCategoryPoints", method = { RequestMethod.POST })
+    public @ResponseBody BaseOutput<Void> updateCategoryPoints(@RequestBody String paramJson){
+        JSONObject jsonObject = JSON.parseObject(paramJson);
+        customerCategoryPointsService.updateCustomerName(jsonObject.getString("name"),jsonObject.getLong("id"));
+        return BaseOutput.success();
     }
 }

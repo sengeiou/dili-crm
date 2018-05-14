@@ -1,14 +1,13 @@
 package com.dili;
 
-import com.dili.ss.datasource.aop.DynamicRoutingDataSourceRegister;
 import com.dili.ss.retrofitful.annotation.RestfulScan;
-import org.springframework.boot.web.servlet.support.SpringBootServletInitializer;
-import tk.mybatis.spring.annotation.MapperScan;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.web.servlet.support.SpringBootServletInitializer;
 import org.springframework.context.annotation.ComponentScan;
-import org.springframework.context.annotation.Import;
+import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
+import tk.mybatis.spring.annotation.MapperScan;
 
 /**
  * 由MyBatis Generator工具自动生成
@@ -21,6 +20,7 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 @SpringBootApplication
 //@EnableScheduling
 @EnableTransactionManagement
+@EnableAsync
 //@EnableAutoConfiguration(exclude = {ThymeleafAutoConfiguration.class, VelocityAutoConfiguration.class})
 @MapperScan(basePackages = {"com.dili.points.dao", "com.dili.ss.dao"})
 //@ImportResource(locations = "classpath:applicationContext.xml")

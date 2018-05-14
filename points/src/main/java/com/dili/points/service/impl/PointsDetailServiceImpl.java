@@ -1,5 +1,6 @@
 package com.dili.points.service.impl;
 
+import com.dili.points.component.AsyncTask;
 import com.dili.points.dao.CustomerCategoryPointsMapper;
 import com.dili.points.dao.CustomerPointsMapper;
 import com.dili.points.dao.PointsDetailMapper;
@@ -65,6 +66,8 @@ public class PointsDetailServiceImpl extends BaseServiceImpl<PointsDetail, Long>
 	@Autowired CustomerCategoryPointsMapper customerCategoryPointsMapper;
 	@Autowired
 	SystemConfigRpc systemConfigRpc;
+	@Autowired
+	AsyncTask asyncTask;
 	@Transactional(propagation = Propagation.REQUIRED)
 	public int batchInsertPointsDetailDTO(Map<PointsDetailDTO,List<CustomerCategoryPointsDTO>> pointsDetailMap) {
 		for(Entry<PointsDetailDTO, List<CustomerCategoryPointsDTO>> entry:pointsDetailMap.entrySet()) {
@@ -376,6 +379,7 @@ public class PointsDetailServiceImpl extends BaseServiceImpl<PointsDetail, Long>
 		Example.Criteria criteria = example.createCriteria();
 		criteria.andIsNotNull("id");
 		customerPointsMapper.updateByExampleSelective(customerPoints, example);
+        asyncTask.generatePointsDetail(notes);
 		return 1;
 	}
 

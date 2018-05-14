@@ -6,6 +6,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.dili.crm.domain.Customer;
 import com.dili.crm.domain.Department;
 import com.dili.crm.domain.dto.MembersDto;
+import com.dili.crm.rpc.CustomerPointsRpc;
 import com.dili.crm.rpc.MapRpc;
 import com.dili.crm.rpc.UserRpc;
 import com.dili.crm.service.CustomerService;
@@ -55,6 +56,9 @@ public class CustomerController {
 
 	@Autowired
 	private UserRpc userRpc;
+
+	@Autowired
+	private CustomerPointsRpc customerPointsRpc;
 
 	@Autowired
 	MapRpc mapRpc;
@@ -189,7 +193,13 @@ public class CustomerController {
 		@ApiImplicitParam(name="Customer", paramType="form", value = "Customer的form信息", required = true, dataType = "string")
 	})
     @RequestMapping(value="/update", method = {RequestMethod.GET, RequestMethod.POST})
-    public @ResponseBody BaseOutput update(Customer customer) {
+    public @ResponseBody BaseOutput update(Customer customer , String oldName) {
+		if(!StringUtils.equals(oldName,customer.getName())){
+			JSONObject jsonObject = new JSONObject();
+			jsonObject.put("id",customer.getId());
+			jsonObject.put("name",customer.getName());
+			customerPointsRpc.updateCategoryPoints(jsonObject.toJSONString());
+		}
 	    return customerService.updateSelectiveWithOutput(customer);
     }
 

@@ -3,7 +3,6 @@ package com.dili.crm.rpc;
 import com.dili.crm.domain.dto.CustomerPoints;
 import com.dili.crm.domain.dto.CustomerPointsApiDTO;
 import com.dili.ss.domain.BaseOutput;
-import com.dili.ss.domain.EasyuiPageOutput;
 import com.dili.ss.retrofitful.annotation.POST;
 import com.dili.ss.retrofitful.annotation.Restful;
 import com.dili.ss.retrofitful.annotation.VOBody;
@@ -19,12 +18,15 @@ import java.util.List;
  * @author wangmi
  * @createTime 2018/3/24 14:11
  */
-@Restful("${points.contextPath}")
+@Restful("http://127.0.0.1:8086")
 public interface CustomerPointsRpc {
 
     @POST("/customerPointsApi/listCustomerPoints")
     BaseOutput<List<CustomerPoints>> listCustomerPoints(@VOBody CustomerPointsApiDTO customer);
     @POST("/customerPointsApi/deleteCustomerPoints")
     BaseOutput<CustomerPoints> deleteCustomerPoints(@VOBody Long customerId);
+
+    @POST("/customerPointsApi/updateCategoryPoints")
+    BaseOutput<Void> updateCategoryPoints(@VOBody String paramJson);
 
 }
