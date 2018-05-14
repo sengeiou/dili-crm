@@ -608,9 +608,11 @@ public class OrderListener {
 			
 			// 交易量 10 交易额 20 商品 30 支付方式:40
 			if(tradeWeightEntry.getKey()) {
+				logger.info("基于交易量进行积分计算 {}",certificateNumber);
 				pointsDetail.setWeightType(10);
 			}
 			if(totalMoneyEntry.getKey()) {
+				logger.info("基于交易额进行积分计算 {}",certificateNumber);
 				pointsDetail.setWeightType(20);
 			}
 			
