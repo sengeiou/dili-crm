@@ -230,9 +230,9 @@
             }
             var pager = $('#grid').datagrid('getPager');    // get the pager of treegrid
                 pager.pagination({
-                    <;#controls_paginationOpts/>,
-                    buttons;:[
-                    <;#resource; code="exportCategoryPoints">
+                    <#controls_paginationOpts/>,
+                    buttons:[
+                    <#resource code="exportCategoryPoints">
                         {
                             iconCls:'icon-export',
                             text:'导出',
@@ -240,7 +240,7 @@
                                 doExport('grid');
                             }
                         }
-                    </#resource>;
+                    </#resource>
 
                         ]
                 })
