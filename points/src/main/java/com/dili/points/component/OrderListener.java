@@ -607,15 +607,17 @@ public class OrderListener {
 			Entry<Boolean,BigDecimal>paymentEntry=this.calculateWeight(paymentValue, tradeTypeConditionList);
 			
 			// 交易量 10 交易额 20 商品 30 支付方式:40
-			if(tradeWeightEntry.getKey()) {
+			
+
+			Integer computingStandard = pointsRule.getComputingStandard();
+			// 10 交易量,20 交易额,30 固定值
+			if (computingStandard == 10) {
 				logger.info("基于交易量进行积分计算 {}",certificateNumber);
 				pointsDetail.setWeightType(10);
-			}
-			if(totalMoneyEntry.getKey()) {
+			} else if (computingStandard == 20) {
 				logger.info("基于交易额进行积分计算 {}",certificateNumber);
 				pointsDetail.setWeightType(20);
-			}
-			
+			} 
 			
 			List<BigDecimal> weightList = Arrays.asList(tradeWeightEntry.getValue(),
 					totalMoneyEntry.getValue(),
