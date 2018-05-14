@@ -675,6 +675,7 @@ public class OrderListener {
 			CustomerCategoryPointsDTO dto=DTOUtils.newDTO(CustomerCategoryPointsDTO.class);
 			dto.setCertificateNumber(customer.getCertificateNumber());
 			dto.setCertificateType(customer.getCertificateType());
+			dto.setCustomerId(customer.getId());
 			dto.setName(customer.getName());
 			dto.setOrder(item.getOrder());
 			dto.setOrganizationType(customer.getOrganizationType());
