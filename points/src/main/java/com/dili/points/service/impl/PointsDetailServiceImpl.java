@@ -39,6 +39,9 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 import com.dili.sysadmin.sdk.session.SessionContext;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
@@ -50,6 +53,7 @@ import tk.mybatis.mapper.entity.Example;
  */
 @Service
 public class PointsDetailServiceImpl extends BaseServiceImpl<PointsDetail, Long> implements PointsDetailService {
+	private static final Logger logger=LoggerFactory.getLogger(PointsDetailServiceImpl.class);
 
 	public PointsDetailMapper getActualDao() {
 		return (PointsDetailMapper) getDao();
@@ -105,7 +109,7 @@ public class PointsDetailServiceImpl extends BaseServiceImpl<PointsDetail, Long>
 			total.setTotalMoney(total.getTotalMoney()+dto.getTotalMoney());
 			total.setWeight(total.getWeight().add(dto.getWeight()));
 		}
-		
+		logger.info("对总积分进行百分比分配: CertificateNumber {},CustomerType {},totalPoints: {}",pointsDetail.getCertificateNumber(),pointsDetail.getCustomerType(),totalPoints);
 		List<CustomerCategoryPoints>resultList=new ArrayList<>();
 		//将总积分按百分比分配
 		for(CustomerCategoryPointsDTO dto:categoryList) {
@@ -144,6 +148,7 @@ public class PointsDetailServiceImpl extends BaseServiceImpl<PointsDetail, Long>
 			}
 			
 			int points=percentage.multiply(new BigDecimal(totalPoints)).intValue();
+			logger.info("CertificateNumber {},CustomerType {},Category1Id {},Category1Name {},Points: {}",pointsDetail.getCertificateNumber(),pointsDetail.getCustomerType(),dto.getCategory3Id(),dto.getCategory3Name(),points);
 			//10:采购,20:销售
 			if("purchase".equals(pointsDetail.getCustomerType())) {
 				result.setBuyerPoints(result.getBuyerPoints()+points);
@@ -153,7 +158,7 @@ public class PointsDetailServiceImpl extends BaseServiceImpl<PointsDetail, Long>
 				total.setSellerPoints(total.getBuyerPoints()+points);
 			}
 			result.setAvailable(result.getAvailable()+points);
-			
+			logger.info("按百分比进行计算后的品类积分为:CertificateNumber {},CustomerType {},BuyerPoints {},SellerPoints {},Available: {}",pointsDetail.getCertificateNumber(),pointsDetail.getCustomerType(),result.getBuyerPoints(),result.getSellerPoints(),result.getAvailable());
 			resultList.add(result);
 		}
 		
@@ -165,6 +170,8 @@ public class PointsDetailServiceImpl extends BaseServiceImpl<PointsDetail, Long>
 			}else if("sale".equals(pointsDetail.getCustomerType())) {
 				lastCategoryPointsDTO.setSellerPoints(totalPoints-total.getSellerPoints()-lastCategoryPointsDTO.getSellerPoints());
 			}
+			lastCategoryPointsDTO.setAvailable(lastCategoryPointsDTO.getBuyerPoints()+lastCategoryPointsDTO.getSellerPoints());
+			logger.info("最后一条数据修:CertificateNumber {},CustomerType {},BuyerPoints{},SellerPoints{},Available: {}",pointsDetail.getCertificateNumber(),pointsDetail.getCustomerType(),lastCategoryPointsDTO.getBuyerPoints(),lastCategoryPointsDTO.getSellerPoints(),lastCategoryPointsDTO.getAvailable());
 		}
 		return resultList;
 	}

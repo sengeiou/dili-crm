@@ -694,15 +694,18 @@ public class OrderListener {
 			this.categoryService.list(category3Condition).stream().findFirst().ifPresent(c3->{
 				dto.setCategory3Id(categoryId);
 				dto.setCategory3Name(c3.getName());
-				if(c3.getParentCategoryId()!=null) {
+				if(StringUtils.trimToNull(c3.getParentCategoryId())!=null) {
+					
 					Category category2Condition=DTOUtils.newDTO(Category.class);
 					category2Condition.setCategoryId(String.valueOf(c3.getParentCategoryId()));
 					category2Condition.setSourceSystem(pointsDetail.getSourceSystem());
 					//查询并设置第二级品类ID和名称
-					this.categoryService.list(category3Condition).stream().findFirst().ifPresent(c2->{
+					this.categoryService.list(category2Condition).stream().findFirst().ifPresent(c2->{
 						dto.setCategory2Id(Long.valueOf(c2.getCategoryId()));
 						dto.setCategory2Name(c2.getName());
-						if(c2.getParentCategoryId()!=null) {
+						if(StringUtils.trimToNull(c2.getParentCategoryId())!=null) {
+							
+							
 							Category category1Condition=DTOUtils.newDTO(Category.class);
 							category1Condition.setCategoryId(String.valueOf(c2.getParentCategoryId()));
 							category1Condition.setSourceSystem(pointsDetail.getSourceSystem());
