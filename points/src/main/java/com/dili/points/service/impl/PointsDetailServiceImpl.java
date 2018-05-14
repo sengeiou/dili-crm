@@ -72,8 +72,8 @@ public class PointsDetailServiceImpl extends BaseServiceImpl<PointsDetail, Long>
 	public int batchInsertPointsDetailDTO(Map<PointsDetailDTO,List<CustomerCategoryPointsDTO>> pointsDetailMap) {
 		for(Entry<PointsDetailDTO, List<CustomerCategoryPointsDTO>> entry:pointsDetailMap.entrySet()) {
 			PointsDetailDTO pointsDetail=entry.getKey();
-			
 			Optional<PointsDetailDTO> pointsDetailDTO=this.insert(pointsDetail);
+			logger.info("是否进行积分分配{}: CertificateNumber {},CustomerType {},totalPoints: {}",pointsDetailDTO.isPresent(),pointsDetail.getCertificateNumber(),pointsDetail.getCustomerType());
 			pointsDetailDTO.ifPresent((p)->{
 				//对总积分按照百分比(金额或者重量)进行分配
 				List<CustomerCategoryPoints>categoryList=this.reCalculateCategoryPoints(p, entry.getValue());
