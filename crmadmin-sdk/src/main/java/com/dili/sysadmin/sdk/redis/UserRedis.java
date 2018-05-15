@@ -58,7 +58,7 @@ public class UserRedis {
         return JSONObject.parseObject(String.valueOf(JSONObject.parseObject(sessionData).get(SessionConstants.LOGGED_USER)), clazz);
     }
     
-    public static void main(String[] args) {
+    public static void main1(String[] args) {
 		String str = "{key:{lastLoginTime:1499753584000}}";
 		str = "{key:{\"cellphone\":\"12345678912\",\"created\":1499753584000,\"email\":\"as@s.com\",\"fixedLineTelephone\":\"0280011001\",\"id\":5,\"lastLoginIp\":\"127.0.0.1\",\"lastLoginTime\":1500262379575,\"modified\":1500046123000,\"password\":\"3949BA59ABBE56E057\",\"realName\":\"用户5\",\"serialNumber\":\"005\",\"status\":1,\"userName\":\"user5\",\"validTimeBegin\":1499753584000,\"validTimeEnd\":1499788800000,\"yn\":1}}";
 		JSONObject.parseObject(str).getObject("key", UserTicket.class);

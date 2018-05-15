@@ -45,7 +45,6 @@ public class DataAuthManagerImpl implements DataAuthManager {
 		List<DataAuth> dataAuths = this.dataAuthDao.findByUserId(userId);
 		String key = SessionConstants.USER_CURRENT_KEY + userId;
 		this.redisUtil.remove(key);
-		@SuppressWarnings("unchecked")
 		BoundSetOperations<String, Object> ops = this.redisUtil.getRedisTemplate().boundSetOps(key);
 		for (DataAuth dataAuth : dataAuths) {
 			ops.add(JSON.toJSONString(dataAuth));
