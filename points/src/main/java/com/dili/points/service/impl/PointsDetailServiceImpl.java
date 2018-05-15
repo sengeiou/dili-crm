@@ -144,16 +144,16 @@ public class PointsDetailServiceImpl extends BaseServiceImpl<PointsDetail, Long>
 			logger.info("CertificateNumber {},Weight{},Money:{},TotalWeight {},TotalMoney {},Category1Id {},Category1Name {}"
 					,pointsDetail.getCertificateNumber(),dto.getWeight().toPlainString(),dto.getTotalMoney(),total.getWeight().toPlainString()
 					,total.getTotalMoney(),dto.getCategory3Id(),dto.getCategory3Name());
-			BigDecimal percentage=BigDecimal.ZERO;
+			BigDecimal pointsDecimal=BigDecimal.ZERO;
 			if(pointsDetail.getWeightType().equals(10)) {
-				percentage=dto.getWeight().divide(total.getWeight(),10,RoundingMode.HALF_EVEN);
+				pointsDecimal=new BigDecimal(totalPoints).multiply(dto.getWeight()).divide(total.getWeight(),0,RoundingMode.DOWN);
 			}else if(pointsDetail.getWeightType().equals(20)) {
-				percentage=new BigDecimal(dto.getTotalMoney()).divide(new BigDecimal(total.getTotalMoney()),10,RoundingMode.HALF_EVEN);
+				pointsDecimal=new BigDecimal(totalPoints).multiply(new BigDecimal(dto.getTotalMoney())).divide(new BigDecimal(total.getTotalMoney()),0,RoundingMode.DOWN);
 			}else {
 				continue;
 			}
-			
-			int points=percentage.multiply(new BigDecimal(totalPoints)).intValue();
+			BigDecimal percentage=pointsDecimal.divide(new BigDecimal(totalPoints),10,RoundingMode.HALF_EVEN);
+			int points=pointsDecimal.intValue();
 			logger.info("CertificateNumber {},CustomerType {},Category1Id {},Category1Name {},TotalPoints,{},Percentage:{},Points: {}"
 					,pointsDetail.getCertificateNumber(),pointsDetail.getCustomerType(),dto.getCategory3Id(),dto.getCategory3Name(),totalPoints,percentage.toPlainString(),points);
 			//10:采购,20:销售
