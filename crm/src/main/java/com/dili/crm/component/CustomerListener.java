@@ -1,5 +1,6 @@
 package com.dili.crm.component;
 
+import com.alibaba.fastjson.JSONObject;
 import com.dili.crm.boot.RabbitConfiguration;
 import com.dili.crm.converter.DtoMessageConverter;
 import com.dili.crm.domain.Address;
@@ -8,6 +9,7 @@ import com.dili.crm.domain.Customer;
 import com.dili.crm.domain.CustomerExtensions;
 import com.dili.crm.domain.User;
 import com.dili.crm.provider.YnProvider;
+import com.dili.crm.rpc.CustomerPointsRpc;
 import com.dili.crm.service.AddressService;
 import com.dili.crm.service.CacheService;
 import com.dili.crm.service.CityService;
@@ -56,6 +58,7 @@ public class CustomerListener {
 	@Autowired private CustomerExtensionsService customerExtensionsService;
 	@Autowired private AddressService addressService;
 	@Autowired private CityService cityService;
+	@Autowired CustomerPointsRpc customerPointsRpc;
 	
 	/*@Autowired
     private AmqpTemplate amqpTemplate;
@@ -222,6 +225,16 @@ public class CustomerListener {
 		}
 		return true;
 	}
+	private void syncCustomerName(Long customerId,String customerName) {
+		try {
+			JSONObject jsonObject = new JSONObject();
+			jsonObject.put("id",customerId);
+			jsonObject.put("name",customerName);
+			customerPointsRpc.updateCategoryPoints(jsonObject.toJSONString());
+		}catch(Exception e) {
+			logger.error("同步客户名修改失败:"+e.getMessage(),e);
+		}
+	}
 	/**
 	 * @param customer 要插入或者更新到crm的客户信息
 	 * @param customerExtensionsList 要插入到或者更新到cmr的帐户信息
@@ -252,6 +265,7 @@ public class CustomerListener {
 				String sex=StringUtils.trimToEmpty(customer.getSex());
 				if(StringUtils.isNotBlank(name)&&!name.equals(customerItem.getName())) {
 					customerItem.setName(name);	
+					this.syncCustomerName(customerItem.getId(), name);
 				}
 				if(StringUtils.isNotBlank(phone)&&!phone.equals(customerItem.getPhone())) {
 					customerItem.setPhone(phone);	
