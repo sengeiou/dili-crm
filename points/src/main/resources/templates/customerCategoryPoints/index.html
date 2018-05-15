@@ -204,29 +204,33 @@
                 textField:'name',
                 onSelect:function(record){
                     resetCategory(false);
-                    $('#category2Id').combobox({
-                        url:'${contextPath}/category/list?parentCategoryId=' + record.categoryId,
-                        valueField:'categoryId',
-                        textField:'name',
-                        onSelect:function(record){
-                            $('#category3Id').combobox({
-                                url:'${contextPath}/category/list?parentCategoryId=' + record.categoryId,
-                                valueField:'categoryId',
-                                textField:'name'
-                            });
-                        },
-                        onChange:function (newValue,oldValue) {
-                            if(newValue == undefined){
-                                resetCategory(true);
-                            }
-                        }
-                    });
+                    $('#category2Id').combobox('clear');
+                    $('#category2Id').combobox('reload', "${contextPath}/category/list?parentCategoryId=" + record.categoryId);
                 },
                 onChange:function (newValue,oldValue) {
                     if(newValue == undefined){
                         resetCategory(false);
                     }
                 }
+            });
+
+            $('#category2Id').combobox({
+                valueField:'categoryId',
+                textField:'name',
+                onSelect:function(record){
+                    $('#category3Id').combobox('clear');
+                    $('#category3Id').combobox('reload', "${contextPath}/category/list?parentCategoryId=" + record.categoryId);
+                },
+                onChange:function (newValue,oldValue) {
+                    if(newValue == undefined){
+                        resetCategory(true);
+                    }
+                }
+            });
+
+            $('#category3Id').combobox({
+                valueField:'categoryId',
+                textField:'name'
             });
 
             bindFormEvent("form", "name", queryGrid);
