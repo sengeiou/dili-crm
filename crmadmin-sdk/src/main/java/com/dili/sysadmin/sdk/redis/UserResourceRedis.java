@@ -10,7 +10,7 @@ import org.springframework.stereotype.Service;
 
 /**
  * 用户资源redis操作
- * Created by asiamastor on 2017/7/10.
+ * Created by asiamastor on 2018/5/24.
  */
 @Service
 public class UserResourceRedis {

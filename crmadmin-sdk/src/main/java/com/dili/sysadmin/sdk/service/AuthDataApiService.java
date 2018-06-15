@@ -12,7 +12,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * Created by jk on 2017/5/11.
+ * Created by jk on 2018/5/25.
  */
 public class AuthDataApiService extends AbstractApiService {
     private static final Logger log = LoggerFactory.getLogger(AuthDataApiService.class);
@@ -34,8 +34,4 @@ public class AuthDataApiService extends AbstractApiService {
         }
     }
 
-//    public static void main(String[] args) {
-//        AuthDataApiService adas = new AuthDataApiService("", "http://mg.nong12.com");
-//        adas.refreshAuthData("department");
-//    }
 }

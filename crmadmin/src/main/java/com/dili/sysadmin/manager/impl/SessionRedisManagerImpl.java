@@ -16,12 +16,11 @@ import com.dili.sysadmin.sdk.util.ManageRedisUtil;
 @Component
 public class SessionRedisManagerImpl implements SessionRedisManager {
 
-	public static final String SESSION = "sessionId";
-
 	@Autowired
 	private ManageRedisUtil myRedisUtil;
 
-	public void setUserIdSessionDataKey(User user, String session) {
+	@Override
+    public void setUserIdSessionDataKey(User user, String session) {
 		JSONObject map = new JSONObject();
 		map.put("sessionId", session);
 		map.put("user", JSON.toJSONString(user));
@@ -55,18 +54,21 @@ public class SessionRedisManagerImpl implements SessionRedisManager {
 	}
 
 	// sessionId - userId 操作 - START
-	public void setSessionUserIdKey(String sessionId, String userId) {
+	@Override
+    public void setSessionUserIdKey(String sessionId, String userId) {
 		myRedisUtil.set(SessionConstants.SESSION_USERID_KEY + sessionId, userId,
 				SessionConstants.SESSIONID_USERID_TIMEOUT);
 	}
 
-	public String getSessionUserIdKey(String sessionId) {
+	@Override
+    public String getSessionUserIdKey(String sessionId) {
 		String rst = null;
 		rst = myRedisUtil.get(SessionConstants.SESSION_USERID_KEY + sessionId, String.class);
 		return rst;
 	}
 
-	public void clearSessionUserIdKey(String sessionId) {
+	@Override
+    public void clearSessionUserIdKey(String sessionId) {
 		myRedisUtil.remove(SessionConstants.SESSION_USERID_KEY + sessionId);
 	}
 

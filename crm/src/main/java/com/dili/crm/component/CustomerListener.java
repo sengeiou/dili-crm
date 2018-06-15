@@ -122,8 +122,8 @@ public class CustomerListener {
 	/** 进行对象转换和验证并将数据插入(更新到数据库)
 	 * @param customerJson 原始customer json
 	 * @param customerObj  转换为map的customer数据
-	 * @param addressObjList转换为List<String>的address数据
-	 * @param extensionsObjList转换为List<Map>的extension数据
+	 * @param addressObjList 转换为List<String>的address数据
+	 * @param extensionsObjList 转换为List<Map>的extension数据
 	 */
 	private void processCustomer(String customerJson,Map<String,Object> customerObj,List<String> addressObjList,List<Map<String,Object>> extensionsObjList) {
 		Optional<Customer>customerOpt=this.convertAndValidateCustomer(customerJson,customerObj);
@@ -158,7 +158,7 @@ public class CustomerListener {
 	}
 	/**
 	 * @param customerJson 原始customer json
-	 * @param customerObj转换为map的customer数据
+	 * @param customerObj 转换为map的customer数据
 	 * @return Customer对象
 	 */
 	private Optional<Customer> convertAndValidateCustomer(String customerJson,Map<String,Object> customerObj){

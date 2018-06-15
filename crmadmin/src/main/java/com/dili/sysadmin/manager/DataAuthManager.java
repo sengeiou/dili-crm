@@ -16,7 +16,7 @@ import com.dili.sysadmin.domain.DataAuth;
  */
 public interface DataAuthManager {
 
-	public void refreshBackup(DataAuth da);
+	void refreshBackup(DataAuth da);
 
 	void initUserDataAuthsInRedis(Long userId);
 

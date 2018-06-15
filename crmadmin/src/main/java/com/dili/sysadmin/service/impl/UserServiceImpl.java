@@ -413,7 +413,6 @@ public class UserServiceImpl extends BaseServiceImpl<User, Long> implements User
 		this.dataAuthManager.initUserDataAuthsInRedis(user.getId());
 	}
 
-	@SuppressWarnings("unchecked")
 	@Override
 	public List<Map> listOnlineUsers(User user) throws Exception {
 		List<User> userList = new ArrayList<>();

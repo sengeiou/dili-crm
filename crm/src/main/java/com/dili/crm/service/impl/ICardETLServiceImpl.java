@@ -274,7 +274,8 @@ public class ICardETLServiceImpl implements ICardETLService{
 		return null;
 	}
 	
-	public boolean transIncrementData(Customer latestCustomer,int batchSize) {
+	@Override
+	public boolean transIncrementData(Customer latestCustomer, int batchSize) {
 
 		if(this.transICardData(batchSize)||this.transTollData(batchSize)) {
 			return true;
@@ -323,10 +324,8 @@ public class ICardETLServiceImpl implements ICardETLService{
 					}
 					return true;
 				}
-				
 				return false;
 	}
-	
 	
 	/** 将电子结算的数据转移到CRM
 	 * @param batchSize
