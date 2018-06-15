@@ -37,7 +37,7 @@ public class CategoryListenerTest {
 		 ObjectMapper objMapper=new ObjectMapper();
 		 Message message=new Message(objMapper.writeValueAsBytes(map), new MessageProperties());
 		 this.categoryListener.processBootTask(message);
-		 
-		 
+
+
 	 }
 }
