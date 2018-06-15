@@ -9,7 +9,7 @@ import com.dili.points.domain.dto.CustomerPointsDTO;
 import com.dili.points.rpc.CustomerRpc;
 import com.dili.points.service.CustomerPointsService;
 import com.dili.ss.base.BaseServiceImpl;
-import com.dili.ss.dao.CommonMapper;
+import com.dili.ss.dao.mapper.CommonMapper;
 import com.dili.ss.domain.BaseOutput;
 import com.dili.ss.domain.EasyuiPageOutput;
 import com.dili.ss.dto.DTO;
