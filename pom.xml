@@ -112,6 +112,12 @@
 				<build.profile.id>prod</build.profile.id>
 			</properties>
 		</profile>
+		<profile>
+			<id>qqhr</id>
+			<properties>
+				<build.profile.id>qqhr</build.profile.id>
+			</properties>
+		</profile>
 	</profiles>
 
 	<build>
