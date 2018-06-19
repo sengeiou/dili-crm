@@ -56,6 +56,30 @@
 				<build.profile.id>qqhr</build.profile.id>
 			</properties>
 		</profile>
+		<profile>
+			<id>sy</id>
+			<properties>
+				<build.profile.id>sy</build.profile.id>
+			</properties>
+		</profile>
+		<profile>
+			<id>cc</id>
+			<properties>
+				<build.profile.id>cc</build.profile.id>
+			</properties>
+		</profile>
+		<profile>
+			<id>gy</id>
+			<properties>
+				<build.profile.id>gy</build.profile.id>
+			</properties>
+		</profile>
+		<profile>
+			<id>mdj</id>
+			<properties>
+				<build.profile.id>mdj</build.profile.id>
+			</properties>
+		</profile>
 	</profiles>
 
 	<build>
