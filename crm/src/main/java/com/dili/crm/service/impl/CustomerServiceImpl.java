@@ -93,6 +93,8 @@ public class CustomerServiceImpl extends BaseServiceImpl<Customer, Long> impleme
         if(userTicket == null){
             return BaseOutput.failure("新增失败，登录超时");
         }
+        //证件号码去空格
+		customer.setCertificateNumber(customer.getCertificateNumber().trim());
 	    Customer condition = DTOUtils.newDTO(Customer.class);
         condition.setCertificateType(customer.getCertificateType());
         condition.setCertificateNumber(customer.getCertificateNumber());
@@ -121,6 +123,8 @@ public class CustomerServiceImpl extends BaseServiceImpl<Customer, Long> impleme
         if(userTicket == null){
             return BaseOutput.failure("修改失败，登录超时");
         }
+		//证件号码去空格
+		customer.setCertificateNumber(customer.getCertificateNumber().trim());
         customer.setModifiedId(userTicket.getId());
 		customer.setModified(new Date());
         boolean hasParent = customer.getParentId() == null;
@@ -138,6 +142,8 @@ public class CustomerServiceImpl extends BaseServiceImpl<Customer, Long> impleme
 		if(userTicket == null){
 			return BaseOutput.failure("修改失败，登录超时");
 		}
+		//证件号码去空格
+		customer.setCertificateNumber(customer.getCertificateNumber().trim());
 		customer.setModifiedId(userTicket.getId());
 		super.update(customer);
 		return BaseOutput.success("修改成功").setData(customer);
