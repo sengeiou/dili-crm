@@ -123,8 +123,6 @@ public class CustomerServiceImpl extends BaseServiceImpl<Customer, Long> impleme
         if(userTicket == null){
             return BaseOutput.failure("修改失败，登录超时");
         }
-		//证件号码去空格
-		customer.setCertificateNumber(customer.getCertificateNumber().trim());
         customer.setModifiedId(userTicket.getId());
 		customer.setModified(new Date());
         boolean hasParent = customer.getParentId() == null;
