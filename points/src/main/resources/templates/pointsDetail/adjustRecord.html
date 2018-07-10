@@ -67,10 +67,10 @@
                         <th width="10%" data-options="field:'name', _provider:'customerNumberProvider', _escapeFileds:{name:'name', organizationType:'organizationType', certificateType:'certificateType'}, sortable:false, order:'asc', align:'center', resizable:'true', fixed:'false'">
                             客户名称
                         </th>
-                        <th width="10%" data-options="field:'organizationType',  _queryParams:'{dd_id:5}', _provider:'dataDictionaryValueProvider', sortable:false, order:'asc', align:'center', resizable:'true', fixed:'false'">
+                        <th width="10%" data-options="field:'organizationType',  _queryParams:{'dd_code':'customer_organization_type'}, _provider:'dataDictionaryValueProvider', sortable:false, order:'asc', align:'center', resizable:'true', fixed:'false'">
                             组织类型
                         </th>
-                        <th width="10%" data-options="field:'certificateType',  _provider:'dataDictionaryValueProvider',  _queryParams:'{dd_id:3}', sortable:false, order:'asc', align:'center', resizable:'true', fixed:'false'">
+                        <th width="10%" data-options="field:'certificateType',  _provider:'dataDictionaryValueProvider',  _queryParams:{'dd_code':'certificate_type'}, sortable:false, order:'asc', align:'center', resizable:'true', fixed:'false'">
                             证件类型
                         </th>
                         <th width="10%" data-options="field:'certificateNumber', sortable:true, order:'asc', align:'center', resizable:'true', fixed:'false'">
@@ -113,7 +113,7 @@
         function queryGrid() {
             var opts = $("#grid").datagrid("options");
             if (null == opts.url || "" == opts.url) {
-                opts.url = "${contextPath}/pointsDetail/listAdjustRecordPage";
+                opts.url = "${contextPath}/pointsDetail/listAdjustRecordPage.action";
             }
             if(!$('#form').form("validate")){
                 return;

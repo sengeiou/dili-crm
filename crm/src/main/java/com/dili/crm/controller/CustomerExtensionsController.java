@@ -36,7 +36,7 @@ public class CustomerExtensionsController {
     @ApiImplicitParams({
 		@ApiImplicitParam(name="CustomerExtensions", paramType="form", value = "CustomerExtensions的form信息", required = false, dataType = "string")
 	})
-    @RequestMapping(value="/list", method = {RequestMethod.GET, RequestMethod.POST})
+    @RequestMapping(value="/list.action", method = {RequestMethod.GET, RequestMethod.POST})
     public @ResponseBody List<CustomerExtensions> list(CustomerExtensions customerExtensions) {
         return customerExtensionsService.list(customerExtensions);
     }
@@ -45,7 +45,7 @@ public class CustomerExtensionsController {
     @ApiImplicitParams({
 		@ApiImplicitParam(name="CustomerExtensions", paramType="form", value = "CustomerExtensions的form信息", required = false, dataType = "string")
 	})
-    @RequestMapping(value="/listPage", method = {RequestMethod.GET, RequestMethod.POST})
+    @RequestMapping(value="/listPage.action", method = {RequestMethod.GET, RequestMethod.POST})
     public @ResponseBody String listPage(CustomerExtensions customerExtensions) throws Exception {
         return customerExtensionsService.listEasyuiPageByExample(customerExtensions, true).toString();
     }
@@ -54,7 +54,7 @@ public class CustomerExtensionsController {
     @ApiImplicitParams({
 		@ApiImplicitParam(name="CustomerExtensions", paramType="form", value = "CustomerExtensions的form信息", required = true, dataType = "string")
 	})
-    @RequestMapping(value="/insert", method = {RequestMethod.GET, RequestMethod.POST})
+    @RequestMapping(value="/insert.action", method = {RequestMethod.GET, RequestMethod.POST})
     public @ResponseBody BaseOutput insert(CustomerExtensions customerExtensions) {
         customerExtensionsService.insertSelective(customerExtensions);
         return BaseOutput.success("新增成功");
@@ -64,7 +64,7 @@ public class CustomerExtensionsController {
     @ApiImplicitParams({
 		@ApiImplicitParam(name="CustomerExtensions", paramType="form", value = "CustomerExtensions的form信息", required = true, dataType = "string")
 	})
-    @RequestMapping(value="/update", method = {RequestMethod.GET, RequestMethod.POST})
+    @RequestMapping(value="/update.action", method = {RequestMethod.GET, RequestMethod.POST})
     public @ResponseBody BaseOutput update(CustomerExtensions customerExtensions) {
         customerExtensionsService.updateSelective(customerExtensions);
         return BaseOutput.success("修改成功");
@@ -74,7 +74,7 @@ public class CustomerExtensionsController {
     @ApiImplicitParams({
 		@ApiImplicitParam(name="id", paramType="form", value = "CustomerExtensions的主键", required = true, dataType = "long")
 	})
-    @RequestMapping(value="/delete", method = {RequestMethod.GET, RequestMethod.POST})
+    @RequestMapping(value="/delete.action", method = {RequestMethod.GET, RequestMethod.POST})
     public @ResponseBody BaseOutput delete(Long id) {
         customerExtensionsService.delete(id);
         return BaseOutput.success("删除成功");

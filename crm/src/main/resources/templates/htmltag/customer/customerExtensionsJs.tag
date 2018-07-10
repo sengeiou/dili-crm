@@ -6,7 +6,7 @@
         <%if (has(customer)){%>
         var opts = $("#customerExtensionsGrid").datagrid("options");
         if (null == opts.url || "" == opts.url) {
-            opts.url = "${contextPath}/customerExtensions/listPage";
+            opts.url = "${contextPath}/customerExtensions/listPage.action";
         }
         var selected = ${customer};
         $("#customerExtensionsGrid").datagrid("load",  bindGridMeta2Data("customerExtensionsGrid", {"customerId":selected["id"]}));

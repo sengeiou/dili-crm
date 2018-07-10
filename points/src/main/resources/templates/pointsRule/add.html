@@ -37,7 +37,7 @@
                                        name="businessType" id="businessType"
                                        data-options="required:true,editable:false,labelAlign:'right',label:'&lowast;交易类型:'"/>
                                 <#comboProvider _id="businessType" _provider='dataDictionaryValueProvider'
-                                _queryParams='{dd_id:"20"}'/>
+                                _queryParams='{dd_code:"business_type"}'/>
 
                             </td>
                             <td style="padding-top:10px;" width="25%">
@@ -45,14 +45,14 @@
                                        name="customerType" id="customerType"
                                        data-options="required:true,editable:false,labelAlign:'right',label:'&lowast;生效对象:'"/>
                                 <#comboProvider _id="customerType" _provider='dataDictionaryValueProvider'
-                                _queryParams='{dd_id:"4"}'/>
+                                _queryParams='{dd_code:"customer_type"}'/>
                             </td>
 
                             <td style="padding-top:10px;padding-left:10px;" width="25%">
                                 <input class="easyui-textbox inputWidth" name="name" id="name"
                                        data-options="invalidMessage:'名称必填，且不能重复',labelAlign:'right',label:'&lowast;规则名称:', validType:{
 		length:[1,20],
-		remote:['${contextPath}/pointsRule/checkName','name']
+		remote:['${contextPath}/pointsRule/checkName.action','name']
 	}" required="true"/>
                             </td>
                             <td style="padding-top:10px;padding-left:10px;" width="25%">
@@ -60,7 +60,7 @@
                                        panelWidth="auto" panelHeight="auto" label="&lowast;规则编码:" required="true"
                                        data-options="invalidMessage:'编码必填，且不能重复',labelAlign:'right',validType:{
 		length:[1,20],
-		remote:['${contextPath}/pointsRule/checkCode','code']
+		remote:['${contextPath}/pointsRule/checkCode.action','code']
 	}"/>
                             </td>
 
@@ -78,7 +78,7 @@
                                        id="computingStandard" panelWidth="auto" panelHeight="auto"
                                        data-options="required:true,editable:false,labelAlign:'right',label:'&lowast;计算标准:'"/>
                                 <#comboProvider _id="computingStandard" _provider='dataDictionaryValueProvider'
-                                _queryParams='{dd_id:"21"}'/>
+                                _queryParams='{dd_code:"computing_standard"}'/>
                             </td>
 
                             <td style="padding-top:10px;" width="25%">
@@ -211,7 +211,7 @@
                 <td><input style="width:140px" class="easyui-combobox inputWidth" name="conditionType" id="payConditionType"
                            data-options="required:true,editable:false,labelAlign:'right'">
                     <#comboProvider _id="payConditionType" _provider='dataDictionaryValueProvider'
-                    _queryParams='{dd_id:"19"}'/>
+                    _queryParams='{dd_code:"payment"}'/>
                 </td>
             </tr>
             <tr>
@@ -229,7 +229,7 @@
 <script type="text/javascript">
     function submitForm(obj) {
         $('#_form').form('submit', {
-            url: "${contextPath}/pointsRule/insert",
+            url: "${contextPath}/pointsRule/insert.action",
             onSubmit: function () {
                 if ($("#_form").form('validate')) {
                     $(obj).linkbutton('disable');

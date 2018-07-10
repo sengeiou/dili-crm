@@ -39,7 +39,7 @@ import java.util.Map.Entry;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-import com.dili.sysadmin.sdk.session.SessionContext;
+import com.dili.uap.sdk.session.SessionContext;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

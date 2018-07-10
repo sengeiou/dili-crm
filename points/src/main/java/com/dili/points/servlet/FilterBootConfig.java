@@ -1,6 +1,6 @@
 package com.dili.points.servlet;
 
-import com.dili.sysadmin.sdk.session.SessionFilter;
+import com.dili.uap.sdk.session.SessionFilter;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;

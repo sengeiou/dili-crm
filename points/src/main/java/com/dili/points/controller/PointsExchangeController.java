@@ -48,7 +48,7 @@ public class PointsExchangeController {
     }
 
     @ApiOperation(value="根据证件号远程查询客户信息", notes = "根据证件号远程查询客户信息")
-    @RequestMapping(value="/getCustomerInfo", method = {RequestMethod.GET, RequestMethod.POST})
+    @RequestMapping(value="/getCustomerInfo.action", method = {RequestMethod.GET, RequestMethod.POST})
     public @ResponseBody BaseOutput getCustomerInfo(String idCard) throws Exception {
         if (StringUtils.isBlank(idCard)){
             return null;

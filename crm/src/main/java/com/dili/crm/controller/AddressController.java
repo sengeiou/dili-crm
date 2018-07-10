@@ -45,7 +45,7 @@ public class AddressController {
     @ApiImplicitParams({
 		@ApiImplicitParam(name="Address", paramType="form", value = "Address的form信息", required = false, dataType = "string")
 	})
-    @RequestMapping(value="/list", method = {RequestMethod.GET, RequestMethod.POST})
+    @RequestMapping(value="/list.action", method = {RequestMethod.GET, RequestMethod.POST})
     public @ResponseBody List<Address> list(Address address) {
         return addressService.list(address);
     }
@@ -54,7 +54,7 @@ public class AddressController {
     @ApiImplicitParams({
 		@ApiImplicitParam(name="Address", paramType="form", value = "Address的form信息", required = false, dataType = "string")
 	})
-    @RequestMapping(value="/listPage", method = {RequestMethod.GET, RequestMethod.POST})
+    @RequestMapping(value="/listPage.action", method = {RequestMethod.GET, RequestMethod.POST})
     public @ResponseBody String listPage(Address address) throws Exception {
         Map<String, Object> metadata = new HashMap<>();
         JSONObject cityProvider = new JSONObject();
@@ -68,7 +68,7 @@ public class AddressController {
     @ApiImplicitParams({
 		@ApiImplicitParam(name="Address", paramType="form", value = "Address的form信息", required = true, dataType = "string")
 	})
-    @RequestMapping(value="/insert", method = {RequestMethod.GET, RequestMethod.POST})
+    @RequestMapping(value="/insert.action", method = {RequestMethod.GET, RequestMethod.POST})
     public @ResponseBody BaseOutput insert(Address address) throws Exception{
         return addressService.insertSelectiveWithOutput(address);
     }
@@ -77,7 +77,7 @@ public class AddressController {
     @ApiImplicitParams({
 		@ApiImplicitParam(name="Address", paramType="form", value = "Address的form信息", required = true, dataType = "string")
 	})
-    @RequestMapping(value="/update", method = {RequestMethod.GET, RequestMethod.POST})
+    @RequestMapping(value="/update.action", method = {RequestMethod.GET, RequestMethod.POST})
     public @ResponseBody BaseOutput update(Address address) throws Exception{
         return addressService.updateSelectiveWithOutput(address);
     }
@@ -86,7 +86,7 @@ public class AddressController {
     @ApiImplicitParams({
 		@ApiImplicitParam(name="id", paramType="form", value = "Address的主键", required = true, dataType = "long")
 	})
-    @RequestMapping(value="/delete", method = {RequestMethod.GET, RequestMethod.POST})
+    @RequestMapping(value="/delete.action", method = {RequestMethod.GET, RequestMethod.POST})
     public @ResponseBody BaseOutput delete(Long id) {
         addressService.delete(id);
         return BaseOutput.success("删除成功");
@@ -97,7 +97,7 @@ public class AddressController {
 		@ApiImplicitParam(name="lat", paramType="form", value = "纬度", required = true, dataType = "String"),
 		@ApiImplicitParam(name="lng", paramType="form", value = "经度", required = true, dataType = "String")
 	})
-    @RequestMapping(value="/locationReverse", method = {RequestMethod.GET, RequestMethod.POST})
+    @RequestMapping(value="/locationReverse.action", method = {RequestMethod.GET, RequestMethod.POST})
     public @ResponseBody BaseOutput locationReverse(String lat,String lng) throws Exception{
         return this.addressService.locationReverse(lat, lng);
     }

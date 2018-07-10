@@ -6,8 +6,8 @@ import com.dili.points.domain.dto.PointsDetailDTO;
 import com.dili.points.service.CustomerPointsService;
 import com.dili.points.service.PointsDetailService;
 import com.dili.ss.domain.BaseOutput;
-import com.dili.sysadmin.sdk.domain.UserTicket;
-import com.dili.sysadmin.sdk.session.SessionContext;
+import com.dili.uap.sdk.domain.UserTicket;
+import com.dili.uap.sdk.session.SessionContext;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
@@ -62,7 +62,7 @@ public class PointsDetailController {
     @ApiImplicitParams({
 		@ApiImplicitParam(name="PointsDetail", paramType="form", value = "PointsDetail的form信息", required = false, dataType = "string")
 	})
-    @RequestMapping(value="/list", method = {RequestMethod.GET, RequestMethod.POST})
+    @RequestMapping(value="/list.action", method = {RequestMethod.GET, RequestMethod.POST})
     public @ResponseBody List<PointsDetail> list(PointsDetail pointsDetail) {
         return pointsDetailService.list(pointsDetail);
     }
@@ -71,7 +71,7 @@ public class PointsDetailController {
     @ApiImplicitParams({
 		@ApiImplicitParam(name="PointsDetail", paramType="form", value = "PointsDetail的form信息", required = false, dataType = "string")
 	})
-    @RequestMapping(value="/listPage", method = {RequestMethod.GET, RequestMethod.POST})
+    @RequestMapping(value="/listPage.action", method = {RequestMethod.GET, RequestMethod.POST})
     public @ResponseBody String listPage(PointsDetailDTO pointsDetail) throws Exception {
         return pointsDetailService.listEasyuiPageByExample(pointsDetail, true).toString();
     }
@@ -80,7 +80,7 @@ public class PointsDetailController {
     @ApiImplicitParams({
             @ApiImplicitParam(name="PointsDetail", paramType="form", value = "PointsDetailDTO的form信息", required = false, dataType = "string")
     })
-    @RequestMapping(value="/listAdjustRecordPage", method = {RequestMethod.GET, RequestMethod.POST})
+    @RequestMapping(value="/listAdjustRecordPage.action", method = {RequestMethod.GET, RequestMethod.POST})
     public @ResponseBody String listAdjustRecordPage(PointsDetailDTO pointsDetail) throws Exception {
         pointsDetail.setGenerateWay(50);
         return pointsDetailService.listEasyuiPageByExample(pointsDetail, true).toString();
@@ -91,7 +91,7 @@ public class PointsDetailController {
     @ApiImplicitParams({
 		@ApiImplicitParam(name="PointsDetail", paramType="form", value = "PointsDetail的form信息", required = true, dataType = "string")
 	})
-    @RequestMapping(value="/mannuallyInsert", method = {RequestMethod.GET, RequestMethod.POST})
+    @RequestMapping(value="/mannuallyInsert.action", method = {RequestMethod.GET, RequestMethod.POST})
     public @ResponseBody BaseOutput mannuallyInsert(PointsDetailDTO pointsDetail) {
     	//先进行基本属性判断
     	if(pointsDetail.getPoints()==null||pointsDetail.getPoints()==0) {
@@ -122,7 +122,7 @@ public class PointsDetailController {
      * @param notes
      * @return
      */
-    @RequestMapping(value="/clearPoints", method = {RequestMethod.GET, RequestMethod.POST})
+    @RequestMapping(value="/clearPoints.action", method = {RequestMethod.GET, RequestMethod.POST})
     public @ResponseBody BaseOutput clearPoints(String notes) {
 
         if(StringUtils.trimToNull(notes)==null) {
@@ -142,7 +142,7 @@ public class PointsDetailController {
     @ApiImplicitParams({
 		@ApiImplicitParam(name="PointsDetail", paramType="form", value = "PointsDetail的form信息", required = true, dataType = "string")
 	})
-    @RequestMapping(value="/insert", method = {RequestMethod.GET, RequestMethod.POST})
+    @RequestMapping(value="/insert.action", method = {RequestMethod.GET, RequestMethod.POST})
     public @ResponseBody BaseOutput insert(PointsDetail pointsDetail) {
         pointsDetailService.insertSelective(pointsDetail);
         return BaseOutput.success("新增成功");
@@ -152,7 +152,7 @@ public class PointsDetailController {
     @ApiImplicitParams({
 		@ApiImplicitParam(name="PointsDetail", paramType="form", value = "PointsDetail的form信息", required = true, dataType = "string")
 	})
-    @RequestMapping(value="/update", method = {RequestMethod.GET, RequestMethod.POST})
+    @RequestMapping(value="/update.action", method = {RequestMethod.GET, RequestMethod.POST})
     public @ResponseBody BaseOutput update(PointsDetail pointsDetail) {
         pointsDetailService.updateSelective(pointsDetail);
         return BaseOutput.success("修改成功");
@@ -162,7 +162,7 @@ public class PointsDetailController {
     @ApiImplicitParams({
 		@ApiImplicitParam(name="id", paramType="form", value = "PointsDetail的主键", required = true, dataType = "long")
 	})
-    @RequestMapping(value="/delete", method = {RequestMethod.GET, RequestMethod.POST})
+    @RequestMapping(value="/delete.action", method = {RequestMethod.GET, RequestMethod.POST})
     public @ResponseBody BaseOutput delete(Long id) {
         pointsDetailService.delete(id);
         return BaseOutput.success("删除成功");

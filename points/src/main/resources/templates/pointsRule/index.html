@@ -38,7 +38,7 @@
                             <input name="customerType" id="customerType" style="width:100%;" editable="false"
                                    labelAlign="right" panelWidth="auto" panelHeight="auto" label="客户类型:"/>
                             <#comboProvider _id="customerType" _provider='dataDictionaryValueProvider'
-                            _queryParams='{dd_id:"4"}'/>
+                            _queryParams='{dd_code:"customer_type"}'/>
 
                         </td>
                         <td style="padding:5px;">
@@ -46,7 +46,7 @@
                                    style="width:100%"
                                    labelAlign="right" data-options="label:'交易类型:'"/>
                             <#comboProvider _id="businessType" _provider='dataDictionaryValueProvider'
-                            _queryParams='{dd_id:"20"}'/>
+                            _queryParams='{dd_code:"business_type"}'/>
                         </td>
                         <td style="padding:5px;">
                             <input class="easyui-combobox" name="yn" panelWidth="auto" panelHeight="auto" editable="false" id="yn" style="width:100%"
@@ -94,16 +94,16 @@
                     <th data-options="field:'code', width:'10%',  sortable:true, order:'asc', align:'center', resizable:'true', fixed:'false',formatter:formatview">
                         规则编码
                     </th>
-                    <th data-options="field:'businessType', width:'5%',  sortable:true, order:'asc', align:'center', resizable:'true', fixed:'false',_provider:'dataDictionaryValueProvider', _queryParams:'{dd_id:20}'">
+                    <th data-options="field:'businessType', width:'5%',  sortable:true, order:'asc', align:'center', resizable:'true', fixed:'false',_provider:'dataDictionaryValueProvider', _queryParams:{'dd_code':'business_type'}">
                         交易类型
                     </th>
-                    <th data-options="field:'customerType',width:'5%',  sortable:true, order:'asc', align:'center', resizable:'true', fixed:'false',_provider:'dataDictionaryValueProvider', _queryParams:'{dd_id:4}'">
+                    <th data-options="field:'customerType',width:'5%',  sortable:true, order:'asc', align:'center', resizable:'true', fixed:'false',_provider:'dataDictionaryValueProvider', _queryParams:{'dd_code':'customer_type'}">
                         客户类型
                     </th>
                     <th data-options="field:'name',width:'10%',   sortable:true, order:'asc', align:'center', resizable:'true', fixed:'false',formatter:formatview">
                         规则名称
                     </th>
-                    <th data-options="field:'computingStandard',width:'10%',   sortable:true, order:'asc', align:'center', resizable:'true', fixed:'false',_provider:'dataDictionaryValueProvider', _queryParams:'{dd_id:21}',formatter:computingStandard">
+                    <th data-options="field:'computingStandard',width:'10%',   sortable:true, order:'asc', align:'center', resizable:'true', fixed:'false',_provider:'dataDictionaryValueProvider', _queryParams:{'dd_code':'computing_standard'},formatter:computingStandard">
                         计算标准
                     </th>
                     <th data-options="field:'ruleCondition',width:'10%',sortable:false, order:'asc', align:'center', resizable:'true', fixed:'false',_provider:'ruleConditionProvider'">
@@ -192,7 +192,7 @@
 
         $.ajax({
             type: "POST",
-            url: "${contextPath}/pointsRule/checkPointsRule",
+            url: "${contextPath}/pointsRule/checkPointsRule.action",
             data: {
                 customerType: selected.$_customerType,
                 businessType: selected.$_businessType,
@@ -207,7 +207,7 @@
                         if (r) {
                             $.ajax({
                                 type: "POST",
-                                url: "${contextPath}/pointsRule/startPointsRule",
+                                url: "${contextPath}/pointsRule/startPointsRule.action",
                                 data: {
                                     id: selected.id,
                                     customerType: selected.$_customerType,
@@ -255,7 +255,7 @@
             if (r) {
                 $.ajax({
                     type: "POST",
-                    url: "${contextPath}/pointsRule/startPointsRule",
+                    url: "${contextPath}/pointsRule/startPointsRule.action",
                     data: {id: selected.id, status: 0},
                     processData: true,
                     dataType: "json",
@@ -280,7 +280,7 @@
     function queryGrid() {
         var opts = $("#grid").datagrid("options");
         if (null == opts.url || "" == opts.url) {
-            opts.url = "${contextPath}/pointsRule/listPage";
+            opts.url = "${contextPath}/pointsRule/listPage.action";
         }
         if (!$('#form').form("validate")) {
             return;

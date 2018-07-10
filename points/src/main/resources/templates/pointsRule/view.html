@@ -35,21 +35,21 @@
                                 <input class="easyui-combobox inputWidth" name="businessType" id="businessType"
                                        data-options="required:true,editable:false,labelAlign:'right',label:'交易类型:'"/>
                                 <#comboProvider _id="businessType" _provider='dataDictionaryValueProvider'
-                                _queryParams='{dd_id:"20"}'/>
+                                _queryParams='{dd_code:"business_type"}'/>
 
                             </td>
                             <td style="padding-top:10px;" width="25%">
                                 <input class="easyui-combobox inputWidth" name="customerType" id="customerType"
                                        data-options="required:true,editable:false,labelAlign:'right',label:'生效对象:'"/>
                                 <#comboProvider _id="customerType" _provider='dataDictionaryValueProvider'
-                                _queryParams='{dd_id:"4"}'/>
+                                _queryParams='{dd_code:"customer_type"}'/>
                             </td>
 
                             <td style="padding-top:10px;padding-left:10px;" width="25%">
                                 <input class="easyui-textbox inputWidth" name="name" id="name"
                                        data-options="invalidMessage:'名称必填，且不能重复',labelAlign:'right',label:'规则名称:', validType:{
 		length:[1,20],
-		remote:['${contextPath}/pointsRule/checkName?org=${potins.name}','name']
+		remote:['${contextPath}/pointsRule/checkName.action?org=${potins.name}','name']
 	}" required="true"/>
                             </td>
                             <td style="padding-top:10px;padding-left:10px;" width="25%">
@@ -72,7 +72,7 @@
                                        id="computingStandard"
                                        data-options="required:true,editable:false,labelAlign:'right',label:'计算标准:'"/>
                                 <#comboProvider _id="computingStandard" _provider='dataDictionaryValueProvider'
-                                _queryParams='{dd_id:"21"}'/>
+                                _queryParams='{dd_code:"computing_standard"}'/>
                             </td>
 
                             <td style="padding-top:10px;" width="25%">
@@ -96,12 +96,12 @@
                     <tr>
                         <td width="33%" valign="top"  style="padding-right:6px;box-sizing: border-box;">
                             <table class="easyui-datagrid" id="dg_0" title="交易量" style="width:100%;"
-                                   data-options="url:'${contextPath}/ruleCondition/list?pointRuleId=${potins.id}&weightType=10',singleSelect:true,collapsible:false,method:'get',style:{marginTop:20}">
+                                   data-options="url:'${contextPath}/ruleCondition/list.action?pointRuleId=${potins.id}&weightType=10',singleSelect:true,collapsible:false,method:'get',style:{marginTop:20}">
                                 <thead>
                                 <tr>
                                     <th  width="51%" data-options="formatter:formatUpdateDisplay,field:'displayText',width:200">交易量（公斤）</th>
                                     <th  width="52%" data-options="field:'weight',width:100">权重值</th>
-                                    <th data-options="_provider:'dataDictionaryValueProvider', _queryParams:'{dd_id:23}',field:'conditionType',width:100,hidden:true"></th>
+                                    <th data-options="_provider:'dataDictionaryValueProvider', _queryParams:{dd_code:'condition_type'},field:'conditionType',width:100,hidden:true"></th>
                                     <th data-options="field:'value',width:100,hidden:true"></th>
                                     <th data-options="field:'startValue',width:100,hidden:true"></th>
                                     <th data-options="field:'endValue',width:100,hidden:true"></th>
@@ -111,12 +111,12 @@
                         </td>
                         <td width="33%" valign="top"  style="padding-right:6px;box-sizing: border-box;">
                             <table class="easyui-datagrid" id="dg_1" title="交易额" style="width:100%;"
-                                   data-options="url:'${contextPath}/ruleCondition/list?pointRuleId=${potins.id}&weightType=20',singleSelect:true,collapsible:false,method:'get',style:{marginTop:20}">
+                                   data-options="url:'${contextPath}/ruleCondition/list.action?pointRuleId=${potins.id}&weightType=20',singleSelect:true,collapsible:false,method:'get',style:{marginTop:20}">
                                 <thead>
                                 <tr>
                                     <th  width="51%" data-options="formatter:formatUpdateDisplay,field:'displayText',width:200">交易额（元）</th>
                                     <th  width="52%" data-options="field:'weight',width:100">权重值</th>
-                                    <th data-options="_provider:'dataDictionaryValueProvider', _queryParams:'{dd_id:23}',field:'conditionType',width:100,hidden:true"></th>
+                                    <th data-options="_provider:'dataDictionaryValueProvider', _queryParams:{dd_code:'condition_type'},field:'conditionType',width:100,hidden:true"></th>
                                     <th data-options="field:'value',width:100,hidden:true"></th>
                                     <th data-options="field:'startValue',width:100,hidden:true"></th>
                                     <th data-options="field:'endValue',width:100,hidden:true"></th>
@@ -126,7 +126,7 @@
                         </td>
                         <td width="33%" valign="top"  style="padding-right:6px;box-sizing: border-box;">
                             <table class="easyui-datagrid" id="dg_2" title="支付方式" style="width:100%;"
-                                   data-options="url:'${contextPath}/ruleCondition/list?pointRuleId=${potins.id}&weightType=40',singleSelect:true,collapsible:false,method:'get',style:{marginTop:20}">
+                                   data-options="url:'${contextPath}/ruleCondition/list.action?pointRuleId=${potins.id}&weightType=40',singleSelect:true,collapsible:false,method:'get',style:{marginTop:20}">
                                 <thead>
                                 <tr>
                                     <th  width="51%" data-options="formatter:formatPayDisplay,field:'displayText',width:200">支付方式</th>
@@ -208,7 +208,7 @@
                 <td><input class="easyui-combobox inputWidth" name="conditionType" id="payConditionType"
                            data-options="required:true,editable:false,labelAlign:'right'">
                     <#comboProvider _id="payConditionType" _provider='dataDictionaryValueProvider'
-                    _queryParams='{dd_id:"19"}'/>
+                    _queryParams='{dd_code:"payment"}'/>
                 </td>
             </tr>
             <tr>
@@ -268,7 +268,7 @@
     }
 
     $(function () {
-        $('#_form').form('load', '${contextPath}/pointsRule/get/${potins.id}');
+        $('#_form').form('load', '${contextPath}/pointsRule/get.action/${potins.id}');
 
         $('input[class^=easyui-]').textbox({
             cls:'noborder'
@@ -283,7 +283,7 @@
         // 操作日志
         var opts = $("#dg_log").datagrid("options");
         if (null == opts.url || "" == opts.url) {
-            opts.url = "${contextPath}/pointsRuleLog/listPage?pointsRuleId=${potins.id}";
+            opts.url = "${contextPath}/pointsRuleLog/listPage.action?pointsRuleId=${potins.id}";
         }
         $("#dg_log").datagrid("load", bindGridMeta2Data("dg_log", {}));
     });

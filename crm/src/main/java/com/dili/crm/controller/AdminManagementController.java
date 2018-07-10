@@ -31,7 +31,7 @@ public class AdminManagementController {
     public String index(ModelMap modelMap) {
         return "adminManagement/index";
     }
-    @RequestMapping(value="/sendJsonToMQ", method = {RequestMethod.GET, RequestMethod.POST})
+    @RequestMapping(value="/sendJsonToMQ.action", method = {RequestMethod.GET, RequestMethod.POST})
     public  @ResponseBody BaseOutput  sendJsonToMQ(String type,String json) throws Exception {
     	
     	try {
@@ -53,7 +53,7 @@ public class AdminManagementController {
     	
         return BaseOutput.success("发送成功");
     }
-    @RequestMapping(value="/loadCustomers", method = {RequestMethod.GET, RequestMethod.POST})
+    @RequestMapping(value="/loadCustomers.action", method = {RequestMethod.GET, RequestMethod.POST})
     public  @ResponseBody BaseOutput  loadCustomers() throws Exception {
     	
     	try {

@@ -36,7 +36,7 @@ public class PointsRuleLogController {
     @ApiImplicitParams({
 		@ApiImplicitParam(name="PointsRuleLog", paramType="form", value = "PointsRuleLog的form信息", required = false, dataType = "string")
 	})
-    @RequestMapping(value="/list", method = {RequestMethod.GET, RequestMethod.POST})
+    @RequestMapping(value="/list.action", method = {RequestMethod.GET, RequestMethod.POST})
     public @ResponseBody List<PointsRuleLog> list(PointsRuleLog pointsRuleLog) {
         return pointsRuleLogService.list(pointsRuleLog);
     }
@@ -45,7 +45,7 @@ public class PointsRuleLogController {
     @ApiImplicitParams({
 		@ApiImplicitParam(name="PointsRuleLog", paramType="form", value = "PointsRuleLog的form信息", required = false, dataType = "string")
 	})
-    @RequestMapping(value="/listPage", method = {RequestMethod.GET, RequestMethod.POST})
+    @RequestMapping(value="/listPage.action", method = {RequestMethod.GET, RequestMethod.POST})
     public @ResponseBody String listPage(PointsRuleLog pointsRuleLog) throws Exception {
         return pointsRuleLogService.listEasyuiPageByExample(pointsRuleLog, true).toString();
     }
@@ -54,7 +54,7 @@ public class PointsRuleLogController {
     @ApiImplicitParams({
 		@ApiImplicitParam(name="PointsRuleLog", paramType="form", value = "PointsRuleLog的form信息", required = true, dataType = "string")
 	})
-    @RequestMapping(value="/insert", method = {RequestMethod.GET, RequestMethod.POST})
+    @RequestMapping(value="/insert.action", method = {RequestMethod.GET, RequestMethod.POST})
     public @ResponseBody BaseOutput insert(PointsRuleLog pointsRuleLog) {
         pointsRuleLogService.insertSelective(pointsRuleLog);
         return BaseOutput.success("新增成功");
@@ -64,7 +64,7 @@ public class PointsRuleLogController {
     @ApiImplicitParams({
 		@ApiImplicitParam(name="PointsRuleLog", paramType="form", value = "PointsRuleLog的form信息", required = true, dataType = "string")
 	})
-    @RequestMapping(value="/update", method = {RequestMethod.GET, RequestMethod.POST})
+    @RequestMapping(value="/update.action", method = {RequestMethod.GET, RequestMethod.POST})
     public @ResponseBody BaseOutput update(PointsRuleLog pointsRuleLog) {
         pointsRuleLogService.updateSelective(pointsRuleLog);
         return BaseOutput.success("修改成功");
@@ -74,7 +74,7 @@ public class PointsRuleLogController {
     @ApiImplicitParams({
 		@ApiImplicitParam(name="id", paramType="form", value = "PointsRuleLog的主键", required = true, dataType = "long")
 	})
-    @RequestMapping(value="/delete", method = {RequestMethod.GET, RequestMethod.POST})
+    @RequestMapping(value="/delete.action", method = {RequestMethod.GET, RequestMethod.POST})
     public @ResponseBody BaseOutput delete(Long id) {
         pointsRuleLogService.delete(id);
         return BaseOutput.success("删除成功");

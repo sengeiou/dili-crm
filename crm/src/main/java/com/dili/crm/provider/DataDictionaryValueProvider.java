@@ -1,61 +1,103 @@
 package com.dili.crm.provider;
 
-import com.dili.ss.metadata.provider.SimpleValueProvider;
+import com.alibaba.fastjson.JSONObject;
+import com.dili.crm.rpc.DataDictionaryRpc;
+import com.dili.ss.domain.BaseOutput;
+import com.dili.ss.dto.DTOUtils;
+import com.dili.ss.metadata.FieldMeta;
+import com.dili.ss.metadata.ValuePair;
+import com.dili.ss.metadata.ValuePairImpl;
+import com.dili.ss.metadata.provider.BatchDisplayTextProviderAdaptor;
+import com.dili.uap.sdk.domain.DataDictionaryValue;
+import com.google.common.collect.Lists;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
- * 数据字典提供者
+ * 远程数据字典批量提供者
  */
 @Component
 @Scope("prototype")
-public class DataDictionaryValueProvider extends SimpleValueProvider {
+public class DataDictionaryValueProvider extends BatchDisplayTextProviderAdaptor {
 
     //前台需要传入的参数
-    protected static final String DD_ID_KEY = "dd_id";
+    protected static final String DD_CODE_KEY = "dd_code";
+    @Autowired
+    private DataDictionaryRpc dataDictionaryRpc;
 
     @Override
-    public String getTable() {
-        return "data_dictionary_value";
+    public List<ValuePair<?>> getLookupList(Object val, Map metaMap, FieldMeta fieldMeta) {
+        Object queryParams = metaMap.get(QUERY_PARAMS_KEY);
+        if(queryParams == null) {
+            return Lists.newArrayList();
+        }
+
+        String ddCode = getDdCode(queryParams.toString());
+        DataDictionaryValue dataDictionaryValue = DTOUtils.newDTO(DataDictionaryValue.class);
+        dataDictionaryValue.setDdCode(ddCode);
+        BaseOutput<List<DataDictionaryValue>> output = dataDictionaryRpc.list(dataDictionaryValue);
+        if(!output.isSuccess()){
+            return null;
+        }
+        List<ValuePair<?>> valuePairs = Lists.newArrayList();
+        valuePairs.add(0, new ValuePairImpl(EMPTY_ITEM_TEXT, null));
+        List<DataDictionaryValue> dataDictionaryValues = output.getData();
+        for(int i=0; i<dataDictionaryValues.size(); i++) {
+            DataDictionaryValue dataDictionaryValue1 = dataDictionaryValues.get(i);
+            valuePairs.add(i+1, new ValuePairImpl(dataDictionaryValue1.getName(), dataDictionaryValue1.getCode()));
+        }
+        return valuePairs;
     }
 
     @Override
-    public String getTextField() {
-        return "code";
+    protected List getFkList(List<String> ddvIds, Map metaMap) {
+        Object queryParams = metaMap.get(QUERY_PARAMS_KEY);
+        if(queryParams == null) {
+            return Lists.newArrayList();
+        }
+        String ddCode = getDdCode(queryParams.toString());
+        DataDictionaryValue dataDictionaryValue = DTOUtils.newDTO(DataDictionaryValue.class);
+        dataDictionaryValue.setDdCode(ddCode);
+        BaseOutput<List<DataDictionaryValue>> output = dataDictionaryRpc.list(dataDictionaryValue);
+        return output.isSuccess() ? output.getData() : null;
     }
 
     @Override
-    public String getValueField() {
-        return "value";
-    }
-
-    @Override
-    public String getOrderByClause() {
-        return "order_number asc";
-    }
-
-    @Override
-    protected void buildParam(Map paramMap){
-        super.buildParam(paramMap);
-        Map<String, Object> params = new HashMap<>();
-        params.put("yn", 1);
-        params.put("dd_id", getDdId());
-        setQueryParams(params);
+    protected Map<String, String> getEscapeFileds(Map metaMap) {
+        if(metaMap.get(ESCAPE_FILEDS_KEY) instanceof Map){
+            return (Map)metaMap.get(ESCAPE_FILEDS_KEY);
+        }else {
+            Map<String, String> map = new HashMap<>();
+            map.put(metaMap.get(FIELD_KEY).toString(), "name");
+            return map;
+        }
     }
 
     /**
-     * 获取数据字典id
+     * 关联(数据库)表的主键的字段名
+     * 默认取id，子类可自行实现
      * @return
      */
-    public String getDdId(){
+    @Override
+    protected String getRelationTablePkField(Map metaMap) {
+        return "code";
+    }
+
+    /**
+     * 获取数据字典编码
+     * @return
+     */
+    public String getDdCode(String queryParams){
         //清空缓存
-        Object ddId = getQueryParams().get(DD_ID_KEY);
-        if(ddId == null){
-            throw new RuntimeException("dd_id属性为空");
+        String ddCode = JSONObject.parseObject(queryParams).getString(DD_CODE_KEY);
+        if(ddCode == null){
+            throw new RuntimeException("dd_code属性为空");
         }
-        return ddId.toString();
+        return ddCode;
     }
 }

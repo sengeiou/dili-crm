@@ -29,7 +29,7 @@
                             </td>
                             <td style="padding:10px;">
                                 <input name="mode" id="mode" style="width:100%;"  data-options="labelAlign:'right',editable:false" panelHeight="auto" label="回访方式:"/>
-                                <#comboProvider _id="mode" _provider='dataDictionaryValueProvider' _queryParams='{dd_id:"11"}'/>
+                                <#comboProvider _id="mode" _provider='dataDictionaryValueProvider' _queryParams='{dd_code:"visit_mode"}'/>
                             </td>
                             <td style="padding:10px;">
                                 <input name="state" id="state" style="width:100%;" data-options="labelAlign:'right',editable:false" panelHeight="auto" label="回访状态:"/>
@@ -43,7 +43,7 @@
                             </td>
                             <td style="padding:10px;">
                                 <input name="priority" id="priority" style="width:100%;" data-options="labelAlign:'right',editable:false" panelHeight="auto" label="优先级:"/>
-                                <#comboProvider _id="priority" _provider='dataDictionaryValueProvider' _queryParams='{dd_id:"10"}'/>
+                                <#comboProvider _id="priority" _provider='dataDictionaryValueProvider' _queryParams='{dd_code:"priority"}'/>
                             </td>
                             <td style="padding-left: 28px;">
                                 <a href="#" class="easyui-linkbutton" iconCls="icon-search" id="queryBtn"
@@ -80,10 +80,10 @@
                             <th width="10%" data-options="field:'customerPhone', sortable:'true', order:'asc', align:'center', resizable:'true', fixed:'false'">
                                 电话
                             </th>
-                            <th width="8%" data-options="field:'priority',  _provider:'dataDictionaryValueProvider',_queryParams:{'dd_id':'10'}, sortable:'true', order:'asc', align:'center', resizable:'true', fixed:'false'">
+                            <th width="8%" data-options="field:'priority',  _provider:'dataDictionaryValueProvider',_queryParams:{'dd_code':'priority'}, sortable:'true', order:'asc', align:'center', resizable:'true', fixed:'false'">
                                 优先级
                             </th>
-                            <th width="8%" data-options="field:'mode',  _provider:'dataDictionaryValueProvider',_queryParams:{'dd_id':'11'}, sortable:'true', order:'asc', align:'center', resizable:'true', fixed:'false'">
+                            <th width="8%" data-options="field:'mode',  _provider:'dataDictionaryValueProvider',_queryParams:{'dd_code':'visit_mode'}, sortable:'true', order:'asc', align:'center', resizable:'true', fixed:'false'">
                                 回访方式
                             </th>
                             <th width="10%" data-options="field:'userId', _provider:'ownerProvider', order:'asc', align:'center', resizable:'true', fixed:'false'">
@@ -176,7 +176,7 @@
         function queryGrid() {
             var opts = $("#grid").datagrid("options");
             if (null == opts.url || "" == opts.url) {
-                opts.url = "${contextPath}/customerVisit/listPage";
+                opts.url = "${contextPath}/customerVisit/listPage.action";
             }
             if(!$('#form').form("validate")){
                 return;

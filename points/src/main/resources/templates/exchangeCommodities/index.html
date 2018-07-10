@@ -149,9 +149,9 @@
             var _url = null;
             //没有id就新增
             if(_formData.id == null || _formData.id==""){
-                _url = "${contextPath}/exchangeCommodities/insert";
+                _url = "${contextPath}/exchangeCommodities/insert.action";
             }else{//有id就修改
-                _url = "${contextPath}/exchangeCommodities/update";
+                _url = "${contextPath}/exchangeCommodities/update.action";
             }
             $.ajax({
                 type: "POST",
@@ -185,7 +185,7 @@
                 if (r){
                     $.ajax({
                         type: "POST",
-                        url: "${contextPath}/exchangeCommodities/delete",
+                        url: "${contextPath}/exchangeCommodities/delete.action",
                         data: {id:selected.id},
                         processData:true,
                         dataType: "json",
@@ -210,7 +210,7 @@
         function queryGrid() {
             var opts = $("#grid").datagrid("options");
             if (null == opts.url || "" == opts.url) {
-                opts.url = "${contextPath}/exchangeCommodities/listPage";
+                opts.url = "${contextPath}/exchangeCommodities/listPage.action";
             }
             if(!$('#form').form("validate")){
                 return;

@@ -32,7 +32,7 @@
                         </td>
                         <td style="padding:5px;display:none">
                             <input name="inOut" id="inOut" style="width:100%;display:none" data-options="labelAlign:'right', editable:false,value:'10'" panelWidth="auto" panelHeight="auto" label=""/>
-                            <#comboProvider _id="inOut" _provider='dataDictionaryValueProvider' _queryParams='{dd_id:"18"}'/>
+                            <#comboProvider _id="inOut" _provider='dataDictionaryValueProvider' _queryParams='{dd_code:"in_out"}'/>
                         </td>
 
                     </tr>
@@ -61,10 +61,10 @@
                     <th data-options="width:'10%',field:'points',   sortable:true, order:'asc', align:'center', resizable:'true', fixed:'false',formatter: pointsFormatter">
                         积分
                     </th>
-                      <th data-options="width:'10%',field:'generateWay',   _provider:'dataDictionaryValueProvider', _queryParams:{dd_id:17},  sortable:true, order:'asc', align:'center', resizable:'true', fixed:'false'">
+                      <th data-options="width:'10%',field:'generateWay',   _provider:'dataDictionaryValueProvider', _queryParams:{'dd_code':'generate_way'},  sortable:true, order:'asc', align:'center', resizable:'true', fixed:'false'">
                         来源
                     </th>
-                    <th data-options="formatter: customerTypeFormatter,width:'10%',field:'customerType',   _provider:'dataDictionaryValueProvider', _queryParams:{dd_id:4},  sortable:true, order:'asc', align:'center', resizable:'true', fixed:'false'">
+                    <th data-options="formatter: customerTypeFormatter,width:'10%',field:'customerType',   _provider:'dataDictionaryValueProvider', _queryParams:{'dd_code':'customer_type'},  sortable:true, order:'asc', align:'center', resizable:'true', fixed:'false'">
                         订单客户类型
                     </th>
                     <th data-options="width:'10%',field:'balance',   sortable:true, order:'asc', align:'center', resizable:'true', fixed:'false'">
@@ -95,7 +95,7 @@
                     <th data-options="width:'10%',field:'points',   sortable:true, order:'asc', align:'center', resizable:'true', fixed:'false'">
                         积分
                     </th>
-                     <th data-options="width:'10%',field:'generateWay',   _provider:'dataDictionaryValueProvider', _queryParams:{dd_id:17},  sortable:true, order:'asc', align:'center', resizable:'true', fixed:'false'">
+                     <th data-options="width:'10%',field:'generateWay',   _provider:'dataDictionaryValueProvider', _queryParams:{'dd_code':'generate_way'},  sortable:true, order:'asc', align:'center', resizable:'true', fixed:'false'">
                         使用方式
                     </th>
                     <th data-options="width:'10%',field:'balance',   sortable:true, order:'asc', align:'center', resizable:'true', fixed:'false'">
@@ -229,9 +229,9 @@
         var _url = null;
         //没有id就新增
         if(_formData.id == null || _formData.id==""){
-            _url = "${contextPath}/pointsDetail/insert";
+            _url = "${contextPath}/pointsDetail/insert.action";
         }else{//有id就修改
-            _url = "${contextPath}/pointsDetail/update";
+            _url = "${contextPath}/pointsDetail/update.action";
         }
         $.ajax({
             type: "POST",
@@ -265,7 +265,7 @@
             if (r){
                 $.ajax({
                     type: "POST",
-                    url: "${contextPath}/pointsDetail/delete",
+                    url: "${contextPath}/pointsDetail/delete.action",
                     data: {id:selected.id},
                     processData:true,
                     dataType: "json",
@@ -329,7 +329,7 @@
        // $('#grid').datagrid();
 
         if (null == opts.url || "" == opts.url) {
-            opts.url = "${contextPath}/pointsDetail/listPage";
+            opts.url = "${contextPath}/pointsDetail/listPage.action";
         }
         if(!$('#form').form("validate")){
             return;

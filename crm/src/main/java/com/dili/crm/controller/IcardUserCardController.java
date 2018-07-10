@@ -36,7 +36,7 @@ public class IcardUserCardController {
     @ApiImplicitParams({
 		@ApiImplicitParam(name="IcardUserCard", paramType="form", value = "IcardUserCard的form信息", required = false, dataType = "string")
 	})
-    @RequestMapping(value="/list", method = {RequestMethod.GET, RequestMethod.POST})
+    @RequestMapping(value="/list.action", method = {RequestMethod.GET, RequestMethod.POST})
     public @ResponseBody List<IcardUserCard> list(IcardUserCard icardUserCard) {
         return icardUserCardService.list(icardUserCard);
     }
@@ -45,7 +45,7 @@ public class IcardUserCardController {
     @ApiImplicitParams({
 		@ApiImplicitParam(name="IcardUserCard", paramType="form", value = "IcardUserCard的form信息", required = false, dataType = "string")
 	})
-    @RequestMapping(value="/listPage", method = {RequestMethod.GET, RequestMethod.POST})
+    @RequestMapping(value="/listPage.action", method = {RequestMethod.GET, RequestMethod.POST})
     public @ResponseBody String listPage(IcardUserCard icardUserCard) throws Exception {
         return icardUserCardService.listEasyuiPageByExample(icardUserCard, true).toString();
     }
@@ -54,7 +54,7 @@ public class IcardUserCardController {
     @ApiImplicitParams({
 		@ApiImplicitParam(name="IcardUserCard", paramType="form", value = "IcardUserCard的form信息", required = true, dataType = "string")
 	})
-    @RequestMapping(value="/insert", method = {RequestMethod.GET, RequestMethod.POST})
+    @RequestMapping(value="/insert.action", method = {RequestMethod.GET, RequestMethod.POST})
     public @ResponseBody BaseOutput insert(IcardUserCard icardUserCard) {
         icardUserCardService.insertSelective(icardUserCard);
         return BaseOutput.success("新增成功");
@@ -64,7 +64,7 @@ public class IcardUserCardController {
     @ApiImplicitParams({
 		@ApiImplicitParam(name="IcardUserCard", paramType="form", value = "IcardUserCard的form信息", required = true, dataType = "string")
 	})
-    @RequestMapping(value="/update", method = {RequestMethod.GET, RequestMethod.POST})
+    @RequestMapping(value="/update.action", method = {RequestMethod.GET, RequestMethod.POST})
     public @ResponseBody BaseOutput update(IcardUserCard icardUserCard) {
         icardUserCardService.updateSelective(icardUserCard);
         return BaseOutput.success("修改成功");
@@ -74,7 +74,7 @@ public class IcardUserCardController {
     @ApiImplicitParams({
 		@ApiImplicitParam(name="id", paramType="form", value = "IcardUserCard的主键", required = true, dataType = "long")
 	})
-    @RequestMapping(value="/delete", method = {RequestMethod.GET, RequestMethod.POST})
+    @RequestMapping(value="/delete.action", method = {RequestMethod.GET, RequestMethod.POST})
     public @ResponseBody BaseOutput delete(Long id) {
         icardUserCardService.delete(id);
         return BaseOutput.success("删除成功");

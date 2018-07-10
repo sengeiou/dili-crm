@@ -22,8 +22,8 @@ import java.util.List;
 @Restful("${crm.contextPath}")
 public interface CustomerRpc {
 
-    @POST("/customerApi/list")
+    @POST("/customerApi/list.api")
     BaseOutput<List<Customer>> list(@VOBody CustomerApiDTO customer);
-    @POST("/customerApi/listPage")
+    @POST("/customerApi/listPage.api")
     BaseOutput<EasyuiPageOutput> listPage(@VOBody CustomerApiDTO customer);
 }

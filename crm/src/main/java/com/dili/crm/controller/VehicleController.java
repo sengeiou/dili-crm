@@ -36,7 +36,7 @@ public class VehicleController {
     @ApiImplicitParams({
 		@ApiImplicitParam(name="Vehicle", paramType="form", value = "Vehicle的form信息", required = false, dataType = "string")
 	})
-    @RequestMapping(value="/list", method = {RequestMethod.GET, RequestMethod.POST})
+    @RequestMapping(value="/list.action", method = {RequestMethod.GET, RequestMethod.POST})
     public @ResponseBody List<Vehicle> list(Vehicle vehicle) {
         return vehicleService.list(vehicle);
     }
@@ -45,7 +45,7 @@ public class VehicleController {
     @ApiImplicitParams({
 		@ApiImplicitParam(name="Vehicle", paramType="form", value = "Vehicle的form信息", required = false, dataType = "string")
 	})
-    @RequestMapping(value="/listPage", method = {RequestMethod.GET, RequestMethod.POST})
+    @RequestMapping(value="/listPage.action", method = {RequestMethod.GET, RequestMethod.POST})
     public @ResponseBody String listPage(Vehicle vehicle) throws Exception {
         return vehicleService.listEasyuiPageByExample(vehicle, true).toString();
     }
@@ -64,7 +64,7 @@ public class VehicleController {
     @ApiImplicitParams({
 		@ApiImplicitParam(name="Vehicle", paramType="form", value = "Vehicle的form信息", required = true, dataType = "string")
 	})
-    @RequestMapping(value="/update", method = {RequestMethod.GET, RequestMethod.POST})
+    @RequestMapping(value="/update.action", method = {RequestMethod.GET, RequestMethod.POST})
     public @ResponseBody BaseOutput update(Vehicle vehicle) {
         vehicleService.updateSelective(vehicle);
         return BaseOutput.success("修改成功");
@@ -74,7 +74,7 @@ public class VehicleController {
     @ApiImplicitParams({
 		@ApiImplicitParam(name="id", paramType="form", value = "Vehicle的主键", required = true, dataType = "long")
 	})
-    @RequestMapping(value="/delete", method = {RequestMethod.GET, RequestMethod.POST})
+    @RequestMapping(value="/delete.action", method = {RequestMethod.GET, RequestMethod.POST})
     public @ResponseBody BaseOutput delete(Long id) {
         vehicleService.delete(id);
         return BaseOutput.success("删除成功");

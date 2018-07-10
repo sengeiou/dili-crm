@@ -11,10 +11,10 @@
             <th width="25%" data-options="field:'acctId',   sortable:'true', order:'asc', align:'center', resizable:'true', fixed:'false'">
                 账户id
             </th>
-            <th width="20%" data-options="field:'acctType', _provider:'dataDictionaryValueProvider', _queryParams:{'dd_id':'7'}, sortable:'true', order:'asc', align:'center', resizable:'true', fixed:'false'">
+            <th width="20%" data-options="field:'acctType', _provider:'dataDictionaryValueProvider', _queryParams:{'dd_code':'acct_type'}, sortable:'true', order:'asc', align:'center', resizable:'true', fixed:'false'">
                 类型
             </th>
-            <th width="20%" data-options="field:'system', _provider:'dataDictionaryValueProvider', _queryParams:{'dd_id':'8'},  sortable:'true', order:'asc', align:'center', resizable:'true', fixed:'false'">
+            <th width="20%" data-options="field:'system', _provider:'dataDictionaryValueProvider', _queryParams:{'dd_code':'system'},  sortable:'true', order:'asc', align:'center', resizable:'true', fixed:'false'">
                 所属系统
             </th>
             <th width="36%" data-options="field:'notes',   sortable:'true', order:'asc', align:'center', resizable:'true', fixed:'false'">

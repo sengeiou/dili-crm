@@ -5,8 +5,8 @@ import com.dili.points.domain.ExchangeCommodities;
 import com.dili.points.service.ExchangeCommoditiesService;
 import com.dili.ss.base.BaseServiceImpl;
 import com.dili.ss.domain.BaseOutput;
-import com.dili.sysadmin.sdk.domain.UserTicket;
-import com.dili.sysadmin.sdk.session.SessionContext;
+import com.dili.uap.sdk.domain.UserTicket;
+import com.dili.uap.sdk.session.SessionContext;
 import org.springframework.stereotype.Service;
 
 /**

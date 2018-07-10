@@ -26,8 +26,8 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 //@EnableAutoConfiguration(exclude = {ThymeleafAutoConfiguration.class, VelocityAutoConfiguration.class})
 @MapperScan(basePackages = {"com.dili.crm.dao", "com.dili.ss.dao", "com.dili.ss.quartz.dao"})
 //@ImportResource(locations = "classpath:applicationContext.xml")
-@ComponentScan(basePackages={"com.dili.ss","com.dili.crm","com.dili.sysadmin"})
-@RestfulScan({"com.dili.crm.rpc", "com.dili.sysadmin.sdk.rpc"})
+@ComponentScan(basePackages={"com.dili.ss","com.dili.crm","com.dili.uap"})
+@RestfulScan({"com.dili.crm.rpc", "com.dili.uap.sdk.rpc"})
 @Import({DynamicRoutingDataSourceRegister.class})// 注册动态多数据源
 //@EnableEncryptableProperties
 //@PropertySource(name="EncryptedProperties", value = "classpath:security.properties")

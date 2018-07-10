@@ -36,7 +36,7 @@ public class OrderItemController {
     @ApiImplicitParams({
 		@ApiImplicitParam(name="OrderItem", paramType="form", value = "OrderItem的form信息", required = false, dataType = "string")
 	})
-    @RequestMapping(value="/list", method = {RequestMethod.GET, RequestMethod.POST})
+    @RequestMapping(value="/list.action", method = {RequestMethod.GET, RequestMethod.POST})
     public @ResponseBody List<OrderItem> list(OrderItem orderItem) {
         return orderItemService.list(orderItem);
     }
@@ -45,7 +45,7 @@ public class OrderItemController {
     @ApiImplicitParams({
 		@ApiImplicitParam(name="OrderItem", paramType="form", value = "OrderItem的form信息", required = false, dataType = "string")
 	})
-    @RequestMapping(value="/listPage", method = {RequestMethod.GET, RequestMethod.POST})
+    @RequestMapping(value="/listPage.action", method = {RequestMethod.GET, RequestMethod.POST})
     public @ResponseBody String listPage(OrderItem orderItem) throws Exception {
         return orderItemService.listEasyuiPageByExample(orderItem, true).toString();
     }
@@ -54,7 +54,7 @@ public class OrderItemController {
     @ApiImplicitParams({
 		@ApiImplicitParam(name="OrderItem", paramType="form", value = "OrderItem的form信息", required = true, dataType = "string")
 	})
-    @RequestMapping(value="/insert", method = {RequestMethod.GET, RequestMethod.POST})
+    @RequestMapping(value="/insert.action", method = {RequestMethod.GET, RequestMethod.POST})
     public @ResponseBody BaseOutput insert(OrderItem orderItem) {
         orderItemService.insertSelective(orderItem);
         return BaseOutput.success("新增成功");
@@ -64,7 +64,7 @@ public class OrderItemController {
     @ApiImplicitParams({
 		@ApiImplicitParam(name="OrderItem", paramType="form", value = "OrderItem的form信息", required = true, dataType = "string")
 	})
-    @RequestMapping(value="/update", method = {RequestMethod.GET, RequestMethod.POST})
+    @RequestMapping(value="/update.action", method = {RequestMethod.GET, RequestMethod.POST})
     public @ResponseBody BaseOutput update(OrderItem orderItem) {
         orderItemService.updateSelective(orderItem);
         return BaseOutput.success("修改成功");
@@ -74,7 +74,7 @@ public class OrderItemController {
     @ApiImplicitParams({
 		@ApiImplicitParam(name="id", paramType="form", value = "OrderItem的主键", required = true, dataType = "long")
 	})
-    @RequestMapping(value="/delete", method = {RequestMethod.GET, RequestMethod.POST})
+    @RequestMapping(value="/delete.action", method = {RequestMethod.GET, RequestMethod.POST})
     public @ResponseBody BaseOutput delete(Long id) {
         orderItemService.delete(id);
         return BaseOutput.success("删除成功");

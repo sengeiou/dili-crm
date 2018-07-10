@@ -44,7 +44,7 @@
                                 </td>
                                 <td style="padding-top:10px;padding-left:15px;" width="33%">
                                     <input name="_type" id="_type" data-options="labelAlign:'right', cls:'noborder', readonly:true, editable:false, hasDownArrow:false" style="width:96%;" panelWidth="auto" panelHeight="auto" label="客户类型:" />
-                                    <#comboProvider _id="_type" _provider='dataDictionaryValueProvider' _queryParams='{dd_id:"4"}'/>
+                                    <#comboProvider _id="_type" _provider='dataDictionaryValueProvider' _queryParams='{dd_code:"customer_type"}'/>
                                 </td>
                             </tr>
 
@@ -57,18 +57,18 @@
                                 </td>
                                 <td style="padding-top:10px;padding-left:15px;">
                                     <input name="_profession" id="_profession" data-options="labelAlign:'right', cls:'noborder', readonly:true, editable:false, hasDownArrow:false" style="width:96%;" panelWidth="auto" panelHeight="auto" label="客户行业:" />
-                                    <#comboProvider _id="_profession" _provider='dataDictionaryValueProvider' _queryParams='{dd_id:"6"}'/>
+                                    <#comboProvider _id="_profession" _provider='dataDictionaryValueProvider' _queryParams='{dd_code:"customer_profession"}'/>
                                 </td>
                             </tr>
 
                             <tr>
                                 <td style="padding-top:10px;padding-left:15px;">
                                     <input name="_organizationType" id="_organizationType" style="width:96%;" panelWidth="auto" panelHeight="auto" label="组织类型:" data-options="labelAlign:'right', cls:'noborder', readonly:true, editable:false, hasDownArrow:false"/>
-                                    <#comboProvider _id="_organizationType" _provider='dataDictionaryValueProvider' _queryParams='{dd_id:"5"}'/>
+                                    <#comboProvider _id="_organizationType" _provider='dataDictionaryValueProvider' _queryParams='{dd_code:"customer_organization_type"}'/>
                                 </td>
                                 <td style="padding-top:10px;padding-left:15px;">
                                     <input name="_market" id="_market" data-options="labelAlign:'right', cls:'noborder', readonly:true, editable:false, hasDownArrow:false" style="width:96%;" panelWidth="auto" panelHeight="auto" label="所属市场:" />
-                                    <#comboProvider _id="_market" _provider='dataDictionaryValueProvider' _queryParams='{dd_id:"2"}'/>
+                                    <#comboProvider _id="_market" _provider='dataDictionaryValueProvider' _queryParams='{dd_code:"market"}'/>
                                 </td>
                                 <td style="padding-top:10px;padding-left:15px;">
                                     <input class="easyui-textbox" name="_mainCategory" id="_mainCategory" style="width:96%;" data-options="labelAlign:'right', label:'主营品类:', cls:'noborder', readonly:true, editable:false" />
@@ -122,7 +122,7 @@
                                     </div>
                                     <div class="enterprise">
                                     <input name="_employeeNumber" id="_employeeNumber" data-options="cls:'noborder', labelAlign:'right', editable:false, readonly:true, hasDownArrow:false" style="width:96%;" panelWidth="auto" panelHeight="auto" label="企业员工数:" />
-                                    <#comboProvider _id="_employeeNumber" _provider='dataDictionaryValueProvider' _queryParams='{dd_id:"9"}'/>
+                                    <#comboProvider _id="_employeeNumber" _provider='dataDictionaryValueProvider' _queryParams='{dd_code:"employee"}'/>
                                     </div>
                                 </td>
                                 <td style="padding-top:10px;padding-left:15px;">
@@ -132,7 +132,7 @@
                             <tr>
                                 <td style="padding-top:10px;padding-left:15px;">
                                     <input name="_sourceSystem" id="_sourceSystem" style="width:96%;" data-options="label:'来源系统:', cls:'noborder', labelAlign:'right', editable:false, readonly:true, hasDownArrow:false" />
-                                    <#comboProvider _id="_sourceSystem" _provider='dataDictionaryValueProvider' _queryParams='{dd_id:"8"}'/>
+                                    <#comboProvider _id="_sourceSystem" _provider='dataDictionaryValueProvider' _queryParams='{dd_code:"system"}'/>
                                 </td>
                                 <td style="padding-top:10px;padding-left:15px;">
                                     <input name="_department" id="_department" style="width:96%;" data-options="label:'归属部门:', labelAlign:'right', cls:'noborder', editable:false, readonly:true, hasDownArrow:false" />
@@ -297,7 +297,7 @@
         function loadCertificateTypeByOrganizationType(organizationType) {
             $.ajax({
                 type: "POST",
-                url: "${contextPath}/customer/getCertificateTypeComboboxData",
+                url: "${contextPath}/customer/getCertificateTypeComboboxData.action",
                 data: {"organizationType":organizationType},
                 processData:true,
                 dataType: "json",

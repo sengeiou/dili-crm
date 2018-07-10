@@ -12,12 +12,12 @@ import java.util.List;
 /**
  * Created by asiamaster on 2017/10/19 0019.
  */
-@Restful("${sysadmin.contextPath}")
+@Restful("${uap.contextPath}")
 public interface DepartmentRpc {
 
-	@POST("/departmentApi/get")
+	@POST("/departmentApi/get.api")
 	BaseOutput<Department> get(@VOSingleParameter Long id);
 
-	@POST("/departmentApi/listByExample")
+	@POST("/departmentApi/listByExample.api")
 	BaseOutput<List<Department>> listByExample(@VOBody Department department);
 }

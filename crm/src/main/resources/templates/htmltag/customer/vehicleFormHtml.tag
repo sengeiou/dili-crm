@@ -24,7 +24,7 @@
             <tr>
                 <td style="padding:5px;">
                     <input  name="_vehicle_type" id="_vehicle_type" style="width:100%" data-options="labelAlign:'right',label:'车型:', editable:false, validType:'length[0,20]'" />
-                    <#comboProvider _id="_vehicle_type" _provider='dataDictionaryValueProvider' _queryParams='{dd_id:"14"}'/>
+                    <#comboProvider _id="_vehicle_type" _provider='dataDictionaryValueProvider' _queryParams='{dd_code:"vehicle_type"}'/>
                 </td>
             </tr>
         </table>

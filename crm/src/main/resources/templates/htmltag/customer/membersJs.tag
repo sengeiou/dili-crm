@@ -6,7 +6,7 @@
     <%if (has(customer)){%>
             var opts = $("#membersGrid").datagrid("options");
             if (null == opts.url || "" == opts.url) {
-                opts.url = "${contextPath}/customer/listPage";
+                opts.url = "${contextPath}/customer/listPage.action";
             }
             var selected = ${customer};
             $("#membersGrid").datagrid("load",  bindGridMeta2Data("membersGrid", {"parentId":selected["id"]}));
@@ -30,7 +30,7 @@
     function saveOrUpdateMembers(id) {
         <%if (has(customer)){%>
         var _formData = {id:id};
-        var _url = "${contextPath}/customer/update";
+        var _url = "${contextPath}/customer/update.action";
         //设置当前选择的客户id
         var selected = ${customer};
         _formData["parentId"] = selected["id"];

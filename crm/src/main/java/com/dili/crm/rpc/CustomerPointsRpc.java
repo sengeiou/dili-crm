@@ -21,12 +21,12 @@ import java.util.List;
 @Restful("${points.contextPath}")
 public interface CustomerPointsRpc {
 
-    @POST("/customerPointsApi/listCustomerPoints")
+    @POST("/customerPointsApi/listCustomerPoints.api")
     BaseOutput<List<CustomerPoints>> listCustomerPoints(@VOBody CustomerPointsApiDTO customer);
-    @POST("/customerPointsApi/deleteCustomerPoints")
+    @POST("/customerPointsApi/deleteCustomerPoints.api")
     BaseOutput<CustomerPoints> deleteCustomerPoints(@VOBody Long customerId);
 
-    @POST("/customerPointsApi/updateCategoryPoints")
+    @POST("/customerPointsApi/updateCategoryPoints.api")
     BaseOutput<Void> updateCategoryPoints(@VOBody String paramJson);
 
 }

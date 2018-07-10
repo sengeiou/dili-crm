@@ -12,19 +12,19 @@ import java.util.List;
 /**
  * Created by asiamaster on 2017/10/19 0019.
  */
-@Restful("${sysadmin.contextPath}")
+@Restful("${uap.contextPath}")
 public interface UserRpc {
 
-	@POST("/userApi/get")
+	@POST("/userApi/get.api")
 	BaseOutput<User> get(@VOSingleParameter Long id);
 
-	@POST("/userApi/list")
+	@POST("/userApi/list.api")
 	BaseOutput<List<User>> list(@VOBody User user);
 
-	@POST("/userApi/listByExample")
+	@POST("/userApi/listByExample.api")
 	BaseOutput<List<User>> listByExample(@VOBody User user);
 
-	@POST("/userApi/listUserByIds")
+	@POST("/userApi/listUserByIds.api")
 	BaseOutput<List<User>> listUserByIds(@VOSingleParameter List<String> ids);
 
 }

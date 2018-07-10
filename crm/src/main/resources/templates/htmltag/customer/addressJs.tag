@@ -6,7 +6,7 @@
     <%if (has(customer)){%>
             var opts = $("#addressGrid").datagrid("options");
             if (null == opts.url || "" == opts.url) {
-                opts.url = "${contextPath}/address/listPage";
+                opts.url = "${contextPath}/address/listPage.action";
             }
             var selected = ${customer};
             $("#addressGrid").datagrid("load", bindGridMeta2Data("addressGrid", {"customerId":selected["id"]}));
@@ -106,9 +106,9 @@
             var _url = null;
             //没有id就新增
             if(_formData.id == null || _formData.id==""){
-                _url = "${contextPath}/address/insert";
+                _url = "${contextPath}/address/insert.action";
             }else{//有id就修改
-                _url = "${contextPath}/address/update";
+                _url = "${contextPath}/address/update.action";
             }
             //设置当前选择的客户id
             var selected = ${customer};

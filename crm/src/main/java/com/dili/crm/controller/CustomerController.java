@@ -7,6 +7,7 @@ import com.dili.crm.domain.Customer;
 import com.dili.crm.domain.Department;
 import com.dili.crm.domain.dto.MembersDto;
 import com.dili.crm.rpc.CustomerPointsRpc;
+import com.dili.crm.rpc.DepartmentRpc;
 import com.dili.crm.rpc.MapRpc;
 import com.dili.crm.rpc.UserRpc;
 import com.dili.crm.service.CustomerService;
@@ -14,9 +15,9 @@ import com.dili.ss.domain.BaseOutput;
 import com.dili.ss.domain.EasyuiPageOutput;
 import com.dili.ss.metadata.ValuePair;
 import com.dili.ss.metadata.ValueProviderUtils;
-import com.dili.sysadmin.sdk.domain.UserTicket;
-import com.dili.sysadmin.sdk.session.SessionConstants;
-import com.dili.sysadmin.sdk.session.SessionContext;
+import com.dili.uap.sdk.domain.UserTicket;
+import com.dili.uap.sdk.session.SessionConstants;
+import com.dili.uap.sdk.session.SessionContext;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
 import io.swagger.annotations.Api;
@@ -58,6 +59,9 @@ public class CustomerController {
 	private UserRpc userRpc;
 
 	@Autowired
+	private DepartmentRpc departmentRpc;
+
+	@Autowired
 	private CustomerPointsRpc customerPointsRpc;
 
 	@Autowired
@@ -86,7 +90,7 @@ public class CustomerController {
 	public String locations(ModelMap modelMap, @RequestParam(value = "types",required=false) String[] types)  throws Exception{
     	Map<String,Object> params =  Maps.newHashMap();
 		JSONObject queryParams = new JSONObject();
-		queryParams.put("dd_id",4);
+		queryParams.put("dd_code", "customer_type");
 		params.put("queryParams", queryParams);
 		List<ValuePair<?>> ddList = valueProviderUtils.getLookupList("dataDictionaryValueProvider", null, params);
 		//删除  --请选择--
@@ -131,12 +135,8 @@ public class CustomerController {
 		}
 		//页面上用于展示拥有者和新增时获取拥有者id
 		modelMap.put("user", userTicket);
-		BaseOutput<List<Department>> listBaseOutput = userRpc.listUserDepartmentByUserId(userTicket.getId());
-		List<Department> departments = listBaseOutput.getData();
-		if (CollectionUtils.isNotEmpty(departments)){
-			//页面上用于展示拥有者和新增时获取拥有者id
-			modelMap.put("department", departments.get(0));
-		}
+		//页面上用于展示拥有者和新增时获取拥有者id
+		modelMap.put("department", departmentRpc.get(userTicket.getDepartmentId()));
 		return "customer/edit";
 	}
 
@@ -146,7 +146,7 @@ public class CustomerController {
 	 * @return
 	 * @throws Exception
 	 */
-	@RequestMapping(value="/expand", method = {RequestMethod.GET, RequestMethod.POST})
+	@RequestMapping(value="/expand.action", method = {RequestMethod.GET, RequestMethod.POST})
 	public @ResponseBody String expand(Long parentId) throws Exception {
 		return customerService.expandEasyuiPageByParentId(parentId);
 	}
@@ -155,7 +155,7 @@ public class CustomerController {
     @ApiImplicitParams({
 		@ApiImplicitParam(name="Customer", paramType="form", value = "Customer的form信息", required = false, dataType = "string")
 	})
-    @RequestMapping(value="/list", method = {RequestMethod.GET, RequestMethod.POST})
+    @RequestMapping(value="/list.action", method = {RequestMethod.GET, RequestMethod.POST})
     public @ResponseBody
     List<Customer> list(Customer customer){
         return customerService.list(customer);
@@ -165,7 +165,7 @@ public class CustomerController {
     @ApiImplicitParams({
 		@ApiImplicitParam(name="Customer", paramType="form", value = "Customer的form信息", required = false, dataType = "string")
 	})
-    @RequestMapping(value="/listPage", method = {RequestMethod.GET, RequestMethod.POST})
+    @RequestMapping(value="/listPage.action", method = {RequestMethod.GET, RequestMethod.POST})
     public @ResponseBody String listPage(Customer customer, HttpServletRequest req) throws Exception {
     	//判断导出时全查所有客户
 	    String sessionId = req.getHeader(SessionConstants.SESSION_ID);
@@ -183,7 +183,7 @@ public class CustomerController {
     @ApiImplicitParams({
 		@ApiImplicitParam(name="Customer", paramType="form", value = "Customer的form信息", required = true, dataType = "string")
 	})
-    @RequestMapping(value="/insert", method = {RequestMethod.GET, RequestMethod.POST})
+    @RequestMapping(value="/insert.action", method = {RequestMethod.GET, RequestMethod.POST})
     public @ResponseBody BaseOutput insert(Customer customer) {
         return customerService.insertSelectiveWithOutput(customer);
     }
@@ -192,7 +192,7 @@ public class CustomerController {
     @ApiImplicitParams({
 		@ApiImplicitParam(name="Customer", paramType="form", value = "Customer的form信息", required = true, dataType = "string")
 	})
-    @RequestMapping(value="/update", method = {RequestMethod.GET, RequestMethod.POST})
+    @RequestMapping(value="/update.action", method = {RequestMethod.GET, RequestMethod.POST})
     public @ResponseBody BaseOutput update(Customer customer , String oldName) {
 		if(!StringUtils.equals(oldName,customer.getName())){
 			JSONObject jsonObject = new JSONObject();
@@ -207,7 +207,7 @@ public class CustomerController {
     @ApiImplicitParams({
 		@ApiImplicitParam(name="id", paramType="form", value = "Customer的主键", required = true, dataType = "long")
 	})
-    @RequestMapping(value="/delete", method = {RequestMethod.GET, RequestMethod.POST})
+    @RequestMapping(value="/delete.action", method = {RequestMethod.GET, RequestMethod.POST})
     public @ResponseBody BaseOutput delete(Long id) {
 		try {
 			return customerService.deleteWithOutput(id);
@@ -218,7 +218,7 @@ public class CustomerController {
     }
 
     //根据机构类型加载证件类型数据
-    @RequestMapping(value="/getCertificateTypeComboboxData", method = {RequestMethod.GET, RequestMethod.POST})
+    @RequestMapping(value="/getCertificateTypeComboboxData.action", method = {RequestMethod.GET, RequestMethod.POST})
 	public @ResponseBody BaseOutput<String> getCertificateTypeComboboxData(@RequestParam(required = false) String organizationType) throws Exception {
     	Map params = new HashMap(2);
     	params.put("organizationType", organizationType);
@@ -236,7 +236,7 @@ public class CustomerController {
 	@ApiImplicitParams({
 			@ApiImplicitParam(name="MembersDto", paramType="form", value = "MembersDto的form信息", required = false, dataType = "string")
 	})
-	@RequestMapping(value="/listMembersPage", method = {RequestMethod.GET, RequestMethod.POST})
+	@RequestMapping(value="/listMembersPage.action", method = {RequestMethod.GET, RequestMethod.POST})
 	public @ResponseBody String listMembersPage(MembersDto membersDto) throws Exception {
 		return customerService.listMembersPage(membersDto).toString();
 	}
@@ -245,7 +245,7 @@ public class CustomerController {
 	@ApiImplicitParams({
 			@ApiImplicitParam(name="id", paramType="form", value = "Customer的主键", required = true, dataType = "long")
 	})
-	@RequestMapping(value="/deleteMembers", method = {RequestMethod.GET, RequestMethod.POST})
+	@RequestMapping(value="/deleteMembers.action", method = {RequestMethod.GET, RequestMethod.POST})
 	public @ResponseBody BaseOutput deleteMembers(Long id) {
 		return customerService.deleteMembers(id);
 	}
@@ -254,7 +254,7 @@ public class CustomerController {
 	@ApiImplicitParams({
 			@ApiImplicitParam(name="MembersDto", paramType="form", value = "MembersDto的form信息", required = false, dataType = "string")
 	})
-	@RequestMapping(value="/listParentCustomerPage", method = {RequestMethod.GET, RequestMethod.POST})
+	@RequestMapping(value="/listParentCustomerPage.action", method = {RequestMethod.GET, RequestMethod.POST})
 	public @ResponseBody String listParentCustomerPage(MembersDto membersDto) throws Exception {
     	if (null == membersDto || null == membersDto.getId()){
     		return customerService.listEasyuiPageByExample(membersDto, true).toString();
@@ -269,11 +269,4 @@ public class CustomerController {
 		return datetimeProvider;
 	}
 
-	//获取数据字典提供者
-	private JSONObject getDDProvider(Long ddId){
-		JSONObject dataDictionaryValueProvider = new JSONObject();
-		dataDictionaryValueProvider.put("provider", "dataDictionaryValueProvider");
-		dataDictionaryValueProvider.put("queryParams", "{dd_id:"+ddId+"}");
-		return dataDictionaryValueProvider;
-	}
 }

@@ -34,7 +34,7 @@ public class CustomerApi {
 
     @ApiOperation(value = "查询customer列表接口", notes = "查询customer列表接口，返回列表信息")
     @ApiImplicitParams({ @ApiImplicitParam(name = "Customer", paramType = "form", value = "Customer的form信息", required = false, dataType = "string") })
-    @RequestMapping(value = "/list", method = { RequestMethod.GET, RequestMethod.POST })
+    @RequestMapping(value = "/list.api", method = { RequestMethod.GET, RequestMethod.POST })
     public @ResponseBody
     BaseOutput<List<Customer>> list(CustomerApiDTO customer) {
         return BaseOutput.success().setData(customerService.listByExample(customer));
@@ -42,7 +42,7 @@ public class CustomerApi {
 
     @ApiOperation(value = "分页查询customer列表接口", notes = "分页查询customer列表接口，返回列表信息")
     @ApiImplicitParams({ @ApiImplicitParam(name = "Customer", paramType = "form", value = "Customer的form信息", required = false, dataType = "string") })
-    @RequestMapping(value = "/listPage", method = { RequestMethod.GET, RequestMethod.POST })
+    @RequestMapping(value = "/listPage.api", method = { RequestMethod.GET, RequestMethod.POST })
     public @ResponseBody
     BaseOutput<EasyuiPageOutput> listPage(CustomerApiDTO customer) throws Exception {
         return BaseOutput.success().setData(customerService.listEasyuiPageByExample(customer, true));

@@ -19,7 +19,7 @@
 					<th data-options="field:'name',width:50">客户名</th>
 					<th data-options="field:'code',width:50">编码</th>
 					<th data-options="field:'phone',width:50">电话</th>
-					<th data-options="field:'sourceSystem', _provider:'dataDictionaryValueProvider', _queryParams:{'dd_id':'8'}, width:50">来源系统</th>
+					<th data-options="field:'sourceSystem', _provider:'dataDictionaryValueProvider', _queryParams:{'dd_code':'system'}, width:50">来源系统</th>
 					<th data-options="field:'department', _provider:'departmentProvider', width:'50'">归属部门</th>
 				</tr>
 			</thead>
@@ -33,7 +33,7 @@
 	function searchMember() {
 		var opts = $("#selectMembersGrid").datagrid("options");
         if (null == opts.url || "" == opts.url) {
-            opts.url = '${contextPath!}/customer/listMembersPage';
+            opts.url = '${contextPath!}/customer/listMembersPage.action';
         }
 		var text = $('#searchMembersTextbox').textbox('getText');
 		$('#selectMembersGrid').datagrid('load', bindGridMeta2Data("selectMembersGrid",{name : text,id: "${customerId}"}));

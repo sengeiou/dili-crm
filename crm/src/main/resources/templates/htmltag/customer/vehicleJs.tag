@@ -6,7 +6,7 @@
     <%if (has(customer)){%>
             var opts = $("#vehicleGrid").datagrid("options");
             if (null == opts.url || "" == opts.url) {
-                opts.url = "${contextPath}/vehicle/listPage";
+                opts.url = "${contextPath}/vehicle/listPage.action";
             }
             var selected = ${customer};
             $("#vehicleGrid").datagrid("load",  bindGridMeta2Data('vehicleGrid',{"customerId":selected["id"]}));
@@ -63,9 +63,9 @@
         var _url = null;
         //没有id就新增
         if(_formData.id == null || _formData.id==""){
-            _url = "${contextPath}/vehicle/insert";
+            _url = "${contextPath}/vehicle/insert.action";
         }else{//有id就修改
-            _url = "${contextPath}/vehicle/update";
+            _url = "${contextPath}/vehicle/update.action";
         }
         //设置当前选择的客户id
         var selected = ${customer};

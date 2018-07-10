@@ -8,6 +8,7 @@ import com.dili.crm.domain.Department;
 import com.dili.crm.domain.User;
 import com.dili.crm.domain.dto.*;
 import com.dili.crm.rpc.CustomerPointsRpc;
+import com.dili.crm.rpc.DepartmentRpc;
 import com.dili.crm.rpc.UserRpc;
 import com.dili.crm.service.CacheService;
 import com.dili.crm.service.ChartService;
@@ -19,8 +20,8 @@ import com.dili.ss.dto.DTO;
 import com.dili.ss.dto.DTOUtils;
 import com.dili.ss.dto.IDTO;
 import com.dili.ss.metadata.ValueProviderUtils;
-import com.dili.sysadmin.sdk.domain.UserTicket;
-import com.dili.sysadmin.sdk.session.SessionContext;
+import com.dili.uap.sdk.domain.UserTicket;
+import com.dili.uap.sdk.session.SessionContext;
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
 import com.google.common.collect.Lists;
@@ -54,6 +55,9 @@ public class CustomerServiceImpl extends BaseServiceImpl<Customer, Long> impleme
 
 	@Autowired
 	private UserRpc userRpc;
+
+	@Autowired
+	private DepartmentRpc departmentRpc;
 
 	@Autowired
 	private CustomerPointsRpc customerPointsRpc;
@@ -108,11 +112,7 @@ public class CustomerServiceImpl extends BaseServiceImpl<Customer, Long> impleme
         customer.setCreatedId(userTicket.getId());
         customer.setOwnerId(userTicket.getId());
         //查询当前用户所属的部门
-		BaseOutput<List<Department>> listBaseOutput = userRpc.listUserDepartmentByUserId(userTicket.getId());
-		List<Department> departments = listBaseOutput.getData();
-		if (CollectionUtils.isNotEmpty(departments)){
-			customer.setDepartment(String.valueOf(departments.get(0).getId()));
-		}
+		customer.setDepartment(String.valueOf(departmentRpc.get(userTicket.getDepartmentId())));
         super.insertSelective(customer);
         return BaseOutput.success("新增成功").setData(customer);
     }
@@ -296,15 +296,15 @@ public class CustomerServiceImpl extends BaseServiceImpl<Customer, Long> impleme
 		metadata.put("department", departmentProvider);
 		metadata.put("created", getDatetimeProvider());
 		metadata.put("modified", getDatetimeProvider());
-		metadata.put("certificateType", getDDProvider(3L));
-		metadata.put("organizationType", getDDProvider(5L));
+		metadata.put("certificateType", getDDProvider("certificate_type"));
+		metadata.put("organizationType", getDDProvider("customer_organization_type"));
 		JSONObject cityProvider = new JSONObject();
 		cityProvider.put("provider", "cityProvider");
 		metadata.put("operatingArea", cityProvider);
-		metadata.put("sourceSystem", getDDProvider(8L));
-		metadata.put("market", getDDProvider(2L));
-		metadata.put("type", getDDProvider(4L));
-		metadata.put("profession", getDDProvider(6L));
+		metadata.put("sourceSystem", getDDProvider("system"));
+		metadata.put("market", getDDProvider("market"));
+		metadata.put("type", getDDProvider("customer_type"));
+		metadata.put("profession", getDDProvider("customer_profession"));
 
 		customer.mset(metadata);
 		EasyuiPageOutput easyuiPageOutput = this.listEasyuiPageByExample(customer, true);
@@ -420,11 +420,11 @@ public class CustomerServiceImpl extends BaseServiceImpl<Customer, Long> impleme
 		departmentProvider.put("provider", "departmentProvider");
 		metadata.put("department", departmentProvider);
 		//字典
-		metadata.put("certificateType", getDDProvider(3L));
-		metadata.put("organizationType", getDDProvider(5L));
-		metadata.put("market", getDDProvider(2L));
-		metadata.put("type", getDDProvider(4L));
-		metadata.put("profession", getDDProvider(6L));
+		metadata.put("certificateType", getDDProvider("certificate_type"));
+		metadata.put("organizationType", getDDProvider("customer_organization_type"));
+		metadata.put("market", getDDProvider("market"));
+		metadata.put("type", getDDProvider("customer_type"));
+		metadata.put("profession", getDDProvider("customer_profession"));
 		metadata.put("certificateTime", getDatetimeProvider());
 		metadata.put("created", getDatetimeProvider());
 		return metadata;
@@ -437,10 +437,10 @@ public class CustomerServiceImpl extends BaseServiceImpl<Customer, Long> impleme
 		return datetimeProvider;
 	}
 	//获取数据字典提供者
-	private JSONObject getDDProvider(Long ddId){
+	private JSONObject getDDProvider(String ddCode){
 		JSONObject dataDictionaryValueProvider = new JSONObject();
 		dataDictionaryValueProvider.put("provider", "dataDictionaryValueProvider");
-		dataDictionaryValueProvider.put("queryParams", "{dd_id:"+ddId+"}");
+		dataDictionaryValueProvider.put("queryParams", "{dd_code:\""+ddCode+"\"}");
 		return dataDictionaryValueProvider;
 	}
 	private String calStartDate() {

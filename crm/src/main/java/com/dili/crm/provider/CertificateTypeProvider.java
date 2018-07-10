@@ -52,7 +52,7 @@ public class CertificateTypeProvider extends DataDictionaryValueProvider {
     }
 
     @Override
-    public String getDdId(){
-        return "3";
+    public String getDdCode(String queryParam){
+        return "certificate_type";
     }
 }

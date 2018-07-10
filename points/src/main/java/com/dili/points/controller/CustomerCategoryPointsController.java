@@ -36,7 +36,7 @@ public class CustomerCategoryPointsController {
     @ApiImplicitParams({
 		@ApiImplicitParam(name="CustomerCategoryPoints", paramType="form", value = "CustomerCategoryPoints的form信息", required = false, dataType = "string")
 	})
-    @RequestMapping(value="/list", method = {RequestMethod.GET, RequestMethod.POST})
+    @RequestMapping(value="/list.action", method = {RequestMethod.GET, RequestMethod.POST})
     public @ResponseBody List<CustomerCategoryPoints> list(CustomerCategoryPoints customerCategoryPoints) {
         return customerCategoryPointsService.list(customerCategoryPoints);
     }
@@ -45,7 +45,7 @@ public class CustomerCategoryPointsController {
     @ApiImplicitParams({
 		@ApiImplicitParam(name="CustomerCategoryPoints", paramType="form", value = "CustomerCategoryPoints的form信息", required = false, dataType = "string")
 	})
-    @RequestMapping(value="/listPage", method = {RequestMethod.GET, RequestMethod.POST})
+    @RequestMapping(value="/listPage.action", method = {RequestMethod.GET, RequestMethod.POST})
     public @ResponseBody String listPage(CustomerCategoryPoints customerCategoryPoints) throws Exception {
         return customerCategoryPointsService.listEasyuiPageByExample(customerCategoryPoints, true).toString();
     }
@@ -54,7 +54,7 @@ public class CustomerCategoryPointsController {
     @ApiImplicitParams({
 		@ApiImplicitParam(name="CustomerCategoryPoints", paramType="form", value = "CustomerCategoryPoints的form信息", required = true, dataType = "string")
 	})
-    @RequestMapping(value="/insert", method = {RequestMethod.GET, RequestMethod.POST})
+    @RequestMapping(value="/insert.action", method = {RequestMethod.GET, RequestMethod.POST})
     public @ResponseBody BaseOutput insert(CustomerCategoryPoints customerCategoryPoints) {
         customerCategoryPointsService.insertSelective(customerCategoryPoints);
         return BaseOutput.success("新增成功");
@@ -64,7 +64,7 @@ public class CustomerCategoryPointsController {
     @ApiImplicitParams({
 		@ApiImplicitParam(name="CustomerCategoryPoints", paramType="form", value = "CustomerCategoryPoints的form信息", required = true, dataType = "string")
 	})
-    @RequestMapping(value="/update", method = {RequestMethod.GET, RequestMethod.POST})
+    @RequestMapping(value="/update.action", method = {RequestMethod.GET, RequestMethod.POST})
     public @ResponseBody BaseOutput update(CustomerCategoryPoints customerCategoryPoints) {
         customerCategoryPointsService.updateSelective(customerCategoryPoints);
         return BaseOutput.success("修改成功");
@@ -74,7 +74,7 @@ public class CustomerCategoryPointsController {
     @ApiImplicitParams({
 		@ApiImplicitParam(name="id", paramType="form", value = "CustomerCategoryPoints的主键", required = true, dataType = "long")
 	})
-    @RequestMapping(value="/delete", method = {RequestMethod.GET, RequestMethod.POST})
+    @RequestMapping(value="/delete.action", method = {RequestMethod.GET, RequestMethod.POST})
     public @ResponseBody BaseOutput delete(Long id) {
         customerCategoryPointsService.delete(id);
         return BaseOutput.success("删除成功");

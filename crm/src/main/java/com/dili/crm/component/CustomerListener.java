@@ -1,51 +1,31 @@
 package com.dili.crm.component;
 
 import com.alibaba.fastjson.JSONObject;
-import com.dili.crm.boot.RabbitConfiguration;
 import com.dili.crm.converter.DtoMessageConverter;
 import com.dili.crm.domain.Address;
 import com.dili.crm.domain.City;
 import com.dili.crm.domain.Customer;
 import com.dili.crm.domain.CustomerExtensions;
-import com.dili.crm.domain.User;
-import com.dili.crm.provider.YnProvider;
 import com.dili.crm.rpc.CustomerPointsRpc;
 import com.dili.crm.service.AddressService;
-import com.dili.crm.service.CacheService;
 import com.dili.crm.service.CityService;
 import com.dili.crm.service.CustomerExtensionsService;
 import com.dili.crm.service.CustomerService;
-import com.dili.crm.service.IcardUserAccountService;
-import com.dili.crm.service.IcardUserCardService;
-import com.dili.crm.service.SystemConfigService;
-import com.dili.crm.service.toll.TollCustomerService;
 import com.dili.ss.domain.BaseOutput;
 import com.dili.ss.dto.DTO;
 import com.dili.ss.dto.DTOUtils;
 import com.dili.ss.util.SystemConfigUtils;
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.ObjectMapper;
-
-import java.io.UnsupportedEncodingException;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-
-import org.apache.commons.beanutils.BeanUtilsBean2;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.amqp.core.AmqpTemplate;
 import org.springframework.amqp.core.Message;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.ApplicationListener;
-import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.io.UnsupportedEncodingException;
+import java.util.*;
 
 /**
  * 客户消费组件

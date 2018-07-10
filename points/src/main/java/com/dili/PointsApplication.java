@@ -24,8 +24,8 @@ import tk.mybatis.spring.annotation.MapperScan;
 //@EnableAutoConfiguration(exclude = {ThymeleafAutoConfiguration.class, VelocityAutoConfiguration.class})
 @MapperScan(basePackages = {"com.dili.points.dao", "com.dili.ss.dao"})
 //@ImportResource(locations = "classpath:applicationContext.xml")
-@ComponentScan(basePackages={"com.dili.ss","com.dili.points","com.dili.sysadmin"})
-@RestfulScan({"com.dili.points.rpc", "com.dili.sysadmin.sdk.rpc"})
+@ComponentScan(basePackages={"com.dili.ss","com.dili.points","com.dili.uap"})
+@RestfulScan({"com.dili.points.rpc", "com.dili.uap.sdk.rpc"})
 //@EnableEncryptableProperties
 //@PropertySource(name="EncryptedProperties", value = "classpath:security.properties")
 //@EncryptablePropertySource(name = "EncryptedProperties", value = "classpath:security.properties")

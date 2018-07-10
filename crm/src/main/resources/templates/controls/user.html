@@ -30,7 +30,7 @@
 	function searchUser() {
 		var opts = $("#selectUserGrid").datagrid("options");
         if (null == opts.url || "" == opts.url) {
-            opts.url = '${contextPath!}/selectDialog/listUser';
+            opts.url = '${contextPath!}/selectDialog/listUser.action';
         }
 		var text = $('#searchUserTextbox').textbox('getText');
 		$('#selectUserGrid').datagrid('load', bindGridMeta2Data("selectUserGrid",{realName : text}));

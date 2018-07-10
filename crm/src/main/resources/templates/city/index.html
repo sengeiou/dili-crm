@@ -216,7 +216,7 @@
         }
         //加载完了必须要重设url，否则删除的时候可能会调用expand
         var onLoadSuccess = function(row, data){
-            $(this).treegrid("options").url="${contextPath}/city/listPage";
+            $(this).treegrid("options").url="${contextPath}/city/listPage.action";
 //            $("#grid").treegrid("expandAll");
 //          展开第一级
             if(data && data.rows){
@@ -233,7 +233,7 @@
         function queryGrid() {
             var opts = $("#grid").treegrid("options");
 //            if (null == opts.url || "" == opts.url) {
-                opts.url ="${contextPath}/city/listPage";
+                opts.url ="${contextPath}/city/listPage.action";
 //            }
             $("#grid").treegrid("load", bindGridMeta2Form("grid", "form"));
 
@@ -306,9 +306,9 @@
             var _url = null;
             //没有id就新增
             if(_formData.id == null || _formData.id==""){
-                _url = "${contextPath}/city/insert";
+                _url = "${contextPath}/city/insert.action";
             }else{//有id就修改
-                _url = "${contextPath}/city/update";
+                _url = "${contextPath}/city/update.action";
             }
             $.ajax({
                 type: "POST",

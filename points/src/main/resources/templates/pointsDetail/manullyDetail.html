@@ -222,9 +222,9 @@
             var _url = null;
             //没有id就新增
             if(_formData.id == null || _formData.id==""){
-                _url = "${contextPath}/pointsDetail/insert";
+                _url = "${contextPath}/pointsDetail/insert.action";
             }else{//有id就修改
-                _url = "${contextPath}/pointsDetail/update";
+                _url = "${contextPath}/pointsDetail/update.action";
             }
             $.ajax({
                 type: "POST",
@@ -258,7 +258,7 @@
                 if (r){
                     $.ajax({
                         type: "POST",
-                        url: "${contextPath}/pointsDetail/delete",
+                        url: "${contextPath}/pointsDetail/delete.action",
                         data: {id:selected.id},
                         processData:true,
                         dataType: "json",
@@ -284,7 +284,7 @@
         	
             var opts = $("#grid").datagrid("options");
             if (null == opts.url || "" == opts.url) {
-                opts.url = "${contextPath}/pointsDetail/listPage";
+                opts.url = "${contextPath}/pointsDetail/listPage.action";
             }
             if(!$('#form').form("validate")){
                 return;

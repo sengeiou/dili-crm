@@ -176,9 +176,9 @@
             var _url = null;
             //没有id就新增
             if(_formData.id == null || _formData.id==""){
-                _url = "${contextPath}/visitEvent/insert";
+                _url = "${contextPath}/visitEvent/insert.action";
             }else{//有id就修改
-                _url = "${contextPath}/visitEvent/update";
+                _url = "${contextPath}/visitEvent/update.action";
             }
             $.ajax({
                 type: "POST",
@@ -237,7 +237,7 @@
         function queryGrid() {
             var opts = $("#grid").datagrid("options");
             if (null == opts.url || "" == opts.url) {
-                opts.url = "${contextPath}/visitEvent/listPage";
+                opts.url = "${contextPath}/visitEvent/listPage.action";
             }
             if(!$('#form').form("validate")){
                 return;

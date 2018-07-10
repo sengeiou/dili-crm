@@ -150,9 +150,9 @@
             var _url = null;
             //没有id就新增
             if(_formData.id == null || _formData.id==""){
-                _url = "${contextPath}/pointsRuleLog/insert";
+                _url = "${contextPath}/pointsRuleLog/insert.action";
             }else{//有id就修改
-                _url = "${contextPath}/pointsRuleLog/update";
+                _url = "${contextPath}/pointsRuleLog/update.action";
             }
             $.ajax({
                 type: "POST",
@@ -211,7 +211,7 @@
         function queryGrid() {
             var opts = $("#grid").datagrid("options");
             if (null == opts.url || "" == opts.url) {
-                opts.url = "${contextPath}/pointsRuleLog/listPage";
+                opts.url = "${contextPath}/pointsRuleLog/listPage.action";
             }
             if(!$('#form').form("validate")){
                 return;

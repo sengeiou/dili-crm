@@ -41,7 +41,7 @@ public class SelectDialogController {
 	}
 
 	@ResponseBody
-	@RequestMapping(value = "/listUser", method = { RequestMethod.GET, RequestMethod.POST }, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+	@RequestMapping(value = "/listUser.action", method = { RequestMethod.GET, RequestMethod.POST }, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
 	public List<User> listUser(ModelMap modelMap, User user) {
 		BaseOutput<List<User>> output = this.userRPC.listByExample(user);
 		if (output.isSuccess()) {
@@ -73,7 +73,7 @@ public class SelectDialogController {
 	}
 
 	@ResponseBody
-	@RequestMapping(value = "/listCustomer", method = { RequestMethod.GET, RequestMethod.POST }, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+	@RequestMapping(value = "/listCustomer.action", method = { RequestMethod.GET, RequestMethod.POST }, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
 	public String listCustomer(CustomerApiDTO customer) throws Exception {
 		BaseOutput<EasyuiPageOutput> output =  this.customerRpc.listPage(customer);
 		return output.isSuccess() ? output.getData().toString() : null;

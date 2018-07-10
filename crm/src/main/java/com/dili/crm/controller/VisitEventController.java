@@ -3,14 +3,10 @@ package com.dili.crm.controller;
 import com.dili.crm.domain.VisitEvent;
 import com.dili.crm.service.VisitEventService;
 import com.dili.ss.domain.BaseOutput;
-import com.dili.sysadmin.sdk.domain.UserTicket;
-import com.dili.sysadmin.sdk.session.SessionContext;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
-import java.util.List;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,6 +15,8 @@ import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
+
+import java.util.List;
 
 /**
  * 由MyBatis Generator工具自动生成
@@ -44,7 +42,7 @@ public class VisitEventController {
     @ApiImplicitParams({
 		@ApiImplicitParam(name="VisitEvent", paramType="form", value = "VisitEvent的form信息", required = false, dataType = "string")
 	})
-    @RequestMapping(value="/list", method = {RequestMethod.GET, RequestMethod.POST})
+    @RequestMapping(value="/list.action", method = {RequestMethod.GET, RequestMethod.POST})
     public @ResponseBody List<VisitEvent> list(VisitEvent visitEvent) {
         return visitEventService.list(visitEvent);
     }
@@ -53,7 +51,7 @@ public class VisitEventController {
     @ApiImplicitParams({
 		@ApiImplicitParam(name="VisitEvent", paramType="form", value = "VisitEvent的form信息", required = false, dataType = "string")
 	})
-    @RequestMapping(value="/listPage", method = {RequestMethod.GET, RequestMethod.POST})
+    @RequestMapping(value="/listPage.action", method = {RequestMethod.GET, RequestMethod.POST})
     public @ResponseBody String listPage(VisitEvent visitEvent) throws Exception {
         return visitEventService.listEasyuiPageByExample(visitEvent, true).toString();
     }
@@ -62,7 +60,7 @@ public class VisitEventController {
     @ApiImplicitParams({
 		@ApiImplicitParam(name="VisitEvent", paramType="form", value = "VisitEvent的form信息", required = true, dataType = "string")
 	})
-    @RequestMapping(value="/insert", method = {RequestMethod.GET, RequestMethod.POST})
+    @RequestMapping(value="/insert.action", method = {RequestMethod.GET, RequestMethod.POST})
     public @ResponseBody BaseOutput insert(VisitEvent visitEvent) {
         try {
             return visitEventService.insertSelectiveWithOut(visitEvent);
@@ -77,7 +75,7 @@ public class VisitEventController {
     @ApiImplicitParams({
 		@ApiImplicitParam(name="VisitEvent", paramType="form", value = "VisitEvent的form信息", required = true, dataType = "string")
 	})
-    @RequestMapping(value="/update", method = {RequestMethod.GET, RequestMethod.POST})
+    @RequestMapping(value="/update.action", method = {RequestMethod.GET, RequestMethod.POST})
     public @ResponseBody BaseOutput update(VisitEvent visitEvent) {
         visitEventService.updateSelective(visitEvent);
         return BaseOutput.success("修改成功");
@@ -87,7 +85,7 @@ public class VisitEventController {
     @ApiImplicitParams({
 		@ApiImplicitParam(name="id", paramType="form", value = "VisitEvent的主键", required = true, dataType = "long")
 	})
-    @RequestMapping(value="/delete", method = {RequestMethod.GET, RequestMethod.POST})
+    @RequestMapping(value="/delete.action", method = {RequestMethod.GET, RequestMethod.POST})
     public @ResponseBody BaseOutput delete(Long id) {
         visitEventService.delete(id);
         return BaseOutput.success("删除成功");

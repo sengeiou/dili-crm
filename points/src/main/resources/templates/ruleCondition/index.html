@@ -251,9 +251,9 @@
             var _url = null;
             //没有id就新增
             if(_formData.id == null || _formData.id==""){
-                _url = "${contextPath}/ruleCondition/insert";
+                _url = "${contextPath}/ruleCondition/insert.action";
             }else{//有id就修改
-                _url = "${contextPath}/ruleCondition/update";
+                _url = "${contextPath}/ruleCondition/update.action";
             }
             $.ajax({
                 type: "POST",
@@ -287,7 +287,7 @@
                 if (r){
                     $.ajax({
                         type: "POST",
-                        url: "${contextPath}/ruleCondition/delete",
+                        url: "${contextPath}/ruleCondition/delete.action",
                         data: {id:selected.id},
                         processData:true,
                         dataType: "json",
@@ -312,7 +312,7 @@
         function queryGrid() {
             var opts = $("#grid").datagrid("options");
             if (null == opts.url || "" == opts.url) {
-                opts.url = "${contextPath}/ruleCondition/listPage";
+                opts.url = "${contextPath}/ruleCondition/listPage.action";
             }
             if(!$('#form').form("validate")){
                 return;

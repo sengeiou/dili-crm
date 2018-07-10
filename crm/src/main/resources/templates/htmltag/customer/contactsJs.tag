@@ -5,7 +5,7 @@
     <%if (has(customer)){%>
             var opts = $("#contactsGrid").datagrid("options");
             if (null == opts.url || "" == opts.url) {
-                opts.url = "${contextPath}/contacts/listPage";
+                opts.url = "${contextPath}/contacts/listPage.action";
             }
             var selected = ${customer};
             $("#contactsGrid").datagrid("load",  bindGridMeta2Data("contactsGrid", {"customerId":selected["id"]}));
@@ -61,9 +61,9 @@
         var _url = null;
         //没有id就新增
         if(_formData.id == null || _formData.id==""){
-            _url = "${contextPath}/contacts/insert";
+            _url = "${contextPath}/contacts/insert.action";
         }else{//有id就修改
-            _url = "${contextPath}/contacts/update";
+            _url = "${contextPath}/contacts/update.action";
         }
         //设置当前选择的客户id
         var selected = ${customer};

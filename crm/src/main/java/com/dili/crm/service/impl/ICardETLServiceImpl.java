@@ -1,40 +1,30 @@
 package com.dili.crm.service.impl;
 
-import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import javax.annotation.Resource;
-
+import com.dili.crm.rpc.SystemConfigRpc;
+import com.dili.uap.sdk.domain.SystemConfig;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.alibaba.fastjson.JSONObject;
-import com.dili.crm.dao.CityMapper;
-import com.dili.crm.dao.CustomerExtensionsMapper;
-import com.dili.crm.dao.CustomerMapper;
 import com.dili.crm.domain.Address;
 import com.dili.crm.domain.City;
 import com.dili.crm.domain.Customer;
 import com.dili.crm.domain.CustomerExtensions;
 import com.dili.crm.domain.IcardUserAccount;
 import com.dili.crm.domain.IcardUserCard;
-import com.dili.crm.domain.SystemConfig;
 import com.dili.crm.domain.dto.IcardUserCardDTO;
 import com.dili.crm.domain.toll.TollCustomer;
-import com.dili.crm.provider.YnProvider;
-import com.dili.crm.rpc.MapRpc;
 import com.dili.crm.service.AddressService;
 import com.dili.crm.service.CityService;
 import com.dili.crm.service.CustomerExtensionsService;
@@ -42,13 +32,11 @@ import com.dili.crm.service.CustomerService;
 import com.dili.crm.service.ICardETLService;
 import com.dili.crm.service.IcardUserAccountService;
 import com.dili.crm.service.IcardUserCardService;
-import com.dili.crm.service.SystemConfigService;
 import com.dili.crm.service.toll.TollCustomerService;
 import com.dili.ss.domain.BaseOutput;
 import com.dili.ss.domain.BasePage;
 import com.dili.ss.dto.DTOUtils;
 import com.dili.ss.util.SystemConfigUtils;
-import com.mysql.fabric.xmlrpc.base.Array;
 
 /**
  * @author wangguofeng
@@ -63,7 +51,7 @@ public class ICardETLServiceImpl implements ICardETLService{
 	@Autowired private CustomerExtensionsService customerExtensionsService;
 	@Autowired private AddressService addressService;
 	@Autowired private TollCustomerService tollCustomerService;
-	@Autowired private SystemConfigService systemConfigService;
+	@Autowired private SystemConfigRpc systemConfigRpc;
 	@Autowired private CityService cityService;
 	/**
 	 * @param customer 要插入或者更新到crm的客户信息
@@ -197,20 +185,17 @@ public class ICardETLServiceImpl implements ICardETLService{
 		if(date==null) {
 			return;
 		}
-		SystemConfig systemConfig=DTOUtils.newDTO(SystemConfig.class);
+		SystemConfig systemConfig = DTOUtils.newDTO(SystemConfig.class);
 		systemConfig.setCode("toll_latest_time");
-		List<SystemConfig>list=this.systemConfigService.list(systemConfig);
-		if(list!=null&&list.size()>=1) {
-			systemConfig=list.get(0);
+		BaseOutput<List<SystemConfig>> list = this.systemConfigRpc.list(systemConfig);
+		if(list.isSuccess() && list.getData()!=null && list.getData().size()>=1) {
+			systemConfig=list.getData().get(0);
 		}else {
 			systemConfig.setName("最后一个同步的神农客户信息的时间");
-			systemConfig.setNotes("请不要修改");
+			systemConfig.setDescription("请不要修改");
 		}
-		systemConfig.setYn(1);
 		systemConfig.setValue(this.formatLatestTime(date));
-
-		this.systemConfigService.saveOrUpdate(systemConfig);
-		
+		this.systemConfigRpc.saveOrUpdate(systemConfig);
 	}
 	private void saveOrUpdateSettlementLatestTime(Date date) {
 		if(date==null) {
@@ -218,18 +203,15 @@ public class ICardETLServiceImpl implements ICardETLService{
 		}
 		SystemConfig systemConfig=DTOUtils.newDTO(SystemConfig.class);
 		systemConfig.setCode("settlement_latest_time");
-		
-		List<SystemConfig>list=this.systemConfigService.list(systemConfig);
-		if(list!=null&&list.size()>=1) {
-			systemConfig=list.get(0);
+		BaseOutput<List<SystemConfig>> list = this.systemConfigRpc.list(systemConfig);
+		if(list.isSuccess() && list.getData()!=null && list.getData().size() >= 1) {
+			systemConfig = list.getData().get(0);
 		}else {
 			systemConfig.setName("最后一个同步的电子结算客户信息的时间");
-			systemConfig.setNotes("请不要修改");
+			systemConfig.setDescription("请不要修改");
 		}
-		systemConfig.setYn(1);
 		systemConfig.setValue(this.formatLatestTime(date));
-		this.systemConfigService.saveOrUpdate(systemConfig);
-		
+		this.systemConfigRpc.saveOrUpdate(systemConfig);
 	}
 	
 	/**
@@ -239,9 +221,9 @@ public class ICardETLServiceImpl implements ICardETLService{
 	private Date findTollLatestTime() {
 		SystemConfig condtion=DTOUtils.newDTO(SystemConfig.class);
 		condtion.setCode("toll_latest_time");
-		List<SystemConfig>list=this.systemConfigService.list(condtion);
-		if(list!=null&&list.size()==1) {
-			String value=list.get(0).getValue();
+		BaseOutput<List<SystemConfig>> list = this.systemConfigRpc.list(condtion);
+		if(list.isSuccess() && list.getData()!=null && list.getData().size() >= 1) {
+			String value=list.getData().get(0).getValue();
 			try {
 				Date date=this.parseLatestTime(value);
 				return date;
@@ -260,9 +242,9 @@ public class ICardETLServiceImpl implements ICardETLService{
 	private Date findSettlementLatestTime() {
 		SystemConfig condtion=DTOUtils.newDTO(SystemConfig.class);
 		condtion.setCode("settlement_latest_time");
-		List<SystemConfig>list=this.systemConfigService.list(condtion);
-		if(list!=null&&list.size()==1) {
-			String value=list.get(0).getValue();
+		BaseOutput<List<SystemConfig>> list = this.systemConfigRpc.list(condtion);
+		if(list.isSuccess() && list.getData()!=null && list.getData().size() >= 1) {
+			String value=list.getData().get(0).getValue();
 			try {
 				Date date=this.parseLatestTime(value);
 				return date;
@@ -276,7 +258,6 @@ public class ICardETLServiceImpl implements ICardETLService{
 	
 	@Override
 	public boolean transIncrementData(Customer latestCustomer, int batchSize) {
-
 		if(this.transICardData(batchSize)||this.transTollData(batchSize)) {
 			return true;
 		}
@@ -300,8 +281,6 @@ public class ICardETLServiceImpl implements ICardETLService{
 				if(latestTime!=null) {
 					example.setCreated(latestTime);
 				}
-				
-				
 				//从神农查询用户信息
 				BasePage<TollCustomer>page=this.tollCustomerService.listPageByExample(example);
 				List<TollCustomer>data=page.getDatas();
@@ -386,14 +365,12 @@ public class ICardETLServiceImpl implements ICardETLService{
 	private Customer transUserAccountAsCustomer(IcardUserAccount icardUserAccount) {
 
 		 //个人账户", 10/对公账户", 20/不记名 30
-		
 		Byte accountType=icardUserAccount.getType();
 		
 		if(new Byte((byte)30).equals(accountType)||StringUtils.trimToEmpty(icardUserAccount.getName()).equals("不记名")||StringUtils.trimToNull(icardUserAccount.getIdCode())==null) {
 			return null;
 		}
-		
-		
+
 		Customer customer=DTOUtils.newDTO(Customer.class);
 		if(new Byte((byte)10).equals(accountType)) {
 			customer.setCertificateType("id");
@@ -437,7 +414,7 @@ public class ICardETLServiceImpl implements ICardETLService{
 	
 	
 	/**
-	 * @param icardUserAccount 电子结算系统的用户信息
+	 * @param tollCustomer 电子结算系统的用户信息
 	 * @return 返回crm用户信息对象
 	 */
 	private Customer transTollCustomerAsCustomer(TollCustomer tollCustomer) {
@@ -474,7 +451,7 @@ public class ICardETLServiceImpl implements ICardETLService{
 		return customer;
 	}
 	/**
-	 * @param icardUserAccount 电子结算系统的用户信息
+	 * @param tollCustomer 电子结算系统的用户信息
 	 * @return 返回crm用户信息对象
 	 */
 	private List<Address> transTollCustomerAsAddress(TollCustomer tollCustomer) {
@@ -550,7 +527,7 @@ public class ICardETLServiceImpl implements ICardETLService{
 		
 	}
 	/**
-	 * @param icardUserCardList 电子结算系统帐号列表
+	 * @param tollCustomer 电子结算系统帐号列表
 	 * @return 返回crm系统统帐号列表
 	 */
 	private List<CustomerExtensions> transTollCustomerAsCustomerExtensions(TollCustomer tollCustomer) {

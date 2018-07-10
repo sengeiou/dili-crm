@@ -22,11 +22,11 @@
                             </td>
                             <td style="padding:5px;">
                                     <input name="type" id="type" style="width:100%;" editable="false" labelAlign="right" panelWidth="auto" panelHeight="auto" label="客户类型:"/>
-                                    <#comboProvider _id="type" _provider='dataDictionaryValueProvider' _queryParams='{dd_id:4}'/>
+                                    <#comboProvider _id="type" _provider='dataDictionaryValueProvider' _queryParams='{dd_code:"customer_type"}'/>
                             </td>
                             <td style="padding:5px;">
                                 <input name="organizationType" id="organizationType" style="width:100%;" editable="false" labelAlign="right" panelWidth="auto" panelHeight="auto" label="组织类型:"/>
-                                <#comboProvider _id="organizationType" _provider='dataDictionaryValueProvider' _queryParams='{dd_id:5}'/>
+                                <#comboProvider _id="organizationType" _provider='dataDictionaryValueProvider' _queryParams='{dd_code:"customer_organization_type"}'/>
 
                             </td>
                         </tr>
@@ -67,10 +67,10 @@
                         <th width="10%" data-options="field:'name',  sortable:true, order:'asc', align:'center', resizable:'true', fixed:'false'">
                             客户名称
                         </th>
-                        <th width="10%" data-options="field:'organizationType',  _queryParams:'{dd_id:5}', _provider:'dataDictionaryValueProvider', sortable:true, order:'asc', align:'center', resizable:'true', fixed:'false'">
+                        <th width="10%" data-options="field:'organizationType',  _queryParams:{'dd_code':'customer_organization_type'}, _provider:'dataDictionaryValueProvider', sortable:true, order:'asc', align:'center', resizable:'true', fixed:'false'">
                             组织类型
                         </th>
-                        <th width="10%" data-options="field:'certificateType',  _provider:'dataDictionaryValueProvider',  _queryParams:'{dd_id:3}', sortable:true, order:'asc', align:'center', resizable:'true', fixed:'false'">
+                        <th width="10%" data-options="field:'certificateType',  _provider:'dataDictionaryValueProvider',  _queryParams:{'dd_code':'certificate_type'}, sortable:true, order:'asc', align:'center', resizable:'true', fixed:'false'">
                             证件类型
                         </th>
                         <th width="15%" data-options="field:'certificateNumber',   sortable:true, order:'asc', align:'center', resizable:'true', fixed:'false'">
@@ -111,7 +111,7 @@
         function queryGrid() {
             var opts = $("#grid").datagrid("options");
             if (null == opts.url || "" == opts.url) {
-                opts.url = "${contextPath}/pointsExchangeRecord/listPage";
+                opts.url = "${contextPath}/pointsExchangeRecord/listPage.action";
             }
             if(!$('#form').form("validate")){
                 return;

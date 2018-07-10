@@ -55,7 +55,7 @@
                             </td>
                             <td style="padding:5px;">
                                 <input name="type" id="type" style="width:100%;" panelWidth="auto" panelHeight="auto" label="客户类型:"/>
-                                <#comboProvider _id="type" _provider='dataDictionaryValueProvider' _queryParams='{dd_id:"4"}'/>
+                                <#comboProvider _id="type" _provider='dataDictionaryValueProvider' _queryParams='{dd_code:"customer_type"}'/>
                             </td>
 
                         </tr>
@@ -63,16 +63,16 @@
 
                             <td style="padding:5px;">
                                 <input name="profession" id="profession" style="width:100%;" panelWidth="auto" panelHeight="auto" label="客户行业:"/>
-                                <#comboProvider _id="profession" _provider='dataDictionaryValueProvider' _queryParams='{dd_id:"6"}'/>
+                                <#comboProvider _id="profession" _provider='dataDictionaryValueProvider' _queryParams='{dd_code:"customer_profession"}'/>
 
                             </td>
                             <td style="padding:5px;">
                                     <input name="market" id="market" style="width:100%;" panelWidth="auto" panelHeight="auto" label="所属市场:"/>
-                                    <#comboProvider _id="market" _provider='dataDictionaryValueProvider' _queryParams='{dd_id:"2"}'/>
+                                    <#comboProvider _id="market" _provider='dataDictionaryValueProvider' _queryParams='{dd_code:"market"}'/>
                             </td>
                             <td style="padding:5px;">
                                 <input name="organizationType" id="organizationType" style="width:100%;" panelWidth="auto" panelHeight="auto" label="组织类型:"/>
-                                <#comboProvider _id="organizationType" _provider='dataDictionaryValueProvider' _queryParams='{dd_id:"5"}'/>
+                                <#comboProvider _id="organizationType" _provider='dataDictionaryValueProvider' _queryParams='{dd_code:"customer_organization_type"}'/>
 
                             </td>
                             <td>
@@ -116,7 +116,7 @@
                         <th data-options="field:'certificateNumber',   sortable:'true', order:'asc', align:'center', resizable:'true', fixed:'false'">
                             证件号
                         </th>
-                        <th data-options="field:'certificateType', _provider:'dataDictionaryValueProvider', _queryParams:{'dd_id':'3'}, sortable:'true', order:'asc', align:'center', resizable:'true', fixed:'false'">
+                        <th data-options="field:'certificateType', _provider:'dataDictionaryValueProvider', _queryParams:{'dd_code':'certificate_type'}, sortable:'true', order:'asc', align:'center', resizable:'true', fixed:'false'">
                             证件类型
                         </th>
                         <th data-options="field:'certificateTime',  _provider:'datetimeProvider', sortable:'true', order:'asc', align:'center', resizable:'true', fixed:'false'">
@@ -128,19 +128,19 @@
                         <th data-options="field:'phone',   sortable:'true', order:'asc', align:'center', resizable:'true', fixed:'false'">
                             电话
                         </th>
-                        <th data-options="field:'organizationType', _provider:'dataDictionaryValueProvider', _queryParams:{'dd_id':'5'},  sortable:'true', order:'asc', align:'center', resizable:'true', fixed:'false'">
+                        <th data-options="field:'organizationType', _provider:'dataDictionaryValueProvider', _queryParams:{'dd_code':'customer_organization_type'},  sortable:'true', order:'asc', align:'center', resizable:'true', fixed:'false'">
                             组织类型
                         </th>
                         <th data-options="field:'source',   sortable:'true', order:'asc', align:'center', resizable:'true', fixed:'false'">
                             归属/来源
                         </th>
-                        <th data-options="field:'market', _provider:'dataDictionaryValueProvider', _queryParams:{'dd_id':'2'},  sortable:'true', order:'asc', align:'center', resizable:'true', fixed:'false'">
+                        <th data-options="field:'market', _provider:'dataDictionaryValueProvider', _queryParams:{'dd_code':'market'},  sortable:'true', order:'asc', align:'center', resizable:'true', fixed:'false'">
                             所属市场
                         </th>
-                        <th data-options="field:'type',  _provider:'dataDictionaryValueProvider', _queryParams:{'dd_id':'4'},  sortable:'true', order:'asc', align:'center', resizable:'true', fixed:'false'">
+                        <th data-options="field:'type',  _provider:'dataDictionaryValueProvider', _queryParams:{'dd_code':'customer_type'},  sortable:'true', order:'asc', align:'center', resizable:'true', fixed:'false'">
                             客户类型
                         </th>
-                        <th data-options="field:'profession',  _provider:'dataDictionaryValueProvider', _queryParams:{'dd_id':'6'},  sortable:'true', order:'asc', align:'center', resizable:'true', fixed:'false'">
+                        <th data-options="field:'profession',  _provider:'dataDictionaryValueProvider', _queryParams:{'dd_code':'customer_profession'},  sortable:'true', order:'asc', align:'center', resizable:'true', fixed:'false'">
                             客户行业
                         </th>
                         <th data-options="field:'operatingArea',   sortable:'true', order:'asc', align:'center', resizable:'true', fixed:'false'">
@@ -185,7 +185,7 @@
                 </td>
                 <td style="padding:5px;" width="49%">
                     <input name="_type" id="_type" data-options="editable:false" style="width:80%;" panelWidth="auto" panelHeight="auto" label="客户类型:" />
-                    <#comboProvider _id="_type" _provider='dataDictionaryValueProvider' _queryParams='{dd_id:"4"}'/>
+                    <#comboProvider _id="_type" _provider='dataDictionaryValueProvider' _queryParams='{dd_code:"customer_type"}'/>
                 </td>
             </tr>
 
@@ -196,7 +196,7 @@
                 </td>
                 <td style="padding:5px;">
                     <input name="_profession" id="_profession" data-options="editable:false" style="width:80%;" panelWidth="auto" panelHeight="auto" label="客户行业:" />
-                    <#comboProvider _id="_profession" _provider='dataDictionaryValueProvider' _queryParams='{dd_id:"6"}'/>
+                    <#comboProvider _id="_profession" _provider='dataDictionaryValueProvider' _queryParams='{dd_code:"customer_profession"}'/>
                 </td>
             </tr>
 
@@ -212,11 +212,11 @@
             <tr>
                 <td style="padding:5px;">
                     <input name="_organizationType" id="_organizationType" style="width:80%;" panelWidth="auto" panelHeight="auto" label="组织类型:" data-options="validType:'length[1,20]', editable:false,  onChange:changeOrganizationType"/>
-                    <#comboProvider _id="_organizationType" _provider='dataDictionaryValueProvider' _queryParams='{dd_id:"5"}'/>
+                    <#comboProvider _id="_organizationType" _provider='dataDictionaryValueProvider' _queryParams='{dd_code:"customer_organization_type"}'/>
                 </td>
                 <td style="padding:5px;">
                     <input name="_market" id="_market" data-options="editable:false" style="width:80%;" panelWidth="auto" panelHeight="auto" label="所属市场:" />
-                    <#comboProvider _id="_market" _provider='dataDictionaryValueProvider' _queryParams='{dd_id:"2"}'/>
+                    <#comboProvider _id="_market" _provider='dataDictionaryValueProvider' _queryParams='{dd_code:"market"}'/>
                 </td>
             </tr>
 
@@ -397,9 +397,9 @@
             var _url = null;
             //没有id就新增
             if(_formData.id == null || _formData.id==""){
-                _url = "${contextPath}/address/insert";
+                _url = "${contextPath}/address/insert.action";
             }else{//有id就修改
-                _url = "${contextPath}/address/update";
+                _url = "${contextPath}/address/update.action";
             }
             //设置当前选择的客户id
             var selected = $("#grid").treegrid("getSelected");
@@ -429,7 +429,7 @@
         function listAddress(){
             var opts = $("#addressGrid").datagrid("options");
             if (null == opts.url || "" == opts.url) {
-                opts.url = "${contextPath}/address/list";
+                opts.url = "${contextPath}/address/list.action";
             }
             var selected = $("#grid").treegrid("getSelected");
             $("#addressGrid").datagrid("load", {"customerId":selected["id"]});
@@ -585,9 +585,9 @@
             var _url = null;
             //没有id就新增
             if(_formData.id == null || _formData.id==""){
-                _url = "${contextPath}/customer/insert";
+                _url = "${contextPath}/customer/insert.action";
             }else{//有id就修改
-                _url = "${contextPath}/customer/update";
+                _url = "${contextPath}/customer/update.action";
             }
             $.ajax({
                 type: "POST",
@@ -645,7 +645,7 @@
         function queryGrid() {
             var opts = $("#grid").treegrid("options");
             if (null == opts.url || "" == opts.url) {
-                opts.url = "${contextPath}/customer/listPage";
+                opts.url = "${contextPath}/customer/listPage.action";
             }
             if(!$('#form').form("validate")){
                 return;

@@ -167,7 +167,7 @@
         var msg = '请确认需要用'+_formData["points"]+'积分兑换'+_formData["quantity"]+'件'+goodsName+'吗？';
         $.messager.confirm('确认',msg,function(r) {
             if(r){
-                var _url = "${contextPath}/pointsExchangeRecord/insert";
+                var _url = "${contextPath}/pointsExchangeRecord/insert.action";
                 _formData["customerId"] = $('#_id').val();
                 _formData["organizationType"] = $('#_organizationType').val();
                 _formData["certificateType"] = $('#_certificateType').val();

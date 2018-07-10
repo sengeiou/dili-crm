@@ -46,7 +46,7 @@ public class CityController {
     @ApiImplicitParams({
 		@ApiImplicitParam(name="City", paramType="form", value = "City的form信息", required = false, dataType = "string")
 	})
-    @RequestMapping(value="/list", method = {RequestMethod.GET, RequestMethod.POST})
+    @RequestMapping(value="/list.action", method = {RequestMethod.GET, RequestMethod.POST})
     public @ResponseBody List<City> list(City city) {
         return cityService.list(city);
     }
@@ -55,7 +55,7 @@ public class CityController {
     @ApiImplicitParams({
 		@ApiImplicitParam(name="City", paramType="form", value = "City的form信息", required = false, dataType = "string")
 	})
-    @RequestMapping(value="/listPage", method = {RequestMethod.GET, RequestMethod.POST})
+    @RequestMapping(value="/listPage.action", method = {RequestMethod.GET, RequestMethod.POST})
     public @ResponseBody String listPage(City city) throws Exception {
     	DTO queryDto = DTOUtils.go(city);
 	    CityDto cityDto= DTOUtils.as(city, CityDto.class);
@@ -86,7 +86,7 @@ public class CityController {
 	 * @return
 	 * @throws Exception
 	 */
-	@RequestMapping(value="/expand", method = {RequestMethod.GET, RequestMethod.POST})
+	@RequestMapping(value="/expand.action", method = {RequestMethod.GET, RequestMethod.POST})
 	public @ResponseBody String expand(Long parentId) throws Exception {
 		City city = DTOUtils.newDTO(City.class);
 		city.setParentId(parentId);
@@ -120,7 +120,7 @@ public class CityController {
     @ApiImplicitParams({
 		@ApiImplicitParam(name="City", paramType="form", value = "City的form信息", required = true, dataType = "string")
 	})
-    @RequestMapping(value="/insert", method = {RequestMethod.GET, RequestMethod.POST})
+    @RequestMapping(value="/insert.action", method = {RequestMethod.GET, RequestMethod.POST})
     public @ResponseBody BaseOutput insert(City city) {
 	    city.setYn(true);
         cityService.insertSelective(city);
@@ -131,7 +131,7 @@ public class CityController {
     @ApiImplicitParams({
 		@ApiImplicitParam(name="City", paramType="form", value = "City的form信息", required = true, dataType = "string")
 	})
-    @RequestMapping(value="/update", method = {RequestMethod.GET, RequestMethod.POST})
+    @RequestMapping(value="/update.action", method = {RequestMethod.GET, RequestMethod.POST})
     public @ResponseBody BaseOutput update(City city) {
         cityService.updateSelective(city);
         return BaseOutput.success("修改成功");
@@ -141,7 +141,7 @@ public class CityController {
     @ApiImplicitParams({
 		@ApiImplicitParam(name="id", paramType="form", value = "City的主键", required = true, dataType = "long")
 	})
-    @RequestMapping(value="/delete", method = {RequestMethod.GET, RequestMethod.POST})
+    @RequestMapping(value="/delete.action", method = {RequestMethod.GET, RequestMethod.POST})
     public @ResponseBody BaseOutput delete(Long id) {
         cityService.delete(id);
         return BaseOutput.success("删除成功");

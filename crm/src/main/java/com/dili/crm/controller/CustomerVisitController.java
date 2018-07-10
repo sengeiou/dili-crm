@@ -5,8 +5,8 @@ import com.dili.crm.domain.CustomerVisit;
 import com.dili.crm.service.CustomerVisitService;
 import com.dili.ss.domain.BaseOutput;
 import com.dili.ss.metadata.ValueProviderUtils;
-import com.dili.sysadmin.sdk.domain.UserTicket;
-import com.dili.sysadmin.sdk.session.SessionContext;
+import com.dili.uap.sdk.domain.UserTicket;
+import com.dili.uap.sdk.session.SessionContext;
 import com.google.common.collect.Lists;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
@@ -48,7 +48,7 @@ public class CustomerVisitController {
     @ApiImplicitParams({
 		@ApiImplicitParam(name="CustomerVisit", paramType="form", value = "CustomerVisit的form信息", required = false, dataType = "string")
 	})
-    @RequestMapping(value="/list", method = {RequestMethod.GET, RequestMethod.POST})
+    @RequestMapping(value="/list.action", method = {RequestMethod.GET, RequestMethod.POST})
     public @ResponseBody List<CustomerVisit> list(CustomerVisit customerVisit) {
         return customerVisitService.list(customerVisit);
     }
@@ -57,7 +57,7 @@ public class CustomerVisitController {
     @ApiImplicitParams({
 		@ApiImplicitParam(name="CustomerVisit", paramType="form", value = "CustomerVisit的form信息", required = false, dataType = "string")
 	})
-    @RequestMapping(value="/listPage", method = {RequestMethod.GET, RequestMethod.POST})
+    @RequestMapping(value="/listPage.action", method = {RequestMethod.GET, RequestMethod.POST})
     public @ResponseBody String listPage(CustomerVisit customerVisit) throws Exception {
         return customerVisitService.listEasyuiPageByExample(customerVisit, true).toString();
     }
@@ -66,7 +66,7 @@ public class CustomerVisitController {
     @ApiImplicitParams({
 		@ApiImplicitParam(name="CustomerVisit", paramType="form", value = "CustomerVisit的form信息", required = true, dataType = "string")
 	})
-    @RequestMapping(value="/insert", method = {RequestMethod.GET, RequestMethod.POST})
+    @RequestMapping(value="/insert.action", method = {RequestMethod.GET, RequestMethod.POST})
     public @ResponseBody BaseOutput insert(CustomerVisit customerVisit) {
         try {
             customerVisit.setState(1);
@@ -81,7 +81,7 @@ public class CustomerVisitController {
     @ApiImplicitParams({
             @ApiImplicitParam(name="CustomerVisit", paramType="form", value = "CustomerVisit的form信息", required = true, dataType = "string")
     })
-    @RequestMapping(value="/insertAndFinished", method = {RequestMethod.GET, RequestMethod.POST})
+    @RequestMapping(value="/insertAndFinished.action", method = {RequestMethod.GET, RequestMethod.POST})
     public @ResponseBody BaseOutput insertAndFinished(CustomerVisit customerVisit) {
         try {
             customerVisit.setState(3);
@@ -96,7 +96,7 @@ public class CustomerVisitController {
     @ApiImplicitParams({
             @ApiImplicitParam(name="CustomerVisit", paramType="form", value = "CustomerVisit的form信息", required = true, dataType = "string")
     })
-    @RequestMapping(value="/updateAndFinished", method = {RequestMethod.GET, RequestMethod.POST})
+    @RequestMapping(value="/updateAndFinished.action", method = {RequestMethod.GET, RequestMethod.POST})
     public @ResponseBody BaseOutput updateAndFinished(CustomerVisit customerVisit) {
         try {
             customerVisit.setState(3);
@@ -112,7 +112,7 @@ public class CustomerVisitController {
     @ApiImplicitParams({
 		@ApiImplicitParam(name="CustomerVisit", paramType="form", value = "CustomerVisit的form信息", required = true, dataType = "string")
 	})
-    @RequestMapping(value="/update", method = {RequestMethod.GET, RequestMethod.POST})
+    @RequestMapping(value="/update.action", method = {RequestMethod.GET, RequestMethod.POST})
     public @ResponseBody BaseOutput update(CustomerVisit customerVisit) {
         try {
             return customerVisitService.updateSelectiveWithOutput(customerVisit);
@@ -127,7 +127,7 @@ public class CustomerVisitController {
     @ApiImplicitParams({
 		@ApiImplicitParam(name="id", paramType="form", value = "CustomerVisit的主键", required = true, dataType = "long")
 	})
-    @RequestMapping(value="/delete", method = {RequestMethod.GET, RequestMethod.POST})
+    @RequestMapping(value="/delete.action", method = {RequestMethod.GET, RequestMethod.POST})
     public @ResponseBody BaseOutput delete(Long id) {
         try {
             return customerVisitService.deleteAndEvent(id);
@@ -206,19 +206,19 @@ public class CustomerVisitController {
         visitStateProvider.put("provider", "visitStateProvider");
         metadata.put("state", visitStateProvider);
         //回访方式
-        metadata.put("mode", getDDProvider(11L));
+        metadata.put("mode", getDDProvider("visit_mode"));
         //优先级
-        metadata.put("priority", getDDProvider(10L));
+        metadata.put("priority", getDDProvider("priority"));
         //完成时间
         metadata.put("finishTime", getDatetimeProvider());
         return metadata;
     }
 
     //获取数据字典提供者
-    private JSONObject getDDProvider(Long ddId){
+    private JSONObject getDDProvider(String ddCode){
         JSONObject dataDictionaryValueProvider = new JSONObject();
         dataDictionaryValueProvider.put("provider", "dataDictionaryValueProvider");
-        dataDictionaryValueProvider.put("queryParams", "{dd_id:"+ddId+"}");
+        dataDictionaryValueProvider.put("queryParams", "{dd_code:\""+ddCode+"\"}");
         return dataDictionaryValueProvider;
     }
 

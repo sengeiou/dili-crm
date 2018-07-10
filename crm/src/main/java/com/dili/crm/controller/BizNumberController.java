@@ -36,7 +36,7 @@ public class BizNumberController {
     @ApiImplicitParams({
 		@ApiImplicitParam(name="BizNumber", paramType="form", value = "BizNumber的form信息", required = false, dataType = "string")
 	})
-    @RequestMapping(value="/list", method = {RequestMethod.GET, RequestMethod.POST})
+    @RequestMapping(value="/list.action", method = {RequestMethod.GET, RequestMethod.POST})
     public @ResponseBody List<BizNumber> list(BizNumber bizNumber) {
         return bizNumberService.list(bizNumber);
     }
@@ -45,7 +45,7 @@ public class BizNumberController {
     @ApiImplicitParams({
 		@ApiImplicitParam(name="BizNumber", paramType="form", value = "BizNumber的form信息", required = false, dataType = "string")
 	})
-    @RequestMapping(value="/listPage", method = {RequestMethod.GET, RequestMethod.POST})
+    @RequestMapping(value="/listPage.action", method = {RequestMethod.GET, RequestMethod.POST})
     public @ResponseBody String listPage(BizNumber bizNumber) throws Exception {
         return bizNumberService.listEasyuiPageByExample(bizNumber, true).toString();
     }
@@ -54,7 +54,7 @@ public class BizNumberController {
     @ApiImplicitParams({
 		@ApiImplicitParam(name="BizNumber", paramType="form", value = "BizNumber的form信息", required = true, dataType = "string")
 	})
-    @RequestMapping(value="/insert", method = {RequestMethod.GET, RequestMethod.POST})
+    @RequestMapping(value="/insert.action", method = {RequestMethod.GET, RequestMethod.POST})
     public @ResponseBody BaseOutput insert(BizNumber bizNumber) {
         bizNumberService.insertSelective(bizNumber);
         return BaseOutput.success("新增成功");
@@ -64,7 +64,7 @@ public class BizNumberController {
     @ApiImplicitParams({
 		@ApiImplicitParam(name="BizNumber", paramType="form", value = "BizNumber的form信息", required = true, dataType = "string")
 	})
-    @RequestMapping(value="/update", method = {RequestMethod.GET, RequestMethod.POST})
+    @RequestMapping(value="/update.action", method = {RequestMethod.GET, RequestMethod.POST})
     public @ResponseBody BaseOutput update(BizNumber bizNumber) {
         bizNumberService.updateSelective(bizNumber);
         return BaseOutput.success("修改成功");
@@ -74,7 +74,7 @@ public class BizNumberController {
     @ApiImplicitParams({
 		@ApiImplicitParam(name="id", paramType="form", value = "BizNumber的主键", required = true, dataType = "long")
 	})
-    @RequestMapping(value="/delete", method = {RequestMethod.GET, RequestMethod.POST})
+    @RequestMapping(value="/delete.action", method = {RequestMethod.GET, RequestMethod.POST})
     public @ResponseBody BaseOutput delete(Long id) {
         bizNumberService.delete(id);
         return BaseOutput.success("删除成功");

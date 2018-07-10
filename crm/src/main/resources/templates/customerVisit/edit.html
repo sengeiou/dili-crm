@@ -99,7 +99,7 @@
                         <th width="20%" data-options="field:'time', _provider:'datetimeProvider', sortable:'true', order:'asc', align:'center', resizable:'true', fixed:'false'">
                             时间
                         </th>
-                        <th width="10%" data-options="field:'mode', _provider:'dataDictionaryValueProvider',_queryParams:{'dd_id':'11'},sortable:'true', order:'asc', align:'center', resizable:'true', fixed:'false'">
+                        <th width="10%" data-options="field:'mode', _provider:'dataDictionaryValueProvider',_queryParams:{'dd_code':'visit_mode'},sortable:'true', order:'asc', align:'center', resizable:'true', fixed:'false'">
                             方式
                         </th>
                         <th width="15%" data-options="field:'userId', _provider:'ownerProvider', sortable:'false', order:'asc', align:'center', resizable:'true', fixed:'false'">
@@ -139,7 +139,7 @@
                 <tr>
                     <td style="padding-top:10px;padding-left:20px;width: 100%;">
                         <input class="easyui-combobox" name="_event_mode" id="_event_mode" style="width:60%" panelHeight="auto" label="&lowast;方式:" data-options="labelAlign:'right'" required="true" editable="false"/>
-                        <#comboProvider _id="_event_mode" _provider='dataDictionaryValueProvider' _queryParams='{dd_id:"11"}'/>
+                        <#comboProvider _id="_event_mode" _provider='dataDictionaryValueProvider' _queryParams='{dd_code:"visit_mode"}'/>
                     </td>
                 </tr>
                 <tr>
@@ -271,15 +271,15 @@
                     //没有id就新增
                     if(_formData.id == null || _formData.id==""){
                         if (type==3){   //完成
-                            _url = "${contextPath}/customerVisit/insertAndFinished";
+                            _url = "${contextPath}/customerVisit/insertAndFinished.action";
                         }else{
-                            _url = "${contextPath}/customerVisit/insert";
+                            _url = "${contextPath}/customerVisit/insert.action";
                         }
                     }else{//有id就修改
                         if (type==3){  //完成
-                            _url = "${contextPath}/customerVisit/updateAndFinished";
+                            _url = "${contextPath}/customerVisit/updateAndFinished.action";
                         }else{
-                            _url = "${contextPath}/customerVisit/update";
+                            _url = "${contextPath}/customerVisit/update.action";
                         }
                     }
                     $.ajax({
@@ -349,9 +349,9 @@
                     var _url = null;
                     //没有id就新增
                     if(_formData.id == null || _formData.id==""){
-                        _url = "${contextPath}/visitEvent/insert";
+                        _url = "${contextPath}/visitEvent/insert.action";
                     }else{//有id就修改
-                        _url = "${contextPath}/visitEvent/update";
+                        _url = "${contextPath}/visitEvent/update.action";
                     }
                     //设置当前选择的回访id
                     var visitId = $("#_id").val();
@@ -435,7 +435,7 @@
         function listEvents(){
             var opts = $("#eventGrid").datagrid("options");
             if (null == opts.url || "" == opts.url) {
-                opts.url = "${contextPath}/visitEvent/listPage";
+                opts.url = "${contextPath}/visitEvent/listPage.action";
             }
             //设置当前选择的回访id
             var visitId = $("#_id").val();

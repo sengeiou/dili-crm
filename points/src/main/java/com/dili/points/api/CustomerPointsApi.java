@@ -46,7 +46,7 @@ public class CustomerPointsApi {
 
     @ApiOperation(value = "根据客户证件号码查询客户积分信息", notes = "根据客户证件号码查询客户积分信息")
     @ApiImplicitParams({ @ApiImplicitParam(name = "certificateNumber JSON", paramType = "form", value = "证件号码JSON信息", dataType = "string") })
-    @RequestMapping(value = "/getCustomerPoints", method = { RequestMethod.POST }, produces = "application/json;charset=utf-8")
+    @RequestMapping(value = "/getCustomerPoints.api", method = { RequestMethod.POST }, produces = "application/json;charset=utf-8")
     public @ResponseBody
     BaseOutput<CustomerPoints> getCustomerPoints(@RequestBody String paramJson) {
         JSONObject jsonObject = JSONObject.parseObject(paramJson);
@@ -67,7 +67,7 @@ public class CustomerPointsApi {
 
     @ApiOperation(value = "根据客户证件号码查询客户积分明细", notes = "根据客户证件号码查询客户积分明细")
     @ApiImplicitParams({ @ApiImplicitParam(name = "certificateNumber JSON", paramType = "form", value = "证件号码JSON信息", dataType = "string") })
-    @RequestMapping(value = "/listPointsDetail", method = { RequestMethod.POST }, produces = "application/json;charset=utf-8")
+    @RequestMapping(value = "/listPointsDetail.api", method = { RequestMethod.POST }, produces = "application/json;charset=utf-8")
     public @ResponseBody
     BaseOutput<CustomerPoints> listPointsDetail(@RequestBody String paramJson) {
         JSONObject jsonObject = JSONObject.parseObject(paramJson);
@@ -100,7 +100,7 @@ public class CustomerPointsApi {
 
     @ApiOperation(value = "根据客户证件号码查询客户积分信息", notes = "根据客户证件号码查询客户积分信息")
     @ApiImplicitParams({ @ApiImplicitParam(name = "CustomerPointsApiDTO", paramType = "form", value = "客户积分条件对象", dataType = "string") })
-    @RequestMapping(value = "/listCustomerPoints", method = { RequestMethod.POST })
+    @RequestMapping(value = "/listCustomerPoints.api", method = { RequestMethod.POST })
     public @ResponseBody
     BaseOutput<List<CustomerPoints>> listCustomerPoints(CustomerPointsApiDTO customerPointsApiDTO) {
     	customerPointsApiDTO.setYn(1);
@@ -110,7 +110,7 @@ public class CustomerPointsApi {
 
     @ApiOperation(value = "根据客户ID逻辑删除客户积分信息", notes = "根据客户ID逻辑删除客户积分信息")
     @ApiImplicitParams({ @ApiImplicitParam(name = "customerId Long", paramType = "form", value = "客户ID", dataType = "Long") })
-    @RequestMapping(value = "/deleteCustomerPoints", method = { RequestMethod.POST })
+    @RequestMapping(value = "/deleteCustomerPoints.api", method = { RequestMethod.POST })
     public @ResponseBody
     BaseOutput<CustomerPoints> deleteCustomerPoints(@RequestBody Long customerId) {
     	CustomerPoints customerPoints=customerPointsService.get(customerId);
@@ -124,7 +124,7 @@ public class CustomerPointsApi {
 
     @ApiOperation(value = "同步修改客户品类积分名字", notes = "同步修改客户品类积分名字")
     @ApiImplicitParams({ @ApiImplicitParam(name = "customerInfo json", paramType = "form", value = "json", dataType = "json") })
-    @RequestMapping(value = "/updateCategoryPoints", method = { RequestMethod.POST })
+    @RequestMapping(value = "/updateCategoryPoints.api", method = { RequestMethod.POST })
     public @ResponseBody BaseOutput<Void> updateCategoryPoints(@RequestBody String paramJson){
         JSONObject jsonObject = JSON.parseObject(paramJson);
         customerCategoryPointsService.updateCustomerName(jsonObject.getString("name"),jsonObject.getLong("id"));

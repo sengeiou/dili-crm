@@ -23,11 +23,11 @@
                 </td>
                 <td style="padding-top:10px;padding-left:10px;">
                     <input name="_mode" class="easyui-combobox inputWidth" id="_mode"  panelWidth="auto" panelHeight="auto" data-options="labelAlign:'right'" label="&lowast;回访方式:" required="true" editable="false"/>
-                    <#comboProvider _id="_mode" _provider='dataDictionaryValueProvider' _queryParams='{dd_id:"11"}'/>
+                    <#comboProvider _id="_mode" _provider='dataDictionaryValueProvider' _queryParams='{dd_code:"visit_mode"}'/>
                 </td>
                 <td style="padding-top:10px;padding-left:10px;">
                     <input class="easyui-combobox inputWidth" name="_priority" id="_priority"  data-options="labelAlign:'right',editable:false" panelWidth="auto" panelHeight="auto" label="优先级:" />
-                    <#comboProvider _id="_priority" _provider='dataDictionaryValueProvider' _queryParams='{dd_id:"10"}'/>
+                    <#comboProvider _id="_priority" _provider='dataDictionaryValueProvider' _queryParams='{dd_code:"priority"}'/>
                 </td>
             </tr>
             <tr>

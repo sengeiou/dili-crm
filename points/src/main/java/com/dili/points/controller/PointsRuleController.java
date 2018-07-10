@@ -94,7 +94,7 @@ public class PointsRuleController {
     @ApiImplicitParams({
             @ApiImplicitParam(name = "PointsRule", paramType = "form", value = "PointsRule的form信息", required = false, dataType = "string")
     })
-    @RequestMapping(value = "/list", method = {RequestMethod.GET, RequestMethod.POST})
+    @RequestMapping(value = "/list.action", method = {RequestMethod.GET, RequestMethod.POST})
     public @ResponseBody
     List<PointsRule> list(PointsRule pointsRule) {
         return pointsRuleService.list(pointsRule);
@@ -104,7 +104,7 @@ public class PointsRuleController {
     @ApiImplicitParams({
             @ApiImplicitParam(name = "PointsRule", paramType = "form", value = "PointsRule的form信息", required = false, dataType = "string")
     })
-    @RequestMapping(value = "/listPage", method = {RequestMethod.GET, RequestMethod.POST})
+    @RequestMapping(value = "/listPage.action", method = {RequestMethod.GET, RequestMethod.POST})
     public @ResponseBody
     String listPage(PointsRuleDTO pointsRule) throws Exception {
         return pointsRuleService.listEasyuiPageByExample(pointsRule, true).toString();
@@ -114,7 +114,7 @@ public class PointsRuleController {
     @ApiImplicitParams({
             @ApiImplicitParam(name = "PointsRule", paramType = "form", value = "PointsRule的form信息", required = true, dataType = "string")
     })
-    @RequestMapping(value = "/insert", method = {RequestMethod.GET, RequestMethod.POST})
+    @RequestMapping(value = "/insert.action", method = {RequestMethod.GET, RequestMethod.POST})
     public @ResponseBody
     BaseOutput insert(PointsRule pointsRule, String numberJson, String moneyJson, String payMethodJson) {
         pointsRuleService.insertPointRule(pointsRule, numberJson, moneyJson, payMethodJson);
@@ -125,7 +125,7 @@ public class PointsRuleController {
     @ApiImplicitParams({
             @ApiImplicitParam(name = "PointsRule", paramType = "form", value = "PointsRule的form信息", required = true, dataType = "string")
     })
-    @RequestMapping(value = "/update", method = {RequestMethod.GET, RequestMethod.POST})
+    @RequestMapping(value = "/update.action", method = {RequestMethod.GET, RequestMethod.POST})
     public @ResponseBody
     BaseOutput update(PointsRule pointsRule, String numberJson, String moneyJson, String payMethodJson) {
         pointsRuleService.updatePointRule(pointsRule, numberJson, moneyJson, payMethodJson);
@@ -136,21 +136,21 @@ public class PointsRuleController {
     @ApiImplicitParams({
             @ApiImplicitParam(name = "id", paramType = "form", value = "PointsRule的主键", required = true, dataType = "long")
     })
-    @RequestMapping(value = "/startPointsRule", method = {RequestMethod.GET, RequestMethod.POST})
+    @RequestMapping(value = "/startPointsRule.action", method = {RequestMethod.GET, RequestMethod.POST})
     public @ResponseBody
     BaseOutput startPointsRule(PointsRule pointsRule, int status) {
         pointsRuleService.startPointRule(pointsRule, status);
         return BaseOutput.success("成功");
     }
 
-    @RequestMapping(value = "/checkPointsRule", method = {RequestMethod.GET, RequestMethod.POST})
+    @RequestMapping(value = "/checkPointsRule.action", method = {RequestMethod.GET, RequestMethod.POST})
     public @ResponseBody
     BaseOutput checkPointsRule(PointsRule pointsRule) {
         List<PointsRule> ruleList = pointsRuleService.listByExample(pointsRule);
         return CollectionUtils.isNotEmpty(ruleList) ? BaseOutput.failure("已启用相同类型规则 [编码]:" + ruleList.get(0).getCode() + " [名称]:" + ruleList.get(0).getName() + " 请先禁用才能启用此规则!") : BaseOutput.success();
     }
 
-    @RequestMapping(value = "/checkName")
+    @RequestMapping(value = "/checkName.action")
     public @ResponseBody
     Object checkName(String name, String org) {
         PointsRuleDTO ex = DTOUtils.newDTO(PointsRuleDTO.class);
@@ -158,7 +158,7 @@ public class PointsRuleController {
         return checkDuplicate(name, org, ex);
     }
 
-    @RequestMapping(value = "/checkCode")
+    @RequestMapping(value = "/checkCode.action")
     public @ResponseBody
     Object checkCode(String code, String org) {
         PointsRuleDTO ex = DTOUtils.newDTO(PointsRuleDTO.class);

@@ -5,6 +5,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.dili.crm.rpc.DataDictionaryRpc;
+import com.dili.ss.domain.BaseOutput;
+import com.dili.ss.dto.DTOUtils;
+import com.dili.uap.sdk.domain.DataDictionaryValue;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -16,20 +20,14 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
-import com.dili.crm.domain.Address;
 import com.dili.crm.domain.dto.CustomerChartDTO;
 import com.dili.crm.domain.dto.CustomerVisitChartDTO;
 import com.dili.crm.service.ChartService;
 import com.dili.crm.service.CustomerService;
 import com.dili.crm.service.CustomerVisitService;
-import com.dili.crm.service.DataDictionaryValueService;
-import com.dili.ss.domain.BaseOutput;
 import com.dili.ss.metadata.ValueProviderUtils;
-import com.google.common.collect.Lists;
 
 import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiImplicitParam;
-import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 
 @Api("/chart")
@@ -39,17 +37,30 @@ public class ChartController {
 	@Autowired CustomerService customerService;
 	@Autowired CustomerVisitService customerVisitService;
 	@Autowired ChartService chartService;
-	@Autowired DataDictionaryValueService dataDictionaryValueService;
+	@Autowired
+	DataDictionaryRpc dataDictionaryRpc;
 
 	@ApiOperation("跳转到报表页面")
 	@RequestMapping(value = "/index.html", method = RequestMethod.GET)
 	public String index(ModelMap modelMap) {
-		
 		return "chart/index";
 	}
+
+	private String findChartServer() {
+		String code="thirdparty.servers";
+		DataDictionaryValue dataDictionaryValue = DTOUtils.newDTO(DataDictionaryValue.class);
+		dataDictionaryValue.setDdCode(code);
+		dataDictionaryValue.setCode("chartserver");
+		BaseOutput<List<DataDictionaryValue>> output = dataDictionaryRpc.list(dataDictionaryValue);
+		if(output.isSuccess() && !output.getData().isEmpty()) {
+			return output.getData().get(0).getCode();
+		}
+		return null;
+	}
+
 	private ModelMap addData(ModelMap modelMap,String url) {
 		modelMap.put("url", url);
-		modelMap.put("chartServer",dataDictionaryValueService.findChartServer());
+		modelMap.put("chartServer", findChartServer());
 		return modelMap;
 	}
 	@ApiOperation("跳转到销量top(量)报表页面")
@@ -138,7 +149,7 @@ public class ChartController {
 	}
 	
 	@ApiOperation(value = "查询客户类型分布", notes = "查询Address，返回列表信息")
-	@RequestMapping(value = "/customerTypeChart", method = { RequestMethod.GET, RequestMethod.POST })
+	@RequestMapping(value = "/customerTypeChart.action", method = { RequestMethod.GET, RequestMethod.POST })
 	public @ResponseBody Object customerTypeChart() {
 		List<CustomerChartDTO>data=this.customerService.selectCustomersGroupByType().getData();
 		
@@ -153,7 +164,7 @@ public class ChartController {
 	}
 	@ApiOperation(value = "查询客户类型分布", notes = "查询客户类型分布，返回客户类型分布信息")
 	
-	@RequestMapping(value = "/customerMarketChart", method = { RequestMethod.GET, RequestMethod.POST })
+	@RequestMapping(value = "/customerMarketChart.action", method = { RequestMethod.GET, RequestMethod.POST })
 	public @ResponseBody Object customerMarketChart() {
 		 List<CustomerChartDTO>data=this.customerService.selectCustomersGroupByMarket().getData();
 			Map<Object, Object> metadata =this.getCustomerMetadata();
@@ -167,7 +178,7 @@ public class ChartController {
 	}
 	@ApiOperation(value = "查询客户行业分布", notes = "查询客户行业分布，返回客户行业分布信息")
 	
-	@RequestMapping(value = "/customerProfessionChart", method = { RequestMethod.GET, RequestMethod.POST })
+	@RequestMapping(value = "/customerProfessionChart.action", method = { RequestMethod.GET, RequestMethod.POST })
 	public @ResponseBody Object customerProfessionChart() {
 		 List<CustomerChartDTO>data=this.customerService.selectCustomersGroupByProfession().getData();
 			Map<Object, Object> metadata =this.getCustomerMetadata();
@@ -181,7 +192,7 @@ public class ChartController {
 	}
 	@ApiOperation(value = "查询回访方式分布", notes = "查询回访方式分布，返回回访方式分布信息")
 	
-	@RequestMapping(value = "/customerVisitModeChart", method = { RequestMethod.GET, RequestMethod.POST })
+	@RequestMapping(value = "/customerVisitModeChart.action", method = { RequestMethod.GET, RequestMethod.POST })
 	public @ResponseBody Object customerVisitModeChart() {
 		 List<CustomerVisitChartDTO>data=this.customerVisitService.selectCustomerVisitGroupByMode().getData();
 			Map<Object, Object> metadata =this.getCustomerVisitMetadata();
@@ -197,7 +208,7 @@ public class ChartController {
 	@ApiOperation(value = "查询回访状态分布", notes = "查询回访状态分布，返回状态分布信息")
 	
 	
-	@RequestMapping(value = "/customerVisitStateChart", method = { RequestMethod.GET, RequestMethod.POST })
+	@RequestMapping(value = "/customerVisitStateChart.action", method = { RequestMethod.GET, RequestMethod.POST })
 	public @ResponseBody Object customerVisitStateChart() {
 		 	List<CustomerVisitChartDTO>data=this.customerVisitService.selectCustomerVisitGroupByState().getData();
 			Map<Object, Object> metadata =this.getCustomerVisitMetadata();
@@ -225,7 +236,7 @@ public class ChartController {
 	        visitStateProvider.put("provider", "visitStateProvider");
 	        metadata.put("state", visitStateProvider);
 	        //回访方式
-	        metadata.put("mode", getDDProvider(11L));
+	        metadata.put("mode", getDDProvider("visit_mode"));
 	        return metadata;
 	    }
 
@@ -233,16 +244,16 @@ public class ChartController {
 	private Map<Object, Object> getCustomerMetadata(){
 		Map<Object, Object> metadata = new HashMap<>();
 
-		metadata.put("market", getDDProvider(2L));
-		metadata.put("type", getDDProvider(4L));
-		metadata.put("profession", getDDProvider(6L));
+		metadata.put("market", getDDProvider("market"));
+		metadata.put("type", getDDProvider("customer_type"));
+		metadata.put("profession", getDDProvider("customer_profession"));
 		return metadata;
 	}
 	//获取数据字典提供者
-	private JSONObject getDDProvider(Long ddId){
+	private JSONObject getDDProvider(String ddCode){
 		JSONObject dataDictionaryValueProvider = new JSONObject();
 		dataDictionaryValueProvider.put("provider", "dataDictionaryValueProvider");
-		dataDictionaryValueProvider.put("queryParams", "{dd_id:"+ddId+"}");
+		dataDictionaryValueProvider.put("queryParams", "{dd_code:\""+ddCode+"\"}");
 		return dataDictionaryValueProvider;
 	}
 }

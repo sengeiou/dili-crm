@@ -55,36 +55,6 @@
                 <build.profile.id>prod</build.profile.id>
             </properties>
         </profile>
-        <profile>
-            <id>qqhr</id>
-            <properties>
-                <build.profile.id>qqhr</build.profile.id>
-            </properties>
-        </profile>
-        <profile>
-            <id>sy</id>
-            <properties>
-                <build.profile.id>sy</build.profile.id>
-            </properties>
-        </profile>
-        <profile>
-            <id>cc</id>
-            <properties>
-                <build.profile.id>cc</build.profile.id>
-            </properties>
-        </profile>
-        <profile>
-            <id>gy</id>
-            <properties>
-                <build.profile.id>gy</build.profile.id>
-            </properties>
-        </profile>
-        <profile>
-            <id>mdj</id>
-            <properties>
-                <build.profile.id>mdj</build.profile.id>
-            </properties>
-        </profile>
     </profiles>
 
     <build>
@@ -382,8 +352,8 @@
         <!-- 内部包  -->
         <dependency>
             <groupId>com.dili</groupId>
-            <artifactId>crmadmin-sdk</artifactId>
-            <version>${project.parent.version}</version>
+            <artifactId>uap-sdk</artifactId>
+            <version>1.0.0</version>
         </dependency>
 
     </dependencies>

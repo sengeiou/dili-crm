@@ -3,18 +3,17 @@ package com.dili.points.service.impl;
 import com.alibaba.fastjson.JSON;
 import com.dili.points.constant.Constants;
 import com.dili.points.dao.PointsRuleMapper;
-import com.dili.points.domain.DataDictionaryValue;
 import com.dili.points.domain.PointsRule;
 import com.dili.points.domain.PointsRuleLog;
 import com.dili.points.domain.RuleCondition;
-import com.dili.points.rpc.DataDictionaryValueRpc;
+import com.dili.points.service.DataDictionaryValueRpcService;
 import com.dili.points.service.PointsRuleLogService;
 import com.dili.points.service.PointsRuleService;
 import com.dili.points.service.RuleConditionService;
 import com.dili.ss.base.BaseServiceImpl;
-import com.dili.ss.domain.BaseOutput;
 import com.dili.ss.dto.DTOUtils;
-import com.dili.sysadmin.sdk.session.SessionContext;
+import com.dili.uap.sdk.domain.DataDictionaryValue;
+import com.dili.uap.sdk.session.SessionContext;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -36,7 +35,7 @@ public class PointsRuleServiceImpl extends BaseServiceImpl<PointsRule, Long> imp
     private PointsRuleLogService pointsRuleLogService;
 
     @Autowired
-    private DataDictionaryValueRpc dataDictionaryValueRpc;
+    private DataDictionaryValueRpcService dataDictionaryValueRpcService;
 
     public PointsRuleMapper getActualDao() {
         return (PointsRuleMapper) getDao();
@@ -113,9 +112,9 @@ public class PointsRuleServiceImpl extends BaseServiceImpl<PointsRule, Long> imp
 
     @Override
     public void buildConditionParameter(Map map) {
-        BaseOutput<List<DataDictionaryValue>> output = dataDictionaryValueRpc.listByDdId(23L);
-        map.put("conditionType", JSON.toJSONString(output.getData()));
-        map.put("payMethod", JSON.toJSONString(dataDictionaryValueRpc.listByDdId(19L).getData()));
+        List<DataDictionaryValue> list = dataDictionaryValueRpcService.listByDdCode("condition_type");
+        map.put("conditionType", JSON.toJSONString(list));
+        map.put("payMethod", JSON.toJSONString(dataDictionaryValueRpcService.listByDdCode("payment")));
     }
 
     /**

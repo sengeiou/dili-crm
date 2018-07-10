@@ -1,13 +1,14 @@
 package com.dili.points.provider;
 
 import com.alibaba.fastjson.JSONObject;
-import com.dili.points.domain.DataDictionaryValue;
-import com.dili.points.rpc.DataDictionaryValueRpc;
+import com.dili.points.rpc.DataDictionaryRpc;
 import com.dili.ss.domain.BaseOutput;
+import com.dili.ss.dto.DTOUtils;
 import com.dili.ss.metadata.FieldMeta;
 import com.dili.ss.metadata.ValuePair;
 import com.dili.ss.metadata.ValuePairImpl;
 import com.dili.ss.metadata.provider.BatchDisplayTextProviderAdaptor;
+import com.dili.uap.sdk.domain.DataDictionaryValue;
 import com.google.common.collect.Lists;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
@@ -25,9 +26,9 @@ import java.util.Map;
 public class DataDictionaryValueProvider extends BatchDisplayTextProviderAdaptor {
 
     //前台需要传入的参数
-    protected static final String DD_ID_KEY = "dd_id";
+    protected static final String DD_CODE_KEY = "dd_code";
     @Autowired
-    private DataDictionaryValueRpc dataDictionaryValueRpc;
+    private DataDictionaryRpc dataDictionaryRpc;
 
     @Override
     public List<ValuePair<?>> getLookupList(Object val, Map metaMap, FieldMeta fieldMeta) {
@@ -35,8 +36,11 @@ public class DataDictionaryValueProvider extends BatchDisplayTextProviderAdaptor
         if(queryParams == null) {
             return Lists.newArrayList();
         }
-        Long ddId = JSONObject.parseObject(queryParams.toString()).getLong(DD_ID_KEY);
-        BaseOutput<List<DataDictionaryValue>> output = dataDictionaryValueRpc.listByDdId(ddId);
+
+        String ddCode = getDdCode(queryParams.toString());
+        DataDictionaryValue dataDictionaryValue = DTOUtils.newDTO(DataDictionaryValue.class);
+        dataDictionaryValue.setDdCode(ddCode);
+        BaseOutput<List<DataDictionaryValue>> output = dataDictionaryRpc.list(dataDictionaryValue);
         if(!output.isSuccess()){
             return null;
         }
@@ -44,8 +48,8 @@ public class DataDictionaryValueProvider extends BatchDisplayTextProviderAdaptor
         valuePairs.add(0, new ValuePairImpl(EMPTY_ITEM_TEXT, null));
         List<DataDictionaryValue> dataDictionaryValues = output.getData();
         for(int i=0; i<dataDictionaryValues.size(); i++) {
-            DataDictionaryValue dataDictionaryValue = dataDictionaryValues.get(i);
-            valuePairs.add(i+1, new ValuePairImpl(dataDictionaryValue.getCode(), dataDictionaryValue.getValue()));
+            DataDictionaryValue dataDictionaryValue1 = dataDictionaryValues.get(i);
+            valuePairs.add(i+1, new ValuePairImpl(dataDictionaryValue.getName(), dataDictionaryValue1.getCode()));
         }
         return valuePairs;
     }
@@ -56,9 +60,11 @@ public class DataDictionaryValueProvider extends BatchDisplayTextProviderAdaptor
         if(queryParams == null) {
             return Lists.newArrayList();
         }
-        Long ddId = JSONObject.parseObject(queryParams.toString()).getLong(DD_ID_KEY);
-        BaseOutput<List<DataDictionaryValue>> userOutput = dataDictionaryValueRpc.listByDdId(ddId);
-        return userOutput.isSuccess() ? userOutput.getData() : null;
+        String ddCode = getDdCode(queryParams.toString());
+        DataDictionaryValue dataDictionaryValue = DTOUtils.newDTO(DataDictionaryValue.class);
+        dataDictionaryValue.setDdCode(ddCode);
+        BaseOutput<List<DataDictionaryValue>> output = dataDictionaryRpc.list(dataDictionaryValue);
+        return output.isSuccess() ? output.getData() : null;
     }
 
     @Override
@@ -67,7 +73,7 @@ public class DataDictionaryValueProvider extends BatchDisplayTextProviderAdaptor
             return (Map)metaMap.get(ESCAPE_FILEDS_KEY);
         }else {
             Map<String, String> map = new HashMap<>();
-            map.put(metaMap.get(FIELD_KEY).toString(), "code");
+            map.put(metaMap.get(FIELD_KEY).toString(), "name");
             return map;
         }
     }
@@ -79,6 +85,19 @@ public class DataDictionaryValueProvider extends BatchDisplayTextProviderAdaptor
      */
     @Override
     protected String getRelationTablePkField(Map metaMap) {
-        return "value";
+        return "code";
+    }
+
+    /**
+     * 获取数据字典编码
+     * @return
+     */
+    public String getDdCode(String queryParams){
+        //清空缓存
+        String ddCode = JSONObject.parseObject(queryParams).getString(DD_CODE_KEY);
+        if(ddCode == null){
+            throw new RuntimeException("dd_code属性为空");
+        }
+        return ddCode;
     }
 }
