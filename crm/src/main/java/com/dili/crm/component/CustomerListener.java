@@ -144,7 +144,10 @@ public class CustomerListener {
 	private Optional<Customer> convertAndValidateCustomer(String customerJson,Map<String,Object> customerObj){
 		Customer customer=DTOUtils.proxy(new DTO(customerObj), Customer.class);
 		if(this.validateCustomer(customer)) {
-			customer.setMarket(this.getMarket());
+			//如果上报的客户信息有市场信息，则不做处理
+			if(StringUtils.isBlank(customer.getMarket())) {
+				customer.setMarket(this.getMarket());
+			}
 			customer.setYn(1);
 			return Optional.ofNullable(customer);
 		}else {
