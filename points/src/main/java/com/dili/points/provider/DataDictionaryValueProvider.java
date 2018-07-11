@@ -49,7 +49,7 @@ public class DataDictionaryValueProvider extends BatchDisplayTextProviderAdaptor
         List<DataDictionaryValue> dataDictionaryValues = output.getData();
         for(int i=0; i<dataDictionaryValues.size(); i++) {
             DataDictionaryValue dataDictionaryValue1 = dataDictionaryValues.get(i);
-            valuePairs.add(i+1, new ValuePairImpl(dataDictionaryValue.getName(), dataDictionaryValue1.getCode()));
+            valuePairs.add(i+1, new ValuePairImpl(dataDictionaryValue1.getName(), dataDictionaryValue1.getCode()));
         }
         return valuePairs;
     }
