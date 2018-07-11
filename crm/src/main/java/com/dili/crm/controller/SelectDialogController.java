@@ -64,7 +64,7 @@ public class SelectDialogController {
 	public String customer(ModelMap modelMap, HttpServletRequest request, @RequestParam(name="textboxId", required = false) String textboxId, @RequestParam(name="dataUrl", required = false) String dataUrl,@RequestParam(name="id", required = false) Long id) {
 		modelMap.put("textboxId", textboxId);
 		if (StringUtils.isBlank(dataUrl)){
-			dataUrl = request.getContextPath()+"/selectDialog/listCustomer";
+			dataUrl = request.getContextPath()+"/selectDialog/listCustomer.action";
 		}
 		modelMap.put("dataUrl",dataUrl);
 		modelMap.put("customerId",id);
