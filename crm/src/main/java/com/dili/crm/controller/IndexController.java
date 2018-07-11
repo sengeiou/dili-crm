@@ -84,7 +84,7 @@ public class IndexController {
     @ApiImplicitParams({
             @ApiImplicitParam(name = "Customer", paramType = "form", value = "Customer的form信息", required = false, dataType = "string")
     })
-    @RequestMapping(value = "/listCustomers", method = {RequestMethod.GET, RequestMethod.POST})
+    @RequestMapping(value = "/listCustomers.action", method = {RequestMethod.GET, RequestMethod.POST})
     public
     @ResponseBody
     Object listCustomers(Customer customer) throws Exception {

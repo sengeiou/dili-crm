@@ -20,7 +20,7 @@ public class ChartServiceImpl implements ChartService{
 	private String findUrl(String key) {
 		DataDictionaryValue condtion = DTOUtils.newDTO(DataDictionaryValue.class);
 		condtion.setDdCode("ThirtPartChartUrls");
-		condtion.setCode(key);
+		condtion.setName(key);
 		BaseOutput<List<DataDictionaryValue>> output = this.dataDictionaryRpc.list(condtion);
 		if(output.isSuccess()) {
 			if (output.getData() != null && output.getData().size() == 1) {
