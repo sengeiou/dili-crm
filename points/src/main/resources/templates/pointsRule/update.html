@@ -246,8 +246,8 @@
             return row.startValue + " - " + row.endValue;
         } else {
             for (var d in conditionTypeJson) {
-                if (conditionTypeJson[d].value == row.conditionType) {
-                    return conditionTypeJson[d].code + "" + row.value;
+                if (conditionTypeJson[d].code == row.conditionType) {
+                    return conditionTypeJson[d].name + "" + row.value;
                 }
             }
             return "";
@@ -256,8 +256,8 @@
 
     function formatPayDisplay(value, row, index) {
         for (var d in payMethodJson) {
-            if (payMethodJson[d].value == row.value) {
-                return payMethodJson[d].code;
+            if (payMethodJson[d].code == row.value) {
+                return payMethodJson[d].name;
             }
         }
         return "";
@@ -296,7 +296,7 @@
     }
 
     $(function () {
-        $('#_form').form('load', '${contextPath}/pointsRule/get.action/${potins.id}');
+        $('#_form').form('load', '${contextPath}/pointsRule/get/${potins.id}');
     });
 </script>
 </#body>
