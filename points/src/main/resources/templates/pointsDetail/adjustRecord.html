@@ -29,7 +29,13 @@
                                 <input class="easyui-textbox" name="createdId" id="createdId"  panelHeight="auto" label="操作人:" style="width: 100%;"
                                        data-options="labelAlign:'right',editable:false,buttonText:'选择',onClickButton:_selectUser,onChange:_changeTextboxShowClear" />
                             </td>
-                        
+                        <td style="padding:5px;">
+	                            <input name="firmCode" id="firmCode" style="width:100%;" editable="false"
+	                                   labelAlign="right" panelWidth="auto" panelHeight="auto" label="积分调整市场:"/>
+	                            <#comboProvider _id="firmCode" _provider='firmProvider'
+	                            _queryParams='{}'/>
+
+                        	</td>
                             <td style="padding:5px;">
 
                                 <input class="easyui-datetimebox" name="createdStart" id="createdStart" editable="false"   labelAlign="right" data-options="label:'操作时间:'"  style="width: 250px;"/>
@@ -79,6 +85,9 @@
                         <th width="10%" data-options="field:'points',   sortable:true, order:'asc', align:'center', resizable:'true', fixed:'false',formatter:pointsFormatter">
                             调整积分
                         </th>
+                      <th data-options="field:'firmCode', width:'10%',  sortable:true, order:'asc', align:'center', resizable:'true', fixed:'false',_provider:'firmProvider', _queryParams:{}">
+                        积分调整市场	
+                    </th>
                         <th width="10%" data-options="field:'balance',   sortable:true, order:'asc', align:'center', resizable:'true', fixed:'false'">
                             积分余额
                         </th>

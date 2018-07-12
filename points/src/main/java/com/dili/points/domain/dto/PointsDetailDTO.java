@@ -10,6 +10,7 @@ import javax.persistence.Column;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 import java.util.Date;
+import java.util.List;
 
 @Table(name = "`points_detail`")
 public interface PointsDetailDTO extends PointsDetail {
@@ -50,6 +51,11 @@ public interface PointsDetailDTO extends PointsDetail {
 	@Transient
 	Integer getWeightType();
 	void setWeightType(Integer weightType);
+	
+	@Operator(Operator.IN)
+	@Column(name = "`firm_code`")
+	List<String> getFirmCodes();
+	void setFirmCodes(List<String> firmCodes);
 	
 
 }

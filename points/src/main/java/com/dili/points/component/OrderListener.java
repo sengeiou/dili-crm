@@ -152,6 +152,9 @@ public class OrderListener {
 			if (order.getTotalMoney() == null) {
 				return false;
 			}
+			if (StringUtils.trimToNull(order.getMarket()) == null) {
+				return false;
+			}
 //			if (order.getBuyerCardNo() == null) {
 //				return false;
 //			}
@@ -539,6 +542,7 @@ public class OrderListener {
 			PointsDetailDTO pointsDetail = DTOUtils.newDTO(PointsDetailDTO.class);
 			pointsDetail.setPoints(basePoint.intValue());
 			pointsDetail.setSourceSystem(order.getSourceSystem());
+			pointsDetail.setFirmCode(order.getMarket());
 			pointsDetail.setInOut(10);//收入
 			if (this.isSettlementOrder(order)) {
 				pointsDetail.setOrderCode(order.getSettlementCode());

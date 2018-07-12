@@ -107,7 +107,10 @@ public class CustomerPointsServiceImpl extends BaseServiceImpl<CustomerPoints, L
 		String sort = customer.getSort();
 		String order = customer.getOrder();
 		customer.setYn(1);
-		BaseOutput<EasyuiPageOutput> baseOut = customerRpc.listPage(customer);
+		
+		CustomerApiDTO apiDto=	DTOUtils.clone(customer, CustomerApiDTO.class);
+//		apiDto.mget().remove("firmCode");
+		BaseOutput<EasyuiPageOutput> baseOut = customerRpc.listPage(apiDto);
 		if (!baseOut.isSuccess()) {
 			throw new AppException("远程调用失败:"+baseOut.getResult());
 //			return new EasyuiPageOutput(0, Collections.emptyList());

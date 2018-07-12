@@ -3,6 +3,7 @@ package com.dili.points.controller;
 import com.dili.points.domain.PointsDetail;
 import com.dili.points.domain.dto.CustomerPointsDTO;
 import com.dili.points.domain.dto.PointsDetailDTO;
+import com.dili.points.provider.FirmProvider;
 import com.dili.points.service.CustomerPointsService;
 import com.dili.points.service.PointsDetailService;
 import com.dili.ss.domain.BaseOutput;
@@ -33,6 +34,7 @@ public class PointsDetailController {
     @Autowired
     PointsDetailService pointsDetailService;
     @Autowired CustomerPointsService customerPointsService;
+    @Autowired FirmProvider firmProvider;
 
     @ApiOperation("跳转到PointsDetail页面")
     @RequestMapping(value="/index.html", method = RequestMethod.GET)
@@ -73,6 +75,7 @@ public class PointsDetailController {
 	})
     @RequestMapping(value="/listPage.action", method = {RequestMethod.GET, RequestMethod.POST})
     public @ResponseBody String listPage(PointsDetailDTO pointsDetail) throws Exception {
+    	pointsDetail.setFirmCodes(this.firmProvider.getCurrentUserFirmCodes());
         return pointsDetailService.listEasyuiPageByExample(pointsDetail, true).toString();
     }
 
@@ -83,6 +86,7 @@ public class PointsDetailController {
     @RequestMapping(value="/listAdjustRecordPage.action", method = {RequestMethod.GET, RequestMethod.POST})
     public @ResponseBody String listAdjustRecordPage(PointsDetailDTO pointsDetail) throws Exception {
         pointsDetail.setGenerateWay(50);
+        pointsDetail.setFirmCodes(this.firmProvider.getCurrentUserFirmCodes());
         return pointsDetailService.listEasyuiPageByExample(pointsDetail, true).toString();
     }
 
