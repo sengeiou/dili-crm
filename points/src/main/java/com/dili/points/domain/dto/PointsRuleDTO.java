@@ -10,6 +10,7 @@ import com.dili.ss.metadata.annotation.FieldDef;
 
 import javax.persistence.*;
 import java.util.Date;
+import java.util.List;
 
 /**
  * 由MyBatis Generator工具自动生成
@@ -49,5 +50,11 @@ public interface PointsRuleDTO extends PointsRule {
     Date getEndCreated();
 
     void setEndCreated(Date endCreated);
+    
+    
+	@Operator(Operator.IN)
+	@Column(name = "`firm_code`")
+	List<String> getFirmCodes();
+	void setFirmCodes(List<String> firmCodes);
 
 }
