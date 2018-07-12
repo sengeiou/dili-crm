@@ -305,7 +305,7 @@
             onChange: function (newValue) {
                 change(newValue)
             },
-            url: "/provider/getLookupList"
+            url: "/provider/getLookupList.action"
             , method: "POST"
             , valueField: "value"
             , textField: "text"

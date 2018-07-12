@@ -5,7 +5,7 @@
     }
 
     .inputWidth {
-        width: 20%;
+        width: 17%;
     }
 </style>
 <div class="easyui-layout" fit="true">
@@ -31,28 +31,37 @@
                 <div class="easyui-panel" style="width: 96%;" title="积分基础信息" border="false">
                     <table align="center" width="99%">
                         <tr>
-                            <td style="padding-top:10px;" width="25%">
+                        
+                                                   <td style="padding-top:10px;" width="20%">
+                                <input class="easyui-combobox inputWidth" panelWidth="auto" panelHeight="auto"
+                                       name="firmCode" id="firmCode"
+                                       data-options="required:true,editable:false,labelAlign:'right',label:'所属市场:'"/>
+                                <#comboProvider _id="firmCode" _provider='firmProvider'
+                                _queryParams='{dd_code:"business_type"}'/>
+
+                            </td>
+                            <td style="padding-top:10px;" width="20%">
                                 <input class="easyui-combobox inputWidth" name="businessType" id="businessType"
                                        data-options="required:true,editable:false,labelAlign:'right',label:'交易类型:'"/>
                                 <#comboProvider _id="businessType" _provider='dataDictionaryValueProvider'
                                 _queryParams='{dd_code:"business_type"}'/>
 
                             </td>
-                            <td style="padding-top:10px;" width="25%">
+                            <td style="padding-top:10px;" width="20%">
                                 <input class="easyui-combobox inputWidth" name="customerType" id="customerType"
                                        data-options="required:true,editable:false,labelAlign:'right',label:'生效对象:'"/>
                                 <#comboProvider _id="customerType" _provider='dataDictionaryValueProvider'
                                 _queryParams='{dd_code:"customer_type"}'/>
                             </td>
 
-                            <td style="padding-top:10px;padding-left:10px;" width="25%">
+                            <td style="padding-top:10px;padding-left:10px;" width="20%">
                                 <input class="easyui-textbox inputWidth" name="name" id="name"
                                        data-options="invalidMessage:'名称必填，且不能重复',labelAlign:'right',label:'规则名称:', validType:{
 		length:[1,20],
 		remote:['${contextPath}/pointsRule/checkName.action?org=${potins.name}','name']
 	}" required="true"/>
                             </td>
-                            <td style="padding-top:10px;padding-left:10px;" width="25%">
+                            <td style="padding-top:10px;padding-left:10px;" width="20%">
                                 <input class="easyui-textbox inputWidth" name="code" id="code"
                                        panelWidth="auto" panelHeight="auto" label="规则编码:" required="true"
                                        data-options="labelAlign:'right',validType:'length[0,40]'"/>
@@ -268,7 +277,7 @@
     }
 
     $(function () {
-        $('#_form').form('load', '${contextPath}/pointsRule/get/${potins.id}');
+        $('#_form').form('load', '${contextPath}/pointsRule/get.action?id=${potins.id}');
 
         $('input[class^=easyui-]').textbox({
             cls:'noborder'

@@ -19,7 +19,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * 由MyBatis Generator工具自动生成
@@ -45,9 +47,9 @@ public class PointsRuleController {
         return "pointsRule/add";
     }
 
-    @RequestMapping(value = "/get/{id}", method = RequestMethod.GET)
+    @RequestMapping(value = "/get.action", method = RequestMethod.GET)
     @ResponseBody
-    public Object get(@PathVariable("id") Long id) {
+    public Object get(Long id) {
         PointsRule pointsRule = pointsRuleService.get(id);
         return pointsRule;
     }
