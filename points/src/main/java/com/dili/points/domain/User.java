@@ -117,6 +117,7 @@ public class User extends BaseDomain {
 	 *
 	 * @return id - 主键
 	 */
+	@Override
 	public Long getId() {
 		return id;
 	}
@@ -127,6 +128,7 @@ public class User extends BaseDomain {
 	 * @param id
 	 *            主键
 	 */
+	@Override
 	public void setId(Long id) {
 		this.id = id;
 	}

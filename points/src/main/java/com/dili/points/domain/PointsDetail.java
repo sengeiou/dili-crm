@@ -111,5 +111,11 @@ public interface PointsDetail extends IBaseDomain {
     String getCustomerType();
 
     void setCustomerType(String customerType);
+    
+    @Column(name = "`firm_code`")
+    @FieldDef(label="市场编码", maxLength = 20)
+    @EditMode(editor = FieldEditor.Text, required = false)
+    String getFirmCode();
+    void setFirmCode(String firmCode);
 
 }

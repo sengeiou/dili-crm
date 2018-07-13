@@ -34,6 +34,14 @@
                                    data-options="label:'规则名称:', validType:'length[0,20]'"/>
 
                         </td>
+                                        
+                       <td style="padding:5px;">
+                            <input name="firmCode" id="firmCode" style="width:100%;" editable="false"
+                                   labelAlign="right" panelWidth="auto" panelHeight="auto" label="所属市场:"/>
+                            <#comboProvider _id="firmCode" _provider='firmProvider'
+                            _queryParams='{}'/>
+
+                        </td>
                         <td style="padding:5px;">
                             <input name="customerType" id="customerType" style="width:100%;" editable="false"
                                    labelAlign="right" panelWidth="auto" panelHeight="auto" label="客户类型:"/>
@@ -41,6 +49,7 @@
                             _queryParams='{dd_code:"customer_type"}'/>
 
                         </td>
+        
                         <td style="padding:5px;">
                             <input class="easyui-combobox" name="businessType" panelWidth="auto" panelHeight="auto" editable="false" id="businessType"
                                    style="width:100%"
@@ -53,19 +62,17 @@
                                    labelAlign="right" data-options="label:'状态:'"/>
                             <#comboProvider _id="yn" _provider='ynProvider' />
                         </td>
-                        <td style="padding:5px;">
+                     </tr>
+                    <tr>
+                        <td style="padding:5px;" colspan="2">
                             <input class="easyui-datetimebox" name="startCreated" editable="false" id="startCreated"
                                    labelAlign="right" data-options="label:'创建时间:'" style="width: 250px;"/>
                             - <input class="easyui-datetimebox" editable="false" name="endCreated" id="endCreated"
                                      labelAlign="right" style="width: 150px;"/>
 
                         </td>
-                        <td style="padding:5px;">
-
-                        </td>
-                    </tr>
-                    <tr>
-                        <td style="padding-left:28px;padding-top: 10px; padding-bottom: 10px;">
+                        
+                        <td style="padding-left:8px;padding-top: 10px; padding-bottom: 10px;">
                             <a href="#" class="easyui-linkbutton" iconCls="icon-search" id="queryBtn"
                                onclick="queryGrid()">查询</a>&nbsp;&nbsp;
                             <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-clear"

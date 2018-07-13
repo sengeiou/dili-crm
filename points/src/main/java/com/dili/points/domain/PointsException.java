@@ -102,6 +102,12 @@ public interface PointsException extends IBaseDomain {
     Date getRecoverTime();
 
     void setRecoverTime(Date recoverTime);
+    
+    @Column(name = "`firm_code`")
+    @FieldDef(label="市场编码", maxLength = 20)
+    @EditMode(editor = FieldEditor.Text, required = false)
+    String getFirmCode();
+    void setFirmCode(String firmCode);
 
 
 }

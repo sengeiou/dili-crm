@@ -2,6 +2,7 @@ package com.dili.points.controller;
 
 import com.dili.points.domain.PointsRule;
 import com.dili.points.domain.dto.PointsRuleDTO;
+import com.dili.points.provider.FirmProvider;
 import com.dili.points.service.PointsRuleService;
 import com.dili.ss.domain.BaseOutput;
 import com.dili.ss.dto.DTOUtils;
@@ -33,7 +34,7 @@ import java.util.Map;
 public class PointsRuleController {
     @Autowired
     PointsRuleService pointsRuleService;
-
+    @Autowired FirmProvider firmProvider;
 
 
     @ApiOperation("跳转到PointsRule页面")
@@ -109,7 +110,11 @@ public class PointsRuleController {
     @RequestMapping(value = "/listPage.action", method = {RequestMethod.GET, RequestMethod.POST})
     public @ResponseBody
     String listPage(PointsRuleDTO pointsRule) throws Exception {
-        return pointsRuleService.listEasyuiPageByExample(pointsRule, true).toString();
+    	
+    	//设置当前用户所有可以访问的firm
+    	pointsRule.setFirmCodes(this.firmProvider.getCurrentUserFirmCodes());
+        
+    	return pointsRuleService.listEasyuiPageByExample(pointsRule, true).toString();
     }
 
     @ApiOperation("新增PointsRule")
@@ -167,7 +172,7 @@ public class PointsRuleController {
         ex.setCheckCode(code);
         return checkDuplicate(code, org, ex);
     }
-
+   
     private boolean checkDuplicate(String name, String org, PointsRuleDTO example) {
         if (StringUtils.isNotBlank(name) && StringUtils.isNotBlank(org)) {
             if (name.equals(org)) {

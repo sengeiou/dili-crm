@@ -14,6 +14,7 @@ import com.dili.points.domain.SystemConfig;
 import com.dili.points.domain.dto.CustomerApiDTO;
 import com.dili.points.domain.dto.CustomerCategoryPointsDTO;
 import com.dili.points.domain.dto.PointsDetailDTO;
+import com.dili.points.provider.FirmProvider;
 import com.dili.points.rpc.CustomerRpc;
 import com.dili.points.rpc.SystemConfigRpc;
 import com.dili.points.service.PointsDetailService;
@@ -69,6 +70,7 @@ public class PointsDetailServiceImpl extends BaseServiceImpl<PointsDetail, Long>
 	@Autowired
 	AsyncTask asyncTask;
 	@Transactional(propagation = Propagation.REQUIRED)
+	@Override
 	public int batchInsertPointsDetailDTO(Map<PointsDetailDTO,List<CustomerCategoryPointsDTO>> pointsDetailMap) {
 		for(Entry<PointsDetailDTO, List<CustomerCategoryPointsDTO>> entry:pointsDetailMap.entrySet()) {
 			PointsDetailDTO pointsDetail=entry.getKey();
@@ -199,6 +201,7 @@ public class PointsDetailServiceImpl extends BaseServiceImpl<PointsDetail, Long>
 		return resultList;
 	}
 	@Transactional(propagation = Propagation.REQUIRED)
+	@Override
 	public int batchInsertPointsDetailDTO(List<PointsDetailDTO> pointsDetail) {
 		pointsDetail.stream().forEach(p->{
 			this.insert(p);//insert error pointsdetails
@@ -215,6 +218,7 @@ public class PointsDetailServiceImpl extends BaseServiceImpl<PointsDetail, Long>
 		return pointsExceptionMapper.insertExact(exceptionalPoints);
 	}
 	@Transactional(propagation = Propagation.REQUIRED)
+	@Override
 	public Optional<PointsDetailDTO> insert(PointsDetailDTO pointsDetail) { 
 		if(pointsDetail.getException()!=null&&pointsDetail.getException().equals(1)) {
 			//异常积分信息保存

@@ -145,9 +145,9 @@ public class CustomerListener {
 		Customer customer=DTOUtils.proxy(new DTO(customerObj), Customer.class);
 		if(this.validateCustomer(customer)) {
 			//如果上报的客户信息有市场信息，则不做处理
-			if(StringUtils.isBlank(customer.getMarket())) {
-				customer.setMarket(this.getMarket());
-			}
+//			if(StringUtils.isBlank(customer.getMarket())) {
+//				customer.setMarket(this.getMarket());
+//			}
 			customer.setYn(1);
 			return Optional.ofNullable(customer);
 		}else {
@@ -189,6 +189,9 @@ public class CustomerListener {
 			return false;
 		}
 		if(StringUtils.isBlank(customer.getOrganizationType())) {
+			return false;
+		}
+		if(StringUtils.isBlank(customer.getMarket())) {
 			return false;
 		}
 		if(StringUtils.isBlank(customer.getName())) {
