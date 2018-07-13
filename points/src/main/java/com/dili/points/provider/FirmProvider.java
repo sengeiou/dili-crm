@@ -53,8 +53,8 @@ public class FirmProvider implements ValueProvider {
 		
 		List<Firm> list = this.getCurrentUserFirms();
 		List<ValuePair<?>> resultList = list.stream().map(f->{
-			return new ValuePairImpl(f.getName(), f.getCode());
-		}).collect(Collectors.toCollection(()->new ArrayList<>()));
+			return (ValuePair<?>)new ValuePairImpl(f.getName(), f.getCode());
+		}).collect(Collectors.toCollection(()->new ArrayList<ValuePair<?>>()));
 		resultList.add(0, new ValuePairImpl(EMPTY_ITEM_TEXT, null));
 		return resultList;
 	}
