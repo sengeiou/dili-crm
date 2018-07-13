@@ -1,9 +1,15 @@
 package com.dili.points.service;
 
+import java.util.Collections;
+import java.util.List;
+
 import com.dili.points.domain.ExchangeCommodities;
 import com.dili.points.domain.PointsExchangeRecord;
+import com.dili.points.domain.dto.PointsExchangeRecordDTO;
+import com.dili.points.domain.dto.PointsRuleDTO;
 import com.dili.ss.base.BaseService;
 import com.dili.ss.domain.BaseOutput;
+import com.dili.ss.domain.EasyuiPageOutput;
 import com.dili.ss.exception.BusinessException;
 
 /**
@@ -19,4 +25,8 @@ public interface PointsExchangeRecordService extends BaseService<PointsExchangeR
      * @return
      */
     BaseOutput insertSelectiveWithOutput(PointsExchangeRecord pointsExchangeRecord) throws Exception;
+    
+    
+    
+    public EasyuiPageOutput listEasyuiPageByExample(PointsExchangeRecordDTO pointsExchangeRecordDto,boolean useProvider,List<String>firmCodes) throws Exception ;
 }

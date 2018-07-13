@@ -31,6 +31,14 @@
                             </td>
                         </tr>
                         <tr>
+                                                                  
+                       <td style="padding:5px;">
+                            <input name="firmCode" id="firmCode" style="width:100%;" editable="false"
+                                   labelAlign="right" panelWidth="auto" panelHeight="auto" label="所属市场:"/>
+                            <#comboProvider _id="firmCode" _provider='firmProvider'
+                            _queryParams='{}'/>
+
+                        </td>
                             <td style="padding:5px;">
                                 <input  name="exchangeCommoditiesId" id="exchangeCommoditiesId" editable="false" style="width:100%" labelAlign="right" panelWidth="auto" panelHeight="auto" data-options="label:'兑换商品:'" />
                                 <#comboProvider _id="exchangeCommoditiesId" _provider='commodityProvider'/>
@@ -79,12 +87,15 @@
                         <th width="10%" data-options="field:'exchangeCommoditiesId',_provider:'commodityProvider',sortable:true, order:'asc', align:'center', resizable:'true', fixed:'false'">
                             兑换商品
                         </th>
-                        <th width="10%" data-options="field:'quantity',   sortable:true, order:'asc', align:'center', resizable:'true', fixed:'false'">
+                        <th width="5%" data-options="field:'quantity',   sortable:true, order:'asc', align:'center', resizable:'true', fixed:'false'">
                             兑换数量
                         </th>
-                        <th width="10%" data-options="field:'points',   sortable:true, order:'asc', align:'center', resizable:'true', fixed:'false'">
+                        <th width="5%" data-options="field:'points',   sortable:true, order:'asc', align:'center', resizable:'true', fixed:'false'">
                             使用积分
                         </th>
+                       <th width="10%" data-options="field:'firmCode',sortable:true, order:'asc', align:'center', resizable:'true', fixed:'false',_provider:'firmProvider', _queryParams:{}">
+                        市场	
+                    </th>
                         <th width="10%" data-options="field:'createdId', _provider:'userProvider',  sortable:true, order:'asc', align:'center', resizable:'true', fixed:'false'">
                             兑换操作员
                         </th>

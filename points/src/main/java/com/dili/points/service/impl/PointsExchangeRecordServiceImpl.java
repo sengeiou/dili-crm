@@ -8,6 +8,8 @@ import com.dili.points.domain.CustomerPoints;
 import com.dili.points.domain.ExchangeCommodities;
 import com.dili.points.domain.PointsDetail;
 import com.dili.points.domain.PointsExchangeRecord;
+import com.dili.points.domain.dto.PointsExchangeRecordDTO;
+import com.dili.points.domain.dto.PointsRuleDTO;
 import com.dili.points.service.PointsExchangeRecordService;
 import com.dili.ss.base.BaseServiceImpl;
 import com.dili.ss.domain.BaseOutput;
@@ -24,6 +26,7 @@ import org.springframework.util.CollectionUtils;
 import tk.mybatis.mapper.entity.Example;
 
 import java.math.BigDecimal;
+import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -32,6 +35,7 @@ import java.util.Map;
 /**
  * 由MyBatis Generator工具自动生成
  * This file was generated on 2018-03-20 11:29:31.
+ * @author wangguofeng
  */
 @Service
 public class PointsExchangeRecordServiceImpl extends BaseServiceImpl<PointsExchangeRecord, Long> implements PointsExchangeRecordService {
@@ -151,14 +155,41 @@ public class PointsExchangeRecordServiceImpl extends BaseServiceImpl<PointsExcha
             points = statistics.get("points");
             quantity = statistics.get("quantity");
         }
-        List<Map> footers = Lists.newArrayList();
+        List<Map> footers = this.buildFooter(points, quantity);
+        easyuiPageOutput.setFooter(footers);
+        return easyuiPageOutput;
+    }
+
+	
+    @Override
+    public EasyuiPageOutput listEasyuiPageByExample(PointsExchangeRecordDTO pointsExchangeRecordDto,boolean useProvider,List<String>firmCodes) throws Exception {
+    	
+    	//如果用户数据权限集全为空，则返回空结果集(不再进行数据库查询)
+    	if(firmCodes.isEmpty()) {
+    		EasyuiPageOutput easyuiPageOutput = new EasyuiPageOutput(0,Collections.emptyList()); 
+    		List<Map> footers = this.buildFooter(BigDecimal.ZERO, BigDecimal.ZERO);
+    		easyuiPageOutput.setFooter(footers);
+    	    return easyuiPageOutput;
+    	}
+    	pointsExchangeRecordDto.setFirmCodes(firmCodes);
+	    EasyuiPageOutput easyuiPageOutput = this.listEasyuiPageByExample(pointsExchangeRecordDto, useProvider);
+	    return easyuiPageOutput;
+    }
+    
+    /**
+     * 构造footer数据
+     * @param points 积分总数
+     * @param quantity 兑换总数
+     * @return
+     */
+    private List<Map> buildFooter(BigDecimal points, BigDecimal quantity) {
+		List<Map> footers = Lists.newArrayList();
         Map footer = new HashMap(1);
         footer.put("name", "总使用积分:");
         footer.put("organizationType", points);
         footer.put("certificateType", "总兑换数量:");
         footer.put("certificateNumber", quantity);
         footers.add(footer);
-        easyuiPageOutput.setFooter(footers);
-        return easyuiPageOutput;
-    }
+		return footers;
+	}
 }

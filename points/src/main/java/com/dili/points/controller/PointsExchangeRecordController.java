@@ -2,6 +2,7 @@ package com.dili.points.controller;
 
 import com.dili.points.domain.PointsExchangeRecord;
 import com.dili.points.domain.dto.PointsExchangeRecordDTO;
+import com.dili.points.provider.FirmProvider;
 import com.dili.points.service.PointsExchangeRecordService;
 import com.dili.ss.domain.BaseOutput;
 import com.dili.ss.exception.BusinessException;
@@ -28,6 +29,7 @@ import java.util.List;
 public class PointsExchangeRecordController {
     @Autowired
     PointsExchangeRecordService pointsExchangeRecordService;
+    @Autowired FirmProvider firmProvider;
 
     @ApiOperation("跳转到PointsExchangeRecord页面")
     @RequestMapping(value="/index.html", method = RequestMethod.GET)
@@ -50,7 +52,7 @@ public class PointsExchangeRecordController {
 	})
     @RequestMapping(value="/listPage.action", method = {RequestMethod.GET, RequestMethod.POST})
     public @ResponseBody String listPage(PointsExchangeRecordDTO pointsExchangeRecord) throws Exception {
-        return pointsExchangeRecordService.listEasyuiPageByExample(pointsExchangeRecord, true).toString();
+        return pointsExchangeRecordService.listEasyuiPageByExample(pointsExchangeRecord, true,firmProvider.getCurrentUserFirmCodes()).toString();
     }
 
     @ApiOperation("新增PointsExchangeRecord")
