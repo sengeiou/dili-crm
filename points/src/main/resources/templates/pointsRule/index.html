@@ -98,7 +98,7 @@
                    align="center" fit="true" striped="true" idField="id" data-options="onDblClickRow:openUpdate">
                 <thead>
                 <tr>
-                    <th data-options="field:'firmCode', width:'10%',  sortable:true, order:'asc', align:'center', resizable:'true', fixed:'false',_provider:'firmProvider', _queryParams:{}">
+                    <th data-options="field:'firmCode', width:'5%',  sortable:true, order:'asc', align:'center', resizable:'true', fixed:'false',_provider:'firmProvider', _queryParams:{}">
                         所属市场	
                     </th>
                     <th data-options="field:'code', width:'10%',  sortable:true, order:'asc', align:'center', resizable:'true', fixed:'false',formatter:formatview">
@@ -131,7 +131,7 @@
                     <th data-options="field:'modified',width:'10%',  _provider:'datetimeProvider', sortable:true, order:'asc', align:'center', resizable:'true', fixed:'false'">
                         修改时间
                     </th>
-                    <th data-options="formatter:status,field:'yn',width:'10%',  _provider:'ynProvider', sortable:true, order:'asc', align:'center', resizable:'true', fixed:'false'">
+                    <th data-options="formatter:status,field:'yn',width:'5%',  _provider:'ynProvider', sortable:true, order:'asc', align:'center', resizable:'true', fixed:'false'">
                         状态
                     </th>
                 </tr>
@@ -206,6 +206,7 @@
             data: {
                 customerType: selected.$_customerType,
                 businessType: selected.$_businessType,
+                firmCode: selected.$_firmCode,
                 yn: 1
             },
             processData: true,
@@ -222,6 +223,7 @@
                                     id: selected.id,
                                     customerType: selected.$_customerType,
                                     businessType: selected.$_businessType,
+                                    firmCode: selected.$_firmCode,
                                     status: 1
                                 },
                                 processData: true,

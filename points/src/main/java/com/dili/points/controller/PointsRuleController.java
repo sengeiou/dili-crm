@@ -6,6 +6,8 @@ import com.dili.points.provider.FirmProvider;
 import com.dili.points.service.PointsRuleService;
 import com.dili.ss.domain.BaseOutput;
 import com.dili.ss.dto.DTOUtils;
+import com.dili.uap.sdk.domain.Firm;
+
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
@@ -20,13 +22,17 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 /**
  * 由MyBatis Generator工具自动生成
  * This file was generated on 2018-03-20 11:29:31.
+ * @author wangguofeng
  */
 @Api("/pointsRule")
 @Controller
@@ -110,11 +116,7 @@ public class PointsRuleController {
     @RequestMapping(value = "/listPage.action", method = {RequestMethod.GET, RequestMethod.POST})
     public @ResponseBody
     String listPage(PointsRuleDTO pointsRule) throws Exception {
-    	
-    	//设置当前用户所有可以访问的firm
-    	pointsRule.setFirmCodes(this.firmProvider.getCurrentUserFirmCodes());
-        
-    	return pointsRuleService.listEasyuiPageByExample(pointsRule, true).toString();
+    	return pointsRuleService.listEasyuiPageByExample(pointsRule, true,this.firmProvider.getCurrentUserFirmCodes()).toString();
     }
 
     @ApiOperation("新增PointsRule")
@@ -151,40 +153,80 @@ public class PointsRuleController {
     }
 
     @RequestMapping(value = "/checkPointsRule.action", method = {RequestMethod.GET, RequestMethod.POST})
-    public @ResponseBody
-    BaseOutput checkPointsRule(PointsRule pointsRule) {
-        List<PointsRule> ruleList = pointsRuleService.listByExample(pointsRule);
-        return CollectionUtils.isNotEmpty(ruleList) ? BaseOutput.failure("已启用相同类型规则 [编码]:" + ruleList.get(0).getCode() + " [名称]:" + ruleList.get(0).getName() + " 请先禁用才能启用此规则!") : BaseOutput.success();
-    }
+	public @ResponseBody BaseOutput checkPointsRule(PointsRule pointsRule) {
+		List<PointsRule> ruleList = pointsRuleService.listByExample(pointsRule);
+		if (CollectionUtils.isNotEmpty(ruleList)) {
+			PointsRule pointsRuleItem = ruleList.get(0);
+			String firmCode = pointsRuleItem.getFirmCode();
+			//查询市场名称
+			Optional<Firm> opt = this.firmProvider.getFirmByCode(firmCode);
+			String firmName = opt.map(Firm::getName).orElse(firmCode);
+			String failMsg = "已启用相同类型规则  [市场]:" + firmName 
+					+ " [编码]:" + pointsRuleItem.getCode() 
+					+ " [名称]:"+ pointsRuleItem.getName()
+					+ " 请先禁用才能启用此规则!";
+			return BaseOutput.failure(failMsg);
+		}
+		return BaseOutput.success();
+	}
 
-    @RequestMapping(value = "/checkName.action")
-    public @ResponseBody
-    Object checkName(String name, String org) {
-        PointsRuleDTO ex = DTOUtils.newDTO(PointsRuleDTO.class);
-        ex.setCheckName(name);
-        return checkDuplicate(name, org, ex);
-    }
+//    @RequestMapping(value = "/checkName.action")
+//    public @ResponseBody
+//    Object checkName(String name,String firmCode, String org) {
+//        PointsRuleDTO ex = DTOUtils.newDTO(PointsRuleDTO.class);
+//        ex.setCheckName(name);
+//        ex.setFirmCode(firmCode);
+//        return checkDuplicate(name, org, ex);
+//    }
+//
+//    @RequestMapping(value = "/checkCode.action")
+//    public @ResponseBody
+//    Object checkCode(String code,String firmCode, String org) {
+//        PointsRuleDTO ex = DTOUtils.newDTO(PointsRuleDTO.class);
+//        ex.setCheckCode(code);
+//        ex.setFirmCode(firmCode);
+//        return checkDuplicate(code, org, ex);
+//    }
+    @RequestMapping(value = "/checkPointsRuleCodeAndName.action")
+	public @ResponseBody boolean checkPointsRuleCodeAndName(String firmCode, String code, String name, Long id) {
 
-    @RequestMapping(value = "/checkCode.action")
-    public @ResponseBody
-    Object checkCode(String code, String org) {
-        PointsRuleDTO ex = DTOUtils.newDTO(PointsRuleDTO.class);
-        ex.setCheckCode(code);
-        return checkDuplicate(code, org, ex);
-    }
-   
-    private boolean checkDuplicate(String name, String org, PointsRuleDTO example) {
-        if (StringUtils.isNotBlank(name) && StringUtils.isNotBlank(org)) {
-            if (name.equals(org)) {
-                return true;
-            }
-        }
-        if (StringUtils.isNotBlank(name)) {
-
-            List<PointsRule> ruleList = pointsRuleService.listByExample(example);
-
-            return CollectionUtils.isEmpty(ruleList);
-        }
-        return false;
-    }
+		List<PointsRule> ruleList = new ArrayList<>();
+		// 查询出所有在同一市场code相同的规则
+		if (StringUtils.isNotBlank(code)) {
+			PointsRuleDTO condition = DTOUtils.newDTO(PointsRuleDTO.class);
+			condition.setFirmCode(firmCode);
+			condition.setCheckCode(code);
+			ruleList.addAll(pointsRuleService.listByExample(condition));
+		}
+		// 查询出所有在同一市场name相同的规则
+		if (StringUtils.isNotBlank(name)) {
+			PointsRuleDTO condition = DTOUtils.newDTO(PointsRuleDTO.class);
+			condition.setFirmCode(firmCode);
+			condition.setCheckName(name);
+			ruleList.addAll(pointsRuleService.listByExample(condition));
+		}
+		// id转换为集合并去重
+		List<Long> ids = ruleList.stream().map(PointsRule::getId).distinct().collect(Collectors.toList());
+		// 更新
+		if (id != null) {
+			return ids.size() == 1 && ids.contains(id);
+		} else {
+			// 规则插入
+			return CollectionUtils.isEmpty(ids);
+		}
+	}
+//    private boolean checkDuplicate(String name, String org, PointsRuleDTO example) {
+//        if (StringUtils.isNotBlank(name) && StringUtils.isNotBlank(org)) {
+//            if (name.equals(org)) {
+//                return true;
+//            }
+//        }
+//        if (StringUtils.isNotBlank(name)) {
+//
+//            List<PointsRule> ruleList = pointsRuleService.listByExample(example);
+//
+//            return CollectionUtils.isEmpty(ruleList);
+//        }
+//        return false;
+//    }
 }

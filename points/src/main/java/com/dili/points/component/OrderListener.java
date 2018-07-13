@@ -314,11 +314,12 @@ public class OrderListener {
 	 *            (卖家sale,买家purchase)
 	 * @return 返回规则
 	 */
-	protected Optional<PointsRule> findPointsRule(String customerType, Integer businessType) {
+	protected Optional<PointsRule> findPointsRule(String customerType, Integer businessType,String market) {
 		PointsRule pointsRuleEx = DTOUtils.newDTO(PointsRule.class);
 		pointsRuleEx.setYn(1);
 		pointsRuleEx.setCustomerType(customerType);
 		pointsRuleEx.setBusinessType(businessType);// 10交易,20充值,30开卡
+		pointsRuleEx.setFirmCode(market);
 		return this.pointsRuleService.listByExample(pointsRuleEx).stream().findFirst();
 	}
 
@@ -517,7 +518,7 @@ public class OrderListener {
 		Map<PointsDetailDTO,List<CustomerCategoryPointsDTO>> pointsDetailListMap = new HashMap<>();
 
 		orderMap.forEach((order, orderItemList) -> {
-			PointsRule pointsRule = this.findPointsRule(customerType,order.getBusinessType()).orElse(null);
+			PointsRule pointsRule = this.findPointsRule(customerType,order.getBusinessType(),order.getMarket()).orElse(null);
 			if (isBuyer) {
 				logger.info("对买家["+order.getBuyerCertificateNumber()+"]进行积分计算");
 			} else {

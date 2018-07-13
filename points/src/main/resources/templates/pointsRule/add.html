@@ -60,7 +60,7 @@
                                 <input class="easyui-textbox inputWidth" name="name" id="name"
                                        data-options="invalidMessage:'名称必填，且不能重复',labelAlign:'right',label:'&lowast;规则名称:', validType:{
 		length:[1,20],
-		remote:['${contextPath}/pointsRule/checkName.action','name']
+		validateFun:'checkPointsRuleCodeAndName'
 	}" required="true"/>
                             </td>
                             <td style="padding-top:10px;padding-left:10px;" width="25%">
@@ -68,7 +68,7 @@
                                        panelWidth="auto" panelHeight="auto" label="&lowast;规则编码:" required="true"
                                        data-options="invalidMessage:'编码必填，且不能重复',labelAlign:'right',validType:{
 		length:[1,20],
-		remote:['${contextPath}/pointsRule/checkCode.action','code']
+		validateFun:'checkPointsRuleCodeAndName'
 	}"/>
                             </td>
 
@@ -235,6 +235,60 @@
 </div>
 <#pointsRule_js/>
 <script type="text/javascript">
+//扩展easyui验证支持调用函数
+$.extend($.fn.validatebox.defaults.rules, {
+	validateFun: {
+		validator: function(value, param){
+			var json={};
+			json[$(this).next().prop('name')]=value;
+			var input=JSON.stringify(json);
+			var v=eval(param+'('+input+')')
+			return v;
+		},
+		message:''
+    }
+});
+//绑定事件到firmCode
+$('#firmCode').combobox({
+	onChange: function(newValue,oldValue){
+		var v=$("#_form").form('validate');
+	}
+});
+
+//远程调用验证接口来判断code和name是不是重复
+function checkPointsRuleCodeAndName(input){
+	var data={
+			"firmCode":$('#firmCode').combobox('getValue'),
+			"name":$('#name').textbox('getValue'),
+			"code":	$('#code').textbox('getValue'),
+			"id":""
+	}
+	jQuery.extend( data,input);
+	if(data['firmCode']==''){
+		return true;
+	}
+	if(data['name']==''&&data['code']==''){
+		return true;
+	}
+	
+	var ret=false;
+    $.ajax({
+        type: "POST",
+        url: '${contextPath}/pointsRule/checkPointsRuleCodeAndName.action',
+        data: data,
+        processData:true,
+        dataType: "json",
+        async : false,
+        success: function (resp) {
+        	ret=resp;
+        },
+        error: function(XMLHttpRequest, textStatus, errorThrown){
+            $.messager.alert('错误','远程访问失败');
+        }
+    });
+	return ret;
+}
+
     function submitForm(obj) {
         $('#_form').form('submit', {
             url: "${contextPath}/pointsRule/insert.action",

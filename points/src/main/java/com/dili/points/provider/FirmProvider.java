@@ -26,6 +26,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -65,14 +66,24 @@ public class FirmProvider implements ValueProvider {
 			return null;
 		}
 		String code = obj.toString();
-		BaseOutput<Firm> out = firmRpc.getByCode(code);
+		Optional<Firm> opt = this.getFirmByCode(code);
+		return opt.map(Firm::getName).orElse(null);
+	}
+	/**
+	 * 通过code查询firm
+	 * @return
+	 */
+	public Optional<Firm> getFirmByCode(String firmCode) {
+		if (StringUtils.isBlank(firmCode)) {
+			return Optional.empty();
+		}
+		BaseOutput<Firm> out = firmRpc.getByCode(firmCode);
 		if (out.isSuccess()) {
 			Firm firm = out.getData();
-			return firm.getName();
+			return Optional.ofNullable(firm);
 		}
-		return null;
+		return Optional.empty();
 	}
-	
 	/**
 	 * 获得当前用户拥有的所有Firm
 	 * @return

@@ -6,17 +6,20 @@ import com.dili.points.dao.PointsRuleMapper;
 import com.dili.points.domain.PointsRule;
 import com.dili.points.domain.PointsRuleLog;
 import com.dili.points.domain.RuleCondition;
+import com.dili.points.domain.dto.PointsRuleDTO;
 import com.dili.points.service.DataDictionaryValueRpcService;
 import com.dili.points.service.PointsRuleLogService;
 import com.dili.points.service.PointsRuleService;
 import com.dili.points.service.RuleConditionService;
 import com.dili.ss.base.BaseServiceImpl;
+import com.dili.ss.domain.EasyuiPageOutput;
 import com.dili.ss.dto.DTOUtils;
 import com.dili.uap.sdk.domain.DataDictionaryValue;
 import com.dili.uap.sdk.session.SessionContext;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -116,7 +119,16 @@ public class PointsRuleServiceImpl extends BaseServiceImpl<PointsRule, Long> imp
         map.put("conditionType", JSON.toJSONString(list));
         map.put("payMethod", JSON.toJSONString(dataDictionaryValueRpcService.listByDdCode("payment")));
     }
-
+    @Override
+    public EasyuiPageOutput listEasyuiPageByExample(PointsRuleDTO pointsRule,boolean useProvider,List<String>firmCodes) throws Exception {
+    	pointsRule.setFirmCodes(firmCodes);
+    	//如果用户数据权限集全为空，则返回空结果集(不再进行数据库查询)
+    	if(firmCodes.isEmpty()) {
+    		return new EasyuiPageOutput(0,Collections.emptyList()); 
+    	}
+	    EasyuiPageOutput easyuiPageOutput = super.listEasyuiPageByExample(pointsRule, useProvider);
+	    return easyuiPageOutput;
+    }
     /**
      * 生成操作日志
      * @param ruleId
