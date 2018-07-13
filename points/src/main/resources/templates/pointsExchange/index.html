@@ -218,7 +218,7 @@
         $('#_exchange_exchangeCommoditiesId').combobox("loadData",[]);
         $.ajax({
             type: "POST",
-            url: "${contextPath}/exchangeCommodities/list",
+            url: "${contextPath}/exchangeCommodities/list.action",
             processData:true,
             dataType: "json",
             async : true,
@@ -246,7 +246,7 @@
             $('#_customerForm').form('clear');
             $.ajax({
                 type: "POST",
-                url: "${contextPath}/pointsExchange/getCustomerInfo",
+                url: "${contextPath}/pointsExchange/getCustomerInfo.action",
                 data: {idCard:certificate_number},
                 processData:true,
                 dataType: "json",

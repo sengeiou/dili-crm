@@ -9,6 +9,7 @@ import com.dili.ss.metadata.annotation.FieldDef;
 import javax.persistence.Column;
 import javax.persistence.Table;
 import java.util.Date;
+import java.util.List;
 
 /**
  * <B>Description</B>
@@ -37,5 +38,11 @@ public interface ExchangeCommoditiesDTO extends ExchangeCommodities {
     Date getModifiedEnd();
 
     void setModifiedEnd(Date modifiedEnd);
+    
+    
+	@Operator(Operator.IN)
+	@Column(name = "`firm_code`")
+	List<String> getFirmCodes();
+	void setFirmCodes(List<String> firmCodes);
 
 }

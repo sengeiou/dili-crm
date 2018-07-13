@@ -84,4 +84,11 @@ public interface ExchangeCommodities extends IBaseDomain {
     Long getModifiedId();
 
     void setModifiedId(Long modifiedId);
+    
+    
+    @Column(name = "`firm_code`")
+    @FieldDef(label="市场编码", maxLength = 20)
+    @EditMode(editor = FieldEditor.Text, required = false)
+    String getFirmCode();
+    void setFirmCode(String firmCode);
 }
