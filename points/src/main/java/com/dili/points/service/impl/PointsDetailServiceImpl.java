@@ -1,29 +1,5 @@
 package com.dili.points.service.impl;
 
-import com.dili.points.component.AsyncTask;
-import com.dili.points.dao.CustomerCategoryPointsMapper;
-import com.dili.points.dao.CustomerPointsMapper;
-import com.dili.points.dao.PointsDetailMapper;
-import com.dili.points.dao.PointsExceptionMapper;
-import com.dili.points.domain.Customer;
-import com.dili.points.domain.CustomerCategoryPoints;
-import com.dili.points.domain.CustomerPoints;
-import com.dili.points.domain.PointsDetail;
-import com.dili.points.domain.PointsException;
-import com.dili.points.domain.SystemConfig;
-import com.dili.points.domain.dto.CustomerApiDTO;
-import com.dili.points.domain.dto.CustomerCategoryPointsDTO;
-import com.dili.points.domain.dto.PointsDetailDTO;
-import com.dili.points.provider.FirmProvider;
-import com.dili.points.rpc.CustomerRpc;
-import com.dili.points.rpc.SystemConfigRpc;
-import com.dili.points.service.PointsDetailService;
-import com.dili.ss.base.BaseServiceImpl;
-import com.dili.ss.domain.BaseOutput;
-import com.dili.ss.dto.DTOUtils;
-import com.dili.ss.exception.AppException;
-import com.dili.ss.exception.BusinessException;
-
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.time.Duration;
@@ -40,18 +16,41 @@ import java.util.Map.Entry;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-import com.dili.uap.sdk.session.SessionContext;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
+
+import com.dili.points.component.AsyncTask;
+import com.dili.points.dao.CustomerCategoryPointsMapper;
+import com.dili.points.dao.CustomerPointsMapper;
+import com.dili.points.dao.PointsDetailMapper;
+import com.dili.points.dao.PointsExceptionMapper;
+import com.dili.points.domain.CustomerCategoryPoints;
+import com.dili.points.domain.CustomerPoints;
+import com.dili.points.domain.PointsDetail;
+import com.dili.points.domain.PointsException;
+import com.dili.points.domain.SystemConfig;
+import com.dili.points.domain.dto.CustomerCategoryPointsDTO;
+import com.dili.points.domain.dto.PointsDetailDTO;
+import com.dili.points.rpc.CustomerRpc;
+import com.dili.points.rpc.SystemConfigRpc;
+import com.dili.points.service.PointsDetailService;
+import com.dili.ss.base.BaseServiceImpl;
+import com.dili.ss.domain.BaseOutput;
+import com.dili.ss.domain.EasyuiPageOutput;
+import com.dili.ss.dto.DTOUtils;
+import com.dili.ss.exception.AppException;
+import com.dili.uap.sdk.session.SessionContext;
+
 import tk.mybatis.mapper.entity.Example;
 
 /**
  * 由MyBatis Generator工具自动生成 This file was generated on 2018-03-20 11:29:31.
+ * @author wangguofeng
+ * 
  */
 @Service
 public class PointsDetailServiceImpl extends BaseServiceImpl<PointsDetail, Long> implements PointsDetailService {
@@ -397,5 +396,17 @@ public class PointsDetailServiceImpl extends BaseServiceImpl<PointsDetail, Long>
 		this.insert(pointsDetail);
 		return pointsDetail;
 	}
+	
+    @Override
+    public EasyuiPageOutput listEasyuiPageByExample(PointsDetailDTO pointsDetail,boolean useProvider,List<String>firmCodes) throws Exception {
+    	
+    	//如果用户数据权限集全为空，则返回空结果集(不再进行数据库查询)
+    	if(firmCodes.isEmpty()) {
+    		return new EasyuiPageOutput(0,Collections.emptyList()); 
+    	}
+    	pointsDetail.setFirmCodes(firmCodes);
+	    EasyuiPageOutput easyuiPageOutput = super.listEasyuiPageByExample(pointsDetail, useProvider);
+	    return easyuiPageOutput;
+    }
 
 }

@@ -121,11 +121,12 @@ public class PointsRuleServiceImpl extends BaseServiceImpl<PointsRule, Long> imp
     }
     @Override
     public EasyuiPageOutput listEasyuiPageByExample(PointsRuleDTO pointsRule,boolean useProvider,List<String>firmCodes) throws Exception {
-    	pointsRule.setFirmCodes(firmCodes);
+    	
     	//如果用户数据权限集全为空，则返回空结果集(不再进行数据库查询)
     	if(firmCodes.isEmpty()) {
     		return new EasyuiPageOutput(0,Collections.emptyList()); 
     	}
+    	pointsRule.setFirmCodes(firmCodes);
 	    EasyuiPageOutput easyuiPageOutput = super.listEasyuiPageByExample(pointsRule, useProvider);
 	    return easyuiPageOutput;
     }

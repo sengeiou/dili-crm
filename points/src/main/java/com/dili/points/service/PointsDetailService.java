@@ -4,6 +4,7 @@ import com.dili.points.domain.PointsDetail;
 import com.dili.points.domain.dto.CustomerCategoryPointsDTO;
 import com.dili.points.domain.dto.PointsDetailDTO;
 import com.dili.ss.base.BaseService;
+import com.dili.ss.domain.EasyuiPageOutput;
 
 import java.util.List;
 import java.util.Map;
@@ -18,4 +19,13 @@ public interface PointsDetailService extends BaseService<PointsDetail, Long> {
 	int clear(String notes) ;
 	int batchInsertPointsDetailDTO(List<PointsDetailDTO> pointsDetail) ;
 	public int batchInsertPointsDetailDTO(Map<PointsDetailDTO,List<CustomerCategoryPointsDTO>> pointsDetailMap);
+	/**
+	 * 
+	 * @param pointsDetail 查询example
+	 * @param useProvider 是否使用provider
+	 * @param firmCodes 数据权限firmcode列表
+	 * @return
+	 * @throws Exception
+	 */
+	public EasyuiPageOutput listEasyuiPageByExample(PointsDetailDTO pointsDetail,boolean useProvider,List<String>firmCodes) throws Exception;
 }

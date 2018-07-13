@@ -11,17 +11,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
-import java.util.Objects;
 import java.util.Optional;
-import java.util.Set;
-import java.util.function.BiConsumer;
-import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.StringUtils;
-import org.apache.commons.lang3.tuple.MutablePair;
-import org.apache.commons.lang3.tuple.Pair;
-import org.apache.commons.lang3.tuple.Triple;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.amqp.core.Message;
@@ -37,7 +30,6 @@ import com.dili.points.domain.Category;
 import com.dili.points.domain.Customer;
 import com.dili.points.domain.Order;
 import com.dili.points.domain.OrderItem;
-import com.dili.points.domain.PointsDetail;
 import com.dili.points.domain.PointsRule;
 import com.dili.points.domain.RuleCondition;
 import com.dili.points.domain.dto.CustomerApiDTO;
@@ -58,6 +50,7 @@ import com.dili.ss.exception.AppException;
 
 /**
  * 积分监听组件 Created by asiamaster on 2017/11/7 0007.
+ * @author wangguofeng
  */
 @Component
 @ConditionalOnExpression("'${mq.enable}'=='true'")

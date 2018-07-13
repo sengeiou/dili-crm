@@ -75,8 +75,7 @@ public class PointsDetailController {
 	})
     @RequestMapping(value="/listPage.action", method = {RequestMethod.GET, RequestMethod.POST})
     public @ResponseBody String listPage(PointsDetailDTO pointsDetail) throws Exception {
-    	pointsDetail.setFirmCodes(this.firmProvider.getCurrentUserFirmCodes());
-        return pointsDetailService.listEasyuiPageByExample(pointsDetail, true).toString();
+    	return this.pointsDetailService.listEasyuiPageByExample(pointsDetail, true, this.firmProvider.getCurrentUserFirmCodes()).toString();
     }
 
     @ApiOperation(value="分页查询调整记录", notes = "分页查询调整记录，返回easyui分页信息")
@@ -86,8 +85,7 @@ public class PointsDetailController {
     @RequestMapping(value="/listAdjustRecordPage.action", method = {RequestMethod.GET, RequestMethod.POST})
     public @ResponseBody String listAdjustRecordPage(PointsDetailDTO pointsDetail) throws Exception {
         pointsDetail.setGenerateWay(50);
-        pointsDetail.setFirmCodes(this.firmProvider.getCurrentUserFirmCodes());
-        return pointsDetailService.listEasyuiPageByExample(pointsDetail, true).toString();
+        return this.pointsDetailService.listEasyuiPageByExample(pointsDetail, true, this.firmProvider.getCurrentUserFirmCodes()).toString();
     }
 
     
