@@ -709,7 +709,7 @@
         function loadCertificateTypeByOrganizationType(organizationType) {
             $.ajax({
                 type: "POST",
-                url: "${contextPath}/customer/getCertificateTypeComboboxData",
+                url: "${contextPath}/customer/getCertificateTypeComboboxData.action",
                 data: {"organizationType":organizationType},
                 processData:true,
                 dataType: "json",

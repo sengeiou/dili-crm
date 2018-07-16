@@ -5,10 +5,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import com.dili.crm.rpc.DataDictionaryRpc;
-import com.dili.ss.domain.BaseOutput;
-import com.dili.ss.dto.DTOUtils;
-import com.dili.uap.sdk.domain.DataDictionaryValue;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -22,10 +18,14 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.dili.crm.domain.dto.CustomerChartDTO;
 import com.dili.crm.domain.dto.CustomerVisitChartDTO;
+import com.dili.crm.rpc.DataDictionaryRpc;
 import com.dili.crm.service.ChartService;
 import com.dili.crm.service.CustomerService;
 import com.dili.crm.service.CustomerVisitService;
+import com.dili.ss.domain.BaseOutput;
+import com.dili.ss.dto.DTOUtils;
 import com.dili.ss.metadata.ValueProviderUtils;
+import com.dili.uap.sdk.domain.DataDictionaryValue;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
