@@ -1,8 +1,10 @@
 package com.dili.points.provider;
 
+import com.alibaba.fastjson.JSONObject;
 import com.dili.points.domain.Customer;
 import com.dili.points.domain.dto.CustomerApiDTO;
 import com.dili.points.rpc.CustomerRpc;
+import com.dili.points.rpc.DataAuthRpc;
 import com.dili.points.rpc.FirmRpc;
 import com.dili.ss.domain.BaseOutput;
 import com.dili.ss.dto.DTOUtils;
@@ -12,6 +14,7 @@ import com.dili.ss.metadata.ValuePairImpl;
 import com.dili.ss.metadata.ValueProvider;
 import com.dili.ss.metadata.provider.BatchDisplayTextProviderAdaptor;
 import com.dili.uap.sdk.domain.Firm;
+import com.dili.uap.sdk.domain.UserDataAuth;
 import com.dili.uap.sdk.glossary.DataAuthType;
 import com.dili.uap.sdk.redis.DataAuthRedis;
 import com.dili.uap.sdk.session.SessionContext;
@@ -29,6 +32,7 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.function.Function;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 /**
  * 市场提供者
@@ -37,6 +41,7 @@ import java.util.stream.Collectors;
 @Component
 public class FirmProvider implements ValueProvider {
  @Autowired DataAuthRedis dataAuthRedis;
+ @Autowired DataAuthRpc dataAuthRpc;
  @Autowired FirmRpc firmRpc;
  	
  	/**
@@ -89,32 +94,26 @@ public class FirmProvider implements ValueProvider {
 	 * @return
 	 */
 	private List<Firm> getCurrentUserFirms() {
-		List<Firm> resultList = new ArrayList<>();
-		List<Map> dataAuth = dataAuthRedis.dataAuth(DataAuthType.MARKET.getCode(),
-				SessionContext.getSessionContext().getUserTicket().getId());
-		if (dataAuth != null && !dataAuth.isEmpty()) {
-			Map<Long, Firm> idFirmMap = this.getAllFirms().stream()
-					.collect(Collectors.toMap(Firm::getId, Function.identity()));
-			for (Map map : dataAuth) {
-				Long id = Long.parseLong(String.valueOf(map.get("value")));
-				if (idFirmMap.containsKey(id)) {
-					resultList.add(idFirmMap.get(id));
-				}
-
+		
+		UserDataAuth userDataAuth=DTOUtils.newDTO(UserDataAuth.class);
+		userDataAuth.setUserId(SessionContext.getSessionContext().getUserTicket().getId());
+		userDataAuth.setRefCode(DataAuthType.MARKET.getCode());
+		
+		BaseOutput<List<Map>>out=dataAuthRpc.listUserDataAuthDetail(userDataAuth);
+		if(out.isSuccess()) {
+			Stream<Firm>stream=	out.getData().stream().flatMap(m->m.values().stream())
+			.map(json->{
+				JSONObject obj=(JSONObject)json;
+				Firm firm=DTOUtils.newDTO(Firm.class);
+				firm.setCode(String.valueOf(obj.get("code")));
+				firm.setName(String.valueOf(obj.get("name")));
+				return firm;
 			}
+			);
+			return stream.collect(Collectors.toList());
+		}else {
+			return Collections.emptyList();
 		}
-		return resultList;
 	}
-	
-	/**
-	 * 远程访问所有的Firm
-	 * @return
-	 */
-	private List<Firm> getAllFirms() {
-		BaseOutput<List<Firm>> out = firmRpc.listByExample(DTOUtils.newDTO(Firm.class));
-		if (out.isSuccess()) {
-			return out.getData();
-		}
-		return Collections.emptyList();
-	}
+
 }

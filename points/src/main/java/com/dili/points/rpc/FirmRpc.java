@@ -1,7 +1,5 @@
 package com.dili.points.rpc;
 
-import com.dili.points.domain.Customer;
-import com.dili.points.domain.dto.CustomerApiDTO;
 import com.dili.ss.domain.BaseOutput;
 import com.dili.ss.domain.EasyuiPageOutput;
 import com.dili.ss.retrofitful.annotation.POST;
