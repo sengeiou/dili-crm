@@ -7,6 +7,7 @@ import com.dili.crm.domain.Customer;
 import com.dili.crm.domain.Department;
 import com.dili.crm.domain.User;
 import com.dili.crm.domain.dto.*;
+import com.dili.crm.provider.FirmProvider;
 import com.dili.crm.rpc.CustomerPointsRpc;
 import com.dili.crm.rpc.DepartmentRpc;
 import com.dili.crm.rpc.UserRpc;
@@ -61,6 +62,7 @@ public class CustomerServiceImpl extends BaseServiceImpl<Customer, Long> impleme
 
 	@Autowired
 	private CustomerPointsRpc customerPointsRpc;
+	@Autowired FirmProvider firmProvider;
 
     @Override
     public List<Customer> list(Customer condtion) {
@@ -173,17 +175,29 @@ public class CustomerServiceImpl extends BaseServiceImpl<Customer, Long> impleme
 
 	@Override
 	public BaseOutput<List<CustomerChartDTO>> selectCustomersGroupByType() {
-		return BaseOutput.success().setData(this.getActualDao().selectCustomersGroupByType());
+		List<String>firmCodes = this.firmProvider.getCurrentUserFirmCodes();
+		if(firmCodes.isEmpty()) {
+			return new BaseOutput<>().setData(Collections.emptyList());
+		}
+		return BaseOutput.success().setData(this.getActualDao().selectCustomersGroupByType(firmCodes));
 	}
 
 	@Override
 	public BaseOutput<List<CustomerChartDTO>> selectCustomersGroupByMarket() {
-		return BaseOutput.<List<CustomerChartDTO>>success().<List<CustomerChartDTO>>setData(this.getActualDao().selectCustomersGroupByMarket());
+		List<String>firmCodes = this.firmProvider.getCurrentUserFirmCodes();
+		if(firmCodes.isEmpty()) {
+			return new BaseOutput<>().setData(Collections.emptyList());
+		}
+		return BaseOutput.<List<CustomerChartDTO>>success().<List<CustomerChartDTO>>setData(this.getActualDao().selectCustomersGroupByMarket(firmCodes));
 	}
 
 	@Override
 	public BaseOutput<List<CustomerChartDTO>> selectCustomersGroupByProfession() {
-		return BaseOutput.success().setData(this.getActualDao().selectCustomersGroupByProfession());
+		List<String>firmCodes = this.firmProvider.getCurrentUserFirmCodes();
+		if(firmCodes.isEmpty()) {
+			return new BaseOutput<>().setData(Collections.emptyList());
+		}
+		return BaseOutput.success().setData(this.getActualDao().selectCustomersGroupByProfession(firmCodes));
 	}
 
 	@Override
@@ -332,6 +346,11 @@ public class CustomerServiceImpl extends BaseServiceImpl<Customer, Long> impleme
 	 */
 	@Override
 	public List<Customer> listCustomerOperating(Set<String> types) {
+		List<String>firmCodes = this.firmProvider.getCurrentUserFirmCodes();
+		if(firmCodes.isEmpty()){
+			return Collections.emptyList();
+		}
+		
 		Example example = new Example(Customer.class);
 		Example.Criteria criteria = example.createCriteria();
 		/***  构造查询条件 ***/
@@ -339,6 +358,9 @@ public class CustomerServiceImpl extends BaseServiceImpl<Customer, Long> impleme
 		criteria.andIsNotNull("operatingLng").andIsNotNull("operatingLat");
 		//状态为 可用
 		criteria.andCondition("yn=1");
+		criteria.andCondition("market in('"+String.join("','", firmCodes)+"')");
+		
+		
 		if (CollectionUtils.isNotEmpty(types)){
 			StringBuilder condition = new StringBuilder();
 			condition.append("(");
@@ -375,6 +397,15 @@ public class CustomerServiceImpl extends BaseServiceImpl<Customer, Long> impleme
 	}
 
 
+	@Override
+	public List<Customer> listByExample(CustomerDto domain, List<String> firmCodes) {
+		if(firmCodes.isEmpty()) {
+			return Collections.emptyList();
+		}
+		domain.setFirmCodes(firmCodes);
+		return this.listByExample(domain);
+	}
+	
 	// ========================================== 私有方法 ==========================================
 
 	/**
@@ -464,5 +495,7 @@ public class CustomerServiceImpl extends BaseServiceImpl<Customer, Long> impleme
 		SimpleDateFormat dateFormat=new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 		return dateFormat.format(cal.getTime());
 	}
+
+
 
 }

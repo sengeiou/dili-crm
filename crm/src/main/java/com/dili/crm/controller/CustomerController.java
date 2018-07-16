@@ -6,6 +6,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.dili.crm.domain.Customer;
 import com.dili.crm.domain.Department;
 import com.dili.crm.domain.dto.MembersDto;
+import com.dili.crm.provider.FirmProvider;
 import com.dili.crm.rpc.CustomerPointsRpc;
 import com.dili.crm.rpc.DepartmentRpc;
 import com.dili.crm.rpc.MapRpc;
@@ -63,6 +64,7 @@ public class CustomerController {
 
 	@Autowired
 	private CustomerPointsRpc customerPointsRpc;
+	@Autowired FirmProvider firmProvider;
 
 	@Autowired
 	MapRpc mapRpc;

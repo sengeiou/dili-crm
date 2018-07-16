@@ -4,6 +4,7 @@ import com.dili.crm.dao.CustomerVisitMapper;
 import com.dili.crm.domain.Customer;
 import com.dili.crm.domain.CustomerVisit;
 import com.dili.crm.domain.dto.CustomerVisitChartDTO;
+import com.dili.crm.provider.FirmProvider;
 import com.dili.crm.service.BizNumberService;
 import com.dili.crm.service.CustomerVisitService;
 import com.dili.crm.service.VisitEventService;
@@ -18,6 +19,8 @@ import org.springframework.transaction.annotation.Transactional;
 import tk.mybatis.mapper.entity.Example;
 
 import javax.annotation.Resource;
+
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
@@ -36,6 +39,8 @@ public class CustomerVisitServiceImpl extends BaseServiceImpl<CustomerVisit, Lon
 
     @Autowired
     private BizNumberService bizNumberService;
+    @Autowired FirmProvider firmProvider;
+    
     @Override
     public BaseOutput insertSelectiveWithOutput(CustomerVisit customerVisit) {
         UserTicket userTicket = SessionContext.getSessionContext().getUserTicket();
@@ -51,12 +56,20 @@ public class CustomerVisitServiceImpl extends BaseServiceImpl<CustomerVisit, Lon
 
 	@Override
 	public BaseOutput<List<CustomerVisitChartDTO>> selectCustomerVisitGroupByMode() {
-		return BaseOutput.success().setData(this.getActualDao().selectCustomerVisitGroupByMode());
+		List<String>firmCodes=this.firmProvider.getCurrentUserFirmCodes();
+		if(firmCodes.isEmpty()) {
+			return new BaseOutput<>().setData(Collections.emptyList());
+		}
+		return BaseOutput.success().setData(this.getActualDao().selectCustomerVisitGroupByMode(firmCodes));
 	}
 
 	@Override
 	public BaseOutput<List<CustomerVisitChartDTO>> selectCustomerVisitGroupByState() {
-		return BaseOutput.success().setData(this.getActualDao().selectCustomerVisitGroupByState());
+		List<String>firmCodes=this.firmProvider.getCurrentUserFirmCodes();
+		if(firmCodes.isEmpty()) {
+			return new BaseOutput<>().setData(Collections.emptyList());
+		}
+		return BaseOutput.success().setData(this.getActualDao().selectCustomerVisitGroupByState(firmCodes));
 	}
 
     @Override

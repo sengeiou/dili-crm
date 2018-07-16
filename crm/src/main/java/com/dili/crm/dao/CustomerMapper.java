@@ -8,9 +8,9 @@ import com.dili.ss.base.MyMapper;
 import java.util.List;
 
 public interface CustomerMapper extends MyMapper<Customer> {
-	List<CustomerChartDTO>selectCustomersGroupByType();
-	List<CustomerChartDTO>selectCustomersGroupByMarket();
-	List<CustomerChartDTO>selectCustomersGroupByProfession();
+	List<CustomerChartDTO>selectCustomersGroupByType(List<String>firmCodes);
+	List<CustomerChartDTO>selectCustomersGroupByMarket(List<String>firmCodes);
+	List<CustomerChartDTO>selectCustomersGroupByProfession(List<String>firmCodes );
 
 	/**
 	 * 获取父客户id，以逗号分隔,包含自己

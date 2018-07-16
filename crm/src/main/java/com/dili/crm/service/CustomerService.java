@@ -3,6 +3,7 @@ package com.dili.crm.service;
 import com.dili.crm.domain.Customer;
 import com.dili.crm.domain.dto.CustomerAddressDto;
 import com.dili.crm.domain.dto.CustomerChartDTO;
+import com.dili.crm.domain.dto.CustomerDto;
 import com.dili.crm.domain.dto.MembersDto;
 import com.dili.ss.base.BaseService;
 import com.dili.ss.domain.BaseOutput;
@@ -110,4 +111,13 @@ public interface CustomerService extends BaseService<Customer, Long> {
 	 * @return
 	 */
 	List<Customer> listCustomerOperating(Set<String> types);
+	
+	
+	/**
+	 * 根据example和市场数据权限查询客户信息
+	 * @param domain
+	 * @param firmCodes
+	 * @return
+	 */
+	List<Customer> listByExample(CustomerDto domain,List<String>firmCodes);
 }

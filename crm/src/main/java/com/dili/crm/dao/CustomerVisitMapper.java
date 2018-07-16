@@ -8,6 +8,6 @@ import com.dili.crm.domain.dto.CustomerVisitChartDTO;
 import com.dili.ss.base.MyMapper;
 
 public interface CustomerVisitMapper extends MyMapper<CustomerVisit> {
-	public List<CustomerVisitChartDTO>selectCustomerVisitGroupByMode();
-	public List<CustomerVisitChartDTO>selectCustomerVisitGroupByState();
+	public List<CustomerVisitChartDTO>selectCustomerVisitGroupByMode(List<String>firmCodes);
+	public List<CustomerVisitChartDTO>selectCustomerVisitGroupByState(List<String>firmCodes);
 }

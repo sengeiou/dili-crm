@@ -3,6 +3,9 @@ package com.dili.crm.controller;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.dili.crm.domain.Customer;
+import com.dili.crm.domain.dto.CustomerDto;
+import com.dili.crm.domain.dto.MembersDto;
+import com.dili.crm.provider.FirmProvider;
 import com.dili.crm.rpc.DataDictionaryRpc;
 import com.dili.crm.rpc.SystemConfigRpc;
 import com.dili.crm.service.*;
@@ -41,6 +44,8 @@ public class IndexController {
     ChartService chartService;
     @Autowired
     private ValueProviderUtils valueProviderUtils;
+    
+    @Autowired FirmProvider firmProvider;
 
 //    @Autowired
 //    private AmqpTemplate amqpTemplate;
@@ -87,13 +92,13 @@ public class IndexController {
     @RequestMapping(value = "/listCustomers.action", method = {RequestMethod.GET, RequestMethod.POST})
     public
     @ResponseBody
-    Object listCustomers(Customer customer) throws Exception {
+    Object listCustomers(CustomerDto customer) throws Exception {
         customer.setPage(1);
         customer.setRows(10);
         customer.setYn(1);
         customer.setSort("created");
         customer.setOrder("DESC");
-        List<Customer> data = this.customerService.listByExample(customer);
+        List<Customer> data = this.customerService.listByExample(customer,this.firmProvider.getCurrentUserFirmCodes());
         Map<Object, Object> metadata = this.getCustomerMetadata();
         try {
             List<Map> list = ValueProviderUtils.buildDataByProvider(metadata, data);

@@ -142,23 +142,41 @@
     where id = #{id,jdbcType=BIGINT}
   </update>
   
-  <select id="selectCustomersGroupByType" parameterType="java.lang.Long" resultMap="CustomerChartResultMap">
+  <select id="selectCustomersGroupByType" parameterType="list" resultMap="CustomerChartResultMap">
     select type,count(1) AS `count`
     from customer
     where yn=1
+    <if test="list != null and list.size()>0">
+     AND market IN
+        <foreach collection="list" item="market" open="(" close=")" separator="," >
+                #{market}
+        </foreach>
+ 	</if>
     group by type
  </select>
   
-   <select id="selectCustomersGroupByMarket" parameterType="java.lang.Long" resultMap="CustomerChartResultMap">
+   <select id="selectCustomersGroupByMarket" parameterType="list" resultMap="CustomerChartResultMap">
     select market,count(1) AS `count`
     from customer
     where yn=1
+    <if test="list != null and list.size()>0">
+     AND market IN
+        <foreach collection="list" item="market" open="(" close=")" separator="," >
+                #{market}
+        </foreach>
+ 	</if>
     group by market
  </select>
-  <select id="selectCustomersGroupByProfession" parameterType="java.lang.Long" resultMap="CustomerChartResultMap">
+  <select id="selectCustomersGroupByProfession" parameterType="list" resultMap="CustomerChartResultMap">
     select profession,count(1) AS `count`
     from customer
     where yn=1
+    <if test="list != null and list.size()>0">
+     AND market IN
+        <foreach collection="list" item="market" open="(" close=")" separator="," >
+                #{market}
+        </foreach>
+ 	</if>
     group by profession
  </select>
 

@@ -90,14 +90,28 @@
     where id = #{id,jdbcType=BIGINT}
   </update>
   
- <select id="selectCustomerVisitGroupByMode" resultMap="CustomerVisitChartResultMap">
+ <select id="selectCustomerVisitGroupByMode" parameterType="list"  resultMap="CustomerVisitChartResultMap">
     select mode,count(1) AS `count`
     from customer_visit
+     <if test="list != null and list.size()>0">
+       WHERE exists(SELECT 1 from customer where customer_visit.customer_id=customer.id and customer.market IN 
+        <foreach collection="list" item="market" open="(" close=")" separator="," >
+                #{market}
+        </foreach>
+        )
+ 	</if>
     group by mode
  </select>
-  <select id="selectCustomerVisitGroupByState" resultMap="CustomerVisitChartResultMap">
+  <select id="selectCustomerVisitGroupByState" parameterType="list"  resultMap="CustomerVisitChartResultMap">
     select state,count(1) AS `count`
     from customer_visit
+     <if test="list != null and list.size()>0">
+       WHERE exists(SELECT 1 from customer where customer_visit.customer_id=customer.id and customer.market IN 
+        <foreach collection="list" item="market" open="(" close=")" separator="," >
+                #{market}
+        </foreach>
+        )
+ 	</if>
     group by state
  </select>
  
