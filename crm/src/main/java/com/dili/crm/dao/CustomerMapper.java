@@ -6,6 +6,8 @@ import com.dili.crm.domain.dto.CustomerChartDTO;
 import com.dili.ss.base.MyMapper;
 
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 public interface CustomerMapper extends MyMapper<Customer> {
 	List<CustomerChartDTO>selectCustomersGroupByType(List<String>firmCodes);
@@ -38,5 +40,18 @@ public interface CustomerMapper extends MyMapper<Customer> {
 	 * @return
 	 */
 	List<CustomerAddressDto> selectCustomerAddress();
+
+	/**
+	 * 批量用户的父客户为某一客户
+	 * @param params 参数，key-parentId(更新后的父客户ID),key-ids(需要执行更新操作的数据ID集);
+	 */
+	void updateParentIdById(Map<String,Object> params);
+
+	/**
+	 * 根据客户ID过滤客户ID数据
+	 * @param ids 需要排除的ID集
+	 * @return
+	 */
+	Set<Long> queryMemberIds(List ids);
 
 }

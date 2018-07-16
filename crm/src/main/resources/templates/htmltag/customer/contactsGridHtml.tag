@@ -1,14 +1,14 @@
 <p />
 <div id="contactsDiv" class="easyui-panel" style="width: 96%;" border="false" header="#contactsHeader">
     <% var insertFunction = "";
-    if(has(action) && action=="edit"){
+    if(has(action) && (action=="edit" || action=="add")){
         insertFunction = "openInsertContacts";
     }%>
     <#controls_panelHeader panelId="contactsDiv" headerId="contactsHeader" title="联系人" insertFun="${insertFunction}"></#controls_panelHeader>
     <!-- =========================================================联系人表格========================================================= -->
     <table class="easyui-datagrid" id="contactsGrid" style="height:150px;padding:0px;width:100%;" noheader="true" title="联系人" 
            pagination="false" rownumbers="false" remoteSort="false" data-options="loadMsg:0
-          <%if(has(action) && action=="edit"){%>,onDblClickRow:openUpdateContacts, onBeforeSelect:onBeforeSelectContacts,tools:[{iconCls:'icon-add',handler:openInsertContacts}]<%}%>"
+          <%if(has(action) && (action=="edit" || action=="add")){%>,onDblClickRow:openUpdateContacts, onBeforeSelect:onBeforeSelectContacts,tools:[{iconCls:'icon-add',handler:openInsertContacts}]<%}%>"
            loadMsg="数据加载中..." singleSelect="true" method="post" multiSort="false"
            align="center"  striped="false" idField="id" >
         <thead>
@@ -34,10 +34,10 @@
             <th width="12%" data-options="field:'address',   sortable:'true', order:'asc', align:'center', resizable:'true', fixed:'false'">
                 地址
             </th>
-            <th width="<%if(has(action) && action=="edit"){%>21%<%}else{%>29%<%}%>" data-options="field:'notes',   sortable:'true', order:'asc', align:'center', resizable:'true', fixed:'false'">
+            <th width="<%if(has(action) && (action=="edit" || action=="add")){%>21%<%}else{%>29%<%}%>" data-options="field:'notes',   sortable:'true', order:'asc', align:'center', resizable:'true', fixed:'false'">
                 备注
             </th>
-            <%if(has(action) && action=="edit"){%>
+            <%if(has(action) && (action=="edit" || action=="add")){%>
             <th width="8%" data-options="field:'contactsOpt', formatter:contactsOptFmt, sortable:'true', order:'asc', align:'center', resizable:'true', fixed:'false'">
                 操作
             </th>

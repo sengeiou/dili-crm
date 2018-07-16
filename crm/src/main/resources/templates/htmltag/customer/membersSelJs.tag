@@ -9,16 +9,15 @@
     }
 
     // 确认选择事件
-    function confirmMembersBtn(id) {
-        if(!id || id == null){
+    function confirmMembersBtn(row) {
+        if(!row || row == null){
             var selected = $('#selectMembersGrid').datagrid('getSelected');
             if (null == selected) {
                 $.messager.alert('警告','请选中一条数据');
                 return;
             }
-            id = selected.id;
         }
-        saveOrUpdateMembers(id);
+        saveOrUpdateMembers(row);
         closeMembersSelectDlg();
     }
 

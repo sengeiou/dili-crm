@@ -1,10 +1,8 @@
 package com.dili.crm.controller;
 
-import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.dili.crm.domain.Customer;
-import com.dili.crm.domain.Department;
 import com.dili.crm.domain.dto.MembersDto;
 import com.dili.crm.provider.FirmProvider;
 import com.dili.crm.rpc.CustomerPointsRpc;
@@ -14,6 +12,7 @@ import com.dili.crm.rpc.UserRpc;
 import com.dili.crm.service.CustomerService;
 import com.dili.ss.domain.BaseOutput;
 import com.dili.ss.domain.EasyuiPageOutput;
+import com.dili.ss.dto.DTOUtils;
 import com.dili.ss.metadata.ValuePair;
 import com.dili.ss.metadata.ValueProviderUtils;
 import com.dili.uap.sdk.domain.UserTicket;
@@ -135,10 +134,18 @@ public class CustomerController {
 		if (userTicket == null) {
 			throw new RuntimeException("未登录");
 		}
+		Customer customer = DTOUtils.newDTO(Customer.class);
+		customer.setName("temp");
+		customer.setYn(0);
+		customer.setOwnerId(userTicket.getId());
+		customerService.insert(customer);
+		modelMap.put("customerId", customer.getId());
+		modelMap.put("customer",JSONObject.toJSONString(customer));
+		modelMap.put("action", "add");
 		//页面上用于展示拥有者和新增时获取拥有者id
 		modelMap.put("user", userTicket);
 		//页面上用于展示拥有者和新增时获取拥有者id
-		modelMap.put("department", departmentRpc.get(userTicket.getDepartmentId()));
+		modelMap.put("department", departmentRpc.get(userTicket.getDepartmentId()).getData());
 		return "customer/edit";
 	}
 
@@ -186,8 +193,8 @@ public class CustomerController {
 		@ApiImplicitParam(name="Customer", paramType="form", value = "Customer的form信息", required = true, dataType = "string")
 	})
     @RequestMapping(value="/insert.action", method = {RequestMethod.GET, RequestMethod.POST})
-    public @ResponseBody BaseOutput insert(Customer customer) {
-        return customerService.insertSelectiveWithOutput(customer);
+    public @ResponseBody BaseOutput insert(Customer customer,Long members[]) {
+        return customerService.insertSelectiveWithOutput(customer,members);
     }
 
     @ApiOperation("修改Customer")
@@ -240,7 +247,7 @@ public class CustomerController {
 	})
 	@RequestMapping(value="/listMembersPage.action", method = {RequestMethod.GET, RequestMethod.POST})
 	public @ResponseBody String listMembersPage(MembersDto membersDto) throws Exception {
-		return customerService.listMembersPage(membersDto).toString();
+		return customerService.listMembersPage(membersDto);
 	}
 
 	@ApiOperation("删除成员客户")

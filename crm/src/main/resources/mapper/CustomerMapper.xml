@@ -196,4 +196,20 @@
     select c.id, c.name,c.type, a.lat, a.lng from customer c, address a where c.id = a.customer_id and a.is_default = 1 and c.yn = 1 and a.lat is not null and a.lng is not null
   </select>
 
+  <!-- 批量用户的父客户为某一客户 -->
+  <update id="updateParentIdById" parameterType="map">
+      UPDATE customer set parent_id =#{parentId}  where id in
+    <foreach collection="ids" item="item" index="index" open="(" close=")" separator=",">
+      #{item}
+    </foreach>
+  </update>
+
+  <!-- 根据客户ID过滤客户ID数据 -->
+  <select id="queryMemberIds"  resultType="long">
+    select c.id from customer c where c.id NOT in
+    <foreach collection="list" item="item" index="index" open="(" close=")" separator=",">
+      #{item}
+    </foreach>
+  </select>
+
 </mapper>

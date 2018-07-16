@@ -54,7 +54,7 @@
         }
 
     }
-    <%if(has(action) && action=="edit"){%>
+    <%if(has(action) && (action=="edit" || action=="add")){%>
         //选择地址之前切换反相色的图标
         function onBeforeSelectAddress(index, row) {
             //获取当前选中的行索引
@@ -152,17 +152,17 @@
                 if (r){
                     $.ajax({
                         type: "POST",
-                        url: "${contextPath}/address/delete",
+                        url: "${contextPath}/address/delete.action",
                         data: {id:selectedId},
                         processData:true,
                         dataType: "json",
                         async : true,
-                        success: function (data) {
-                            if(data.code=="200"){
+                        success: function (ret) {
+                            if(ret.success){
                                 $("#addressGrid").datagrid("reload");
                                 $('#addressDlg').dialog('close');
                             }else{
-                                $.messager.alert('错误',data.result);
+                                $.messager.alert('错误',ret.result);
                             }
                         },
                         error: function(){

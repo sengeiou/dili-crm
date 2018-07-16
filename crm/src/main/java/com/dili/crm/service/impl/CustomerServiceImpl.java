@@ -8,6 +8,7 @@ import com.dili.crm.domain.Department;
 import com.dili.crm.domain.User;
 import com.dili.crm.domain.dto.*;
 import com.dili.crm.provider.FirmProvider;
+import com.dili.crm.provider.YnProvider;
 import com.dili.crm.rpc.CustomerPointsRpc;
 import com.dili.crm.rpc.DepartmentRpc;
 import com.dili.crm.rpc.UserRpc;
@@ -26,6 +27,7 @@ import com.dili.uap.sdk.session.SessionContext;
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
 import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -94,7 +96,8 @@ public class CustomerServiceImpl extends BaseServiceImpl<Customer, Long> impleme
     }
 
     @Override
-    public BaseOutput insertSelectiveWithOutput(Customer customer) {
+	@Transactional(rollbackFor = Exception.class)
+    public BaseOutput insertSelectiveWithOutput(Customer customer,Long memberIds[]) {
         UserTicket userTicket = SessionContext.getSessionContext().getUserTicket();
         if(userTicket == null){
             return BaseOutput.failure("新增失败，登录超时");
@@ -113,10 +116,18 @@ public class CustomerServiceImpl extends BaseServiceImpl<Customer, Long> impleme
 	    customer.setSourceSystem("crm");
         customer.setCreatedId(userTicket.getId());
         customer.setOwnerId(userTicket.getId());
+		customer.setYn(1);
         //查询当前用户所属的部门
-		customer.setDepartment(String.valueOf(departmentRpc.get(userTicket.getDepartmentId())));
-        super.insertSelective(customer);
-        return BaseOutput.success("新增成功").setData(customer);
+		Department department = departmentRpc.get(userTicket.getDepartmentId()).getData();
+		if (null != department){
+			customer.setDepartment(String.valueOf(department.getId()));
+		}
+
+        //由于在进入新增页面时，已经预生成了用户，所以，此处直接用修改方法
+		super.updateSelective(customer);
+		//更改父客户信息
+		BaseOutput baseOutput = updateParentIdById(customer.getId(), memberIds);
+		return baseOutput.setData(customer);
     }
 
     @Override
@@ -249,6 +260,11 @@ public class CustomerServiceImpl extends BaseServiceImpl<Customer, Long> impleme
 
 	@Override
     public String listMembersPage(MembersDto membersDto) throws Exception {
+    	//如果传入的当前用户为空，则查询所有
+		if (null == membersDto || null == membersDto.getId()) {
+			membersDto.setYn(1);
+			return listEasyuiPageByExample(membersDto, false).toString();
+		}
         String parentIdsStr = getActualDao().getParentCustomers(membersDto.getId());
         if(StringUtils.isBlank(parentIdsStr)) {
         	return null;
@@ -350,7 +366,7 @@ public class CustomerServiceImpl extends BaseServiceImpl<Customer, Long> impleme
 		if(firmCodes.isEmpty()){
 			return Collections.emptyList();
 		}
-		
+
 		Example example = new Example(Customer.class);
 		Example.Criteria criteria = example.createCriteria();
 		/***  构造查询条件 ***/
@@ -359,8 +375,8 @@ public class CustomerServiceImpl extends BaseServiceImpl<Customer, Long> impleme
 		//状态为 可用
 		criteria.andCondition("yn=1");
 		criteria.andCondition("market in('"+String.join("','", firmCodes)+"')");
-		
-		
+
+
 		if (CollectionUtils.isNotEmpty(types)){
 			StringBuilder condition = new StringBuilder();
 			condition.append("(");
@@ -405,7 +421,7 @@ public class CustomerServiceImpl extends BaseServiceImpl<Customer, Long> impleme
 		domain.setFirmCodes(firmCodes);
 		return this.listByExample(domain);
 	}
-	
+
 	// ========================================== 私有方法 ==========================================
 
 	/**
@@ -497,5 +513,41 @@ public class CustomerServiceImpl extends BaseServiceImpl<Customer, Long> impleme
 	}
 
 
+
+	/**
+	 * 批量用户的父客户为某一客户
+	 * @param parentId 父客户ID
+	 * @param ids 需要更新的客户ID
+	 */
+	private BaseOutput updateParentIdById(Long parentId,Long ids[]){
+		if(null != parentId && null != ids && ids.length > 0){
+			Set<Long> memberIds = listMemberIds(parentId);
+			for (Long id : ids) {
+				 if (!memberIds.contains(id)){
+				 	  return BaseOutput.success("成员客户信息异常，成员客户保存失败");
+				 }
+			}
+			Map params = Maps.newHashMap();
+			params.put("parentId",parentId);
+			params.put("ids",ids);
+			getActualDao().updateParentIdById(params);
+		}
+		return BaseOutput.success("保存成功");
+
+	}
+
+	/**
+	 * 根据客户ID查询该客户的可选成员列表的客户ID集
+	 * @param id 当前客户ID
+	 * @return
+	 */
+	private Set<Long> listMemberIds(Long id){
+		String parentIdsStr = this.getActualDao().getParentCustomers(id);
+		if(StringUtils.isBlank(parentIdsStr)) {
+			return null;
+		}
+		List<String> parentIds = Arrays.asList(parentIdsStr.split(","));
+		return getActualDao().queryMemberIds(parentIds);
+	}
 
 }

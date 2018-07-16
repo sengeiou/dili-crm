@@ -11,7 +11,7 @@
             $("#contactsGrid").datagrid("load",  bindGridMeta2Data("contactsGrid", {"customerId":selected["id"]}));
         <%}%>
     }
-    <%if(has(action) && action=="edit"){%>
+    <%if(has(action) && (action=="edit" || action=="add")){%>
     //选择联系人之前切换反相色的图标
     function onBeforeSelectContacts(index, row) {
         //获取当前选中的行索引
@@ -76,11 +76,11 @@
             processData:true,
             dataType: "json",
             async : true,
-            success: function (data) {
-                if(data.code=="200"){
+            success: function (ret) {
+                if(ret.success){
                     $("#contactsGrid").datagrid("reload");
                 }else{
-                    $.messager.alert('错误',data.result);
+                    $.messager.alert('错误',ret.result);
                 }
             },
             error: function(){
@@ -92,6 +92,7 @@
 
     //根据主键删除联系人
     function delContacts(id) {
+        debugger;
         var selectedId;
         if(id){
             selectedId = id;
@@ -107,7 +108,7 @@
             if (r){
                 $.ajax({
                     type: "POST",
-                    url: "${contextPath}/contacts/delete",
+                    url: "${contextPath}/contacts/delete.action",
                     data: {id:selectedId},
                     processData:true,
                     dataType: "json",

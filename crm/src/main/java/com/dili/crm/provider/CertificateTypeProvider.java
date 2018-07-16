@@ -1,9 +1,13 @@
 package com.dili.crm.provider;
 
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
 import com.dili.ss.metadata.FieldMeta;
 import com.dili.ss.metadata.ValuePair;
+import com.google.common.collect.Maps;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
+import org.springframework.util.CollectionUtils;
 
 import java.util.Iterator;
 import java.util.List;
@@ -26,6 +30,14 @@ public class CertificateTypeProvider extends DataDictionaryValueProvider {
      */
     @Override
     public List<ValuePair<?>> getLookupList(Object value, Map paramMap, FieldMeta fieldMeta){
+        if (null == paramMap){
+            paramMap = Maps.newHashMap();
+        }
+        if (!paramMap.containsKey(QUERY_PARAMS_KEY)){
+            JSONObject json = new JSONObject();
+            json.put(DD_CODE_KEY,getDdCode(null));
+            paramMap.put(QUERY_PARAMS_KEY,json.toJSONString());
+        }
         List<ValuePair<?>> valuePairs = super.getLookupList(value, paramMap, fieldMeta);
         Object organizationType = paramMap.get("organizationType");
         if(organizationType == null || "".equals(organizationType)){

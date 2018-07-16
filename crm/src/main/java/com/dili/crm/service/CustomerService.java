@@ -20,10 +20,11 @@ public interface CustomerService extends BaseService<Customer, Long> {
 
 	/**
 	 * 按需插入客户，返回BaseOutput
-	 * @param customer
+	 * @param customer 客户信息
+	 * @param memberIds 成员客户ID
 	 * @return
 	 */
-	BaseOutput insertSelectiveWithOutput(Customer customer);
+	BaseOutput insertSelectiveWithOutput(Customer customer,Long memberIds[]);
 
 	/**
 	 * 按需修改客户，返回BaseOutput

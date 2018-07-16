@@ -13,7 +13,7 @@
         <%}%>
     }
 
-    <%if(has(action) && action=="edit"){%>
+    <%if(has(action) && (action=="edit" || action=="add")){%>
     //选择车辆之前切换反相色的图标
     function onBeforeSelectVehicle(index, row) {
         //获取当前选中的行索引
@@ -109,7 +109,7 @@
             if (r){
                 $.ajax({
                     type: "POST",
-                    url: "${contextPath}/vehicle/delete",
+                    url: "${contextPath}/vehicle/delete.action",
                     data: {id:selectedId},
                     processData:true,
                     dataType: "json",

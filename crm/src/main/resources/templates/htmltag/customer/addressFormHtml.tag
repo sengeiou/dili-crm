@@ -6,20 +6,20 @@
         <table style="width: 100%;height: 99%;" align="center">
             <tr style="height: 20%;width: 100%;">
                 <td style="width:20%;">
-                    <input class="easyui-textbox" name="_address_name" id="_address_name" required="true" style="width: 100%;" data-options="labelWidth:'50',labelAlign:'right',label:'&lowast;名称:', validType:'length[1,40]'<%if(has(action) && action!="edit"){%>,disabled:true<%}%>" />
+                    <input class="easyui-textbox" name="_address_name" id="_address_name" required="true" style="width: 100%;" data-options="labelWidth:'50',labelAlign:'right',label:'&lowast;名称:', validType:'length[1,40]'<%if(has(action) && (action!="edit" && action!="add")){%>,disabled:true<%}%>" />
                 </td>
                 <td  width="15%">
-                    <input class="easyui-textbox" name="_address_isDefault" id="_address_isDefault" panelWidth="auto" style="width: 90%;" required="true" panelHeight="auto" label="&lowast;是否默认:"  data-options="labelAlign:'right',validType:'length[1,20]', editable:false<%if(has(action) && action!="edit"){%>,disabled:true,hasDownArrow:false<%}%>"/>
+                    <input class="easyui-textbox" name="_address_isDefault" id="_address_isDefault" panelWidth="auto" style="width: 90%;" required="true" panelHeight="auto" label="&lowast;是否默认:"  data-options="labelAlign:'right',validType:'length[1,20]', editable:false<%if(has(action) && (action!="edit" && action!="add")){%>,disabled:true,hasDownArrow:false<%}%>"/>
                     <#comboProvider _id="_address_isDefault" _provider='isDefaultProvider' />
                 </td>
                 <td  width="20%">
                     <input class="easyui-textbox" name="_address_city" id="_address_city" panelWidth="auto" style="width: 100%;" required="true" panelHeight="auto" label="&lowast;所在城市:"  data-options="labelAlign:'right',validType:'length[1,20]',disabled:true, editable:false"/>
                 </td>
                 <td  width="33%">
-                    <input class="easyui-textbox" name="_address_address" id="_address_address" style="width: 100%;" required="true"  data-options="labelAlign:'right',label:'&lowast;地址:', validType:'length[1,250]'<%if(has(action) && action!="edit"){%>,disabled:true<%}%>" />
+                    <input class="easyui-textbox" name="_address_address" id="_address_address" style="width: 100%;" required="true"  data-options="labelAlign:'right',label:'&lowast;地址:', validType:'length[1,250]'<%if(has(action) && (action!="edit" && action!="add")){%>,disabled:true<%}%>" />
                 </td>
                 <td  width="10%">
-                    <%if(has(action) && action=="edit"){%>
+                    <%if(has(action) && (action=="edit" || action=="add")){%>
                         <a href="#" class="easyui-linkbutton" id="queryBtn" data-options="width:80" iconCls="icon-ok"
                            onclick="saveOrUpdateAddress()">确定</a>
                     <%}%>
@@ -50,7 +50,7 @@
         return $('#'+id);
     }
     //只有在修改操作时，才绑定地图的相关事件
-    <%if(has(action) && action=="edit"){%>
+    <%if(has(action) && (action=="edit" || action=="add")){%>
         //建立一个自动完成的对象
         var ac = new BMap.Autocomplete(
             {"input" : "suggestId"

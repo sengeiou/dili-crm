@@ -54,7 +54,7 @@ public class VehicleController {
     @ApiImplicitParams({
 		@ApiImplicitParam(name="Vehicle", paramType="form", value = "Vehicle的form信息", required = true, dataType = "string")
 	})
-    @RequestMapping(value="/insert", method = {RequestMethod.GET, RequestMethod.POST})
+    @RequestMapping(value="/insert.action", method = {RequestMethod.GET, RequestMethod.POST})
     public @ResponseBody BaseOutput insert(Vehicle vehicle) {
         vehicleService.insertSelective(vehicle);
         return BaseOutput.success("新增成功");
