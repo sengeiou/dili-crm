@@ -1,8 +1,11 @@
 package com.dili.crm.domain.dto;
 
 import com.dili.crm.domain.Customer;
+import com.dili.ss.domain.annotation.Operator;
 
+import javax.persistence.Column;
 import javax.persistence.Table;
+import java.util.List;
 
 /**
  * 由MyBatis Generator工具自动生成
@@ -19,5 +22,10 @@ public interface CustomerTreeDto extends Customer {
 	String getState();
 
 	void setState(String state);
+
+	@Column(name = "`market`")
+	@Operator(Operator.IN)
+	List<String> getFirmCodes();
+	void setFirmCodes(List<String> firmCodes);
 
 }

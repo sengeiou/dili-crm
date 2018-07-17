@@ -8,7 +8,6 @@ import com.dili.crm.provider.FirmProvider;
 import com.dili.crm.rpc.CustomerPointsRpc;
 import com.dili.crm.rpc.DepartmentRpc;
 import com.dili.crm.rpc.MapRpc;
-import com.dili.crm.rpc.UserRpc;
 import com.dili.crm.service.CustomerService;
 import com.dili.ss.domain.BaseOutput;
 import com.dili.ss.domain.EasyuiPageOutput;
@@ -54,10 +53,7 @@ public class CustomerController {
     CustomerService customerService;
 	@Autowired
 	private ValueProviderUtils valueProviderUtils;
-
-	@Autowired
-	private UserRpc userRpc;
-
+	
 	@Autowired
 	private DepartmentRpc departmentRpc;
 

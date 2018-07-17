@@ -6,5 +6,10 @@ package com.dili.crm.constant;
  */
 public class CrmConstants {
 
+    /**
+     * 需要扫描多长时间以前的数据(单位秒)
+     * 默认24小时以前的数据
+     */
+    public static Integer scanTime = 60 * 60 * 24;
 
 }

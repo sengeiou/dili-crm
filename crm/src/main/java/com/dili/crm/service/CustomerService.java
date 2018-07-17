@@ -121,4 +121,10 @@ public interface CustomerService extends BaseService<Customer, Long> {
 	 * @return
 	 */
 	List<Customer> listByExample(CustomerDto domain,List<String>firmCodes);
+
+	/**
+	 * 根据客户ID集，级联删除客户相关信息
+	 * @param ids 客户ID集合
+	 */
+	Integer deleteWithCascade(List<Long> ids);
 }

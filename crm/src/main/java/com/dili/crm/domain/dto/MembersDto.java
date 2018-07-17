@@ -23,5 +23,11 @@ public interface MembersDto extends Customer {
 	@Operator(Operator.NOT_IN)
 	List<String> getIdNotIn();
 	void setIdNotIn(List<String> idNotIn);
+	
+	@Column(name = "`market`")
+	@Operator(Operator.IN)
+	List<String> getFirmCodes();
+	void setFirmCodes(List<String> firmCodes);
+
 
 }

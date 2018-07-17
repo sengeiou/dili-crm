@@ -212,4 +212,27 @@
     </foreach>
   </select>
 
+  <delete id="deleteWithCascade">
+    <!-- 删除客户信息本身 -->
+    DELETE from customer where id IN
+    <foreach collection="list" item="item" index="index" open="(" close=")" separator=",">
+      #{item}
+    </foreach>;
+    <!-- 删除客户地址信息 -->
+    DELETE from address where customer_id IN
+    <foreach collection="list" item="item" index="index" open="(" close=")" separator=",">
+      #{item}
+    </foreach>;
+    <!-- 删除客户联系人信息 -->
+    DELETE from contacts where customer_id IN
+    <foreach collection="list" item="item" index="index" open="(" close=")" separator=",">
+      #{item}
+    </foreach>;
+    <!-- 删除客户车俩信息 -->
+    DELETE from vehicle where customer_id IN
+    <foreach collection="list" item="item" index="index" open="(" close=")" separator=",">
+      #{item}
+    </foreach>;
+  </delete>
+
 </mapper>

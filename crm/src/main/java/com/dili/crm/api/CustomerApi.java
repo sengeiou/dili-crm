@@ -1,19 +1,29 @@
 package com.dili.crm.api;
 
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
+import com.dili.crm.constant.CrmConstants;
 import com.dili.crm.domain.Customer;
 import com.dili.crm.domain.dto.CustomerApiDTO;
+import com.dili.crm.domain.dto.CustomerDto;
 import com.dili.crm.service.CustomerService;
 import com.dili.ss.domain.BaseOutput;
 import com.dili.ss.domain.EasyuiPageOutput;
+import com.dili.ss.dto.DTOUtils;
+import com.dili.ss.quartz.domain.ScheduleMessage;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
+import org.apache.commons.collections4.CollectionUtils;
+import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.time.DateUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Date;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * <B>客户信息相关的API</B>
@@ -46,5 +56,32 @@ public class CustomerApi {
     public @ResponseBody
     BaseOutput<EasyuiPageOutput> listPage(CustomerApiDTO customer) throws Exception {
         return BaseOutput.success().setData(customerService.listEasyuiPageByExample(customer, true));
+    }
+
+    @ApiOperation(value = "按照条件扫描临时用户数据", notes = "按照条件扫描临时用户数据，并级联删除")
+    @ApiImplicitParams({ @ApiImplicitParam(name = "scheduleMessage", paramType = "form", value = "scheduleMessage消息", required = false, dataType = "string") })
+    @RequestMapping(value = "/scanTempCustomer.api", method = { RequestMethod.GET, RequestMethod.POST })
+    @ResponseBody
+    public BaseOutput scanTempCustomer(@RequestBody ScheduleMessage scheduleMessage) throws Exception {
+        CustomerDto customer = DTOUtils.newDTO(CustomerDto.class);
+        customer.setYn(0);
+        customer.setEqualName("temp");
+        if (null != scheduleMessage && StringUtils.isNotBlank(scheduleMessage.getJobData())) {
+            JSONObject object = JSON.parseObject(scheduleMessage.getJobData());
+            //数据库中配置的扫描多长时间以前的数据(单位：小时)
+            if (object.containsKey("scanTime")) {
+                Integer time = object.getInteger("scanTime");
+                if (null != time && time.intValue() > 0) {
+                    CrmConstants.scanTime = time * 60 * 60;
+                }
+            }
+        }
+        customer.setCreatedEnd(DateUtils.addSeconds(new Date(), 0 - CrmConstants.scanTime));
+        List<Customer> customers = customerService.listByExample(customer);
+        if (CollectionUtils.isNotEmpty(customers)){
+            List<Long> ids = customers.stream().map(Customer::getId).collect(Collectors.toList());
+            customerService.deleteWithCascade(ids);
+        }
+        return BaseOutput.success();
     }
 }

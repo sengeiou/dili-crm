@@ -8,7 +8,6 @@ import com.dili.crm.domain.Department;
 import com.dili.crm.domain.User;
 import com.dili.crm.domain.dto.*;
 import com.dili.crm.provider.FirmProvider;
-import com.dili.crm.provider.YnProvider;
 import com.dili.crm.rpc.CustomerPointsRpc;
 import com.dili.crm.rpc.DepartmentRpc;
 import com.dili.crm.rpc.UserRpc;
@@ -83,6 +82,10 @@ public class CustomerServiceImpl extends BaseServiceImpl<Customer, Long> impleme
 		    customerTreeDto.mset(IDTO.NULL_VALUE_FIELD, "parent_id");
 	    }
 	    domain.setYn(1);
+	    //如果未传入市场信息，则只能查询当前用户有数据权限的市场的数据
+		if (StringUtils.isBlank(customerTreeDto.getMarket())){
+			customerTreeDto.setFirmCodes(firmProvider.getCurrentUserFirmCodes());
+		}
 	    EasyuiPageOutput easyuiPageOutput = super.listEasyuiPageByExample(customerTreeDto, useProvider);
 	    for(Object rowObj : easyuiPageOutput.getRows()) {
 		    if(DTOUtils.isDTOProxy(rowObj)){
@@ -273,6 +276,10 @@ public class CustomerServiceImpl extends BaseServiceImpl<Customer, Long> impleme
         List<String> parentIds = Arrays.asList(parentIdsStr.split(","));
 	    membersDto.setIdNotIn(parentIds);
         membersDto.setId(null);
+		//如果未传入市场信息，则只能查询当前用户有数据权限的市场的数据
+		if (StringUtils.isBlank(membersDto.getMarket())){
+			membersDto.setFirmCodes(firmProvider.getCurrentUserFirmCodes());
+		}
         //由于查询条件中有or parent_id is null，所以这里只能自己构建Example了，以后利刃框架会支持or查询
 	    Example example = new Example(Customer.class);
 	    //这里构建name和id not in的等条件部分
@@ -310,6 +317,10 @@ public class CustomerServiceImpl extends BaseServiceImpl<Customer, Long> impleme
 		membersDto.setIdNotIn(childIds);
 		membersDto.setId(null);
 		membersDto.setYn(1);
+		//如果未传入市场信息，则只能查询当前用户有数据权限的市场的数据
+		if (StringUtils.isBlank(membersDto.getMarket())){
+			membersDto.setFirmCodes(firmProvider.getCurrentUserFirmCodes());
+		}
 		return super.listEasyuiPageByExample(membersDto, true).toString();
 	}
 
@@ -420,6 +431,15 @@ public class CustomerServiceImpl extends BaseServiceImpl<Customer, Long> impleme
 		}
 		domain.setFirmCodes(firmCodes);
 		return this.listByExample(domain);
+	}
+
+	@Override
+	@Transactional(rollbackFor = Exception.class)
+	public Integer deleteWithCascade(List<Long> ids) {
+		if (CollectionUtils.isNotEmpty(ids)) {
+			return getActualDao().deleteWithCascade(ids);
+		}
+		return 0;
 	}
 
 	// ========================================== 私有方法 ==========================================
