@@ -60,14 +60,17 @@ public class IndexController {
 //        amqpTemplate.convertAndSend(RabbitConfiguration.DEFAULT_TOPIC_EXCHANGE, RabbitConfiguration.TOPIC_ROUTE_KEY, "客户x");
 
         int clientRefreshFrequency = this.getRefreshFrequency();
+        String firmCode = this.firmProvider.getCurrentUserDefaultFirmCode();
         modelMap.put("startDate", this.calStartDate());
         modelMap.put("endDate", this.calEndDate());
-        modelMap.put("indexAbnormalOrdersChartUrl", this.chartService.getIndexAbnormalOrdersChartUrl());
-        modelMap.put("indexPurchasingTopChartUrl", this.chartService.getIndexPurchasingTopChartUrl());
-        modelMap.put("indexSalesTopChartUrl", this.chartService.getIndexSalesTopChartUrl());
+        modelMap.put("indexAbnormalOrdersChartUrl", this.chartService.getIndexAbnormalOrdersChartUrl(firmCode));
+        modelMap.put("indexPurchasingTopChartUrl", this.chartService.getIndexPurchasingTopChartUrl(firmCode));
+        modelMap.put("indexSalesTopChartUrl", this.chartService.getIndexSalesTopChartUrl(firmCode));
         modelMap.put("chartServer", findChartServer());
-        modelMap.put("customerAddress", JSONArray.toJSONString(customerService.listCustomerOperating(null)));
+        modelMap.put("customerAddress", JSONArray.toJSONString(customerService.listCustomerOperating(null,null)));
         modelMap.put("clientRefreshFrequency", clientRefreshFrequency);
+        modelMap.put("firmCode", firmCode);
+        
         Map<String,Object> params =  Maps.newHashMap();
         JSONObject queryParams = new JSONObject();
         queryParams.put("dd_code", "customer_type");

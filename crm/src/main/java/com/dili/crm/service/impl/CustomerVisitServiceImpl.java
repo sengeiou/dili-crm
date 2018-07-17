@@ -55,8 +55,8 @@ public class CustomerVisitServiceImpl extends BaseServiceImpl<CustomerVisit, Lon
     }
 
 	@Override
-	public BaseOutput<List<CustomerVisitChartDTO>> selectCustomerVisitGroupByMode() {
-		List<String>firmCodes=this.firmProvider.getCurrentUserFirmCodes();
+	public BaseOutput<List<CustomerVisitChartDTO>> selectCustomerVisitGroupByMode(String firmCode) {
+		List<String>firmCodes = this.firmProvider.getCurrentUserAvaliableFirmCodes(firmCode);
 		if(firmCodes.isEmpty()) {
 			return new BaseOutput<>().setData(Collections.emptyList());
 		}
@@ -64,8 +64,8 @@ public class CustomerVisitServiceImpl extends BaseServiceImpl<CustomerVisit, Lon
 	}
 
 	@Override
-	public BaseOutput<List<CustomerVisitChartDTO>> selectCustomerVisitGroupByState() {
-		List<String>firmCodes=this.firmProvider.getCurrentUserFirmCodes();
+	public BaseOutput<List<CustomerVisitChartDTO>> selectCustomerVisitGroupByState(String firmCode) {
+		List<String>firmCodes = this.firmProvider.getCurrentUserAvaliableFirmCodes(firmCode);
 		if(firmCodes.isEmpty()) {
 			return new BaseOutput<>().setData(Collections.emptyList());
 		}

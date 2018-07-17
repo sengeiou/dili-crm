@@ -185,8 +185,8 @@ public class CustomerServiceImpl extends BaseServiceImpl<Customer, Long> impleme
     }
 
 	@Override
-	public BaseOutput<List<CustomerChartDTO>> selectCustomersGroupByType() {
-		List<String>firmCodes = this.firmProvider.getCurrentUserFirmCodes();
+	public BaseOutput<List<CustomerChartDTO>> selectCustomersGroupByType(String firmCode) {
+		List<String>firmCodes = this.firmProvider.getCurrentUserAvaliableFirmCodes(firmCode);
 		if(firmCodes.isEmpty()) {
 			return new BaseOutput<>().setData(Collections.emptyList());
 		}
@@ -194,8 +194,8 @@ public class CustomerServiceImpl extends BaseServiceImpl<Customer, Long> impleme
 	}
 
 	@Override
-	public BaseOutput<List<CustomerChartDTO>> selectCustomersGroupByMarket() {
-		List<String>firmCodes = this.firmProvider.getCurrentUserFirmCodes();
+	public BaseOutput<List<CustomerChartDTO>> selectCustomersGroupByMarket(String firmCode) {
+		List<String>firmCodes = this.firmProvider.getCurrentUserAvaliableFirmCodes(firmCode);
 		if(firmCodes.isEmpty()) {
 			return new BaseOutput<>().setData(Collections.emptyList());
 		}
@@ -203,8 +203,8 @@ public class CustomerServiceImpl extends BaseServiceImpl<Customer, Long> impleme
 	}
 
 	@Override
-	public BaseOutput<List<CustomerChartDTO>> selectCustomersGroupByProfession() {
-		List<String>firmCodes = this.firmProvider.getCurrentUserFirmCodes();
+	public BaseOutput<List<CustomerChartDTO>> selectCustomersGroupByProfession(String firmCode) {
+		List<String>firmCodes = this.firmProvider.getCurrentUserAvaliableFirmCodes(firmCode);
 		if(firmCodes.isEmpty()) {
 			return new BaseOutput<>().setData(Collections.emptyList());
 		}
@@ -249,9 +249,9 @@ public class CustomerServiceImpl extends BaseServiceImpl<Customer, Long> impleme
 	    modelMap.put("startDate",this.calStartDate());
 	    modelMap.put("endDate",this.calEndDate());
 	    
-	    modelMap.put("clientPurchasingTopChartUrl",this.chartService.getClientPurchasingTopChartUrl());
-	    modelMap.put("clientSalesTopChartUrl",this.chartService.getClientSalesTopChartUrl());
-	    modelMap.put("clientUserContributionChartUrl",this.chartService.getClientUserContributionChartUrl());
+	    modelMap.put("clientPurchasingTopChartUrl",this.chartService.getClientPurchasingTopChartUrl(this.firmProvider.getCurrentUserDefaultFirmCode()));
+	    modelMap.put("clientSalesTopChartUrl",this.chartService.getClientSalesTopChartUrl(this.firmProvider.getCurrentUserDefaultFirmCode()));
+	    modelMap.put("clientUserContributionChartUrl",this.chartService.getClientUserContributionChartUrl(this.firmProvider.getCurrentUserDefaultFirmCode()));
 		if(customer.aget(ValueProviderUtils.ORIGINAL_KEY_PREFIX+"parentId") != null){
 			Customer parent = get(Long.parseLong(customer.aget(ValueProviderUtils.ORIGINAL_KEY_PREFIX+"parentId").toString()));
 			modelMap.put("parentCustomer", parent);
@@ -361,8 +361,8 @@ public class CustomerServiceImpl extends BaseServiceImpl<Customer, Long> impleme
 	 * @return
 	 */
 	@Override
-	public List<Customer> listCustomerOperating(Set<String> types) {
-		List<String>firmCodes = this.firmProvider.getCurrentUserFirmCodes();
+	public List<Customer> listCustomerOperating(Set<String> types,String firmCode) {
+		List<String>firmCodes = this.firmProvider.getCurrentUserAvaliableFirmCodes(firmCode);
 		if(firmCodes.isEmpty()){
 			return Collections.emptyList();
 		}

@@ -7,8 +7,12 @@
  <div class="easyui-layout" style="margin-left: 0px;" fit="true">
  		<div region="north" style="width:100%;" minHeight="40" border="false">
  			 <!-- 上方导航栏 (锁定不滚动) -->
-            <div id="nav" style="padding-left:10px;padding-top:10px;position:fixed;z-index:2008;width:90%;height:30px;background-color:white" align="left">
-                <#nav/><div style="float:right;">aaa</div>
+            <div id="nav" style="padding-left:10px;padding-top:10px;position:fixed;z-index:2008;width:97%;height:30px;background-color:white" align="left">
+                <#nav/>
+                <div style="float:right;"> 
+                 	<input name="firmCode" id="firmCode" style="width:100%;" panelWidth="auto" data-options="editable:false, labelAlign:'right'" panelHeight="auto" label="所属市场:" value="${firmCode}"/>
+                    <#comboProvider _id="firmCode" _provider='firmProvider' _queryParams='{}'/>
+                </div>
             </div>
  		</div>
         <div region="center" style="width:100%;" minHeight="360" border="false"  align="center">
@@ -25,13 +29,13 @@
 					        <div region="west" height="auto" align="center" style="width:50%">
 						        <div  class="easyui-panel"  style="width:100%;height:100%;"  border="false">
 						   		        <div id="customerTypeChart" style="width:98%;height:99.9%;" ></div>
-										<#echarts _id="customerTypeChart" _title="客户类型分布" _type="Pie"  _url="${contextPath}/chart/customerTypeChart.action" _nameField="type" _options="{legend:{selectedMode:false}}"  _valueField="count"></#echarts>
+										<#echarts _id="customerTypeChart" _title="客户类型分布" _type="Pie"  _url="${contextPath}/chart/customerTypeChart.action?firmCode=${firmCode}" _nameField="type" _options="{legend:{selectedMode:false}}"  _valueField="count"></#echarts>
 								</div>
 					        </div>
 					        <div region="center" height="auto">
 						        <div  class="easyui-panel"   style="width:100%;height:100%;"  border="false">
 						   		        <div id="customerProfessionChart" style="width:98%;height:99.9%;" ></div>
-										<#echarts _id="customerProfessionChart" _title="客户行业分布" _type="Pie"  _url="${contextPath}/chart/customerProfessionChart.action"
+										<#echarts _id="customerProfessionChart" _title="客户行业分布" _type="Pie"  _url="${contextPath}/chart/customerProfessionChart.action?firmCode=${firmCode}"
 										 _nameField="profession" _options="{legend:{selectedMode:false}}"    _valueField="count" ></#echarts>
 								</div>
 					        </div>
@@ -47,7 +51,7 @@
 					        <div region="west" height="auto" align="center" style="width:50%">
 						        <div  class="easyui-panel"  style="width:100%;height:100%;"  border="false">
 									<div id="customerMarketChart" style="width:98%;height:99.9%; " ></div>
-									<#echarts _id="customerMarketChart" _title="客户市场分布" _type="Pie"  _url="${contextPath}/chart/customerMarketChart.action" _nameField="market" _options="{legend:{selectedMode:false}}"   _valueField="count" ></#echarts>
+									<#echarts _id="customerMarketChart" _title="客户市场分布" _type="Pie"  _url="${contextPath}/chart/customerMarketChart.action?firmCode=${firmCode}" _nameField="market" _options="{legend:{selectedMode:false}}"   _valueField="count" ></#echarts>
 								</div>
 					        </div>
 			
@@ -86,8 +90,20 @@
 	 <#customer_locationJs/>
     <!-- ====================================================================================================================== -->
     <script type="text/javascript">
-
-
+    //绑定事件到firmCode
+    $('#firmCode').combobox({
+    	onChange: function(newValue,oldValue){
+    		console.info(newValue);
+    		//console.info(window.location.href);
+    		var url=window.location.href;
+    		var index=url.indexOf("?");
+    		if(index>=0){
+    			url=url.substring(0,index)
+    		}
+    		window.location.href=url+"?firmCode="+newValue;
+    	}
+    });
+	    
         //全局按键事件
         function getKey(e){
             e = e || window.event;

@@ -50,17 +50,17 @@ public interface CustomerService extends BaseService<Customer, Long> {
 	/**基于用户类型分组查询统计数据
 	 * @return 用户数量,用户类型数据列表
 	 */
-	BaseOutput<List<CustomerChartDTO>> selectCustomersGroupByType();
+	BaseOutput<List<CustomerChartDTO>> selectCustomersGroupByType(String firmCode);
 	
 	/**基于用户所属市场分组查询统计数据
 	 * @return 用户数量,市场数据列表
 	 */
-	BaseOutput<List<CustomerChartDTO>> selectCustomersGroupByMarket();
+	BaseOutput<List<CustomerChartDTO>> selectCustomersGroupByMarket(String firmCode);
 
 	/**基于用户行业分组查询统计数据
 	 * @return 用户数量,用户行业 数据列表
 	 */
-	BaseOutput<List<CustomerChartDTO>> selectCustomersGroupByProfession();
+	BaseOutput<List<CustomerChartDTO>> selectCustomersGroupByProfession(String firmCode);
 
 	/**
 	 * 处理客户详情
@@ -111,7 +111,7 @@ public interface CustomerService extends BaseService<Customer, Long> {
 	 * @param types 客户类型：采购、销售、代买等
 	 * @return
 	 */
-	List<Customer> listCustomerOperating(Set<String> types);
+	List<Customer> listCustomerOperating(Set<String> types,String firmCode);
 	
 	
 	/**

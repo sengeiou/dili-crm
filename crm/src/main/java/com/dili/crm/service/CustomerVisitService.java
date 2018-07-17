@@ -23,13 +23,13 @@ public interface CustomerVisitService extends BaseService<CustomerVisit, Long> {
 	/**基于回访信息类型分组查询统计数据
 	 * @return 信息数量,类型数据列表
 	 */
-    BaseOutput<List<CustomerVisitChartDTO>> selectCustomerVisitGroupByMode();
+    BaseOutput<List<CustomerVisitChartDTO>> selectCustomerVisitGroupByMode(String firmCode);
 
 
 	/**基于回访信息状态分组查询统计数据
 	 * @return 信息数量,状态数据列表
 	 */
-    BaseOutput<List<CustomerVisitChartDTO>> selectCustomerVisitGroupByState();
+    BaseOutput<List<CustomerVisitChartDTO>> selectCustomerVisitGroupByState(String firmCode);
 
     /**
      * 更新回访信息

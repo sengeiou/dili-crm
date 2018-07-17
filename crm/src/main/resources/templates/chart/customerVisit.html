@@ -5,9 +5,12 @@
 <div class="easyui-layout" style="margin-left: 0px;" fit="true">
  		<div region="north" style="width:100%;" minHeight="40" border="false">
  			 <!-- 上方导航栏 (锁定不滚动) -->
-            <div id="nav" style="padding-left:10px;padding-top:10px;position:fixed;z-index:2008;width:100%;height:30px;background-color:white" align="left">
+            <div id="nav" style="padding-left:10px;padding-top:10px;position:fixed;z-index:2008;width:97%;height:30px;background-color:white" align="left">
                 <#nav/>
-            </div>
+				<div style="float:right;"> 
+                 	<input name="firmCode" id="firmCode" style="width:100%;" panelWidth="auto" data-options="editable:false, labelAlign:'right'" panelHeight="auto" label="所属市场:" value="${firmCode}"/>
+                    <#comboProvider _id="firmCode" _provider='firmProvider' _queryParams='{}'/>
+                </div>            </div>
  		</div>
         <div region="center"  minHeight="360" border="false" align="center">
            <div style="width:96%;height:100%" border="false">
@@ -16,13 +19,13 @@
 			        <div region="west" height="auto" align="center" style="width:50%" border="false">
 				        <div  class="easyui-panel"   style="height:100%;">
 				   		        <div id="customerTypeChart" style="width:99.8%;height:50%;" ></div>
-								<#echarts _id="customerTypeChart" _title="回访方式分布" _type="Pie"  _url="${contextPath}/chart/customerVisitModeChart.action" _nameField="mode" _options="{legend:{selectedMode:false}}"   _valueField="count"></#echarts>
+								<#echarts _id="customerTypeChart" _title="回访方式分布" _type="Pie"  _url="${contextPath}/chart/customerVisitModeChart.action?firmCode=${firmCode}" _nameField="mode" _options="{legend:{selectedMode:false}}"   _valueField="count"></#echarts>
 						</div>
 			        </div>
 			        <div region="center"   align="center" style="width:50%"   height="auto">
 				        <div  class="easyui-panel"   style="height:100%;" border="false"  align="center" >
 				   		        <div id="customerProfessionChart" style="width:99.8%;height:50%;" ></div>
-								<#echarts _id="customerProfessionChart" _title="回访状态分布"  _type="Pie"  _url="${contextPath}/chart/customerVisitStateChart.action" _nameField="state" _options="{legend:{selectedMode:false}}"   _valueField="count" ></#echarts>
+								<#echarts _id="customerProfessionChart" _title="回访状态分布"  _type="Pie"  _url="${contextPath}/chart/customerVisitStateChart.action?firmCode=${firmCode}" _nameField="state" _options="{legend:{selectedMode:false}}"   _valueField="count" ></#echarts>
 						</div>
 			        </div>
     			</div>
@@ -40,7 +43,19 @@
     <!-- ====================================================================================================================== -->
     <script type="text/javascript">
 
-
+    //绑定事件到firmCode
+    $('#firmCode').combobox({
+    	onChange: function(newValue,oldValue){
+    		console.info(newValue);
+    		//console.info(window.location.href);
+    		var url=window.location.href;
+    		var index=url.indexOf("?");
+    		if(index>=0){
+    			url=url.substring(0,index)
+    		}
+    		window.location.href=url+"?firmCode="+newValue;
+    	}
+    });
 
         //全局按键事件
         function getKey(e){

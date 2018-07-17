@@ -50,6 +50,35 @@ public class FirmProvider implements ValueProvider {
 		return resultList;
 	}
 	
+	/**
+ 	 * 当前用户拥有访问权限的firmcode
+ 	 * @return
+ 	 */
+	public List<String> getCurrentUserAvaliableFirmCodes(String firmCode) {
+		List<Firm> list = this.getCurrentUserFirms();
+		List<String> resultList = list.stream().map(Firm::getCode).collect(Collectors.toList());
+		if(StringUtils.isBlank(firmCode)||!resultList.contains(firmCode)) {
+			return resultList;
+		}else {
+			return Arrays.asList(firmCode);
+		}
+	}
+	/**
+ 	 * 当前用户拥有访问权限的firmcode
+ 	 * @return
+ 	 */
+	public String getCurrentUserDefaultFirmCode() {
+		String defaultFirmCode="hd";
+		List<Firm> list = this.getCurrentUserFirms();
+		List<String> resultList = list.stream().map(Firm::getCode).collect(Collectors.toList());
+		if(resultList.contains(defaultFirmCode)) {
+			return defaultFirmCode;
+		}else if(resultList.size()>0){
+			return resultList.get(0);
+		}else {
+			return "";
+		}
+	}
 	@Override
 	public List<ValuePair<?>> getLookupList(Object obj, Map metaMap, FieldMeta fieldMeta) {
 		
