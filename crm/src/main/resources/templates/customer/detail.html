@@ -140,7 +140,12 @@
                                 </td>
                                 <td style="padding-top:10px;padding-left:15px;">
                                     <!--<input name="_available" class="easyui-textbox" id="_available" style="width:96%;" data-options="label:'可用积分:', labelAlign:'right', cls:'noborder', editable:false, readonly:true" />-->
-                                    <input name="_available" class="easyui-textbox" id="_available" style="width:80px;" data-options="label:'可用积分:', labelAlign:'right', cls:'noborder', editable:false, readonly:true" /><a href="<#config name="points.contextPath"/>/pointsDetail/detail.html?certificateNumber=${certificateNumber}">${available}</a>
+                                    <input name="_available" class="easyui-textbox" id="_available" style="width:80px;" data-options="label:'可用积分:', labelAlign:'right', cls:'noborder', editable:false, readonly:true" />
+                                    <%if (has(certificateNumber)) {%>
+                                    <a href="<#config name="points.contextPath"/>/pointsDetail/detail.html?certificateNumber=${certificateNumber}">${available}</a>
+                                    <%}else{%>
+                                    ${available}
+                                    <%}%>
                                 </td>
                             </tr>
                             <tr>
@@ -213,34 +218,6 @@
 
 
         // ============================   客户相关js st  ==============================
-        //打开新增客户窗口
-        function openInsert(){
-//            $('#_form').form('clear');
-            $("#_ownerName").textbox("setValue", "${user.realName}");
-            var formData = {};
-            //设置上级客户名称
-            <%
-            if(has(parentCustomer) && parentCustomer!=null){
-            %>
-                //新增下级客户需要设置父id
-                formData["parentId"] = "${parentCustomer.id}";
-                formData["parentName"] = "${parentCustomer.name}";
-
-            <%}%>
-            //组织类型默认选中"个人"
-            formData["organizationType"] = "individuals";
-            //根据组织类型加载证件类型、性别、民族、证件日期控件、注册资金和企业员工数f
-            switchByOrganizationType("individuals");
-            formData = addKeyStartWith(formData,"_");
-            $('#_form').form('load', formData);
-            formFocus("_form", "_name");
-            $("#vehicleDiv").hide();
-            $("#addressDiv").hide();
-            $("#contactsDiv").hide();
-            $("#membersDiv").hide();
-            $("#customerExtensionsDiv").hide();
-            $("#portraitDiv").panel("destroy");
-        }
 
         //打开修改客户窗口
         function openUpdate(){
@@ -326,55 +303,10 @@
             $('#form').form('clear');
         }
 
-        //表格表头右键菜单
-        function headerContextMenu(e, field){
-            e.preventDefault();
-            if (!cmenu){
-                createColumnMenu("grid");
-            }
-            cmenu.menu('show', {
-                left:e.pageX,
-                top:e.pageY
-            });
-        }
-
-        // ============================   客户相关js end  ==============================
-
-
-        //全局按键事件
-        function getKey(e){
-            e = e || window.event;
-            var keycode = e.which ? e.which : e.keyCode;
-            if(keycode == 46){ //如果按下删除键
-                var selected = $("#grid").treegrid("getSelected");
-                if(selected && selected!= null){
-                    del();
-                }
-            }
-        }
-
         /**
-         * 绑定页面回车事件，以及初始化页面时的光标定位
-         * @formId
-         *          表单ID
-         * @elementName
-         *          光标定位在指点表单元素的name属性的值
-         * @submitFun
-         *          表单提交需执行的任务
+         *
          */
         $(function () {
-            if (document.addEventListener) {
-                document.addEventListener("keyup",getKey,false);
-            } else if (document.attachEvent) {
-                document.attachEvent("onkeyup",getKey);
-            } else {
-                document.onkeyup = getKey;
-            }
-//            $('#addressGrid').datagrid('getPanel').removeClass('lines-both lines-no lines-right lines-bottom').addClass("lines-bottom");
-//            $('#contactsGrid').datagrid('getPanel').removeClass('lines-both lines-no lines-right lines-bottom').addClass("lines-bottom");
-//            $('#vehicleGrid').datagrid('getPanel').removeClass('lines-both lines-no lines-right lines-bottom').addClass("lines-bottom");
-//            $('#customerExtensionsGrid').datagrid('getPanel').removeClass('lines-both lines-no lines-right lines-bottom').addClass("lines-bottom");
-//            $('#membersGrid').datagrid('getPanel').removeClass('lines-both lines-no lines-right lines-bottom').addClass("lines-bottom");
             openUpdate();
         })
     </script>

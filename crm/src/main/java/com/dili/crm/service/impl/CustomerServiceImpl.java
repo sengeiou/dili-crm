@@ -105,16 +105,18 @@ public class CustomerServiceImpl extends BaseServiceImpl<Customer, Long> impleme
         if(userTicket == null){
             return BaseOutput.failure("新增失败，登录超时");
         }
-        //证件号码去空格
-		customer.setCertificateNumber(customer.getCertificateNumber().trim());
-	    Customer condition = DTOUtils.newDTO(Customer.class);
-        condition.setCertificateType(customer.getCertificateType());
-        condition.setCertificateNumber(customer.getCertificateNumber());
-        condition.setYn(1);
-        List<Customer> list = list(condition);
-        if(!list.isEmpty()){
-        	return BaseOutput.failure("证件号码已存在");
-        }
+		if (StringUtils.isNotBlank(customer.getCertificateNumber())) {
+			//证件号码去空格
+			customer.setCertificateNumber(customer.getCertificateNumber().trim());
+			Customer condition = DTOUtils.newDTO(Customer.class);
+			condition.setCertificateType(customer.getCertificateType());
+			condition.setCertificateNumber(customer.getCertificateNumber());
+			condition.setYn(1);
+			List<Customer> list = list(condition);
+			if(!list.isEmpty()){
+				return BaseOutput.failure("证件号码已存在");
+			}
+		}
         //本系统新增的，写死为crm，对应数据字典
 	    customer.setSourceSystem("crm");
         customer.setCreatedId(userTicket.getId());
@@ -247,7 +249,9 @@ public class CustomerServiceImpl extends BaseServiceImpl<Customer, Long> impleme
 			modelMap.put("available", 0);
 		}
 		modelMap.put("customerId", customerMap.get("id"));
-		modelMap.put("certificateNumber", URLEncoder.encode(customerMap.get("certificateNumber").toString(), "utf-8"));
+		if (null != customerMap.get("certificateNumber")){
+			modelMap.put("certificateNumber", URLEncoder.encode(customerMap.get("certificateNumber").toString(), "utf-8"));
+		}
 		modelMap.put("customer", JSONObject.toJSONString(customerMap));
 	    modelMap.put("startDate",this.calStartDate());
 	    modelMap.put("endDate",this.calEndDate());
@@ -343,7 +347,7 @@ public class CustomerServiceImpl extends BaseServiceImpl<Customer, Long> impleme
 		cityProvider.put("provider", "cityProvider");
 		metadata.put("operatingArea", cityProvider);
 		metadata.put("sourceSystem", getDDProvider("system"));
-		metadata.put("market", getDDProvider("market"));
+		metadata.put("market", "firmProvider");
 		metadata.put("type", getDDProvider("customer_type"));
 		metadata.put("profession", getDDProvider("customer_profession"));
 

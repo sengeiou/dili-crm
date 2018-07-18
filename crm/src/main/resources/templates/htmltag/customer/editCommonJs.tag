@@ -164,8 +164,17 @@
             day = birthStr.substr(6,2);
             year = birthStr.substr(0,4);
         }
+        //获取组织类型
+        var organizationType = $("#_organizationType").combobox("getValue");
+        //组织类型不为企业时，证件号码为必填项
+        if (organizationType != "enterprise"){
+            if (!newValue){
+                $.messager.alert('警告','组织类型不为企业时，证件号为必填项');
+                return false;
+            }
+        }
         //组织类型为个人,并且证件类型为身份证时才校验
-        if($("#_organizationType").combobox("getValue") != "individuals" || $("#_certificateType").combobox("getValue") != "id"){
+        if(organizationType != "individuals" || $("#_certificateType").combobox("getValue") != "id"){
             return true;
         }
         if(newValue.length < 18 || newValue.length > 19){
@@ -326,7 +335,7 @@
         //发送ajax请求查询adcode
         $.ajax({
             type: "POST",
-            url:"${contextPath}/address/locationReverse",
+            url:"${contextPath}/address/locationReverse.action",
             data: {"lat":lat,"lng":lng},
             processData:true,
             dataType: "json",
@@ -439,6 +448,11 @@
         $('#selectedAreaLat').val(selected.operatingLat);
         $('#selectedAreaLng').val(selected.operatingLng);
         $("#departmentName").textbox("setText", selected["department"]);
+        //修改时，如果证件号，为空，则表示可以修改，否则，不能修改证件号
+        if (selected.certificateNumber){
+            $("#_certificateNumber").textbox("disable");
+            $("#_certificateNumber").textbox("readonly");
+        }
         formFocus("_form", "_name");
         listCustomerExtensions();
         <%}%>
