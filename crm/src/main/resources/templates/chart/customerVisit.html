@@ -10,7 +10,8 @@
 				<div style="float:right;"> 
                  	<input name="firmCode" id="firmCode" style="width:100%;" panelWidth="auto" data-options="editable:false, labelAlign:'right'" panelHeight="auto" label="所属市场:" value="${firmCode}"/>
                     <#comboProvider _id="firmCode" _provider='firmProvider' _queryParams='{}'/>
-                </div>            </div>
+                </div>
+           </div>
  		</div>
         <div region="center"  minHeight="360" border="false" align="center">
            <div style="width:96%;height:100%" border="false">
@@ -46,12 +47,15 @@
     //绑定事件到firmCode
     $('#firmCode').combobox({
     	onChange: function(newValue,oldValue){
-    		console.info(newValue);
+    		//console.info(newValue);
     		//console.info(window.location.href);
     		var url=window.location.href;
     		var index=url.indexOf("?");
     		if(index>=0){
     			url=url.substring(0,index)
+    		}
+    		if(typeof(newValue)=='undefined'){
+    			newValue='';
     		}
     		window.location.href=url+"?firmCode="+newValue;
     	}

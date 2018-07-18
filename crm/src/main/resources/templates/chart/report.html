@@ -4,8 +4,13 @@
  <div class="easyui-layout" style="margin-left: 0px;" fit="true">
  		<div region="north" style="width:100%;" minHeight="40" border="false">
  			 <!-- 上方导航栏 (锁定不滚动) -->
-            <div id="nav" style="padding-left:10px;padding-top:10px;position:fixed;z-index:2008;width:100%;height:30px;background-color:white" align="left">
+            <div id="nav" style="padding-left:10px;padding-top:10px;position:fixed;z-index:2008;width:97%;height:30px;background-color:white" align="left">
                 <#nav/>
+                <div style="float:right;"> 
+                 	<input name="firmCode" id="firmCode" style="width:100%;" panelWidth="auto" data-options="editable:false, labelAlign:'right'" panelHeight="auto" label="所属市场:" value="${firmCode}"/>
+                    <#comboProvider _id="firmCode" _provider='firmProvider' _queryParams='{withEmptyOpt:false}'/>
+                </div>
+                
             </div>
  		</div>
  		
@@ -51,7 +56,22 @@
     <!-- style & script 分隔线 -->
     <!-- ====================================================================================================================== -->
     <script type="text/javascript">
-
+    //绑定事件到firmCode
+    $('#firmCode').combobox({
+    	onChange: function(newValue,oldValue){
+    		//console.info(newValue);
+    		//console.info(window.location.href);
+    		var url=window.location.href;
+    		var index=url.indexOf("?");
+    		if(index>=0){
+    			url=url.substring(0,index)
+    		}
+    		if(typeof(newValue)=='undefined'){
+    			newValue='';
+    		}
+    		window.location.href=url+"?firmCode="+newValue;
+    	}
+    });
 
         //全局按键事件
         function getKey(e){

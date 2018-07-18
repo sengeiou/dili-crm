@@ -1,6 +1,7 @@
 package com.dili.crm.service.impl;
 
 
+import java.text.MessageFormat;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -151,6 +152,18 @@ public class ChartServiceImpl implements ChartService{
 		53	长春
 		59	寿光
 		 */
+		
+		DataDictionaryValue condtion = DTOUtils.newDTO(DataDictionaryValue.class);
+		condtion.setDdCode("firmcode_reportproxy");
+		condtion.setName(firmCode);
+		BaseOutput<List<DataDictionaryValue>> output = this.dataDictionaryRpc.list(condtion);
+		String proxyValue = "";
+		if(output.isSuccess()) {
+			if (output.getData() != null && output.getData().size() == 1) {
+				proxyValue= output.getData().get(0).getCode();
+			}
+		}
+		url= MessageFormat.format(url, new Object[]{proxyValue});
 		return url;
 	}
 	

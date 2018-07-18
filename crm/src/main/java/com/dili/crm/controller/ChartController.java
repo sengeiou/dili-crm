@@ -60,81 +60,86 @@ public class ChartController {
 		return null;
 	}
 
-	private ModelMap addData(ModelMap modelMap,String url) {
+	private ModelMap addData(ModelMap modelMap,String url,String firmCode) {
 		modelMap.put("url", url);
 		modelMap.put("chartServer", findChartServer());
+		if(StringUtils.isBlank(firmCode)) {
+			modelMap.put("firmCode", this.firmProvider.getCurrentUserDefaultFirmCode());
+		}else {
+			modelMap.put("firmCode", firmCode);
+		}
 		return modelMap;
 	}
 	@ApiOperation("跳转到销量top(量)报表页面")
 	@RequestMapping(value = "/salestopQuantity.html", method = RequestMethod.GET)
 	public String salestopQuantityChart(ModelMap modelMap,String firmCode) {
-		modelMap=this.addData(modelMap, this.chartService.getSalestopQuantityChartUrl(firmCode));
+		modelMap=this.addData(modelMap, this.chartService.getSalestopQuantityChartUrl(firmCode),firmCode);
 		return "chart/report";
 	}
 	@ApiOperation("跳转到销量top(额)报表页面")
 	@RequestMapping(value = "/salestopAmount.html", method = RequestMethod.GET)
 	public String salestopAmountChart(ModelMap modelMap,String firmCode) {
-		modelMap=this.addData(modelMap, this.chartService.getSalestopAmountChartUrl(firmCode));
+		modelMap=this.addData(modelMap, this.chartService.getSalestopAmountChartUrl(firmCode),firmCode);
 		return "chart/report";
 	}
 	@ApiOperation("跳转到交易报表(客户)报表页面")
 	@RequestMapping(value = "/tradingClient.html", method = RequestMethod.GET)
 	public String tradingClientChart(ModelMap modelMap,String firmCode) {
-		modelMap=this.addData(modelMap, this.chartService.getTradingClientChartUrl(firmCode));
+		modelMap=this.addData(modelMap, this.chartService.getTradingClientChartUrl(firmCode),firmCode);
 		return "chart/report";
 	}
 	@ApiOperation("跳转到交易报表(客户-产品)报表页面")
 	@RequestMapping(value = "/tradingClientProduct.html", method = RequestMethod.GET)
 	public String tradingClientProductChart(ModelMap modelMap,String firmCode) {
-		modelMap=this.addData(modelMap, this.chartService.getTradingClientProductChartUrl(firmCode));
+		modelMap=this.addData(modelMap, this.chartService.getTradingClientProductChartUrl(firmCode),firmCode);
 		return "chart/report";
 	}
 	
 	@ApiOperation("跳转到消费top(量)报表页面")
 	@RequestMapping(value = "/consumptionQuantity.html", method = RequestMethod.GET)
 	public String consumptionQuantityChart(ModelMap modelMap,String firmCode) {
-		modelMap=this.addData(modelMap, this.chartService.getConsumptionQuantityChartUrl(firmCode));
+		modelMap=this.addData(modelMap, this.chartService.getConsumptionQuantityChartUrl(firmCode),firmCode);
 		return "chart/report";
 	}
 	
 	@ApiOperation("跳转到消费top(额)报表页面")
 	@RequestMapping(value = "/consumptionAmount.html", method = RequestMethod.GET)
 	public String consumptionAmountChart(ModelMap modelMap,String firmCode) {
-		modelMap=this.addData(modelMap,  this.chartService.getConsumptionAmountChartUrl(firmCode));
+		modelMap=this.addData(modelMap,  this.chartService.getConsumptionAmountChartUrl(firmCode),firmCode);
 		return "chart/report";
 	}
 	
 	@ApiOperation("跳转到销售去向报表页面")
 	@RequestMapping(value = "/salesarea.html", method = RequestMethod.GET)
 	public String salesareaChart(ModelMap modelMap,String firmCode) {
-		modelMap=this.addData(modelMap, this.chartService.getSalesareaChartUrl(firmCode));
+		modelMap=this.addData(modelMap, this.chartService.getSalesareaChartUrl(firmCode),firmCode);
 		return "chart/report";
 	}
 	@ApiOperation("跳转到销售去向地区明细报表页面")
 	@RequestMapping(value = "/salesareaDetails.html", method = RequestMethod.GET)
 	public String salesareaDetailsChart(ModelMap modelMap,String firmCode) {
-		modelMap=this.addData(modelMap, this.chartService.getSalesareaDetailsChartUrl(firmCode));
+		modelMap=this.addData(modelMap, this.chartService.getSalesareaDetailsChartUrl(firmCode),firmCode);
 		return "chart/report";
 	}
 	
 	@ApiOperation("跳转到销售去向地区+商品明细报表页面")
 	@RequestMapping(value = "/salesareaProductDetails.html", method = RequestMethod.GET)
 	public String salesareaProductDetailsChart(ModelMap modelMap,String firmCode) {
-		modelMap=this.addData(modelMap,  this.chartService.getSalesareaProductDetails(firmCode));
+		modelMap=this.addData(modelMap,  this.chartService.getSalesareaProductDetails(firmCode),firmCode);
 		return "chart/report";
 	}
 	
 	@ApiOperation("跳转到异常订单报表")
 	@RequestMapping(value = "/abnormalOrdersChart.html", method = RequestMethod.GET)
 	public String abnormalOrdersChart(ModelMap modelMap,String firmCode) {
-		modelMap=this.addData(modelMap, this.chartService.getChartUrl("AbnormalOrdersChartUrl",firmCode));
+		modelMap=this.addData(modelMap, this.chartService.getChartUrl("AbnormalOrdersChartUrl",firmCode),firmCode);
 		return "chart/report";
 	}
 	
 	@ApiOperation("跳转到其他报表")
 	@RequestMapping(value = "/others/{key}/chart.html", method = RequestMethod.GET)
 	public String otherChart(ModelMap modelMap,@PathVariable(value="key")String key,String firmCode) {
-		modelMap=this.addData(modelMap, this.chartService.getChartUrl(key,firmCode));
+		modelMap=this.addData(modelMap, this.chartService.getChartUrl(key,firmCode),firmCode);
 		return "chart/report";
 	}
 	
@@ -142,11 +147,11 @@ public class ChartController {
 	@RequestMapping(value = "/customer.html", method = RequestMethod.GET)
 	public String customerChart(ModelMap modelMap,String firmCode) {
 		modelMap.put("customerAddress", JSONArray.toJSONString(customerService.listCustomerOperating(null,firmCode)));
-		if(StringUtils.isBlank(firmCode)) {
-			modelMap.put("firmCode", this.firmProvider.getCurrentUserDefaultFirmCode());
-		}else {
+		//if(StringUtils.isBlank(firmCode)) {
+		//	modelMap.put("firmCode", this.firmProvider.getCurrentUserDefaultFirmCode());
+		//}else {
 			modelMap.put("firmCode", StringUtils.trimToEmpty(firmCode));
-		}
+		//}
 		
 		return "chart/customer";
 	}

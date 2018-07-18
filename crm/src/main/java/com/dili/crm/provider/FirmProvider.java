@@ -1,6 +1,7 @@
 package com.dili.crm.provider;
 
 import com.alibaba.fastjson.JSONObject;
+import com.alibaba.fastjson.JSONPath;
 import com.dili.crm.rpc.DataAuthRpc;
 import com.dili.crm.rpc.FirmRpc;
 import com.dili.ss.domain.BaseOutput;
@@ -86,7 +87,28 @@ public class FirmProvider implements ValueProvider {
 		List<ValuePair<?>> resultList = list.stream().map(f->{
 			return (ValuePair<?>)new ValuePairImpl(f.getName(), f.getCode());
 		}).collect(Collectors.toCollection(()->new ArrayList<ValuePair<?>>()));
-		resultList.add(0, new ValuePairImpl(EMPTY_ITEM_TEXT, null));
+		
+		
+		boolean withEmptyOpt=true;
+		Object withEmptyOptValue=JSONPath.read(String.valueOf(metaMap.get("queryParams")), "/withEmptyOpt");	
+		if(withEmptyOptValue!=null&&withEmptyOptValue instanceof Boolean) {
+			withEmptyOpt=(Boolean)withEmptyOptValue;
+		}
+		
+//		
+//		if(metaMap.containsKey("queryParams")) {
+//			
+//			String queryParams=String.valueOf(metaMap.containsKey("queryParams"));
+//			//JSONPath.read(String.valueOf(metaMap.get("queryParams")), path)
+//			  JSONObject json =JSONObject.parseObject(queryParams);
+//			  Boolean value=json.getBoolean("withEmptyOpt");
+//			  if(value!=null) {
+//				  withEmptyOpt=value;
+//			  }
+//		}
+		if(withEmptyOpt) {
+			resultList.add(0, new ValuePairImpl(EMPTY_ITEM_TEXT, null));	
+		}
 		return resultList;
 	}
 
@@ -141,5 +163,8 @@ public class FirmProvider implements ValueProvider {
 		}
 	}
 	
-
+public static void main(String[] args) {
+	Object obj=JSONPath.read(null, "/abc");
+	System.out.println(obj);
+}
 }
