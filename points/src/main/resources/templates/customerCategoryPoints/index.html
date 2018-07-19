@@ -20,11 +20,20 @@
                                 <input class="easyui-textbox" name="certificateNumber" id="certificateNumber" style="width:100%" labelAlign="right" data-options="label:'证件号:', validType:'length[0,40]'" />
 
                             </td>
+                            
+                            <td style="padding:5px;">
+                                   <input name="firmCode" id="firmCode" style="width:100%;" panelWidth="auto" data-options="editable:false, labelAlign:'right'" panelHeight="auto" label="所属市场:"/>
+                    				<#comboProvider _id="firmCode" _provider='firmProvider' _queryParams='{}'/>
+                            </td>
+                            
                             <td style="padding:5px;">
                                     <input name="organizationType" id="organizationType" style="width:100%;" editable="false" labelAlign="right" panelWidth="auto" panelHeight="auto" label="组织类型:"/>
                                     <#comboProvider _id="organizationType" _provider='dataDictionaryValueProvider' _queryParams='{dd_code:"customer_organization_type"}'/>
 
                             </td>
+                            
+                        </tr>
+                        <tr>
                             <td style="padding:5px;">
                                 <input class="easyui-combobox" name="category1Id" id="category1Id" style="width:100%" labelAlign="right" data-options="label:'一级品类:', validType:'length[0,20]'" />
 
@@ -37,8 +46,6 @@
                                 <input class="easyui-combobox" name="category3Id" id="category3Id" style="width:100%" labelAlign="right" data-options="label:'三级品类:', validType:'length[0,19]'" />
 
                             </td>
-                        </tr>
-                        <tr>
                             <td style="padding-left:28px;padding-top: 10px; padding-bottom: 10px;">
                                 <a href="#" class="easyui-linkbutton" iconCls="icon-search" id="queryBtn"
                                    onclick="queryGrid()">查询</a>&nbsp;&nbsp;
@@ -65,10 +72,13 @@
                         <th data-options="field:'name', width:'10%',  sortable:true, order:'asc', align:'center', resizable:'true', fixed:'false'">
                             客户名称
                         </th>
+                        <th data-options="field:'firmCode', width:'10%', _provider:'firmProvider',_queryParams:{}, sortable:true, order:'asc', align:'center', resizable:'true', fixed:'false'">
+                            所属市场
+                        </th>
                         <th data-options="field:'organizationType', width:'10%', _provider:'dataDictionaryValueProvider',_queryParams:{'dd_code':'customer_organization_type'}, sortable:true, order:'asc', align:'center', resizable:'true', fixed:'false'">
                             组织类型
                         </th>
-                        <th data-options="field:'certificateType', width:'10%', _provider:'dataDictionaryValueProvider', _queryParams:{'dd_code':'certificate_type'},sortable:true, order:'asc', align:'center', resizable:'true', fixed:'false'">
+                        <th data-options="field:'certificateType', width:'5%', _provider:'dataDictionaryValueProvider', _queryParams:{'dd_code':'certificate_type'},sortable:true, order:'asc', align:'center', resizable:'true', fixed:'false'">
                             证件类型
                         </th>
                         <th data-options="field:'certificateNumber', width:'10%',  sortable:true, order:'asc', align:'center', resizable:'true', fixed:'false'">
@@ -89,7 +99,7 @@
                         <th data-options="field:'buyerPoints', width:'10%',  sortable:true, order:'asc', align:'center', resizable:'true', fixed:'false'">
                             采购积分
                         </th>
-                        <th data-options="field:'sellerPoints',  width:'10%', sortable:true, order:'asc', align:'center', resizable:'true', fixed:'false'">
+                        <th data-options="field:'sellerPoints',  width:'5%', sortable:true, order:'asc', align:'center', resizable:'true', fixed:'false'">
                             销售积分
                         </th>
                     </tr>
@@ -150,7 +160,6 @@
         function clearForm() {
             $('#form').form('clear');
             resetCategory(false);
-            queryGrid();
         }
 
         function resetCategory(second) {

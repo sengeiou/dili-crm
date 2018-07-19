@@ -1,6 +1,8 @@
 package com.dili.points.controller;
 
 import com.dili.points.domain.CustomerCategoryPoints;
+import com.dili.points.domain.dto.CustomerCategoryPointsDTO;
+import com.dili.points.provider.FirmProvider;
 import com.dili.points.service.CustomerCategoryPointsService;
 import com.dili.ss.domain.BaseOutput;
 import io.swagger.annotations.Api;
@@ -25,6 +27,8 @@ import org.springframework.web.bind.annotation.ResponseBody;
 public class CustomerCategoryPointsController {
     @Autowired
     CustomerCategoryPointsService customerCategoryPointsService;
+    
+    @Autowired FirmProvider firmProvider;
 
     @ApiOperation("跳转到CustomerCategoryPoints页面")
     @RequestMapping(value="/index.html", method = RequestMethod.GET)
@@ -46,8 +50,8 @@ public class CustomerCategoryPointsController {
 		@ApiImplicitParam(name="CustomerCategoryPoints", paramType="form", value = "CustomerCategoryPoints的form信息", required = false, dataType = "string")
 	})
     @RequestMapping(value="/listPage.action", method = {RequestMethod.GET, RequestMethod.POST})
-    public @ResponseBody String listPage(CustomerCategoryPoints customerCategoryPoints) throws Exception {
-        return customerCategoryPointsService.listEasyuiPageByExample(customerCategoryPoints, true).toString();
+    public @ResponseBody String listPage(CustomerCategoryPointsDTO customerCategoryPoints) throws Exception {
+        return customerCategoryPointsService.listEasyuiPageByExample(customerCategoryPoints, true,this.firmProvider.getCurrentUserFirmCodes()).toString();
     }
 
     @ApiOperation("新增CustomerCategoryPoints")

@@ -2,9 +2,15 @@ package com.dili.points.service.impl;
 
 import com.dili.points.dao.CustomerCategoryPointsMapper;
 import com.dili.points.domain.CustomerCategoryPoints;
+import com.dili.points.domain.dto.CustomerCategoryPointsDTO;
 import com.dili.points.service.CustomerCategoryPointsService;
 import com.dili.ss.base.BaseServiceImpl;
+import com.dili.ss.domain.EasyuiPageOutput;
 import com.dili.ss.dto.DTOUtils;
+
+import java.util.Collections;
+import java.util.List;
+
 import org.springframework.stereotype.Service;
 import tk.mybatis.mapper.entity.Example;
 
@@ -29,5 +35,13 @@ public class CustomerCategoryPointsServiceImpl extends BaseServiceImpl<CustomerC
         criteria.andEqualTo("customerId", id);
         getActualDao().updateByExampleSelective(customerCategoryPoints, example);
         return 1;
+    }
+    @Override
+    public EasyuiPageOutput listEasyuiPageByExample(CustomerCategoryPointsDTO customerCategoryPoints, boolean useProvider,List<String>firmCodes) throws Exception{
+    	if(firmCodes.isEmpty()) {
+    		return new EasyuiPageOutput(0,Collections.emptyList());
+    	}
+    	customerCategoryPoints.setFirmCodes(firmCodes);
+    	return super.listEasyuiPage(customerCategoryPoints, useProvider);
     }
 }

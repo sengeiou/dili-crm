@@ -136,4 +136,10 @@ public interface CustomerCategoryPoints extends IBaseDomain {
     String getCategory3Name();
 
     void setCategory3Name(String category3Name);
+    
+    @Column(name = "`firm_code`")
+    @FieldDef(label="市场编码", maxLength = 20)
+    @EditMode(editor = FieldEditor.Text, required = false)
+    String getFirmCode();
+    void setFirmCode(String firmCode);
 }
