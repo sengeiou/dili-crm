@@ -5,6 +5,7 @@ import com.dili.ss.domain.annotation.Operator;
 
 import javax.persistence.Column;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 import java.util.List;
 
 /**
@@ -27,5 +28,13 @@ public interface CustomerTreeDto extends Customer {
 	@Operator(Operator.IN)
 	List<String> getFirmCodes();
 	void setFirmCodes(List<String> firmCodes);
+
+	/**
+	 * 操作用户ID
+	 * @return
+	 */
+	@Transient
+	Long getUserId();
+	void setUserId(Long userId);
 
 }

@@ -6,6 +6,7 @@ import com.dili.points.rpc.CustomerRpc;
 import com.dili.points.rpc.UserRpc;
 import com.dili.ss.domain.BaseOutput;
 import com.dili.ss.domain.EasyuiPageOutput;
+import com.dili.uap.sdk.session.SessionContext;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
@@ -75,6 +76,7 @@ public class SelectDialogController {
 	@ResponseBody
 	@RequestMapping(value = "/listCustomer.action", method = { RequestMethod.GET, RequestMethod.POST }, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
 	public String listCustomer(CustomerApiDTO customer) throws Exception {
+		customer.setUserId(SessionContext.getSessionContext().getUserTicket().getId());
 		BaseOutput<EasyuiPageOutput> output =  this.customerRpc.listPage(customer);
 		return output.isSuccess() ? output.getData().toString() : null;
 	}

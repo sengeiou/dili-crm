@@ -1,12 +1,11 @@
 package com.dili.crm.service.impl;
 
 import com.dili.crm.dao.CustomerVisitMapper;
-import com.dili.crm.domain.Customer;
 import com.dili.crm.domain.CustomerVisit;
 import com.dili.crm.domain.dto.CustomerVisitChartDTO;
-import com.dili.crm.provider.FirmProvider;
 import com.dili.crm.service.BizNumberService;
 import com.dili.crm.service.CustomerVisitService;
+import com.dili.crm.service.FirmService;
 import com.dili.crm.service.VisitEventService;
 import com.dili.ss.base.BaseServiceImpl;
 import com.dili.ss.domain.BaseOutput;
@@ -19,7 +18,6 @@ import org.springframework.transaction.annotation.Transactional;
 import tk.mybatis.mapper.entity.Example;
 
 import javax.annotation.Resource;
-
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
@@ -39,7 +37,8 @@ public class CustomerVisitServiceImpl extends BaseServiceImpl<CustomerVisit, Lon
 
     @Autowired
     private BizNumberService bizNumberService;
-    @Autowired FirmProvider firmProvider;
+    @Autowired
+    FirmService firmService;
     
     @Override
     public BaseOutput insertSelectiveWithOutput(CustomerVisit customerVisit) {
@@ -56,7 +55,7 @@ public class CustomerVisitServiceImpl extends BaseServiceImpl<CustomerVisit, Lon
 
 	@Override
 	public BaseOutput<List<CustomerVisitChartDTO>> selectCustomerVisitGroupByMode(String firmCode) {
-		List<String>firmCodes = this.firmProvider.getCurrentUserAvaliableFirmCodes(firmCode);
+		List<String>firmCodes = this.firmService.getCurrentUserAvaliableFirmCodes(firmCode);
 		if(firmCodes.isEmpty()) {
 			return new BaseOutput<>().setData(Collections.emptyList());
 		}
@@ -65,7 +64,7 @@ public class CustomerVisitServiceImpl extends BaseServiceImpl<CustomerVisit, Lon
 
 	@Override
 	public BaseOutput<List<CustomerVisitChartDTO>> selectCustomerVisitGroupByState(String firmCode) {
-		List<String>firmCodes = this.firmProvider.getCurrentUserAvaliableFirmCodes(firmCode);
+		List<String>firmCodes = this.firmService.getCurrentUserAvaliableFirmCodes(firmCode);
 		if(firmCodes.isEmpty()) {
 			return new BaseOutput<>().setData(Collections.emptyList());
 		}

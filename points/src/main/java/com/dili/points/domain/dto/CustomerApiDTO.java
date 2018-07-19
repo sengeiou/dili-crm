@@ -26,4 +26,11 @@ public interface CustomerApiDTO extends Customer {
 	List<String> getCertificateNumbers();
 	void setCertificateNumbers(List<String> certificateNumbers);
 
+	/**
+	 * 操作用户ID
+	 * @return
+	 */
+	Long getUserId();
+	void setUserId(Long userId);
+
 }

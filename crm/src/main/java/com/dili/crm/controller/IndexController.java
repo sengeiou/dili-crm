@@ -4,11 +4,11 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.dili.crm.domain.Customer;
 import com.dili.crm.domain.dto.CustomerDto;
-import com.dili.crm.domain.dto.MembersDto;
-import com.dili.crm.provider.FirmProvider;
 import com.dili.crm.rpc.DataDictionaryRpc;
 import com.dili.crm.rpc.SystemConfigRpc;
-import com.dili.crm.service.*;
+import com.dili.crm.service.ChartService;
+import com.dili.crm.service.CustomerService;
+import com.dili.crm.service.FirmService;
 import com.dili.ss.domain.BaseOutput;
 import com.dili.ss.dto.DTOUtils;
 import com.dili.ss.metadata.ValuePair;
@@ -45,7 +45,7 @@ public class IndexController {
     @Autowired
     private ValueProviderUtils valueProviderUtils;
     
-    @Autowired FirmProvider firmProvider;
+    @Autowired FirmService firmService;
 
 //    @Autowired
 //    private AmqpTemplate amqpTemplate;
@@ -60,7 +60,7 @@ public class IndexController {
 //        amqpTemplate.convertAndSend(RabbitConfiguration.DEFAULT_TOPIC_EXCHANGE, RabbitConfiguration.TOPIC_ROUTE_KEY, "客户x");
 
         int clientRefreshFrequency = this.getRefreshFrequency();
-        String firmCode = this.firmProvider.getCurrentUserDefaultFirmCode();
+        String firmCode = this.firmService.getCurrentUserDefaultFirmCode();
         modelMap.put("startDate", this.calStartDate());
         modelMap.put("endDate", this.calEndDate());
         modelMap.put("indexAbnormalOrdersChartUrl", this.chartService.getIndexAbnormalOrdersChartUrl(firmCode));
@@ -101,7 +101,7 @@ public class IndexController {
         customer.setYn(1);
         customer.setSort("created");
         customer.setOrder("DESC");
-        List<Customer> data = this.customerService.listByExample(customer,this.firmProvider.getCurrentUserFirmCodes());
+        List<Customer> data = this.customerService.listByExample(customer,this.firmService.getCurrentUserFirmCodes());
         Map<Object, Object> metadata = this.getCustomerMetadata();
         try {
             List<Map> list = ValueProviderUtils.buildDataByProvider(metadata, data);

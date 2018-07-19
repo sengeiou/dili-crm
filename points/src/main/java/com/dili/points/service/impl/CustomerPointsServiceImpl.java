@@ -21,6 +21,7 @@ import java.util.stream.Collectors;
 
 import com.dili.ss.exception.AppException;
 import com.dili.ss.metadata.ValueProviderUtils;
+import com.dili.uap.sdk.session.SessionContext;
 import com.google.common.collect.Lists;
 
 import org.slf4j.Logger;
@@ -70,6 +71,7 @@ public class CustomerPointsServiceImpl extends BaseServiceImpl<CustomerPoints, L
 
 	@Override
     public EasyuiPageOutput listCustomerPointsByCustomer(CustomerApiDTO customer) {
+		customer.setUserId(SessionContext.getSessionContext().getUserTicket().getId());
 		List<CustomerPointsDTO> resultList = Lists.newArrayList();
 		EasyuiPageOutput easyuiPageOutput;
 		//如果按可用积分排序，需要以客户积分表为主表，否则以客户表为主表

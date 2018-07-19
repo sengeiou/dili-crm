@@ -4,6 +4,7 @@ import com.dili.crm.domain.Customer;
 import com.dili.ss.domain.annotation.Operator;
 
 import javax.persistence.Column;
+import javax.persistence.Transient;
 import java.util.List;
 
 /**
@@ -21,5 +22,13 @@ public interface CustomerApiDTO extends Customer {
 	@Column(name = "`certificate_number`")
 	List<String> getCertificateNumbers();
 	void setCertificateNumbers(List<String> certificateNumbers);
+
+	/**
+	 * 操作用户ID
+	 * @return
+	 */
+	@Transient
+	Long getUserId();
+	void setUserId(Long userId);
 
 }

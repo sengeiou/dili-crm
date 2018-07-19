@@ -84,4 +84,24 @@ public class CustomerApi {
         }
         return BaseOutput.success();
     }
+
+
+    @ApiOperation(value = "查询单个customer信息接口", notes = "根据证件号查询单个customer信息接口，返回客户信息")
+    @ApiImplicitParams({@ApiImplicitParam(name = "certificateNumber", paramType = "body", value = "Customer的certificateNumber信息", required = false, dataType = "string")})
+    @RequestMapping(value = "/getByCertificateNumber.api", method = {RequestMethod.GET, RequestMethod.POST})
+    @ResponseBody
+    public BaseOutput<Customer> getByCertificateNumber(@RequestBody String certificateNumber) {
+        if (StringUtils.isNotBlank(certificateNumber)) {
+            Customer customer = DTOUtils.newDTO(Customer.class);
+            List<Customer> customers = customerService.list(customer);
+            if (CollectionUtils.isNotEmpty(customers)) {
+                if (customers.size() > 1) {
+                    return BaseOutput.failure("根据唯一证件号检索出多条结果，请核对数据。");
+                } else {
+                    return BaseOutput.success().setData(customers.get(0));
+                }
+            }
+        }
+        return BaseOutput.success();
+    }
 }

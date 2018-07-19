@@ -7,13 +7,13 @@ import com.dili.crm.domain.Customer;
 import com.dili.crm.domain.Department;
 import com.dili.crm.domain.User;
 import com.dili.crm.domain.dto.*;
-import com.dili.crm.provider.FirmProvider;
 import com.dili.crm.rpc.CustomerPointsRpc;
 import com.dili.crm.rpc.DepartmentRpc;
 import com.dili.crm.rpc.UserRpc;
 import com.dili.crm.service.CacheService;
 import com.dili.crm.service.ChartService;
 import com.dili.crm.service.CustomerService;
+import com.dili.crm.service.FirmService;
 import com.dili.ss.base.BaseServiceImpl;
 import com.dili.ss.domain.BaseOutput;
 import com.dili.ss.domain.EasyuiPageOutput;
@@ -63,7 +63,8 @@ public class CustomerServiceImpl extends BaseServiceImpl<Customer, Long> impleme
 
 	@Autowired
 	private CustomerPointsRpc customerPointsRpc;
-	@Autowired FirmProvider firmProvider;
+	@Autowired
+    FirmService firmService;
 
     @Override
     public List<Customer> list(Customer condtion) {
@@ -83,8 +84,12 @@ public class CustomerServiceImpl extends BaseServiceImpl<Customer, Long> impleme
 	    }
 	    domain.setYn(1);
 	    //如果未传入市场信息，则只能查询当前用户有数据权限的市场的数据
-		if (StringUtils.isBlank(customerTreeDto.getMarket())){
-			customerTreeDto.setFirmCodes(firmProvider.getCurrentUserFirmCodes());
+		if (StringUtils.isBlank(customerTreeDto.getMarket()) || CollectionUtils.isEmpty(customerTreeDto.getFirmCodes())){
+			List<String> firmCodes = firmService.getCurrentUserFirmCodes(customerTreeDto.getUserId());
+			if (CollectionUtils.isEmpty(firmCodes)){
+				return new EasyuiPageOutput(0, null);
+			}
+			customerTreeDto.setFirmCodes(firmService.getCurrentUserFirmCodes(customerTreeDto.getUserId()));
 		}
 	    EasyuiPageOutput easyuiPageOutput = super.listEasyuiPageByExample(customerTreeDto, useProvider);
 	    for(Object rowObj : easyuiPageOutput.getRows()) {
@@ -191,7 +196,7 @@ public class CustomerServiceImpl extends BaseServiceImpl<Customer, Long> impleme
 
 	@Override
 	public BaseOutput<List<CustomerChartDTO>> selectCustomersGroupByType(String firmCode) {
-		List<String>firmCodes = this.firmProvider.getCurrentUserAvaliableFirmCodes(firmCode);
+		List<String>firmCodes = this.firmService.getCurrentUserAvaliableFirmCodes(firmCode);
 		if(firmCodes.isEmpty()) {
 			return new BaseOutput<>().setData(Collections.emptyList());
 		}
@@ -200,7 +205,7 @@ public class CustomerServiceImpl extends BaseServiceImpl<Customer, Long> impleme
 
 	@Override
 	public BaseOutput<List<CustomerChartDTO>> selectCustomersGroupByMarket(String firmCode) {
-		List<String>firmCodes = this.firmProvider.getCurrentUserAvaliableFirmCodes(firmCode);
+		List<String>firmCodes = this.firmService.getCurrentUserAvaliableFirmCodes(firmCode);
 		if(firmCodes.isEmpty()) {
 			return new BaseOutput<>().setData(Collections.emptyList());
 		}
@@ -209,7 +214,7 @@ public class CustomerServiceImpl extends BaseServiceImpl<Customer, Long> impleme
 
 	@Override
 	public BaseOutput<List<CustomerChartDTO>> selectCustomersGroupByProfession(String firmCode) {
-		List<String>firmCodes = this.firmProvider.getCurrentUserAvaliableFirmCodes(firmCode);
+		List<String>firmCodes = this.firmService.getCurrentUserAvaliableFirmCodes(firmCode);
 		if(firmCodes.isEmpty()) {
 			return new BaseOutput<>().setData(Collections.emptyList());
 		}
@@ -256,9 +261,9 @@ public class CustomerServiceImpl extends BaseServiceImpl<Customer, Long> impleme
 	    modelMap.put("startDate",this.calStartDate());
 	    modelMap.put("endDate",this.calEndDate());
 	    
-	    modelMap.put("clientPurchasingTopChartUrl",this.chartService.getClientPurchasingTopChartUrl(this.firmProvider.getCurrentUserDefaultFirmCode()));
-	    modelMap.put("clientSalesTopChartUrl",this.chartService.getClientSalesTopChartUrl(this.firmProvider.getCurrentUserDefaultFirmCode()));
-	    modelMap.put("clientUserContributionChartUrl",this.chartService.getClientUserContributionChartUrl(this.firmProvider.getCurrentUserDefaultFirmCode()));
+	    modelMap.put("clientPurchasingTopChartUrl",this.chartService.getClientPurchasingTopChartUrl(this.firmService.getCurrentUserDefaultFirmCode()));
+	    modelMap.put("clientSalesTopChartUrl",this.chartService.getClientSalesTopChartUrl(this.firmService.getCurrentUserDefaultFirmCode()));
+	    modelMap.put("clientUserContributionChartUrl",this.chartService.getClientUserContributionChartUrl(this.firmService.getCurrentUserDefaultFirmCode()));
 		if(customer.aget(ValueProviderUtils.ORIGINAL_KEY_PREFIX+"parentId") != null){
 			Customer parent = get(Long.parseLong(customer.aget(ValueProviderUtils.ORIGINAL_KEY_PREFIX+"parentId").toString()));
 			modelMap.put("parentCustomer", parent);
@@ -282,7 +287,7 @@ public class CustomerServiceImpl extends BaseServiceImpl<Customer, Long> impleme
         membersDto.setId(null);
 		//如果未传入市场信息，则只能查询当前用户有数据权限的市场的数据
 		if (StringUtils.isBlank(membersDto.getMarket())){
-			membersDto.setFirmCodes(firmProvider.getCurrentUserFirmCodes());
+			membersDto.setFirmCodes(firmService.getCurrentUserFirmCodes());
 		}
         //由于查询条件中有or parent_id is null，所以这里只能自己构建Example了，以后利刃框架会支持or查询
 	    Example example = new Example(Customer.class);
@@ -323,7 +328,7 @@ public class CustomerServiceImpl extends BaseServiceImpl<Customer, Long> impleme
 		membersDto.setYn(1);
 		//如果未传入市场信息，则只能查询当前用户有数据权限的市场的数据
 		if (StringUtils.isBlank(membersDto.getMarket())){
-			membersDto.setFirmCodes(firmProvider.getCurrentUserFirmCodes());
+			membersDto.setFirmCodes(firmService.getCurrentUserFirmCodes(null));
 		}
 		return super.listEasyuiPageByExample(membersDto, true).toString();
 	}
@@ -377,7 +382,7 @@ public class CustomerServiceImpl extends BaseServiceImpl<Customer, Long> impleme
 	 */
 	@Override
 	public List<Customer> listCustomerOperating(Set<String> types,String firmCode) {
-		List<String>firmCodes = this.firmProvider.getCurrentUserAvaliableFirmCodes(firmCode);
+		List<String>firmCodes = this.firmService.getCurrentUserAvaliableFirmCodes(firmCode);
 		if(firmCodes.isEmpty()){
 			return Collections.emptyList();
 		}
