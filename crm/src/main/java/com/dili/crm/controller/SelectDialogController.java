@@ -1,10 +1,13 @@
 package com.dili.crm.controller;
 
 import com.dili.crm.domain.Customer;
-import com.dili.crm.domain.User;
+import com.dili.crm.domain.dto.CustomerTreeDto;
 import com.dili.crm.rpc.UserRpc;
 import com.dili.crm.service.CustomerService;
 import com.dili.ss.domain.BaseOutput;
+import com.dili.ss.dto.DTOUtils;
+import com.dili.uap.sdk.domain.User;
+import com.dili.uap.sdk.session.SessionContext;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
@@ -42,6 +45,7 @@ public class SelectDialogController {
 	@ResponseBody
 	@RequestMapping(value = "/listUser.action", method = { RequestMethod.GET, RequestMethod.POST }, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
 	public List<User> listUser(ModelMap modelMap, User user) {
+		user.setFirmCode(SessionContext.getSessionContext().getUserTicket().getFirmCode());
 		BaseOutput<List<User>> output = this.userRPC.listByExample(user);
 		if (output.isSuccess()) {
 			return output.getData();
@@ -74,6 +78,8 @@ public class SelectDialogController {
 	@ResponseBody
 	@RequestMapping(value = "/listCustomer.action", method = { RequestMethod.GET, RequestMethod.POST }, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
 	public String listCustomer(ModelMap modelMap, Customer customer) throws Exception {
-		return this.customerService.listEasyuiPageByExample(customer, true).toString();
+		CustomerTreeDto dto = DTOUtils.as(customer,CustomerTreeDto.class);
+		dto.setUserId(SessionContext.getSessionContext().getUserTicket().getId());
+		return this.customerService.listEasyuiPageByExample(dto, true).toString();
 	}
 }

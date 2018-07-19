@@ -1,11 +1,11 @@
 package com.dili.points.controller;
 
-import com.dili.points.domain.User;
 import com.dili.points.domain.dto.CustomerApiDTO;
 import com.dili.points.rpc.CustomerRpc;
 import com.dili.points.rpc.UserRpc;
 import com.dili.ss.domain.BaseOutput;
 import com.dili.ss.domain.EasyuiPageOutput;
+import com.dili.uap.sdk.domain.User;
 import com.dili.uap.sdk.session.SessionContext;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -44,6 +44,7 @@ public class SelectDialogController {
 	@ResponseBody
 	@RequestMapping(value = "/listUser.action", method = { RequestMethod.GET, RequestMethod.POST }, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
 	public List<User> listUser(ModelMap modelMap, User user) {
+		user.setFirmCode(SessionContext.getSessionContext().getUserTicket().getFirmCode());
 		BaseOutput<List<User>> output = this.userRPC.listByExample(user);
 		if (output.isSuccess()) {
 			return output.getData();

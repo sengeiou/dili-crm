@@ -5,7 +5,6 @@ import com.alibaba.fastjson.JSONObject;
 import com.dili.crm.dao.CustomerMapper;
 import com.dili.crm.domain.Customer;
 import com.dili.crm.domain.Department;
-import com.dili.crm.domain.User;
 import com.dili.crm.domain.dto.*;
 import com.dili.crm.rpc.CustomerPointsRpc;
 import com.dili.crm.rpc.DepartmentRpc;
@@ -21,6 +20,7 @@ import com.dili.ss.dto.DTO;
 import com.dili.ss.dto.DTOUtils;
 import com.dili.ss.dto.IDTO;
 import com.dili.ss.metadata.ValueProviderUtils;
+import com.dili.uap.sdk.domain.User;
 import com.dili.uap.sdk.domain.UserTicket;
 import com.dili.uap.sdk.session.SessionContext;
 import com.github.pagehelper.Page;
@@ -286,8 +286,12 @@ public class CustomerServiceImpl extends BaseServiceImpl<Customer, Long> impleme
 	    membersDto.setIdNotIn(parentIds);
         membersDto.setId(null);
 		//如果未传入市场信息，则只能查询当前用户有数据权限的市场的数据
-		if (StringUtils.isBlank(membersDto.getMarket())){
-			membersDto.setFirmCodes(firmService.getCurrentUserFirmCodes());
+		if (StringUtils.isBlank(membersDto.getMarket()) && CollectionUtils.isEmpty(membersDto.getFirmCodes())){
+			List<String> firmCodes = firmService.getCurrentUserFirmCodes();
+			if (CollectionUtils.isEmpty(firmCodes)){
+				return new EasyuiPageOutput(0,null).toString();
+			}
+			membersDto.setFirmCodes(firmCodes);
 		}
         //由于查询条件中有or parent_id is null，所以这里只能自己构建Example了，以后利刃框架会支持or查询
 	    Example example = new Example(Customer.class);

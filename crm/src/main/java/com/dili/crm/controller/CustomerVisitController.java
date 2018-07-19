@@ -2,6 +2,7 @@ package com.dili.crm.controller;
 
 import com.alibaba.fastjson.JSONObject;
 import com.dili.crm.domain.CustomerVisit;
+import com.dili.crm.domain.dto.CustomerVisitDto;
 import com.dili.crm.service.CustomerVisitService;
 import com.dili.ss.domain.BaseOutput;
 import com.dili.ss.metadata.ValueProviderUtils;
@@ -58,8 +59,8 @@ public class CustomerVisitController {
 		@ApiImplicitParam(name="CustomerVisit", paramType="form", value = "CustomerVisit的form信息", required = false, dataType = "string")
 	})
     @RequestMapping(value="/listPage.action", method = {RequestMethod.GET, RequestMethod.POST})
-    public @ResponseBody String listPage(CustomerVisit customerVisit) throws Exception {
-        return customerVisitService.listEasyuiPageByExample(customerVisit, true).toString();
+    public @ResponseBody String listPage(CustomerVisitDto customerVisit) throws Exception {
+        return customerVisitService.listEasyuiPage(customerVisit, true).toString();
     }
 
     @ApiOperation("新增CustomerVisit")

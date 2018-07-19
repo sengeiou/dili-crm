@@ -207,7 +207,7 @@
                 if (r){
                     $.ajax({
                         type: "POST",
-                        url: "${contextPath}/customer/delete",
+                        url: "${contextPath}/customer/delete.action",
                         data: {id:selected.id},
                         processData:true,
                         dataType: "json",
@@ -412,12 +412,9 @@
             });
             //表格仅显示下边框
             $('#grid').datagrid('getPanel').removeClass('lines-both lines-no lines-right lines-bottom').addClass("lines-bottom");
-
             //打开页面时查询
             queryGrid();
- 
-           initOrGetClientLocationMap();
-
-          })
+            initOrGetClientLocationMap();
+        })
     </script>
 </#body>
