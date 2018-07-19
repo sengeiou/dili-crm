@@ -1,7 +1,6 @@
 package com.dili.points.provider;
 
 import com.dili.points.domain.Customer;
-import com.dili.points.domain.User;
 import com.dili.points.domain.dto.CustomerApiDTO;
 import com.dili.points.rpc.CustomerRpc;
 import com.dili.ss.domain.BaseOutput;
