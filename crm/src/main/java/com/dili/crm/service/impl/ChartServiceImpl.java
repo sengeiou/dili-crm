@@ -4,6 +4,7 @@ package com.dili.crm.service.impl;
 import java.text.MessageFormat;
 import java.util.List;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -102,6 +103,9 @@ public class ChartServiceImpl implements ChartService{
 			if (output.getData() != null && output.getData().size() == 1) {
 				proxyValue= output.getData().get(0).getCode();
 			}
+		}
+		if(StringUtils.isBlank(proxyValue)) {
+			return "";
 		}
 		url= MessageFormat.format(url, new Object[]{proxyValue});
 		return url;
