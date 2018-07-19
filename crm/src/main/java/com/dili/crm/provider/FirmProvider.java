@@ -83,30 +83,24 @@ public class FirmProvider implements ValueProvider {
 	@Override
 	public List<ValuePair<?>> getLookupList(Object obj, Map metaMap, FieldMeta fieldMeta) {
 		
+		Object withEmptyOptValue=JSONPath.read(String.valueOf(metaMap.get("queryParams")), "/withEmptyOpt");	
+		
+		Object withGroupOptValue=JSONPath.read(String.valueOf(metaMap.get("queryParams")), "/withGroupOpt");	
+		
+		
 		List<Firm> list = this.getCurrentUserFirms();
-		List<ValuePair<?>> resultList = list.stream().map(f->{
+		List<ValuePair<?>> resultList = list.stream().filter((f)->{
+			if(Boolean.FALSE.equals(withGroupOptValue)&&f.getCode().equalsIgnoreCase("group")) {
+					return false;
+			}
+			return true;
+		
+		}).map(f->{
 			return (ValuePair<?>)new ValuePairImpl(f.getName(), f.getCode());
 		}).collect(Collectors.toCollection(()->new ArrayList<ValuePair<?>>()));
 		
-		
-		boolean withEmptyOpt=true;
-		Object withEmptyOptValue=JSONPath.read(String.valueOf(metaMap.get("queryParams")), "/withEmptyOpt");	
-		if(withEmptyOptValue!=null&&withEmptyOptValue instanceof Boolean) {
-			withEmptyOpt=(Boolean)withEmptyOptValue;
-		}
-		
-//		
-//		if(metaMap.containsKey("queryParams")) {
-//			
-//			String queryParams=String.valueOf(metaMap.containsKey("queryParams"));
-//			//JSONPath.read(String.valueOf(metaMap.get("queryParams")), path)
-//			  JSONObject json =JSONObject.parseObject(queryParams);
-//			  Boolean value=json.getBoolean("withEmptyOpt");
-//			  if(value!=null) {
-//				  withEmptyOpt=value;
-//			  }
-//		}
-		if(withEmptyOpt) {
+
+		if(!Boolean.FALSE.equals(withEmptyOptValue)) {
 			resultList.add(0, new ValuePairImpl(EMPTY_ITEM_TEXT, null));	
 		}
 		return resultList;

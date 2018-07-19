@@ -7,6 +7,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.dili.crm.provider.FirmProvider;
 import com.dili.crm.rpc.DataDictionaryRpc;
 import com.dili.crm.service.ChartService;
 import com.dili.ss.domain.BaseOutput;
@@ -17,61 +18,8 @@ import com.dili.uap.sdk.domain.DataDictionaryValue;
 public class ChartServiceImpl implements ChartService{
 	@Autowired
 	private DataDictionaryRpc dataDictionaryRpc;
+	@Autowired FirmProvider firmProvider;
 
-
-	@Override
-	public String getSalestopQuantityChartUrl(String firmCode) {
-		String key="SalestopQuantityChartUrl";
-		return this.findUrl(key,firmCode);//"http://ap.nong12.com/find/sZsalestop1Z0fttftttf0.html";
-	}
-
-	@Override
-	public String getSalestopAmountChartUrl(String firmCode) {
-		String key="SalestopAmountChartUrl";
-		return this.findUrl(key,firmCode);//"http://ap.nong12.com/find/sZsalestop2Z0fttftttf0.html";
-	}
-
-	@Override
-	public String getTradingClientChartUrl(String firmCode) {
-		String key="TradingClientChartUrl";
-		return this.findUrl(key,firmCode);//"http://ap.nong12.com/find/sZtrading1Z0fttftttf0.html";
-	}
-
-	@Override
-	public String getTradingClientProductChartUrl(String firmCode) {
-		String key="TradingClientProductChartUrl";
-		return this.findUrl(key,firmCode);//"http://ap.nong12.com/find/sZtrading2Z1fttftttf0.html";
-	}
-
-	@Override
-	public String getConsumptionQuantityChartUrl(String firmCode) {
-		String key="ConsumptionQuantityChartUrl";
-		return this.findUrl(key,firmCode);//"http://ap.nong12.com/find/sZconsumption_top1Z0fttftttf0.html";
-	}
-
-	@Override
-	public String getConsumptionAmountChartUrl(String firmCode) {
-		String key="ConsumptionAmountChartUrl";
-		return this.findUrl(key,firmCode);//"http://ap.nong12.com/find/sZconsumption_top2Z0fttftttf0.html";
-	}
-
-	@Override
-	public String getSalesareaChartUrl(String firmCode) {
-		String key="SalesareaChartUrl";
-		return this.findUrl(key,firmCode);//"http://ap.nong12.com/find/sZsalesareaZ0fttftttf0.html";
-	}
-
-	@Override
-	public String getSalesareaDetailsChartUrl(String firmCode) {
-		String key="SalesareaDetailsChartUrl";
-		return this.findUrl(key,firmCode);//"http://ap.nong12.com/find/sZsalesarea1Z0fttftttf0.html";
-	}
-
-	@Override
-	public String getSalesareaProductDetails(String firmCode) {
-		String key="SalesareaProductDetails";
-		return this.findUrl(key,firmCode);//"http://ap.nong12.com/find/sZsalesarea2Z0fttftttf0.html";
-	}
 
 	@Override
 	public String getIndexAbnormalOrdersChartUrl(String firmCode) {
@@ -144,15 +92,7 @@ public class ChartServiceImpl implements ChartService{
 	 */
 	private String formatUrl(String url,String firmCode) {
 		
-		/*48 哈尔滨
-		49	沈阳
-		50	贵阳
-		51	牡丹江
-		52	齐齐哈尔
-		53	长春
-		59	寿光
-		 */
-		
+
 		DataDictionaryValue condtion = DTOUtils.newDTO(DataDictionaryValue.class);
 		condtion.setDdCode("firmcode_reportproxy");
 		condtion.setName(firmCode);
@@ -166,5 +106,6 @@ public class ChartServiceImpl implements ChartService{
 		url= MessageFormat.format(url, new Object[]{proxyValue});
 		return url;
 	}
+	
 	
 }

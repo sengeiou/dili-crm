@@ -49,97 +49,109 @@ public class ChartController {
 	}
 
 	private String findChartServer() {
-		String code="thirdparty.servers";
+		String code = "thirdparty.servers";
 		DataDictionaryValue dataDictionaryValue = DTOUtils.newDTO(DataDictionaryValue.class);
 		dataDictionaryValue.setDdCode(code);
 		dataDictionaryValue.setCode("chartserver");
 		BaseOutput<List<DataDictionaryValue>> output = dataDictionaryRpc.list(dataDictionaryValue);
-		if(output.isSuccess() && !output.getData().isEmpty()) {
+		if (output.isSuccess() && !output.getData().isEmpty()) {
 			return output.getData().get(0).getCode();
 		}
 		return null;
 	}
 
-	private ModelMap addData(ModelMap modelMap,String url,String firmCode) {
-		modelMap.put("url", url);
-		modelMap.put("chartServer", findChartServer());
-		if(StringUtils.isBlank(firmCode)) {
-			modelMap.put("firmCode", this.firmProvider.getCurrentUserDefaultFirmCode());
-		}else {
-			modelMap.put("firmCode", firmCode);
+
+	private ModelMap addData(ModelMap modelMap,String key,String firmCode) {
+		if (StringUtils.isBlank(firmCode)) {
+			firmCode = this.firmProvider.getCurrentUserDefaultFirmCode();
 		}
+		String url = this.chartService.getChartUrl(key, firmCode);
+		modelMap.put("chartServer", findChartServer());
+		modelMap.put("firmCode", firmCode);
+		modelMap.put("url", url);
+		
 		return modelMap;
 	}
 	@ApiOperation("跳转到销量top(量)报表页面")
 	@RequestMapping(value = "/salestopQuantity.html", method = RequestMethod.GET)
 	public String salestopQuantityChart(ModelMap modelMap,String firmCode) {
-		modelMap=this.addData(modelMap, this.chartService.getSalestopQuantityChartUrl(firmCode),firmCode);
+		String key = "SalestopQuantityChartUrl";
+		modelMap = this.addData(modelMap, key, firmCode);
 		return "chart/report";
 	}
 	@ApiOperation("跳转到销量top(额)报表页面")
 	@RequestMapping(value = "/salestopAmount.html", method = RequestMethod.GET)
 	public String salestopAmountChart(ModelMap modelMap,String firmCode) {
-		modelMap=this.addData(modelMap, this.chartService.getSalestopAmountChartUrl(firmCode),firmCode);
+		String key = "SalestopAmountChartUrl";
+		modelMap = this.addData(modelMap, key, firmCode);
 		return "chart/report";
 	}
 	@ApiOperation("跳转到交易报表(客户)报表页面")
 	@RequestMapping(value = "/tradingClient.html", method = RequestMethod.GET)
 	public String tradingClientChart(ModelMap modelMap,String firmCode) {
-		modelMap=this.addData(modelMap, this.chartService.getTradingClientChartUrl(firmCode),firmCode);
+		String key = "TradingClientChartUrl";
+		modelMap = this.addData(modelMap, key, firmCode);
 		return "chart/report";
 	}
 	@ApiOperation("跳转到交易报表(客户-产品)报表页面")
 	@RequestMapping(value = "/tradingClientProduct.html", method = RequestMethod.GET)
 	public String tradingClientProductChart(ModelMap modelMap,String firmCode) {
-		modelMap=this.addData(modelMap, this.chartService.getTradingClientProductChartUrl(firmCode),firmCode);
+		String key = "TradingClientProductChartUrl";
+		modelMap = this.addData(modelMap, key, firmCode);
 		return "chart/report";
 	}
 	
 	@ApiOperation("跳转到消费top(量)报表页面")
 	@RequestMapping(value = "/consumptionQuantity.html", method = RequestMethod.GET)
 	public String consumptionQuantityChart(ModelMap modelMap,String firmCode) {
-		modelMap=this.addData(modelMap, this.chartService.getConsumptionQuantityChartUrl(firmCode),firmCode);
+		String key = "ConsumptionQuantityChartUrl";
+		modelMap = this.addData(modelMap, key, firmCode);
 		return "chart/report";
 	}
 	
 	@ApiOperation("跳转到消费top(额)报表页面")
 	@RequestMapping(value = "/consumptionAmount.html", method = RequestMethod.GET)
 	public String consumptionAmountChart(ModelMap modelMap,String firmCode) {
-		modelMap=this.addData(modelMap,  this.chartService.getConsumptionAmountChartUrl(firmCode),firmCode);
+		String key = "ConsumptionAmountChartUrl";
+		modelMap = this.addData(modelMap, key, firmCode);
 		return "chart/report";
 	}
 	
 	@ApiOperation("跳转到销售去向报表页面")
 	@RequestMapping(value = "/salesarea.html", method = RequestMethod.GET)
 	public String salesareaChart(ModelMap modelMap,String firmCode) {
-		modelMap=this.addData(modelMap, this.chartService.getSalesareaChartUrl(firmCode),firmCode);
+		String key = "SalesareaChartUrl";
+		modelMap = this.addData(modelMap, key, firmCode);
 		return "chart/report";
 	}
 	@ApiOperation("跳转到销售去向地区明细报表页面")
 	@RequestMapping(value = "/salesareaDetails.html", method = RequestMethod.GET)
 	public String salesareaDetailsChart(ModelMap modelMap,String firmCode) {
-		modelMap=this.addData(modelMap, this.chartService.getSalesareaDetailsChartUrl(firmCode),firmCode);
+		String key = "SalesareaDetailsChartUrl";
+		modelMap = this.addData(modelMap, key, firmCode);
 		return "chart/report";
 	}
 	
 	@ApiOperation("跳转到销售去向地区+商品明细报表页面")
 	@RequestMapping(value = "/salesareaProductDetails.html", method = RequestMethod.GET)
 	public String salesareaProductDetailsChart(ModelMap modelMap,String firmCode) {
-		modelMap=this.addData(modelMap,  this.chartService.getSalesareaProductDetails(firmCode),firmCode);
+		String key = "SalesareaProductDetails";
+		modelMap = this.addData(modelMap, key, firmCode);
 		return "chart/report";
 	}
 	
 	@ApiOperation("跳转到异常订单报表")
 	@RequestMapping(value = "/abnormalOrdersChart.html", method = RequestMethod.GET)
 	public String abnormalOrdersChart(ModelMap modelMap,String firmCode) {
-		modelMap=this.addData(modelMap, this.chartService.getChartUrl("AbnormalOrdersChartUrl",firmCode),firmCode);
+		String key = "AbnormalOrdersChartUrl";
+		modelMap = this.addData(modelMap, key, firmCode);
 		return "chart/report";
 	}
 	
 	@ApiOperation("跳转到其他报表")
 	@RequestMapping(value = "/others/{key}/chart.html", method = RequestMethod.GET)
 	public String otherChart(ModelMap modelMap,@PathVariable(value="key")String key,String firmCode) {
-		modelMap=this.addData(modelMap, this.chartService.getChartUrl(key,firmCode),firmCode);
+		modelMap = this.addData(modelMap, key, firmCode);
 		return "chart/report";
 	}
 	
@@ -165,9 +177,9 @@ public class ChartController {
 	@ApiOperation(value = "查询客户类型分布", notes = "查询Address，返回列表信息")
 	@RequestMapping(value = "/customerTypeChart.action", method = { RequestMethod.GET, RequestMethod.POST })
 	public @ResponseBody Object customerTypeChart(String firmCode) {
-		List<CustomerChartDTO>data=this.customerService.selectCustomersGroupByType(firmCode).getData();
+		List<CustomerChartDTO>data = this.customerService.selectCustomersGroupByType(firmCode).getData();
 		
-		Map<Object, Object> metadata =this.getCustomerMetadata();
+		Map<Object, Object> metadata = this.getCustomerMetadata();
 		try {
 			List<Map> list = ValueProviderUtils.buildDataByProvider(metadata, data);
 			return this.addOthers(list, "type");
@@ -180,42 +192,42 @@ public class ChartController {
 	
 	@RequestMapping(value = "/customerMarketChart.action", method = { RequestMethod.GET, RequestMethod.POST })
 	public @ResponseBody Object customerMarketChart(String firmCode) {
-		 List<CustomerChartDTO>data=this.customerService.selectCustomersGroupByMarket(firmCode).getData();
-			Map<Object, Object> metadata =this.getCustomerMetadata();
-			try {
-				List<Map> list = ValueProviderUtils.buildDataByProvider(metadata, data);
-				return this.addOthers(list, "market");
-			} catch (Exception e) {
-				return Collections.emptyList();
-			}
+		List<CustomerChartDTO> data = this.customerService.selectCustomersGroupByMarket(firmCode).getData();
+		Map<Object, Object> metadata = this.getCustomerMetadata();
+		try {
+			List<Map> list = ValueProviderUtils.buildDataByProvider(metadata, data);
+			return this.addOthers(list, "market");
+		} catch (Exception e) {
+			return Collections.emptyList();
+		}
 			
 	}
 	@ApiOperation(value = "查询客户行业分布", notes = "查询客户行业分布，返回客户行业分布信息")
 	
 	@RequestMapping(value = "/customerProfessionChart.action", method = { RequestMethod.GET, RequestMethod.POST })
 	public @ResponseBody Object customerProfessionChart(String firmCode) {
-		 List<CustomerChartDTO>data=this.customerService.selectCustomersGroupByProfession(firmCode).getData();
-			Map<Object, Object> metadata =this.getCustomerMetadata();
-			try {
-				List<Map> list = ValueProviderUtils.buildDataByProvider(metadata, data);
-				return this.addOthers(list, "profession");
-			} catch (Exception e) {
-				return Collections.emptyList();
-			}
+		List<CustomerChartDTO> data = this.customerService.selectCustomersGroupByProfession(firmCode).getData();
+		Map<Object, Object> metadata = this.getCustomerMetadata();
+		try {
+			List<Map> list = ValueProviderUtils.buildDataByProvider(metadata, data);
+			return this.addOthers(list, "profession");
+		} catch (Exception e) {
+			return Collections.emptyList();
+		}
 			
 	}
 	@ApiOperation(value = "查询回访方式分布", notes = "查询回访方式分布，返回回访方式分布信息")
 	
 	@RequestMapping(value = "/customerVisitModeChart.action", method = { RequestMethod.GET, RequestMethod.POST })
 	public @ResponseBody Object customerVisitModeChart(String firmCode) {
-		 List<CustomerVisitChartDTO>data=this.customerVisitService.selectCustomerVisitGroupByMode(firmCode).getData();
-			Map<Object, Object> metadata =this.getCustomerVisitMetadata();
-			try {
-				List<Map> list = ValueProviderUtils.buildDataByProvider(metadata, data);
-				return list;
-			} catch (Exception e) {
-				return Collections.emptyList();
-			}
+		List<CustomerVisitChartDTO> data = this.customerVisitService.selectCustomerVisitGroupByMode(firmCode).getData();
+		Map<Object, Object> metadata = this.getCustomerVisitMetadata();
+		try {
+			List<Map> list = ValueProviderUtils.buildDataByProvider(metadata, data);
+			return list;
+		} catch (Exception e) {
+			return Collections.emptyList();
+		}
 			
 	}
 	
@@ -224,14 +236,14 @@ public class ChartController {
 	
 	@RequestMapping(value = "/customerVisitStateChart.action", method = { RequestMethod.GET, RequestMethod.POST })
 	public @ResponseBody Object customerVisitStateChart(String firmCode) {
-		 	List<CustomerVisitChartDTO>data=this.customerVisitService.selectCustomerVisitGroupByState(firmCode).getData();
-			Map<Object, Object> metadata =this.getCustomerVisitMetadata();
-			try {
-				List<Map> list = ValueProviderUtils.buildDataByProvider(metadata, data);
-				return list;
-			} catch (Exception e) {
-				return Collections.emptyList();
-			}
+		List<CustomerVisitChartDTO> data = this.customerVisitService.selectCustomerVisitGroupByState(firmCode).getData();
+		Map<Object, Object> metadata = this.getCustomerVisitMetadata();
+		try {
+			List<Map> list = ValueProviderUtils.buildDataByProvider(metadata, data);
+			return list;
+		} catch (Exception e) {
+			return Collections.emptyList();
+		}
 			
 	}
 	private List<Map>addOthers(List<Map> list,String key){
