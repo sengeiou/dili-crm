@@ -120,7 +120,7 @@ public interface CustomerService extends BaseService<Customer, Long> {
 	 * @param firmCodes
 	 * @return
 	 */
-	List<Customer> listByExample(CustomerDto domain,List<String>firmCodes);
+	List<Customer> listByExample(CustomerDto domain, List<String> firmCodes);
 
 	/**
 	 * 根据客户ID集，级联删除客户相关信息

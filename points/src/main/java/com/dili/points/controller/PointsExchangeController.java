@@ -9,6 +9,7 @@ import com.dili.points.rpc.CustomerRpc;
 import com.dili.points.service.CustomerPointsService;
 import com.dili.ss.domain.BaseOutput;
 import com.dili.ss.dto.DTOUtils;
+import com.dili.uap.sdk.session.SessionContext;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.apache.commons.collections4.CollectionUtils;
@@ -56,6 +57,7 @@ public class PointsExchangeController {
         CustomerApiDTO dto = DTOUtils.newDTO(CustomerApiDTO.class);
         dto.setCertificateNumber(idCard);
         dto.setYn(1);
+        dto.setUserId(SessionContext.getSessionContext().getUserTicket().getId());
         BaseOutput<List<Customer>> baseOutput = customerRpc.list(dto);
         if (baseOutput.isSuccess() && CollectionUtils.isNotEmpty(baseOutput.getData())){
             JSONObject object = JSONObject.parseObject(JSON.toJSONString(baseOutput.getData().get(0)));

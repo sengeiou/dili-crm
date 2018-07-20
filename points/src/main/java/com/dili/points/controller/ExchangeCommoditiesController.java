@@ -5,10 +5,13 @@ import com.dili.points.domain.dto.ExchangeCommoditiesDTO;
 import com.dili.points.service.ExchangeCommoditiesService;
 import com.dili.points.service.FirmService;
 import com.dili.ss.domain.BaseOutput;
+import com.dili.ss.domain.EasyuiPageOutput;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
+import org.apache.commons.collections4.CollectionUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
@@ -44,11 +47,13 @@ public class ExchangeCommoditiesController {
 	})
     @RequestMapping(value="/list.action", method = {RequestMethod.GET, RequestMethod.POST})
     public @ResponseBody List<ExchangeCommodities> list(ExchangeCommoditiesDTO exchangeCommodities) {
-        List<String> firmCodes = this.firmService.getCurrentUserFirmCodes();
-        if (firmCodes.isEmpty()) {
-            return Collections.emptyList();
+        if (StringUtils.isBlank(exchangeCommodities.getFirmCode()) && CollectionUtils.isEmpty(exchangeCommodities.getFirmCodes())) {
+            List<String> firmCodes = this.firmService.getCurrentUserFirmCodes();
+            if (firmCodes.isEmpty()) {
+                return Collections.emptyList();
+            }
+            exchangeCommodities.setFirmCodes(firmCodes);
         }
-        exchangeCommodities.setFirmCodes(firmCodes);
         return exchangeCommoditiesService.list(exchangeCommodities);
     }
 
@@ -58,6 +63,13 @@ public class ExchangeCommoditiesController {
 	})
     @RequestMapping(value="/listPage.action", method = {RequestMethod.GET, RequestMethod.POST})
     public @ResponseBody String listPage(ExchangeCommoditiesDTO exchangeCommodities) throws Exception {
+        if (StringUtils.isBlank(exchangeCommodities.getFirmCode()) && CollectionUtils.isEmpty(exchangeCommodities.getFirmCodes())) {
+            List<String> firmCodes = this.firmService.getCurrentUserFirmCodes();
+            if (firmCodes.isEmpty()) {
+                return new EasyuiPageOutput(0, null).toString();
+            }
+            exchangeCommodities.setFirmCodes(firmCodes);
+        }
         return exchangeCommoditiesService.listEasyuiPageByExample(exchangeCommodities, true).toString();
     }
 

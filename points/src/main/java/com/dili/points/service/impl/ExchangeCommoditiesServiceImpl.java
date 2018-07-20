@@ -54,12 +54,15 @@ public class ExchangeCommoditiesServiceImpl extends BaseServiceImpl<ExchangeComm
         }
         ExchangeCommodities old = get(exchangeCommodities.getId());
         //计算出新增的可兑换量
-        Integer add = exchangeCommodities.getAvailable()-old.getAvailable();
+        Integer add = exchangeCommodities.getAvailable() - old.getAvailable();
         //则新的总量等于旧的加上新增的可兑换量
-        Integer newTotal = old.getTotal()+add;
-        exchangeCommodities.setTotal(newTotal);
-        exchangeCommodities.setModifiedId(userTicket.getId());
-        super.updateSelective(exchangeCommodities);
-        return BaseOutput.success("更新成功").setData(exchangeCommodities);
+        Integer newTotal = old.getTotal() + add;
+        old.setTotal(newTotal);
+        old.setModifiedId(userTicket.getId());
+        //只更新可更改项
+        old.setPoints(exchangeCommodities.getPoints());
+        old.setAvailable(exchangeCommodities.getAvailable());
+        super.updateSelective(old);
+        return BaseOutput.success("更新成功").setData(old);
     }
 }

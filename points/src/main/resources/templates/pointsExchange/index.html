@@ -61,6 +61,7 @@
                 <input type="hidden" id="_organizationType" name="_organizationType">
                 <input type="hidden" id="_certificateType" name="_certificateType">
                 <input type="hidden" id="_type" name="_type">
+                <input type="hidden" id="_market" name="_market">
                 <table width="96%" align="left">
                     <tr>
                         <td style="padding-top:10px;">
@@ -202,10 +203,7 @@
      * 兑换按钮，打开兑换商品页面
      */
     function openExchange() {
-        $('#exchangeDlg').dialog('open');
-        $('#exchangeDlg').dialog('center');
         $('#_exchangeForm').form('clear');
-        $('#_available_points').textbox("setValue",$('#_points').textbox("getValue"));
         //加载可兑换商品的数据列表
         getCommodities();
     }
@@ -216,14 +214,19 @@
     function getCommodities() {
         //先清空下拉值
         $('#_exchange_exchangeCommoditiesId').combobox("loadData",[]);
+        var market = $('#_market').val();
         $.ajax({
             type: "POST",
             url: "${contextPath}/exchangeCommodities/list.action",
+            data: {firmCode:market},
             processData:true,
             dataType: "json",
             async : true,
             success: function (ret) {
-                if(null != ret){
+                if(null != ret && ret.length > 0){
+                    $('#exchangeDlg').dialog('open');
+                    $('#exchangeDlg').dialog('center');
+                    $('#_available_points').textbox("setValue",$('#_points').textbox("getValue"));
                     $('#_exchange_exchangeCommoditiesId').combobox("loadData",ret);
                 }else{
                     $.messager.alert('敬告','未获取到可兑换的商品信息');

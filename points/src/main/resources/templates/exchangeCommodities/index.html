@@ -20,7 +20,7 @@
                                 &nbsp;-&nbsp;<input class="easyui-datetimebox" name="modifiedEnd" id="modifiedEnd" editable="false" style="width:180px;" />
                             </td>
                             <td style="padding:5px;">
-                                <input name="firmCode" id="firmCode" style="width:100%;" data-options="labelAlign:'right',labelWidth:100, editable:false" panelWidth="auto" panelHeight="auto" label="&lowast;所属市场:"/>
+                                <input name="firmCode" id="firmCode" style="width:100%;" data-options="labelAlign:'right',labelWidth:100, editable:false" panelWidth="auto" panelHeight="auto" label="所属市场:"/>
                                 <#comboProvider _id="firmCode" _provider='firmProvider' />
                             </td>
                             <td style="padding-left:28px;padding-top: 10px; padding-bottom: 10px;">
@@ -127,7 +127,8 @@
         //打开新增窗口
         function openInsert(){
             $('#exchangedTr').hide();
-            $("#_name").textbox("enable",true);
+            $("#_name").textbox("enable");
+            $("#_firmCode").textbox("enable");
             $('#dlg').dialog('open');
             $('#dlg').dialog('center');
             $('#_form').form('clear');
@@ -148,7 +149,8 @@
             var formData = $.extend({},selected);
             formData = addKeyStartWith(getOriginalData(formData),"_");
             $('#_form').form('load', formData);
-            $("#_name").textbox("disable", true);
+            $("#_name").textbox("disable");
+            $("#_firmCode").textbox("disable");
             var total = selected["total"];
             var available = selected["available"];
             $("#exchanged").textbox("initValue", total-available);

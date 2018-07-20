@@ -455,6 +455,19 @@ public class CustomerServiceImpl extends BaseServiceImpl<Customer, Long> impleme
 		return 0;
 	}
 
+	@Override
+	public List<Customer> listByExample(Customer domain) {
+		CustomerTreeDto dto = DTOUtils.as(domain, CustomerTreeDto.class);
+		if (StringUtils.isBlank(dto.getMarket()) && CollectionUtils.isEmpty(dto.getFirmCodes())) {
+			List<String> firmCodes = firmService.getCurrentUserFirmCodes(dto.getUserId());
+			if (CollectionUtils.isEmpty(firmCodes)) {
+				return Collections.EMPTY_LIST;
+			}
+			dto.setFirmCodes(firmCodes);
+		}
+		return super.listByExample(dto);
+	}
+
 	// ========================================== 私有方法 ==========================================
 
 	/**
