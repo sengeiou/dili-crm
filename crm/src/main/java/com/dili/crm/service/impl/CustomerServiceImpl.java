@@ -113,8 +113,8 @@ public class CustomerServiceImpl extends BaseServiceImpl<Customer, Long> impleme
 		if (StringUtils.isNotBlank(customer.getCertificateNumber())) {
 			//证件号码去空格
 			customer.setCertificateNumber(customer.getCertificateNumber().trim());
+			//检查证件号，全局唯一，不能重复
 			Customer condition = DTOUtils.newDTO(Customer.class);
-			condition.setCertificateType(customer.getCertificateType());
 			condition.setCertificateNumber(customer.getCertificateNumber());
 			condition.setYn(1);
 			List<Customer> list = list(condition);
@@ -145,6 +145,18 @@ public class CustomerServiceImpl extends BaseServiceImpl<Customer, Long> impleme
         UserTicket userTicket = SessionContext.getSessionContext().getUserTicket();
         if(userTicket == null){
             return BaseOutput.failure("修改失败，登录超时");
+        }
+        if (StringUtils.isNotBlank(customer.getCertificateNumber())) {
+            //证件号码去空格
+            customer.setCertificateNumber(customer.getCertificateNumber().trim());
+            //检查证件号，全局唯一，不能重复
+            Customer condition = DTOUtils.newDTO(Customer.class);
+            condition.setCertificateNumber(customer.getCertificateNumber());
+            condition.setYn(1);
+            List<Customer> list = list(condition);
+            if(!list.isEmpty()){
+                return BaseOutput.failure("证件号码已存在");
+            }
         }
         customer.setModifiedId(userTicket.getId());
 		customer.setModified(new Date());
