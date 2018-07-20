@@ -114,8 +114,7 @@ public class IndexController {
 
     private Map<Object, Object> getCustomerMetadata() {
         Map<Object, Object> metadata = new HashMap<>();
-
-        metadata.put("market", getDDProvider("market"));
+        metadata.put("market","firmProvider");
         metadata.put("sourceSystem", getDDProvider("system"));
         metadata.put("profession", getDDProvider("customer_profession"));
         return metadata;

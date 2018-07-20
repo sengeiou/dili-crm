@@ -110,18 +110,9 @@ public class CustomerServiceImpl extends BaseServiceImpl<Customer, Long> impleme
         if(userTicket == null){
             return BaseOutput.failure("新增失败，登录超时");
         }
-		if (StringUtils.isNotBlank(customer.getCertificateNumber())) {
-			//证件号码去空格
-			customer.setCertificateNumber(customer.getCertificateNumber().trim());
-			//检查证件号，全局唯一，不能重复
-			Customer condition = DTOUtils.newDTO(Customer.class);
-			condition.setCertificateNumber(customer.getCertificateNumber());
-			condition.setYn(1);
-			List<Customer> list = list(condition);
-			if(!list.isEmpty()){
-				return BaseOutput.failure("证件号码已存在");
-			}
-		}
+        if (checkCertificateNumberExist(customer)) {
+            return BaseOutput.failure("证件号码已存在");
+        }
         //本系统新增的，写死为crm，对应数据字典
 	    customer.setSourceSystem("crm");
         customer.setCreatedId(userTicket.getId());
@@ -146,17 +137,8 @@ public class CustomerServiceImpl extends BaseServiceImpl<Customer, Long> impleme
         if(userTicket == null){
             return BaseOutput.failure("修改失败，登录超时");
         }
-        if (StringUtils.isNotBlank(customer.getCertificateNumber())) {
-            //证件号码去空格
-            customer.setCertificateNumber(customer.getCertificateNumber().trim());
-            //检查证件号，全局唯一，不能重复
-            Customer condition = DTOUtils.newDTO(Customer.class);
-            condition.setCertificateNumber(customer.getCertificateNumber());
-            condition.setYn(1);
-            List<Customer> list = list(condition);
-            if(!list.isEmpty()){
-                return BaseOutput.failure("证件号码已存在");
-            }
+        if (checkCertificateNumberExist(customer)) {
+            return BaseOutput.failure("证件号码已存在");
         }
         customer.setModifiedId(userTicket.getId());
 		customer.setModified(new Date());
@@ -570,8 +552,6 @@ public class CustomerServiceImpl extends BaseServiceImpl<Customer, Long> impleme
 		return dateFormat.format(cal.getTime());
 	}
 
-
-
 	/**
 	 * 批量用户的父客户为某一客户
 	 * @param parentId 父客户ID
@@ -607,5 +587,26 @@ public class CustomerServiceImpl extends BaseServiceImpl<Customer, Long> impleme
 		List<String> parentIds = Arrays.asList(parentIdsStr.split(","));
 		return getActualDao().queryMemberIds(parentIds);
 	}
+
+    /**
+     * 检查证件号是否存在
+     * @param customer
+     * @return true-存在
+     */
+    private boolean checkCertificateNumberExist(Customer customer) {
+        if (StringUtils.isNotBlank(customer.getCertificateNumber())) {
+            //证件号码去空格
+            customer.setCertificateNumber(customer.getCertificateNumber().trim());
+            //检查证件号，全局唯一，不能重复
+            Customer condition = DTOUtils.newDTO(Customer.class);
+            condition.setCertificateNumber(customer.getCertificateNumber());
+            condition.setYn(1);
+            List<Customer> list = list(condition);
+            if (!list.isEmpty()) {
+                return true;
+            }
+        }
+        return false;
+    }
 
 }
