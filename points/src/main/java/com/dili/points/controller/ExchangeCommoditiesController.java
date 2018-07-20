@@ -1,8 +1,14 @@
 package com.dili.points.controller;
 
-import java.util.Collections;
-import java.util.List;
-
+import com.dili.points.domain.ExchangeCommodities;
+import com.dili.points.domain.dto.ExchangeCommoditiesDTO;
+import com.dili.points.service.ExchangeCommoditiesService;
+import com.dili.points.service.FirmService;
+import com.dili.ss.domain.BaseOutput;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiImplicitParam;
+import io.swagger.annotations.ApiImplicitParams;
+import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
@@ -10,16 +16,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.dili.points.domain.ExchangeCommodities;
-import com.dili.points.domain.dto.ExchangeCommoditiesDTO;
-import com.dili.points.provider.FirmProvider;
-import com.dili.points.service.ExchangeCommoditiesService;
-import com.dili.ss.domain.BaseOutput;
-
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiImplicitParam;
-import io.swagger.annotations.ApiImplicitParams;
-import io.swagger.annotations.ApiOperation;
+import java.util.Collections;
+import java.util.List;
 
 /**
  * 由MyBatis Generator工具自动生成
@@ -31,7 +29,8 @@ import io.swagger.annotations.ApiOperation;
 public class ExchangeCommoditiesController {
     @Autowired
     ExchangeCommoditiesService exchangeCommoditiesService;
-    @Autowired FirmProvider firmProvider;
+    @Autowired
+    FirmService firmService;
 
     @ApiOperation("跳转到ExchangeCommodities页面")
     @RequestMapping(value="/index.html", method = RequestMethod.GET)
@@ -45,11 +44,11 @@ public class ExchangeCommoditiesController {
 	})
     @RequestMapping(value="/list.action", method = {RequestMethod.GET, RequestMethod.POST})
     public @ResponseBody List<ExchangeCommodities> list(ExchangeCommoditiesDTO exchangeCommodities) {
-    	List<String>firmCodes=this.firmProvider.getCurrentUserFirmCodes();
-    	if(firmCodes.isEmpty()) {
-    		return Collections.emptyList();
-    	}
-    	exchangeCommodities.setFirmCodes(firmCodes);
+        List<String> firmCodes = this.firmService.getCurrentUserFirmCodes();
+        if (firmCodes.isEmpty()) {
+            return Collections.emptyList();
+        }
+        exchangeCommodities.setFirmCodes(firmCodes);
         return exchangeCommoditiesService.list(exchangeCommodities);
     }
 

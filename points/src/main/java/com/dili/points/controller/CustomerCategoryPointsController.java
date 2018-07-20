@@ -2,20 +2,21 @@ package com.dili.points.controller;
 
 import com.dili.points.domain.CustomerCategoryPoints;
 import com.dili.points.domain.dto.CustomerCategoryPointsDTO;
-import com.dili.points.provider.FirmProvider;
 import com.dili.points.service.CustomerCategoryPointsService;
+import com.dili.points.service.FirmService;
 import com.dili.ss.domain.BaseOutput;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
-import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
+
+import java.util.List;
 
 /**
  * 由MyBatis Generator工具自动生成
@@ -28,7 +29,8 @@ public class CustomerCategoryPointsController {
     @Autowired
     CustomerCategoryPointsService customerCategoryPointsService;
     
-    @Autowired FirmProvider firmProvider;
+    @Autowired
+    FirmService firmService;
 
     @ApiOperation("跳转到CustomerCategoryPoints页面")
     @RequestMapping(value="/index.html", method = RequestMethod.GET)
@@ -51,7 +53,7 @@ public class CustomerCategoryPointsController {
 	})
     @RequestMapping(value="/listPage.action", method = {RequestMethod.GET, RequestMethod.POST})
     public @ResponseBody String listPage(CustomerCategoryPointsDTO customerCategoryPoints) throws Exception {
-        return customerCategoryPointsService.listEasyuiPageByExample(customerCategoryPoints, true,this.firmProvider.getCurrentUserFirmCodes()).toString();
+        return customerCategoryPointsService.listEasyuiPageByExample(customerCategoryPoints, true,this.firmService.getCurrentUserFirmCodes()).toString();
     }
 
     @ApiOperation("新增CustomerCategoryPoints")

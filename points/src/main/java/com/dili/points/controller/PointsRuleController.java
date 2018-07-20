@@ -2,12 +2,11 @@ package com.dili.points.controller;
 
 import com.dili.points.domain.PointsRule;
 import com.dili.points.domain.dto.PointsRuleDTO;
-import com.dili.points.provider.FirmProvider;
+import com.dili.points.service.FirmService;
 import com.dili.points.service.PointsRuleService;
 import com.dili.ss.domain.BaseOutput;
 import com.dili.ss.dto.DTOUtils;
 import com.dili.uap.sdk.domain.Firm;
-
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
@@ -17,15 +16,12 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -40,7 +36,8 @@ import java.util.stream.Collectors;
 public class PointsRuleController {
     @Autowired
     PointsRuleService pointsRuleService;
-    @Autowired FirmProvider firmProvider;
+    @Autowired
+    FirmService firmService;
 
 
     @ApiOperation("跳转到PointsRule页面")
@@ -116,7 +113,7 @@ public class PointsRuleController {
     @RequestMapping(value = "/listPage.action", method = {RequestMethod.GET, RequestMethod.POST})
     public @ResponseBody
     String listPage(PointsRuleDTO pointsRule) throws Exception {
-    	return pointsRuleService.listEasyuiPageByExample(pointsRule, true,this.firmProvider.getCurrentUserFirmCodes()).toString();
+    	return pointsRuleService.listEasyuiPageByExample(pointsRule, true,this.firmService.getCurrentUserFirmCodes()).toString();
     }
 
     @ApiOperation("新增PointsRule")
@@ -159,7 +156,7 @@ public class PointsRuleController {
 			PointsRule pointsRuleItem = ruleList.get(0);
 			String firmCode = pointsRuleItem.getFirmCode();
 			//查询市场名称
-			Optional<Firm> opt = this.firmProvider.getFirmByCode(firmCode);
+			Optional<Firm> opt = this.firmService.getFirmByCode(firmCode);
 			String firmName = opt.map(Firm::getName).orElse(firmCode);
 			String failMsg = "已启用相同类型规则  [市场]:" + firmName 
 					+ " [编码]:" + pointsRuleItem.getCode() 

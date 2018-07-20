@@ -3,8 +3,8 @@ package com.dili.points.controller;
 import com.dili.points.domain.PointsDetail;
 import com.dili.points.domain.dto.CustomerPointsDTO;
 import com.dili.points.domain.dto.PointsDetailDTO;
-import com.dili.points.provider.FirmProvider;
 import com.dili.points.service.CustomerPointsService;
+import com.dili.points.service.FirmService;
 import com.dili.points.service.PointsDetailService;
 import com.dili.ss.domain.BaseOutput;
 import com.dili.uap.sdk.domain.UserTicket;
@@ -34,7 +34,8 @@ public class PointsDetailController {
     @Autowired
     PointsDetailService pointsDetailService;
     @Autowired CustomerPointsService customerPointsService;
-    @Autowired FirmProvider firmProvider;
+    @Autowired
+    FirmService firmService;
 
     @ApiOperation("跳转到PointsDetail页面")
     @RequestMapping(value="/index.html", method = RequestMethod.GET)
@@ -75,7 +76,7 @@ public class PointsDetailController {
 	})
     @RequestMapping(value="/listPage.action", method = {RequestMethod.GET, RequestMethod.POST})
     public @ResponseBody String listPage(PointsDetailDTO pointsDetail) throws Exception {
-    	return this.pointsDetailService.listEasyuiPageByExample(pointsDetail, true, this.firmProvider.getCurrentUserFirmCodes()).toString();
+    	return this.pointsDetailService.listEasyuiPageByExample(pointsDetail, true, this.firmService.getCurrentUserFirmCodes()).toString();
     }
 
     @ApiOperation(value="分页查询调整记录", notes = "分页查询调整记录，返回easyui分页信息")
@@ -85,7 +86,7 @@ public class PointsDetailController {
     @RequestMapping(value="/listAdjustRecordPage.action", method = {RequestMethod.GET, RequestMethod.POST})
     public @ResponseBody String listAdjustRecordPage(PointsDetailDTO pointsDetail) throws Exception {
         pointsDetail.setGenerateWay(50);
-        return this.pointsDetailService.listEasyuiPageByExample(pointsDetail, true, this.firmProvider.getCurrentUserFirmCodes()).toString();
+        return this.pointsDetailService.listEasyuiPageByExample(pointsDetail, true, this.firmService.getCurrentUserFirmCodes()).toString();
     }
 
     
