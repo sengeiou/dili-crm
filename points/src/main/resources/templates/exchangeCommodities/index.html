@@ -19,6 +19,10 @@
                                 <input class="easyui-datetimebox" name="modifiedStart" id="modifiedStart" editable="false" style="width:270px;" labelAlign="right" data-options="label:'操作日期:'" />
                                 &nbsp;-&nbsp;<input class="easyui-datetimebox" name="modifiedEnd" id="modifiedEnd" editable="false" style="width:180px;" />
                             </td>
+                            <td style="padding:5px;">
+                                <input name="firmCode" id="firmCode" style="width:100%;" data-options="labelAlign:'right',labelWidth:100, editable:false" panelWidth="auto" panelHeight="auto" label="&lowast;所属市场:"/>
+                                <#comboProvider _id="firmCode" _provider='firmProvider' />
+                            </td>
                             <td style="padding-left:28px;padding-top: 10px; padding-bottom: 10px;">
                                 <a href="#" class="easyui-linkbutton" iconCls="icon-search" id="queryBtn"
                                    onclick="queryGrid()">查询</a>&nbsp;&nbsp;
@@ -45,22 +49,25 @@
                             <th width="20%" data-options="field:'name',   sortable:true, order:'asc', align:'center', resizable:'true', fixed:'false'">
                                 商品名称
                             </th>
+                            <th width="10%" data-options="field:'firmCode', _provider:'firmProvider', sortable:'true', order:'asc', align:'center', resizable:'true', fixed:'false'">
+                                所属市场
+                            </th>
                             <th width="12%" data-options="field:'points',   sortable:true, order:'asc', align:'center', resizable:'true', fixed:'false'">
                                 售价（积分）
                             </th>
-                            <th width="13%" data-options="field:'available',sortable:true, order:'asc', align:'center', resizable:'true', fixed:'false'">
+                            <th width="10%" data-options="field:'available',sortable:true, order:'asc', align:'center', resizable:'true', fixed:'false'">
                                 可兑换
                             </th>
-                            <th width="13%" data-options="field:'exchanged',_provider:'exchangeCommodityProvider',sortable:true, order:'asc', align:'center', resizable:'true', fixed:'false'">
+                            <th width="10%" data-options="field:'exchanged',_provider:'exchangeCommodityProvider',sortable:true, order:'asc', align:'center', resizable:'true', fixed:'false'">
                                 已兑换
                             </th>
-                            <th width="13%" data-options="field:'total',   sortable:true, order:'asc', align:'center', resizable:'true', fixed:'false'">
+                            <th width="10%" data-options="field:'total',   sortable:true, order:'asc', align:'center', resizable:'true', fixed:'false'">
                                 总量
                             </th>
                             <th width="13%" data-options="field:'modifiedId',_provider:'userProvider',sortable:true, order:'asc', align:'center', resizable:'true', fixed:'false'">
                                 操作员
                             </th>
-                            <th width="17%" data-options="field:'modified',  _provider:'datetimeProvider', sortable:true, order:'asc', align:'center', resizable:'true', fixed:'false'">
+                            <th width="16%" data-options="field:'modified',  _provider:'datetimeProvider', sortable:true, order:'asc', align:'center', resizable:'true', fixed:'false'">
                                 操作时间
                             </th>
                         </tr>
@@ -73,7 +80,7 @@
     <div id="dlg" class="easyui-dialog" resizable="false" constrain="true" shadow="true" draggable="false" title="商品信息" style="padding:20px" modal="true" border="thin" closed="true"
          data-options="
 				iconCls: 'icon-save',
-				height: 280,
+				height: 300,
 				buttons: [{
 					text:'确认',
 					iconCls:'icon-ok',
@@ -83,6 +90,12 @@
     <form id="_form" class="easyui-form" method="post" fit="true">
         <input name="_id" id="_id" type="hidden">
         <table width="360px">
+            <tr>
+                <td style="padding:5px;">
+                    <input name="_firmCode" id="_firmCode" style="width:100%;" required data-options="labelAlign:'right',labelWidth:100, editable:false" panelWidth="auto" panelHeight="auto" label="&lowast;所属市场:"/>
+                    <#comboProvider _id="_firmCode" _provider='firmProvider' />
+                </td>
+            </tr>
             <tr>
                 <td style="padding:5px;">
                     <input class="easyui-textbox" name="_name" id="_name" style="width:100%" required data-options="labelAlign:'right',labelWidth:100,label:'&lowast;商品名称:', validType:'length[0,20]'" />
@@ -128,6 +141,7 @@
                 $.messager.alert('警告','请选中一条数据');
                 return;
             }
+            $('#_form').form('clear');
             $('#dlg').dialog('open');
             $('#dlg').dialog('center');
             formFocus("_form", "_name");
