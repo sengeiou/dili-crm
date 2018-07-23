@@ -8,6 +8,7 @@ import com.dili.ss.domain.BaseOutput;
 import com.dili.ss.domain.EasyuiPageOutput;
 import com.dili.ss.dto.DTOUtils;
 
+import com.dili.uap.sdk.session.SessionContext;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
@@ -58,6 +59,7 @@ public class CustomerPointsController {
 	})
     @RequestMapping(value="/listPage.action", method = {RequestMethod.GET, RequestMethod.POST})
     public @ResponseBody String listPage(CustomerApiDTO customer) throws Exception {
+        customer.setUserId(SessionContext.getSessionContext().getUserTicket().getId());
     	EasyuiPageOutput easyuiPageOutput = this.customerPointsService.listCustomerPointsByCustomer(customer);
         return easyuiPageOutput.toString();
     }
