@@ -53,7 +53,8 @@ public class CustomerCategoryPointsController {
 	})
     @RequestMapping(value="/listPage.action", method = {RequestMethod.GET, RequestMethod.POST})
     public @ResponseBody String listPage(CustomerCategoryPointsDTO customerCategoryPoints) throws Exception {
-        return customerCategoryPointsService.listEasyuiPageByExample(customerCategoryPoints, true,this.firmService.getCurrentUserFirmCodes()).toString();
+    	List<String>firmCodes = this.firmService.getCurrentUserAvaliableFirmCodes(customerCategoryPoints.getFirmCode());
+        return customerCategoryPointsService.listEasyuiPageByExample(customerCategoryPoints, true, firmCodes).toString();
     }
 
     @ApiOperation("新增CustomerCategoryPoints")

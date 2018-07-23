@@ -86,7 +86,9 @@ public class PointsDetailController {
     @RequestMapping(value="/listAdjustRecordPage.action", method = {RequestMethod.GET, RequestMethod.POST})
     public @ResponseBody String listAdjustRecordPage(PointsDetailDTO pointsDetail) throws Exception {
         pointsDetail.setGenerateWay(50);
-        return this.pointsDetailService.listEasyuiPageByExample(pointsDetail, true, this.firmService.getCurrentUserFirmCodes()).toString();
+        
+       List<String>firmCodes=this.firmService.getCurrentUserAvaliableFirmCodes(pointsDetail.getFirmCode());
+       return this.pointsDetailService.listEasyuiPageByExample(pointsDetail, true, firmCodes).toString();
     }
 
     

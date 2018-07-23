@@ -53,7 +53,10 @@ public class PointsExchangeRecordController {
 	})
     @RequestMapping(value="/listPage.action", method = {RequestMethod.GET, RequestMethod.POST})
     public @ResponseBody String listPage(PointsExchangeRecordDTO pointsExchangeRecord) throws Exception {
-        return pointsExchangeRecordService.listEasyuiPageByExample(pointsExchangeRecord, true,firmService.getCurrentUserFirmCodes()).toString();
+    	
+    	List<String>firmCodes = this.firmService.getCurrentUserAvaliableFirmCodes(pointsExchangeRecord.getFirmCode());
+    	
+        return pointsExchangeRecordService.listEasyuiPageByExample(pointsExchangeRecord, true, firmCodes).toString();
     }
 
     @ApiOperation("新增PointsExchangeRecord")

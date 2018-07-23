@@ -113,7 +113,10 @@ public class PointsRuleController {
     @RequestMapping(value = "/listPage.action", method = {RequestMethod.GET, RequestMethod.POST})
     public @ResponseBody
     String listPage(PointsRuleDTO pointsRule) throws Exception {
-    	return pointsRuleService.listEasyuiPageByExample(pointsRule, true,this.firmService.getCurrentUserFirmCodes()).toString();
+    	
+    	List<String>firmCodes = this.firmService.getCurrentUserAvaliableFirmCodes(pointsRule.getFirmCode());
+    	
+    	return pointsRuleService.listEasyuiPageByExample(pointsRule, true,firmCodes).toString();
     }
 
     @ApiOperation("新增PointsRule")
