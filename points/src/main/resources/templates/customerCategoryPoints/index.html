@@ -163,7 +163,7 @@
         }
 
         function resetCategory(second) {
-            var resetUrl = '${contextPath}/category/list?parentCategoryId=-1';
+            var resetUrl = '${contextPath}/category/list.action?parentCategoryId=-1';
             if (!second) {
                 $('#category2Id').combobox('reload', resetUrl);
                 $('#category2Id').combobox('clear');
@@ -208,13 +208,13 @@
         $(function () {
 
             $('#category1Id').combobox({
-                url:'${contextPath}/category/list?parentCategoryId=0',
+                url:'${contextPath}/category/list.action?parentCategoryId=0',
                 valueField:'categoryId',
                 textField:'name',
                 onSelect:function(record){
                     resetCategory(false);
                     $('#category2Id').combobox('clear');
-                    $('#category2Id').combobox('reload', "${contextPath}/category/list?parentCategoryId=" + record.categoryId);
+                    $('#category2Id').combobox('reload', "${contextPath}/category/list.action?parentCategoryId=" + record.categoryId);
                 },
                 onChange:function (newValue,oldValue) {
                     if(newValue == undefined){
@@ -228,7 +228,7 @@
                 textField:'name',
                 onSelect:function(record){
                     $('#category3Id').combobox('clear');
-                    $('#category3Id').combobox('reload', "${contextPath}/category/list?parentCategoryId=" + record.categoryId);
+                    $('#category3Id').combobox('reload', "${contextPath}/category/list.action?parentCategoryId=" + record.categoryId);
                 },
                 onChange:function (newValue,oldValue) {
                     if(newValue == undefined){
