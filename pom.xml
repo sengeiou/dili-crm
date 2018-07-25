@@ -12,8 +12,8 @@
 	<packaging>pom</packaging>
 
 	<modules>
-		<module>crmadmin-sdk</module>
-		<module>crmadmin</module>
+		<!--<module>crmadmin-sdk</module>-->
+		<!--<module>crmadmin</module>-->
 		<module>points</module>
 		<!--<module>crm-admin-server</module>-->
 		<module>crm</module>
