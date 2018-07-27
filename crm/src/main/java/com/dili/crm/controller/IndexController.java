@@ -20,6 +20,8 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
+
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
@@ -61,11 +63,26 @@ public class IndexController {
 
         int clientRefreshFrequency = this.getRefreshFrequency();
         String firmCode = this.firmService.getCurrentUserDefaultFirmCode();
-        modelMap.put("startDate", this.calStartDate());
-        modelMap.put("endDate", this.calEndDate());
+        String startDate=this.calStartDate();
+        String endDate=this.calEndDate();
+        modelMap.put("startDate", startDate);
+        modelMap.put("endDate", endDate);
         modelMap.put("indexAbnormalOrdersChartUrl", this.chartService.getIndexAbnormalOrdersChartUrl(firmCode));
-        modelMap.put("indexPurchasingTopChartUrl", this.chartService.getIndexPurchasingTopChartUrl(firmCode));
-        modelMap.put("indexSalesTopChartUrl", this.chartService.getIndexSalesTopChartUrl(firmCode));
+        
+        //为第三方报表url添加开始结束日期参数，如果url为空则不添加
+        String indexPurchasingTopChartUrl= this.chartService.getIndexPurchasingTopChartUrl(firmCode);
+        if(StringUtils.isNotBlank(indexPurchasingTopChartUrl)) {
+        	indexPurchasingTopChartUrl=indexPurchasingTopChartUrl+"?dt="+startDate+" - "+startDate;
+        }
+        modelMap.put("indexPurchasingTopChartUrl",indexPurchasingTopChartUrl);
+        
+        //为第三方报表url添加开始结束日期参数，如果url为空则不添加
+        String indexSalesTopChartUrl=this.chartService.getIndexSalesTopChartUrl(firmCode);
+        if(StringUtils.isNotBlank(indexSalesTopChartUrl)) {
+        	indexSalesTopChartUrl=indexSalesTopChartUrl+"?dt="+startDate+" - "+startDate;
+        }
+        
+        modelMap.put("indexSalesTopChartUrl", indexSalesTopChartUrl);
         modelMap.put("chartServer", findChartServer());
         modelMap.put("customerAddress", JSONArray.toJSONString(customerService.listCustomerOperating(null,null)));
         modelMap.put("clientRefreshFrequency", clientRefreshFrequency);
