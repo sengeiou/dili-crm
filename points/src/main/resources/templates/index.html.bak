@@ -1,0 +1,333 @@
+<#resource code="viewIndexPage">
+	<#body>
+		<script type="text/javascript" src="http://api.map.baidu.com/api?v=3.0&ak=<#config name='map.ak'/>"></script>
+		<script type="text/javascript" src="http://api.map.baidu.com/library/InfoBox/1.2/src/InfoBox_min.js"></script>
+		<script type="text/javascript" src="${contextPath}/resources/js/TextIconOverlay_min.js"></script>
+		<script type="text/javascript" src="${contextPath}/resources/js/MarkerClusterer.min.js"></script>
+		<style>
+			html,
+			.easyui-layout {
+				background: #e7e9eb;
+			}
+			.panel-title {
+				font-size: 16px;
+			}
+			/*top-left 板块*/
+			#header,
+			#locationHeader,
+			#sellHeader,
+			#buyHeader {
+				height: 40px;
+				margin: 0;
+				padding-right: 30px;
+				text-indent: 50px;
+				line-height: 40px;
+			}
+			#grid  {
+				margin-left: 20px;
+				margin-right: 20px;
+				border-collapse:collapse;
+				border-spacing:0;
+			}
+			#grid tr {
+				border-bottom: 1px dashed #ddd;
+				line-height: 40px;
+				box-sizing: border-box;
+			}
+			#grid thead tr {
+				border-bottom: none;
+				height: 22px;
+				line-height: 22px;
+			}
+			#grid tr:first-child th {
+				color: #bbb;
+			}
+
+			/*模块 title*/
+			.linkmore {
+				float: right;
+				color: #999;
+				text-decoration: none;
+			}
+			#header  {
+				background: url(${contextPath}/resources/images/icon/add-cus-icon.png) no-repeat 20px center ;
+			}
+			#locationHeader  {
+				background: url(${contextPath}/resources/images/icon/locations-icon.png) no-repeat 20px center ;
+			}
+			#sellHeader  {
+				background: url(${contextPath}/resources/images/icon/money-icon.png) no-repeat 20px center ;
+			}
+			#buyHeader  {
+				background: url(${contextPath}/resources/images/icon/buy-icon.png) no-repeat 20px center ;
+			}
+
+			.layout-panel-center {
+				margin-left: 10px;
+			}
+			.layout-panel-center:nth-child(4) {
+				margin-left: 0;
+			}
+			
+		</style>
+		<div class="maincontain" >
+			<div id="header" class="panel-title" header="addcusHeader" style=" margin: 0; ">
+				<div id="addcusHeader" >
+					<span id="addcusTitle">近期新增客户</span>
+					<a class="linkmore" href="${contextPath}/customer/index.html">查看更多&gt;</a>
+				</div>
+			</div>
+			<!-- ====================================================================================================================== -->
+			<!-- 上方布局 -->
+			<!-- ====================================================================================================================== -->
+			<!--<div region="north" height="auto" align="center" style="height:520px;border:0px;  padding: 10px 25px 0; background: #e7e9eb ">-->
+			<div  align="center" style="height:520px;border:0px;  padding-left: 25px;  padding-right: 25px; background: #e7e9eb ">
+				<!-- =========================================================表单========================================================= -->
+				<div class="easyui-layout" fit="true">
+					<div region="west" height="auto" align="center" border="false" style="width:50%;">
+
+						<div  class="easyui-panel" border="false" title="近期新增客户" header="#header"  style="width:100%;height:100%;">
+							<table  id="grid"  style="padding-left: 20px;padding-right: 20px; text-align: center">
+								<thead>
+								<tr>
+									<th width="20%" data-options="field:'name',   sortable:false, order:'asc', align:'left', resizable:'true', fixed:'false',formatter:clientFormatterFun">
+										客户名称
+									</th>
+									<th width="20%" data-options="field:'phone',   sortable:false, order:'asc', align:'center', resizable:'true', fixed:'false'">
+										电话
+									</th>
+									<th width="20%"  data-options="field:'market', _provider:'dataDictionaryValueProvider', _queryParams:{'dd_code':'market'},  sortable:false, order:'asc', align:'center', resizable:'true', fixed:'false'">
+										所属市场
+									</th>
+
+									<th width="20%" data-options="field:'sourceSystem', _provider:'dataDictionaryValueProvider', _queryParams:{'dd_code':'system'},  sortable:false, order:'asc', align:'center', resizable:'true', fixed:'false'">
+										来源系统
+									</th>
+
+									<th width="20%" data-options="field:'created', _provider:'datetimeProvider',  sortable:false, order:'asc', align:'center', resizable:'true', fixed:'false'">
+										创建时间
+									</th>
+
+								</tr>
+								</thead>
+								<tbody style="white-space: nowrap;"></tbody>
+							</table>
+						</div>
+					</div>
+					<div region="center" style="width:100%;border:0px;" height="auto" border="false">
+						<div  class="easyui-panel" header="#locationHeader" border="false"  title="客户分布"  style="width:100%;height:100%;" >
+							<div id="locationHeader"  class="panel-title" >
+								<span id="locationTitle">客户分布</span>
+								<a class="linkmore" href="${contextPath}/customer/locations.html">查看更多&gt;</a>
+							</div>
+							<div id="mapDiv" style="width:99%;height:99%;"></div>
+						</div>
+					</div>
+				</div>
+				<!--</div>-->
+			</div>
+			<!-- ====================================================================================================================== -->
+			<!-- 中央布局 -->
+			<!-- ====================================================================================================================== -->
+			<!-- 表格 -->
+			<!--<div region="center"  style="height: 450px; border:0px; padding: 10px 25px 0; background: #e7e9eb "  height="auto" border="false">-->
+			<div style="height: 480px; border:0px; padding: 10px 25px 0; background: #e7e9eb ">
+				<div class="easyui-layout" fit="true" border="false" >
+					<div region="west" height="auto" align="center" style="width:50%;" border="false">
+						<div  class="easyui-panel" header="#sellHeader" border="false"  title="近一月 销售top10"  style="width:100%;height:100%;">
+							<div id="sellHeader"  class="panel-title">
+								<span id="sellTitle">近一月 销售top10</span>
+								<a class="linkmore" href="${contextPath}/chart/salestopAmount.html">查看更多&gt;</a>
+							</div>
+							<iframe id="salesTopIframe" style="width:99%;height:100%; margin-top: -30px;" scrolling="no" frameborder="no" marginwidth="0" marginheight="0" border="0" src="${indexSalesTopChartUrl}?dt=${startDate} - ${endDate}">
+							</iframe>
+						</div>
+					</div>
+					<div region="center"  height="auto" align="center"  style="width:50%; " border="false">
+						<div  class="easyui-panel" id="abc" data-options="headerCls:'asdsad'" header="#buyHeader" border="false" title="近一月 采购top10"  style="width:100%;height:100%;">
+							<div id="buyHeader"  class="panel-title">
+								<span id="buyTitle">近一月 采购top10</span>
+								<a class="linkmore" href="${contextPath}/chart/consumptionAmount.html">查看更多&gt;</a>
+							</div>
+							<iframe id="purchasingTopIframe" style="width:99%;height:100%; margin-top: -30px;" scrolling="no" frameborder="no" marginwidth="0" marginheight="0" border="0" src="${indexPurchasingTopChartUrl}?dt=${startDate} - ${endDate}">
+							</iframe>
+						</div>
+					</div>
+				</div>
+				<!-- =========================================================表格========================================================= -->
+				<!--</div>-->
+			</div>
+		</div>
+
+		<!-- ====================================================================================================================== -->
+		<!-- style & script 分隔线 -->
+		<!-- 客户定位相关JS -->
+		<#customer_locationJs/>
+		<!-- ====================================================================================================================== -->
+		<script type="text/javascript">
+            // ============================   客户相关js st  ==============================
+            function clientFormatterFun(value, row, index){
+                var clientId=row['id'];
+                return "<a href='${contextPath}/customer/detail.html?id="+clientId+"'>"+value+"</a>"
+            }
+            //打开修改客户窗口
+            function openUpdate(){
+                var selected = $("#grid").treegrid("getSelected");
+                if (null == selected) {
+                    $.messager.alert('警告','请选中一条数据');
+                    return;
+                }
+                window.location.href="${contextPath}/customer/detail.html?id="+selected["id"];
+                return;
+            }
+
+            //客户表格查询
+            function queryGrid() {
+                $.ajax({
+                    type: "POST",
+                    url: "${contextPath}/listCustomers",
+                    data: {},
+                    processData:true,
+                    dataType: "json",
+                    async : true,
+                    success: function (rows) {
+                        //console.info(JSON.stringify(data.rows));
+                        var tbody=$('<tbody></tbody>');
+                        $.each(rows,function(k,v){
+                            var name=v.name?v.name:'';
+                            var link= "<a href='${contextPath}/customer/detail.html?id="+v.id+"'>"+name+"</a>";
+
+                            var phone=v.phone?v.phone:'';
+                            var market=v.market?v.market:'';
+                            var sourceSystem=v.sourceSystem?v.sourceSystem:'';
+                            var created="";
+                            if(v.created){
+                                var date=new Date();
+                                date.setTime(v.created);
+                                created=datetimeFormatter(date);
+                            }else{
+                                created="";
+                            }
+                            var tr="<tr><td  >"+link+"</td><td >"+phone+"</td><td>"+market+"</td><td>"+sourceSystem+"</td><td>"+created+"</td></tr>";
+                            tbody.append(tr);
+                        });
+                        $('#grid tbody').html(tbody.html())
+                    },
+                    error: function(){
+                        // alert('error')
+                    }
+                });
+            }
+
+
+            // ============================   客户相关js end  ==============================
+            //全局按键事件
+            function getKey(e){
+                e = e || window.event;
+                var keycode = e.which ? e.which : e.keyCode;
+                if(keycode == 46){ //如果按下删除键
+                    var selected = $("#grid").treegrid("getSelected");
+                    if(selected && selected!= null){
+                        del();
+                    }
+                }
+            }
+
+//          第三方InfoBox时保存上次打开的窗口
+            var infoBoxTemp = null;
+            /**
+             * 绑定页面回车事件，以及初始化页面时的光标定位
+             * @formId
+             *          表单ID
+             * @elementName
+             *          光标定位在指点表单元素的name属性的值
+             * @submitFun
+             *          表单提交需执行的任务
+             */
+            $(function () {
+// ============================  地图相关js  ============================
+                // 百度地图API功能
+                var map = new BMap.Map("mapDiv");
+                //哈尔滨
+        		//var lat =45.766474;//126.608858;
+                //var lng =126.641694;//45.709509;
+                var lat ="<#config name='map.lat' />";
+                
+                var lng ="<#config name='map.lng' />";
+                
+                map.centerAndZoom(new BMap.Point(lng,lat), 5);
+                //map.centerAndZoom("哈尔滨市", 12);
+                map.enableScrollWheelZoom();
+                var MAX = 100;
+                var markers = [];
+
+                //所有客户地址信息
+                var customerAddresses = ${customerAddress};
+                for (var i = 0; i < customerAddresses.length; i++) {
+                    var customerAddress = customerAddresses[i];
+                    var pt = new BMap.Point(customerAddress.operatingLng,customerAddress.operatingLat);
+                    var marker = new BMap.Marker(pt, {icon: getLocationIcon(customerAddress.type)});
+                    //绑定自定义属性
+                    marker.meta={id:customerAddress.id, name:customerAddress.name};
+                    map.addOverlay(marker);
+                    //标签显示在图标下方
+                    var label = new window.BMap.Label(customerAddress.name, { offset: new window.BMap.Size(-10, 25) });
+                    label.setStyle({border:'0px',background: "transparent none repeat"});
+                    marker.setLabel(label);
+                    //鼠标悬停时显示
+                    marker.setTitle(marker.meta.name);
+                    marker.addEventListener("click", function(e){
+                        //第三方InfoBox
+                        if (infoBoxTemp) {
+                            infoBoxTemp.close();
+                        }
+                        var content = [
+                            '<iframe scrolling="auto" frameborder="0" src="'
+                            ,'http://crmweb.diligrp.com:8085/customer/info.html?id='+this.meta.id
+                            ,'" onLoad="" style="width:100%; height: 99.2%;"></iframe>'
+                        ];
+                        var infoBox = new BMapLib.InfoBox(map, content.join(""), {
+                            boxStyle:{
+                                background: "white none repeat scroll 0% 0%",
+                        		border:"1px solid #118bde",
+                                // background:"url('${contextPath}/resources/images/bg.png') no-repeat center top",
+                                width: "480px"
+                                ,height: "140px"
+                            }
+                            ,closeIconMargin: "1px 1px 0 0"
+                            ,offset: new BMap.Size(0, 18)
+                            ,closeIconUrl:"${contextPath}/resources/images/close24.png"
+                            ,enableAutoPan: true
+                            ,align: INFOBOX_AT_TOP
+                        });
+                        infoBoxTemp = infoBox;
+                        infoBox.open(this);
+                    });
+                    markers.push(marker);
+                }
+                //最简单的用法，生成一个marker数组，然后调用markerClusterer类即可。
+                var markerClusterer = new BMapLib.MarkerClusterer(map, {markers:markers});
+            })
+            $(document).ready(function(){
+                var clientRefreshFrequency=${clientRefreshFrequency};
+                queryGrid();
+                function refreshAbnormalOrdersIframe(){
+                    $('#abnormalOrdersIframe').attr('src',$('#abnormalOrdersIframe').attr('src'))
+                }
+                function refreshSalesTopIframe(){
+                    $('#salesTopIframe').attr('src',$('#salesTopIframe').attr('src'))
+                }
+                function refreshPurchasingTopIframe(){
+                    $('#purchasingTopIframe').attr('src',$('#purchasingTopIframe').attr('src'))
+
+                }
+                setInterval(queryGrid,clientRefreshFrequency*1000);
+                //setInterval(refreshAbnormalOrdersIframe,clientRefreshFrequency*1000);//abnormalOrdersIframe
+                //setInterval(refreshSalesTopIframe,clientRefreshFrequency*1000);//salesTopIframe
+                //setInterval(refreshPurchasingTopIframe,clientRefreshFrequency*1000);//purchasingTopIframe
+
+
+            });
+		</script>
+	</#body>
+</#resource>
