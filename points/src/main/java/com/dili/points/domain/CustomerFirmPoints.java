@@ -9,6 +9,7 @@ import javax.persistence.Column;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import java.util.Date;
 
 /**
  * 由MyBatis Generator工具自动生成
@@ -53,4 +54,31 @@ public interface CustomerFirmPoints extends IBaseDomain {
     Long getAvailable();
 
     void setAvailable(Long available);
+
+    @Column(name = "`buyer_points`")
+    @FieldDef(label="买方积分")
+    @EditMode(editor = FieldEditor.Number, required = false)
+    Integer getBuyerPoints();
+
+    void setBuyerPoints(Integer buyerPoints);
+
+    @Column(name = "`seller_points`")
+    @FieldDef(label="卖方积分")
+    @EditMode(editor = FieldEditor.Number, required = false)
+    Integer getSellerPoints();
+
+    void setSellerPoints(Integer sellerPoints);
+
+    @Column(name = "`day_points`")
+    @FieldDef(label="当天积分总和")
+    @EditMode(editor = FieldEditor.Number, required = true)
+    Integer getDayPoints();
+
+    void setDayPoints(Integer dayPoints);
+    @Column(name = "`reset_time`")
+    @FieldDef(label="客户单日上限积分重置时间")
+    @EditMode(editor = FieldEditor.Datetime, required = true)
+    Date getResetTime();
+
+    void setResetTime(Date resetTime);
 }
