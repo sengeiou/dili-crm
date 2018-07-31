@@ -128,18 +128,15 @@ public class PointsDetailController {
      * @return
      */
     @RequestMapping(value="/clearPoints.action", method = {RequestMethod.GET, RequestMethod.POST})
-    public @ResponseBody BaseOutput clearPoints(String notes) {
-
-        if(StringUtils.trimToNull(notes)==null) {
-            return BaseOutput.failure("备注不能为空");
+    public @ResponseBody BaseOutput clearPoints(String firmCode,String notes) {
+        if (StringUtils.isBlank(firmCode) || StringUtils.trimToNull(notes) == null) {
+            return BaseOutput.failure("参数不正确");
         }
         UserTicket userTicket = SessionContext.getSessionContext().getUserTicket();
         if (userTicket == null) {
             throw new RuntimeException("未登录");
         }
-
-
-        pointsDetailService.clear(notes);
+        pointsDetailService.clear(firmCode, notes);
         return BaseOutput.success("新增成功");
     }
     

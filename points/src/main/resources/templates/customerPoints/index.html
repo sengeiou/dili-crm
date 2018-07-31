@@ -156,7 +156,7 @@
  <div id="dlg_clear" class="easyui-dialog" resizable="false" constrain="true" shadow="true" draggable="false" title="积分清零" style="padding:20px" modal="true" border="thin" closed="true"
       data-options="
 				iconCls: 'icon-save',
-				height: 200,
+				height: 280,
 				buttons: [{
 					text:'确认',
 					iconCls:'icon-ok',
@@ -172,8 +172,15 @@
      <form id="_formClear" class="easyui-form" method="post" fit="true">
          <table width="360px">
              <tr>
+
                  <td style="padding:5px;">
-                     <input class="easyui-textbox" name="_notes" id="_notesClear" style="width:100%" data-options="label:'清零原因:',height:80, validType:'length[0,120]'" required="true" />
+                     <input name="_firmCode" id="_firmCode" style="width:100%;" data-options="labelAlign:'right', editable:false" panelWidth="auto" panelHeight="auto" label="&lowast;所属市场:" required/>
+                     <#comboProvider _id="_firmCode" _provider='firmProvider' />
+                 </td>
+             </tr>
+             <tr>
+                 <td style="padding:5px;">
+                     <input class="easyui-textbox" name="_notes" id="_notesClear" style="width:100%" data-options="labelAlign:'right',label:'&lowast;清零原因:',multiline:true,height:80, validType:'length[0,120]'" required="true" />
                  </td>
              </tr>
 
@@ -252,25 +259,32 @@
                 return;
             }
             var _formData = removeKeyStartWith($("#_formClear").serializeObject(),"_");
-            var _url = "${contextPath}/pointsDetail/clearPoints.action";
-            $.ajax({
-                type: "POST",
-                url: _url,
-                data: _formData,
-                processData:true,
-                dataType: "json",
-                async : true,
-                success: function (data) {
-                    if(data.code=="200"){
-                        $("#grid").datagrid("reload");
-                        $('#dlg_clear').dialog('close');
-                    }else{
-                        $.messager.alert('错误',data.result);
-                    }
-                },
-                error: function(){
-                    $.messager.alert('错误','远程访问失败');
+            var firm =  $("#_firmCode").textbox("getText");
+            $.messager.confirm('确认', '此操作将清空所有客户在【'+firm+'】的所有积分，是否继续？', function (r) {
+                if (r) {
+                    $.ajax({
+                        type: "POST",
+                        url: "${contextPath}/pointsDetail/clearPoints.action",
+                        data: _formData,
+                        processData:true,
+                        dataType: "json",
+                        async : true,
+                        success: function (data) {
+                            if(data.code=="200"){
+                                $("#grid").datagrid("reload");
+                                $('#dlg_clear').dialog('close');
+                            }else{
+                                $.messager.alert('错误',data.result);
+                            }
+                        },
+                        error: function(){
+                            $.messager.alert('错误','远程访问失败');
+                        }
+                    });
+                }else {
+                    $('#dlg_clear').dialog('close');
                 }
+
             });
         }
     
@@ -319,16 +333,11 @@
 
 
         function openClear(){
-        <#resource code="clearPoints">
-
-                $.messager.confirm('确认', '此操作将清空所有客户积分，是否继续？', function (r) {
-                        if (r) {
-                            $('#dlg_clear').dialog('open');
-                            $('#dlg_clear').dialog('center');
-                            $('#_notesClear').textbox('setValue', '');
-                        }
-                    });
-        </#resource>
+            <#resource code="clearPoints">
+                $('#dlg_clear').dialog('open');
+                $('#dlg_clear').dialog('center');
+                $('#_formClear').form('clear');
+            </#resource>
         }
         //打开新增窗口
         function openInsert(){

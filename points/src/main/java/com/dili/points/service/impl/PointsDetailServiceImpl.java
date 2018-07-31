@@ -1,5 +1,33 @@
 package com.dili.points.service.impl;
 
+import com.dili.points.component.AsyncTask;
+import com.dili.points.dao.CustomerCategoryPointsMapper;
+import com.dili.points.dao.CustomerFirmPointsMapper;
+import com.dili.points.dao.PointsDetailMapper;
+import com.dili.points.dao.PointsExceptionMapper;
+import com.dili.points.domain.*;
+import com.dili.points.domain.dto.CustomerCategoryPointsDTO;
+import com.dili.points.domain.dto.CustomerPointsDTO;
+import com.dili.points.domain.dto.PointsDetailDTO;
+import com.dili.points.rpc.CustomerRpc;
+import com.dili.points.rpc.SystemConfigRpc;
+import com.dili.points.service.CustomerPointsService;
+import com.dili.points.service.PointsDetailService;
+import com.dili.ss.base.BaseServiceImpl;
+import com.dili.ss.domain.BaseOutput;
+import com.dili.ss.domain.EasyuiPageOutput;
+import com.dili.ss.dto.DTOUtils;
+import com.dili.ss.exception.AppException;
+import com.google.common.collect.Lists;
+import org.apache.commons.collections4.CollectionUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
+import tk.mybatis.mapper.entity.Example;
+
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.time.Duration;
@@ -7,45 +35,9 @@ import java.time.Instant;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.time.temporal.TemporalAmount;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.Map.Entry;
-import java.util.Optional;
 import java.util.stream.Collectors;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Propagation;
-import org.springframework.transaction.annotation.Transactional;
-
-import com.dili.points.component.AsyncTask;
-import com.dili.points.dao.CustomerCategoryPointsMapper;
-import com.dili.points.dao.CustomerPointsMapper;
-import com.dili.points.dao.PointsDetailMapper;
-import com.dili.points.dao.PointsExceptionMapper;
-import com.dili.points.domain.CustomerCategoryPoints;
-import com.dili.points.domain.CustomerPoints;
-import com.dili.points.domain.PointsDetail;
-import com.dili.points.domain.PointsException;
-import com.dili.points.domain.SystemConfig;
-import com.dili.points.domain.dto.CustomerCategoryPointsDTO;
-import com.dili.points.domain.dto.PointsDetailDTO;
-import com.dili.points.rpc.CustomerRpc;
-import com.dili.points.rpc.SystemConfigRpc;
-import com.dili.points.service.PointsDetailService;
-import com.dili.ss.base.BaseServiceImpl;
-import com.dili.ss.domain.BaseOutput;
-import com.dili.ss.domain.EasyuiPageOutput;
-import com.dili.ss.dto.DTOUtils;
-import com.dili.ss.exception.AppException;
-import com.dili.uap.sdk.session.SessionContext;
-
-import tk.mybatis.mapper.entity.Example;
 
 /**
  * 由MyBatis Generator工具自动生成 This file was generated on 2018-03-20 11:29:31.
@@ -60,7 +52,8 @@ public class PointsDetailServiceImpl extends BaseServiceImpl<PointsDetail, Long>
 		return (PointsDetailMapper) getDao();
 	}
 
-	@Autowired CustomerPointsMapper customerPointsMapper;
+	@Autowired
+	CustomerPointsService customerPointsService;
 	@Autowired CustomerRpc customerRpc;
 	@Autowired PointsExceptionMapper pointsExceptionMapper; 
 	@Autowired CustomerCategoryPointsMapper customerCategoryPointsMapper;
@@ -68,6 +61,10 @@ public class PointsDetailServiceImpl extends BaseServiceImpl<PointsDetail, Long>
 	SystemConfigRpc systemConfigRpc;
 	@Autowired
 	AsyncTask asyncTask;
+
+	@Autowired
+	CustomerFirmPointsMapper customerFirmPointsMapper;
+
 	@Transactional(propagation = Propagation.REQUIRED)
 	@Override
 	public int batchInsertPointsDetailDTO(Map<PointsDetailDTO,List<CustomerCategoryPointsDTO>> pointsDetailMap) {
@@ -228,7 +225,7 @@ public class PointsDetailServiceImpl extends BaseServiceImpl<PointsDetail, Long>
 		CustomerPoints example = DTOUtils.newDTO(CustomerPoints.class);
 		example.setCertificateNumber(pointsDetail.getCertificateNumber());
 		// 如果用户积分不存在,则先插入用户积分
-		CustomerPoints customerPoints = this.customerPointsMapper.select(example).stream().findFirst().orElseGet(() -> {
+		CustomerPoints customerPoints = this.customerPointsService.list(example).stream().findFirst().orElseGet(() -> {
 			// CustomerApiDTO customer=DTOUtils.newDTO(CustomerApiDTO.class);
 			// customer.setCertificateNumber(pointsDetail.getCertificateNumber());
 			// Customer
@@ -247,7 +244,7 @@ public class PointsDetailServiceImpl extends BaseServiceImpl<PointsDetail, Long>
 			cp.setBuyerPoints(0);
 			cp.setSellerPoints(0);
 			cp.setYn(1);
-			this.customerPointsMapper.insertExact(cp);
+			this.customerPointsService.insertExact(cp);
 			return cp;
 			// }
 			// return null;
@@ -353,7 +350,7 @@ public class PointsDetailServiceImpl extends BaseServiceImpl<PointsDetail, Long>
 			this.insertPointsException(pointsDetail);
 		}else {
 			// pointsDetail.setId(System.currentTimeMillis());
-			this.customerPointsMapper.updateByPrimaryKey(customerPoints);
+			this.customerPointsService.update(customerPoints);
 			// return 0;
 			// pointsDetail.setId(null);
 			super.insertSelective(pointsDetail);	
@@ -367,27 +364,42 @@ public class PointsDetailServiceImpl extends BaseServiceImpl<PointsDetail, Long>
 	}
 
     @Override
-    @Transactional(propagation = Propagation.REQUIRED)
-	public int clear(String notes) {
-		PointsDetail detail = DTOUtils.newDTO(PointsDetail.class);
-		detail.setNotes("积分清零:" + notes + "");
-		detail.setGenerateWay(50);
-		detail.setCreatedId(SessionContext.getSessionContext().getUserTicket().getId());
-		this.insert(detail);
+    @Transactional(propagation = Propagation.REQUIRED,rollbackFor = Exception.class)
+	public int clear(String firmCode,String notes) {
+		//查询在需要清除积分的市场的客户信息
+		CustomerFirmPoints customerFirmPoints = DTOUtils.newDTO(CustomerFirmPoints.class);
+		customerFirmPoints.setTradingFirmCode(firmCode);
+		List<CustomerFirmPoints> firmPointsList = customerFirmPointsMapper.select(customerFirmPoints);
+		//如果没有客户在此市场产生过积分，则直接返回
+		if (CollectionUtils.isEmpty(firmPointsList)){
+			return 1;
+		}
 
-		CustomerPoints customerPoints = DTOUtils.newDTO(CustomerPoints.class);
-		customerPoints.setAvailable(0);
-		customerPoints.setFrozen(0);
-		customerPoints.setTotal(0);
-		customerPoints.setDayPoints(0);
-		customerPoints.setBuyerPoints(0);
-		customerPoints.setSellerPoints(0);
-
+		//转换出 证件号-积分 结构的map
+		Map<String, Long> map = firmPointsList.stream().collect(Collectors.toMap(CustomerFirmPoints::getCertificateNumber, CustomerFirmPoints::getAvailable));
+		/**
+		 * 更改客户积分表中的可用积分
+		 */
+		CustomerPointsDTO customerPoints = DTOUtils.newDTO(CustomerPointsDTO.class);
+		customerPoints.setCertificateNumbers(Lists.newArrayList(map.keySet()));
+		/**
+		 * 转换客户积分信息，设置客户的可用余额
+		 */
+		List<CustomerPoints> customerPointsList = customerPointsService.list(customerPoints)
+				.stream()
+				.map(customerPoint -> {
+					//客户的总可用余额为：当前余额-需要清零的值
+					customerPoint.setAvailable(customerPoint.getAvailable() - map.get(customerPoint.getCertificateNumber()).intValue());
+					return customerPoint;
+				})
+				.collect(Collectors.toList());
+		customerPointsService.batchUpdate(customerPointsList);
+		//删除客户积分市场信息
 		Example example = new Example(CustomerPoints.class);
 		Example.Criteria criteria = example.createCriteria();
-		criteria.andIsNotNull("id");
-		customerPointsMapper.updateByExampleSelective(customerPoints, example);
-        asyncTask.generatePointsDetail(notes);
+		criteria.andIn("certificateNumber",map.keySet());
+		customerFirmPointsMapper.deleteByExample(example);
+        asyncTask.generatePointsDetail(firmPointsList,notes);
 		return 1;
 	}
 

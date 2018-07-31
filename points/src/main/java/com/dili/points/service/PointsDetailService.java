@@ -15,8 +15,16 @@ import java.util.Optional;
  * This file was generated on 2018-03-20 11:29:31.
  */
 public interface PointsDetailService extends BaseService<PointsDetail, Long> {
-	public Optional<PointsDetailDTO> insert(PointsDetailDTO pointsDetail) ;
-	int clear(String notes) ;
+	Optional<PointsDetailDTO> insert(PointsDetailDTO pointsDetail) ;
+
+	/**
+	 * 按照市场编码，清除所有客户在该市场中的积分
+	 * @param firmCode 市场编码
+	 * @param notes 清除原因
+	 * @return
+	 */
+	int clear(String firmCode,String notes);
+
 	int batchInsertPointsDetailDTO(List<PointsDetailDTO> pointsDetail) ;
 	public int batchInsertPointsDetailDTO(Map<PointsDetailDTO,List<CustomerCategoryPointsDTO>> pointsDetailMap);
 	/**

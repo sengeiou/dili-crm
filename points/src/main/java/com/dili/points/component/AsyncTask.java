@@ -1,8 +1,7 @@
 package com.dili.points.component;
 
-import com.dili.points.domain.CustomerPoints;
+import com.dili.points.domain.CustomerFirmPoints;
 import com.dili.points.domain.PointsDetail;
-import com.dili.points.service.CustomerPointsService;
 import com.dili.points.service.PointsDetailService;
 import com.dili.ss.dto.DTOUtils;
 import org.slf4j.Logger;
@@ -12,6 +11,7 @@ import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Component
 public class AsyncTask {
@@ -19,15 +19,11 @@ public class AsyncTask {
     private static final Logger logger = LoggerFactory.getLogger(AsyncTask.class);
 
     @Autowired
-    private CustomerPointsService customerPointsService;
-
-    @Autowired
     private PointsDetailService pointsDetailService;
 
     @Async
-    public void generatePointsDetail(String notes) {
-        List<CustomerPoints> list = customerPointsService.list(DTOUtils.newDTO(CustomerPoints.class));
-        list.forEach(customerPoints -> {
+    public void generatePointsDetail(List<CustomerFirmPoints> firmPointsList, String notes) {
+        List<PointsDetail> pointsDetails = firmPointsList.stream().map(customerPoints -> {
             PointsDetail detail = DTOUtils.newDTO(PointsDetail.class);
             detail.setNotes("积分清零:" + notes + "");
             detail.setGenerateWay(60);
@@ -37,9 +33,10 @@ public class AsyncTask {
             detail.setBalance(0);
             detail.setInOut(20);
             detail.setSourceSystem("points");
-            pointsDetailService.insert(detail);
-        });
-
+            detail.setFirmCode(customerPoints.getTradingFirmCode());
+            return detail;
+        }).collect(Collectors.toList());
+        pointsDetailService.batchUpdate(pointsDetails);
         logger.info("积分清零任务执行完毕");
     }
 }
