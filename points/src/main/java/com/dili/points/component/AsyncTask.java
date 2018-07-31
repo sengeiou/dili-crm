@@ -36,7 +36,7 @@ public class AsyncTask {
             detail.setFirmCode(customerPoints.getTradingFirmCode());
             return detail;
         }).collect(Collectors.toList());
-        pointsDetailService.batchUpdate(pointsDetails);
+        pointsDetailService.batchInsert(pointsDetails);
         logger.info("积分清零任务执行完毕");
     }
 }
