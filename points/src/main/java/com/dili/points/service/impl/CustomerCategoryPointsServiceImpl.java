@@ -44,4 +44,38 @@ public class CustomerCategoryPointsServiceImpl extends BaseServiceImpl<CustomerC
     	customerCategoryPoints.setFirmCodes(firmCodes);
     	return super.listEasyuiPage(customerCategoryPoints, useProvider);
     }
+    @Override
+    public int[] batchSaveCustomerCategoryPointsDTO(List<CustomerCategoryPointsDTO> dtoList) {
+    	int[]result=new int[dtoList.size()];
+    	for(int i=0;i<dtoList.size();i++) {
+    		result[i]=this.saveCustomerCategoryPointsDTO(dtoList.get(i));
+    	}
+    	return result;
+    }
+    @Override
+    public int saveCustomerCategoryPointsDTO(CustomerCategoryPointsDTO dto) {
+    	CustomerCategoryPoints condition=DTOUtils.newDTO(CustomerCategoryPoints.class);
+		condition.setCategory3Id(dto.getCategory3Id());
+		condition.setCertificateNumber(dto.getCertificateNumber());
+		CustomerCategoryPoints item=this.getActualDao().selectOne(condition);
+		if(item==null) {
+			item=DTOUtils.clone(dto, CustomerCategoryPoints.class);
+			item.setId(null);
+			item.setAvailable(0);
+			item.setBuyerPoints(0);
+			item.setSellerPoints(0);
+		}
+		if(dto.isBuyer()) {
+			item.setBuyerPoints(item.getBuyerPoints()+dto.getActualPoints());
+		}else {
+			item.setSellerPoints(item.getSellerPoints()+dto.getActualPoints());
+		}
+		item.setAvailable(item.getBuyerPoints()+item.getSellerPoints());
+		
+		if(item.getId()==null) {
+			return this.getActualDao().insertExact(item);
+		}else {
+			return this.updateExact(item);
+		}
+    }
 }

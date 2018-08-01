@@ -1,6 +1,7 @@
 package com.dili.points.service;
 
 import com.dili.points.domain.CustomerFirmPoints;
+import com.dili.points.domain.dto.CustomerFirmPointsDTO;
 import com.dili.ss.base.BaseService;
 import com.dili.ss.domain.BaseOutput;
 
@@ -23,4 +24,12 @@ public interface CustomerFirmPointsService extends BaseService<CustomerFirmPoint
      * @return
      */
     Integer deleteByExample(Object example);
+    
+    /**
+     * 保存CustomerFirmPointsDTO信息
+     * @param customerFirmPoints
+     * @return
+     */
+    public int saveCustomerFirmPoints(CustomerFirmPointsDTO customerFirmPoints);
+	 
 }

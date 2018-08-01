@@ -223,7 +223,7 @@
             }
             disableEasyUiControl('queryBtn',true);
             var _formData = removeKeyStartWith($("#_form").serializeObject(),"_");
-            var _url ="${contextPath}/adminManagement/sendJsonToMQ";
+            var _url ="${contextPath}/adminManagement/sendJsonToMQ.action";
             $.ajax({
                 type: "POST",
                 url: _url,

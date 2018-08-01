@@ -1,7 +1,9 @@
 package com.dili.points.component;
 
 import java.io.UnsupportedEncodingException;
+import java.lang.reflect.InvocationTargetException;
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.AbstractMap;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -14,6 +16,7 @@ import java.util.Map.Entry;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import org.apache.commons.beanutils.BeanUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -25,19 +28,24 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.alibaba.fastjson.JSONObject;
 import com.dili.points.converter.DtoMessageConverter;
 import com.dili.points.domain.Category;
 import com.dili.points.domain.Customer;
+import com.dili.points.domain.CustomerFirmPoints;
 import com.dili.points.domain.Order;
 import com.dili.points.domain.OrderItem;
 import com.dili.points.domain.PointsRule;
 import com.dili.points.domain.RuleCondition;
-import com.dili.points.domain.dto.CustomerApiDTO;
 import com.dili.points.domain.dto.CustomerCategoryPointsDTO;
+import com.dili.points.domain.dto.CustomerFirmPointsDTO;
+import com.dili.points.domain.dto.OrderPointsDataInfo;
 import com.dili.points.domain.dto.PointsDetailDTO;
 import com.dili.points.provider.DataDictionaryValueProvider;
 import com.dili.points.rpc.CustomerRpc;
 import com.dili.points.service.CategoryService;
+import com.dili.points.service.CustomerCategoryPointsService;
+import com.dili.points.service.CustomerFirmPointsService;
 import com.dili.points.service.OrderItemService;
 import com.dili.points.service.OrderService;
 import com.dili.points.service.PointsDetailService;
@@ -72,6 +80,8 @@ public class OrderListener {
 	CustomerRpc customerRpc;
 	@Autowired
 	CategoryService categoryService;
+	@Autowired CustomerFirmPointsService customerFirmPointsService;
+	@Autowired CustomerCategoryPointsService customerCategoryPointsService;
 
 	@RabbitListener(queues = "#{rabbitConfiguration.ORDER_TOPIC_QUEUE}")
 	public void processBootTask(Message message) throws UnsupportedEncodingException {
@@ -208,7 +218,151 @@ public class OrderListener {
 		}
 
 	}
+	protected void saveData(Map<Order, List<OrderItem>>orderMap,String customerType) {
+		this.saveOrderAndItem(orderMap,customerType);
+		Map<Boolean,List<OrderPointsDataInfo>>map=this.calculatePoints(orderMap, customerType)
+				.stream()
+				.filter(data->{return data.getPoints().intValue()>0;})
+				.collect(Collectors.partitioningBy(data->{return (data.getCustomer()==null);}));
+		
+		
+		
+		List<OrderPointsDataInfo>pointsDataInfoList =map.get(Boolean.FALSE);
+		
+		List<PointsDetailDTO>exceptionList=map.get(Boolean.TRUE).stream().map(data->{
+			PointsDetailDTO pointsDetail=DTOUtils.newDTO(PointsDetailDTO.class);
+			pointsDetail.setNotes("未能通过证件号["+data.getCertificateNumber()+"]查询到客户信息");
+			pointsDetail.setException(1);
+			pointsDetail.setNeedRecover(1);// 将会保存到异常积分表,并在某个时间进行恢复
+			
+			pointsDetail.setCertificateNumber(data.getCertificateNumber());
+//			pointsDetail.setCustomerIll);
+			pointsDetail.setCustomerType(data.getCustomerType());
+			pointsDetail.setFirmCode(data.getFirmCode());
+			pointsDetail.setGenerateWay(data.getGenerateWay());
+			pointsDetail.setInOut(data.getInOut());
+			pointsDetail.setOrderCode(data.getOrderCode());
+			pointsDetail.setOrderType(data.getOrderType());
+			pointsDetail.setPoints(data.getPoints().intValue());
+			pointsDetail.setSourceSystem(data.getSourceSystem());
+			pointsDetail.setWeightType(data.getWeightType());
+			return pointsDetail;
+			})
+		.collect(Collectors.toList());
+		
+		
+		List<Entry<OrderPointsDataInfo,CustomerFirmPoints>>list=pointsDataInfoList.stream().map(data->{
+			CustomerFirmPointsDTO customerFirmPoints=DTOUtils.newDTO(CustomerFirmPointsDTO.class);
+			customerFirmPoints.setBuyer(data.isBuyer());
+			customerFirmPoints.setPoints(data.getPoints().intValue());
+			customerFirmPoints.setBuyerPoints(0);
+			customerFirmPoints.setSellerPoints(0);
+			customerFirmPoints.setCertificateNumber(data.getCertificateNumber());			
+			customerFirmPoints.setCustomerId(data.getCustomer().getId());
+			customerFirmPoints.setTradingFirmCode(data.getFirmCode());
+			customerFirmPointsService.saveCustomerFirmPoints(customerFirmPoints);
+			data.setActualPoints(customerFirmPoints.getActualPoints());
+			Entry<OrderPointsDataInfo,CustomerFirmPoints>entry=new AbstractMap.SimpleEntry<>(data, customerFirmPoints);
+			return entry;
+		}).collect(Collectors.toList());
+		
 
+		List<PointsDetailDTO>pointsDetailList=list.stream().map(e->{
+			OrderPointsDataInfo data=e.getKey();
+			PointsDetailDTO pointsDetail=DTOUtils.newDTO(PointsDetailDTO.class);
+			
+			pointsDetail.setCertificateNumber(data.getCertificateNumber());
+			pointsDetail.setCustomerId(data.getCustomer().getId());
+			pointsDetail.setCustomerType(data.getCustomerType());
+			pointsDetail.setFirmCode(data.getFirmCode());
+			pointsDetail.setGenerateWay(data.getGenerateWay());
+			pointsDetail.setInOut(data.getInOut());
+			pointsDetail.setOrderCode(data.getOrderCode());
+			pointsDetail.setOrderType(data.getOrderType());
+			
+			pointsDetail.setActualPoints(data.getActualPoints());
+			pointsDetail.setSourceSystem(data.getSourceSystem());
+			pointsDetail.setWeightType(data.getWeightType());
+			pointsDetail.setCreatedId(0L);
+			pointsDetail.setNotes(data.getNotes());
+			return pointsDetail;
+			})
+		.collect(Collectors.toList());
+		this.pointsDetailService.batchSavePointsDetailDTO(pointsDetailList);
+		
+		List<CustomerCategoryPointsDTO>customerCategoryList=list.stream().flatMap(e->{
+			    OrderPointsDataInfo data=e.getKey();
+				List<CustomerCategoryPointsDTO>combineList=this.combineOrderItemByCategory(data);
+				List<CustomerCategoryPointsDTO>resultList=this.reCalculateCategoryPoints(data, combineList);
+				return resultList.stream();
+				
+		}).collect(Collectors.toList());
+		this.customerCategoryPointsService.batchSaveCustomerCategoryPointsDTO(customerCategoryList);
+		
+		
+	}
+	
+	private List<CustomerCategoryPointsDTO>reCalculateCategoryPoints(OrderPointsDataInfo data,List<CustomerCategoryPointsDTO>categoryList){
+		if(data.getWeightType()==null) {
+			logger.info("权重计算方式为空不进行品类计算 CertificateNumber {},CustomerType {}",data.getCertificateNumber(),data.getCustomerType());
+			return Collections.emptyList();
+		}
+		Integer totalPoints=data.getActualPoints();
+		if(totalPoints==null||totalPoints<0) {
+			totalPoints=0;
+		}
+		
+		//累加进行总金额总重量计算
+		CustomerCategoryPointsDTO total=DTOUtils.newDTO(CustomerCategoryPointsDTO.class);
+		total.setTotalMoney(0L);
+		total.setWeight(BigDecimal.ZERO);
+		total.setBuyerPoints(0);
+		total.setSellerPoints(0);
+		total.setActualPoints(0);
+		for(CustomerCategoryPointsDTO dto:categoryList) {
+			total.setTotalMoney(total.getTotalMoney()+dto.getTotalMoney());
+			total.setWeight(total.getWeight().add(dto.getWeight()));
+		}
+		logger.info("对总积分进行百分比分配: CertificateNumber {},CustomerType {},totalPoints: {}",data.getCertificateNumber(),data.getCustomerType(),totalPoints);
+		List<CustomerCategoryPointsDTO>resultList=new ArrayList<>();
+		//将总积分按百分比分配
+		for(CustomerCategoryPointsDTO dto:categoryList) {
+			//// 交易量 10 交易额 20 商品 30 支付方式:40
+			
+
+			logger.info("CertificateNumber {},Weight{},Money:{},TotalWeight {},TotalMoney {},Category1Id {},Category1Name {}"
+					,data.getCertificateNumber(),dto.getWeight().toPlainString(),dto.getTotalMoney(),total.getWeight().toPlainString()
+					,total.getTotalMoney(),dto.getCategory3Id(),dto.getCategory3Name());
+			BigDecimal pointsDecimal=BigDecimal.ZERO;
+			if(data.getWeightType().equals(10)) {
+				pointsDecimal=new BigDecimal(totalPoints).multiply(dto.getWeight()).divide(total.getWeight(),0,RoundingMode.DOWN);
+			}else if(data.getWeightType().equals(20)) {
+				pointsDecimal=new BigDecimal(totalPoints).multiply(new BigDecimal(dto.getTotalMoney())).divide(new BigDecimal(total.getTotalMoney()),0,RoundingMode.DOWN);
+			}else {
+				continue;
+			}
+			BigDecimal percentage=pointsDecimal.divide(new BigDecimal(totalPoints),10,RoundingMode.HALF_EVEN);
+			int points=pointsDecimal.intValue();
+			logger.info("CertificateNumber {},CustomerType {},Category1Id {},Category1Name {},TotalPoints,{},Percentage:{},Points: {}"
+					,data.getCertificateNumber(),data.getCustomerType(),dto.getCategory3Id(),dto.getCategory3Name(),totalPoints,percentage.toPlainString(),points);
+			//10:采购,20:销售
+			total.setActualPoints(total.getActualPoints()+points);
+			dto.setActualPoints(points);
+			logger.info("按百分比进行计算后的品类积分为:CertificateNumber {},CustomerType {},BuyerPoints {},SellerPoints {},Available: {}",data.getCertificateNumber(),data.getCustomerType(),dto.getBuyerPoints(),dto.getSellerPoints(),dto.getAvailable());
+			resultList.add(dto);
+		}
+		
+		//对积分进行修正(最后一个的积分等于总积分减去前面积分之和)
+		if(!resultList.isEmpty()) {
+			CustomerCategoryPointsDTO lastCategoryPointsDTO=categoryList.get(categoryList.size()-1);
+			lastCategoryPointsDTO.setActualPoints(totalPoints-(total.getActualPoints()-lastCategoryPointsDTO.getActualPoints()));
+			
+//			lastCategoryPointsDTO.setAvailable(lastCategoryPointsDTO.getPoints());
+			logger.info("最后一条数据修:CertificateNumber {},CustomerType {},BuyerPoints{},SellerPoints{},Available: {}",data.getCertificateNumber(),data.getCustomerType(),lastCategoryPointsDTO.getBuyerPoints(),lastCategoryPointsDTO.getSellerPoints(),lastCategoryPointsDTO.getAvailable());
+		}
+//		
+		return resultList;
+	}
 	/**
 	 * 进行积分的计算和数据保存
 	 * 
@@ -220,30 +374,27 @@ public class OrderListener {
 
 		// 卖家订单
 		Map<Order, List<OrderItem>> saleOrdersMap = orderMap;
-
+		
 		// 计算买家积分
-		 Map<PointsDetailDTO,List<CustomerCategoryPointsDTO>> purchasePointsDetails = this.calPoints(purchaseOrdersMap, "purchase");
+		this.saveData(purchaseOrdersMap,  "purchase");
+		
 		// 计算卖家积分
-		 Map<PointsDetailDTO,List<CustomerCategoryPointsDTO>> salePointsDetails = this.calPoints(saleOrdersMap, "sale");
-		this.saveOrdersAndPointsDetailsData(orderMap, purchasePointsDetails, salePointsDetails);
+		this.saveData(saleOrdersMap,  "sale");
 	}
-
 	/**
-	 * 进行积分数据保存
+	 * 进行订单数据保存
 	 * 
 	 * @param orderMap
 	 */
 	@Transactional(timeout = 90, propagation = Propagation.REQUIRED)
-	public void saveOrdersAndPointsDetailsData(Map<Order, List<OrderItem>> orderMap,
-			Map<PointsDetailDTO,List<CustomerCategoryPointsDTO>> purchasePointsDetails, Map<PointsDetailDTO,List<CustomerCategoryPointsDTO>> salePointsDetails) {
-
-		// 保存订单信息
+	private Map<Order, List<OrderItem>> saveOrderAndItem(Map<Order, List<OrderItem>>orderMap,String customerType) {
+		
+		
 		orderMap.forEach((order, orderItemList) -> {
 			if (this.orderIsExists(order)) {
 				throw new AppException("保存订单信息出错:当前订单号已经在数据库存在");
 			}
-			;
-//			List<OrderItem> items = orderMap.get(order);
+			// 保存订单信息
 			this.orderService.insertSelective(order);
 
 			// 保存订单列表
@@ -252,27 +403,10 @@ public class OrderListener {
 			}
 			this.orderItemService.batchInsert(orderItemList);
 		});
-//		for (Order order : orderMap.keySet()) {
-//			if (this.orderIsExists(order)) {
-//				throw new AppException("保存订单信息出错:当前订单号已经在数据库存在");
-//			}
-//			;
-//			List<OrderItem> items = orderMap.get(order);
-//			this.orderService.insertSelective(order);
-//
-//			// 保存订单列表
-//			for (OrderItem item : items) {
-//				item.setOrderCode(order.getCode());
-//			}
-//			this.orderItemService.batchInsert(items);
-//		}
-
-		// 保存买家的积分详情
-		this.pointsDetailService.batchInsertPointsDetailDTO(purchasePointsDetails);
-		// 保存卖家的积分详情
-		this.pointsDetailService.batchInsertPointsDetailDTO(salePointsDetails);
-
+		return orderMap;
 	}
+
+	
 
 	/**
 	 * 根据证件号查询id
@@ -282,13 +416,18 @@ public class OrderListener {
 	 * @return
 	 */
 	protected Customer findIdByCertificateNumber(String certificateNumber) {
-		CustomerApiDTO dto = DTOUtils.newDTO(CustomerApiDTO.class);
-		dto.setYn(1);
-		dto.setCertificateNumber(certificateNumber);
 		try {
-			BaseOutput<List<Customer>> baseOut = this.customerRpc.list(dto);
-			if (baseOut.isSuccess() && !baseOut.getData().isEmpty()) {
-				return baseOut.getData().get(0);
+			BaseOutput<Customer> baseOut = this.customerRpc.getByCertificateNumber(certificateNumber);
+			if (baseOut.isSuccess()) {
+				String json=baseOut.getData().toString();
+				Customer customer=DTOUtils.newDTO( Customer.class);
+				try {
+					BeanUtils.copyProperties(customer, JSONObject.parse(json));
+					return customer;
+				} catch (IllegalAccessException | InvocationTargetException e) {
+					logger.error(e.getMessage(),e);
+				}
+				
 			} /*
 				 * else { throw new AppException("根据证件号:"+certificateNumber+",没有查询到客户信息"); }
 				 */
@@ -387,7 +526,7 @@ public class OrderListener {
 	 *            订单信息
 	 * @return 计算出的基础积分
 	 */
-	protected BigDecimal calculateBasePoints(PointsRule pointsRule, Order order) {
+	protected BigDecimal calculateBasePoints(PointsRule pointsRule, OrderPointsDataInfo order) {
 		BigDecimal orderWeight = order.getWeight();// 交易量
 
 		BigDecimal totalMoney = new BigDecimal(order.getTotalMoney()).divide(new BigDecimal("100"));// 交易额(除以100,转换单位为元)
@@ -495,151 +634,128 @@ public class OrderListener {
 			return true;
 		}
 	}
-
 	// 卖家sale,买家purchase
-	private Map<PointsDetailDTO,List<CustomerCategoryPointsDTO>> calPoints(Map<Order, List<OrderItem>> orderMap, String customerType) {
-		boolean isBuyer = this.isBuyer(customerType);
-//		if ("sale".equals(customerType)) {
-//			isPurchase = false;
-//		} else if ("purchase".equals(customerType)) {
-//			isPurchase = true;
-//		} else {
-//			return Collections.emptyList();
-//		}
-
-
-		Map<PointsDetailDTO,List<CustomerCategoryPointsDTO>> pointsDetailListMap = new HashMap<>();
-
-		orderMap.forEach((order, orderItemList) -> {
-			PointsRule pointsRule = this.findPointsRule(customerType,order.getBusinessType(),order.getMarket()).orElse(null);
-			if (isBuyer) {
-				logger.info("对买家["+order.getBuyerCertificateNumber()+"]进行积分计算");
-			} else {
-				logger.info("对卖家["+order.getSellerCertificateNumber()+"]进行积分");
-			}
-			if (pointsRule == null) {
-				logger.info("没有找到积分规则 customerType {},businessType {}",customerType,order.getBusinessType());
-				return ;
-			}
-			logger.info("基于积分规则进行积分 code: "+pointsRule.getCode());
-			// 根据 交易量,交易额 ,支付方式 的权重计算总积分
-
-			// 交易量 10 交易额 20 商品 30 支付方式:40
-			List<RuleCondition> tradeWeightConditionList = this.findRuleCondition(pointsRule.getId(), 10);
-			List<RuleCondition> tradeTotalMoneyConditionList = this.findRuleCondition(pointsRule.getId(), 20);
-			List<RuleCondition> tradeTypeConditionList = this.findRuleCondition(pointsRule.getId(), 40);
-			// for (Order order : orderMap.keySet()) {
-			//List<OrderItem> orderItemList = orderMap.get(order);
-	
-			BigDecimal basePoint = this.calculateBasePoints(pointsRule, order);
+		private List<OrderPointsDataInfo> calculatePoints(Map<Order, List<OrderItem>> orderMap, String customerType) {
+			boolean isBuyer = this.isBuyer(customerType);
 			
-			PointsDetailDTO pointsDetail = DTOUtils.newDTO(PointsDetailDTO.class);
-			pointsDetail.setPoints(basePoint.intValue());
-			pointsDetail.setSourceSystem(order.getSourceSystem());
-			pointsDetail.setFirmCode(order.getMarket());
-			pointsDetail.setInOut(10);//收入
-			if (this.isSettlementOrder(order)) {
-				pointsDetail.setOrderCode(order.getSettlementCode());
-				pointsDetail.setOrderType("settlementOrder");// settlementOrder结算单号,order主单
-			} else {
-				pointsDetail.setOrderCode(order.getCode());
-				pointsDetail.setOrderType("order");// settlementOrder结算单号,order主单
-			}
-			//
-			// if(StringUtils.isNoneBlank(order.getSettlementCode())) {
-			// pointsDetail.setOrderCode(order.getSettlementCode());
-			// pointsDetail.setOrderType("settlementOrder");//settlementOrder结算单号,order主单
-			// }else{
-			// pointsDetail.setOrderCode(order.getCode());
-			// pointsDetail.setOrderType("order");//settlementOrder结算单号,order主单
-			// }
-			String notes = this.findNotes(order, orderItemList);
-			pointsDetail.setNotes(notes);
-	
-			String certificateNumber = null;
-			// buyer
-			pointsDetail.setCustomerType(customerType);
-			if (isBuyer) {
-				certificateNumber = order.getBuyerCertificateNumber();
-				logger.info("对买家["+certificateNumber+"]进行积分计算");
-			} else {
-				certificateNumber = order.getSellerCertificateNumber();
-				logger.info("对卖家["+certificateNumber+"]进行积分");
-			}
-			logger.info("基本积分值为:"+basePoint.toPlainString());
-			// 交易10 充值20 兑换礼品30 扣减:40 手工调整50
-			pointsDetail.setGenerateWay(10);// 积分产生方式(当前固定为交易)
-			pointsDetail.setCertificateNumber(certificateNumber);
-			pointsDetail.setSourceSystem(order.getSourceSystem());
-	
-			// 如果买家或者卖家的证件号为空,则不进行积分
-			if (StringUtils.isBlank(certificateNumber)) {
-				// pointsDetail.setCertificateNumber(certificateNumber);
-				// pointsDetail.setNeedRecover(0);
-				// pointsDetail.setPoints(0);
-				// pointsDetailList.add(pointsDetail);
-	//			continue;
-				return;
-			}
-			// try {
-			Customer customer=this.findIdByCertificateNumber(certificateNumber);
-			if (customer != null&&customer.getId()!=null) {
-				pointsDetail.setCustomerId(customer.getId());
-			} else {
-				pointsDetail.setNotes("未能通过证件号["+certificateNumber+"]查询到客户信息");
-				pointsDetail.setException(1);
-				pointsDetail.setNeedRecover(1);// 将会保存到异常积分表,并在某个时间进行恢复
-			}
-	
-			// }catch(Exception e){
-	
-			// logger.warn("查询客户ID出错,当前积分详情将会被保存到异常积分!");
-			// }
-			BigDecimal orderWeightValue = order.getWeight();// 交易量
-			BigDecimal totalMoneyValue = new BigDecimal(order.getTotalMoney()).divide(new BigDecimal("100"));// 交易额
-			BigDecimal paymentValue = new BigDecimal(order.getPayment());// 支付方式
-	
-			// 三个量值与对应的条件列表匹配权重值
-			Entry<Boolean,BigDecimal>tradeWeightEntry=this.calculateWeight(orderWeightValue, tradeWeightConditionList);
-			Entry<Boolean,BigDecimal>totalMoneyEntry=this.calculateWeight(totalMoneyValue, tradeTotalMoneyConditionList);
-			Entry<Boolean,BigDecimal>paymentEntry=this.calculateWeight(paymentValue, tradeTypeConditionList);
+			List<OrderPointsDataInfo>orderList=new ArrayList<>();
+			orderMap.forEach((order, orderItemList) -> {
+				OrderPointsDataInfo orderPointsDataInfo=new OrderPointsDataInfo();
+				String notes = this.findNotes(order, orderItemList);
+				orderPointsDataInfo.setNotes(notes);
+				orderPointsDataInfo.setSourceSystem(order.getSourceSystem());
+				orderPointsDataInfo.setCustomerType(customerType);
+				PointsRule pointsRule = this.findPointsRule(customerType,order.getBusinessType(),order.getMarket()).orElse(null);
+				if (isBuyer) {
+					logger.info("对买家["+order.getBuyerCertificateNumber()+"]进行积分计算");
+					orderPointsDataInfo.setCertificateNumber(order.getBuyerCertificateNumber());
+				} else {
+					logger.info("对卖家["+order.getSellerCertificateNumber()+"]进行积分");
+					orderPointsDataInfo.setCertificateNumber(order.getSellerCertificateNumber());
+				}
+				orderPointsDataInfo.setBuyer(isBuyer);
+				if (pointsRule == null) {
+					logger.info("没有找到积分规则 customerType {},businessType {}",customerType,order.getBusinessType());
+					return ;
+				}
+				
+				
+				
+				Integer computingStandard = pointsRule.getComputingStandard();
+				// 10 交易量,20 交易额,30 固定值
+				if (computingStandard == 10) {
+					logger.info("基于交易量进行积分计算 {}",orderPointsDataInfo.getCertificateNumber());
+					orderPointsDataInfo.setWeightType(10);
+				} else if (computingStandard == 20) {
+					logger.info("基于交易额进行积分计算 {}",orderPointsDataInfo.getCertificateNumber());
+					orderPointsDataInfo.setWeightType(20);
+				} 
+				
+				if (this.isSettlementOrder(order)) {
+					orderPointsDataInfo.setOrderCode(order.getSettlementCode());
+					orderPointsDataInfo.setOrderType("settlementOrder");// settlementOrder结算单号,order主单
+				} else {
+					orderPointsDataInfo.setOrderCode(order.getCode());
+					orderPointsDataInfo.setOrderType("order");// settlementOrder结算单号,order主单
+				}
+				
+				
+				
+				String certificateNumber = orderPointsDataInfo.getCertificateNumber();
+				// 如果买家或者卖家的证件号为空,则不进行积分
+				if (StringUtils.isNotBlank(certificateNumber)) {
+					Customer customer=this.findIdByCertificateNumber(certificateNumber);
+					if (customer != null&&customer.getId()!=null) {
+						orderPointsDataInfo.setCustomer(customer);
+					} else {
+						orderPointsDataInfo.setCustomer(null);
+					}
+				}
+				orderPointsDataInfo.setInOut(10);//收入
+				orderPointsDataInfo.setGenerateWay(10);//订单方式
+				orderPointsDataInfo.setPointsRule(pointsRule);
+				orderPointsDataInfo.setOrderItems(orderItemList);
+				orderPointsDataInfo.setFirmCode(order.getMarket());
+				orderPointsDataInfo.setTotalMoney(order.getTotalMoney());
+				orderPointsDataInfo.setWeight(order.getWeight());
+				orderPointsDataInfo.setPayment(order.getPayment());
+				orderList.add(orderPointsDataInfo);
+			});
 			
-			// 交易量 10 交易额 20 商品 30 支付方式:40
-			
+			return orderList.stream().filter(order->{
+				String certificateNumber = order.getCertificateNumber();
+				// 如果买家或者卖家的证件号为空,则不进行积分
+				return StringUtils.isNotBlank(certificateNumber);
+			}).map(order->{
+				
+				PointsRule pointsRule = order.getPointsRule();
+				logger.info("基于积分规则进行积分 code: "+pointsRule.getCode());
+				// 根据 交易量,交易额 ,支付方式 的权重计算总积分
 
-			Integer computingStandard = pointsRule.getComputingStandard();
-			// 10 交易量,20 交易额,30 固定值
-			if (computingStandard == 10) {
-				logger.info("基于交易量进行积分计算 {}",certificateNumber);
-				pointsDetail.setWeightType(10);
-			} else if (computingStandard == 20) {
-				logger.info("基于交易额进行积分计算 {}",certificateNumber);
-				pointsDetail.setWeightType(20);
-			} 
-			
-			List<BigDecimal> weightList = Arrays.asList(tradeWeightEntry.getValue(),
-					totalMoneyEntry.getValue(),
-					paymentEntry.getValue());
-			logger.info("三个积分权重分别为:"+weightList);
-			// 计算积分值
-			BigDecimal points = weightList.stream().reduce(basePoint, (t, u) -> t.multiply(u));
-			logger.info("最终积分为:"+points);
+				// 交易量 10 交易额 20 商品 30 支付方式:40
+				List<RuleCondition> tradeWeightConditionList = this.findRuleCondition(pointsRule.getId(), 10);
+				List<RuleCondition> tradeTotalMoneyConditionList = this.findRuleCondition(pointsRule.getId(), 20);
+				List<RuleCondition> tradeTypeConditionList = this.findRuleCondition(pointsRule.getId(), 40);
+				
+				BigDecimal basePoint = this.calculateBasePoints(pointsRule, order);
+				logger.info("基本积分值为:"+basePoint.toPlainString());
+				
+//				order.setPoints(basePoint);
+
+				BigDecimal orderWeightValue = order.getWeight();// 交易量
+				BigDecimal totalMoneyValue = new BigDecimal(order.getTotalMoney()).divide(new BigDecimal("100"));// 交易额
+				BigDecimal paymentValue = new BigDecimal(order.getPayment());// 支付方式
 		
-			//只保存积分值大于0的积分明细
-			if(points.intValue()>0) {
-				pointsDetail.setPoints(points.intValue());
-				List<CustomerCategoryPointsDTO>itemList=this.combineOrderItemByCategory(customer,pointsDetail,orderItemList);
-				pointsDetailListMap.put(pointsDetail,itemList);
-			}
-		});
-		return pointsDetailListMap;
-
-	}
-	private List<CustomerCategoryPointsDTO>combineOrderItemByCategory(Customer customer,PointsDetailDTO pointsDetail,List<OrderItem>orderItemList){
+				// 三个量值与对应的条件列表匹配权重值
+				Entry<Boolean,BigDecimal>tradeWeightEntry=this.calculateWeight(orderWeightValue, tradeWeightConditionList);
+				Entry<Boolean,BigDecimal>totalMoneyEntry=this.calculateWeight(totalMoneyValue, tradeTotalMoneyConditionList);
+				Entry<Boolean,BigDecimal>paymentEntry=this.calculateWeight(paymentValue, tradeTypeConditionList);
+				
+				List<BigDecimal> weightList = Arrays.asList(tradeWeightEntry.getValue(),
+						totalMoneyEntry.getValue(),
+						paymentEntry.getValue());
+				logger.info("三个积分权重分别为:"+weightList);
+				// 计算积分值
+				BigDecimal points = weightList.stream().reduce(basePoint, (t, u) -> t.multiply(u));
+				logger.info("最终积分为:"+points);
+				order.setPoints(points);
+				return order;
+			}).collect(Collectors.toList());
+			
+		}
+		
+		/**
+		 * 将订单中相同orderitem的数据进行合并
+		 * @param orderPointsDataInfo
+		 * @return
+		 */
+	private List<CustomerCategoryPointsDTO>combineOrderItemByCategory(OrderPointsDataInfo orderPointsDataInfo){
+		logger.info("对{}合并相同orderitem,并设置Category信息",orderPointsDataInfo.getCertificateNumber());
+		Customer customer=orderPointsDataInfo.getCustomer();
 		if(customer==null){
 			return Collections.emptyList();
 		}
-		List<CustomerCategoryPointsDTO>list= orderItemList
+		List<CustomerCategoryPointsDTO>list= orderPointsDataInfo.getOrderItems()
 		.stream()
 		//过滤空对象及Id为空的对象
 		.filter(item->{return (item!=null&&item.getCategoryId()!=null);})
@@ -681,18 +797,20 @@ public class OrderListener {
 			dto.setName(customer.getName());
 			dto.setOrder(item.getOrder());
 			dto.setOrganizationType(customer.getOrganizationType());
-			dto.setSourceSystem(pointsDetail.getSourceSystem());
+			dto.setSourceSystem(orderPointsDataInfo.getSourceSystem());
+			dto.setFirmCode(orderPointsDataInfo.getFirmCode());
 			dto.setOrderCode(item.getOrderCode());
 			dto.setTotalMoney(item.getTotalMoney());
 			dto.setWeight(item.getWeight());
 			dto.setCategory3Id(categoryId);
 			dto.setCategory3Name("未知");
+			dto.setBuyer(orderPointsDataInfo.isBuyer());
 			dto.setBuyerPoints(0);
 			dto.setSellerPoints(0);
 			dto.setAvailable(0);
 			Category category3Condition=DTOUtils.newDTO(Category.class);
 			category3Condition.setCategoryId(String.valueOf(categoryId));
-			category3Condition.setSourceSystem(pointsDetail.getSourceSystem());
+			category3Condition.setSourceSystem(orderPointsDataInfo.getSourceSystem());
 			//查询并设置第三级品类ID和名称
 			this.categoryService.list(category3Condition).stream().findFirst().ifPresent(c3->{
 				dto.setCategory3Id(categoryId);
@@ -701,7 +819,7 @@ public class OrderListener {
 					
 					Category category2Condition=DTOUtils.newDTO(Category.class);
 					category2Condition.setCategoryId(String.valueOf(c3.getParentCategoryId()));
-					category2Condition.setSourceSystem(pointsDetail.getSourceSystem());
+					category2Condition.setSourceSystem(orderPointsDataInfo.getSourceSystem());
 					//查询并设置第二级品类ID和名称
 					this.categoryService.list(category2Condition).stream().findFirst().ifPresent(c2->{
 						dto.setCategory2Id(Long.valueOf(c2.getCategoryId()));
@@ -711,7 +829,7 @@ public class OrderListener {
 							
 							Category category1Condition=DTOUtils.newDTO(Category.class);
 							category1Condition.setCategoryId(String.valueOf(c2.getParentCategoryId()));
-							category1Condition.setSourceSystem(pointsDetail.getSourceSystem());
+							category1Condition.setSourceSystem(orderPointsDataInfo.getSourceSystem());
 							//查询并设置第一级品类ID和名称
 							this.categoryService.list(category1Condition).stream().findFirst().ifPresent(c->{
 								dto.setCategory1Id(Long.valueOf(c.getCategoryId()));
@@ -728,6 +846,8 @@ public class OrderListener {
 		
 		return list;
 	}
+	
+	
 	/**
 	 * 根据标准值和条件表表,选出条件的第一个权重值
 	 * 

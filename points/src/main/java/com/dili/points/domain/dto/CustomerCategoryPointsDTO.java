@@ -4,6 +4,7 @@ import java.math.BigDecimal;
 import java.util.List;
 
 import javax.persistence.Column;
+import javax.persistence.Transient;
 
 import com.dili.points.domain.CustomerCategoryPoints;
 import com.dili.points.domain.OrderItem;
@@ -17,5 +18,14 @@ public interface CustomerCategoryPointsDTO extends CustomerCategoryPoints,OrderI
 	@Column(name = "`firm_code`")
 	List<String> getFirmCodes();
 	void setFirmCodes(List<String> firmCodes);
+	
+	
+	@Transient
+	public boolean isBuyer();
+	public void setBuyer(boolean isBuyer);
+
+    @Transient
+    public Integer getActualPoints();
+	public void setActualPoints(Integer actualPoints) ;
 	
 }

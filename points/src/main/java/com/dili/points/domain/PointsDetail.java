@@ -96,7 +96,7 @@ public interface PointsDetail extends IBaseDomain {
     @EditMode(editor = FieldEditor.Text, required = false)
     String getOrderType();
 
-    void setOrderType(String orderCode);
+    void setOrderType(String orderType);
     
     @Column(name = "`created_id`")
     @FieldDef(label="操作人")

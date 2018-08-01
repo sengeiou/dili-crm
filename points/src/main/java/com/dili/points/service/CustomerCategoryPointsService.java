@@ -16,4 +16,18 @@ public interface CustomerCategoryPointsService extends BaseService<CustomerCateg
     int updateCustomerName(String name,Long id);
     
     public EasyuiPageOutput listEasyuiPageByExample(CustomerCategoryPointsDTO customerCategoryPoints, boolean useProvider,List<String>firmCodes) throws Exception;
+    
+    /**
+     * 批量保存CustomerCategoryPointsDTO
+     * @param categoryPointsDTO
+     * @return
+     */
+	public int[] batchSaveCustomerCategoryPointsDTO(List<CustomerCategoryPointsDTO> dtoList);
+	
+	/**
+	 * 保存CustomerCategoryPointsDTO
+	 * @param categoryPointsDTO
+	 * @return
+	 */
+	public int saveCustomerCategoryPointsDTO(CustomerCategoryPointsDTO categoryPointsDTO);
 }

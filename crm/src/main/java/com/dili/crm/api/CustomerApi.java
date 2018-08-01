@@ -93,6 +93,8 @@ public class CustomerApi {
     public BaseOutput<Customer> getByCertificateNumber(@RequestBody String certificateNumber) {
         if (StringUtils.isNotBlank(certificateNumber)) {
             Customer customer = DTOUtils.newDTO(Customer.class);
+            customer.setCertificateNumber(certificateNumber);
+            customer.setYn(1);
             List<Customer> customers = customerService.list(customer);
             if (CollectionUtils.isNotEmpty(customers)) {
                 if (customers.size() > 1) {

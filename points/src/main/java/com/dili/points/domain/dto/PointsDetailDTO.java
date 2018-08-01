@@ -57,5 +57,13 @@ public interface PointsDetailDTO extends PointsDetail {
 	List<String> getFirmCodes();
 	void setFirmCodes(List<String> firmCodes);
 	
+	@Transient
+	public boolean isBuyer();
+	public void setBuyer(boolean isBuyer);
+
+    @Transient
+    public Integer getActualPoints();
+	public void setActualPoints(Integer actualPoints) ;
+	
 
 }
