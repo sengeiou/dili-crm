@@ -3,6 +3,7 @@ package com.dili.points.domain.dto;
 import java.util.List;
 
 import javax.persistence.Column;
+import javax.persistence.Transient;
 
 import com.dili.points.domain.CustomerPoints;
 import com.dili.ss.domain.annotation.Operator;
@@ -33,4 +34,13 @@ public interface CustomerPointsDTO extends CustomerPoints{
 	//电话
 	public String getPhone();
 	public void setPhone(String phone) ;
+	
+	
+	@Transient
+	public boolean isBuyer();
+	public void setBuyer(boolean isBuyer);
+
+	@Transient
+    Integer getActualPoints();
+    void setActualPoints(Integer actualPoints);
 }

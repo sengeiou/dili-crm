@@ -37,17 +37,5 @@ public interface PointsDetailService extends BaseService<PointsDetail, Long> {
 	 */
 	public EasyuiPageOutput listEasyuiPageByExample(PointsDetailDTO pointsDetail,boolean useProvider,List<String>firmCodes) throws Exception;
 	
-	 /**
-	  * 保存PointsDetailDTO
-	  * @param dto
-	  * @return
-	  */
- 	public int savePointsDetailDTO(PointsDetailDTO dto);
-	
-	 /**
-	  * 批量保存PointsDetailDTO
-	  * @param dto
-	  * @return
-	  */
- 	public int[] batchSavePointsDetailDTO(List<PointsDetailDTO>dtoList);
+
 }

@@ -3,6 +3,7 @@ package com.dili.points.service.impl;
 import com.alibaba.fastjson.JSONObject;
 import com.dili.points.dao.CustomerPointsMapper;
 import com.dili.points.domain.Customer;
+import com.dili.points.domain.CustomerFirmPoints;
 import com.dili.points.domain.CustomerPoints;
 import com.dili.points.domain.dto.CustomerApiDTO;
 import com.dili.points.domain.dto.CustomerPointsDTO;
@@ -245,5 +246,42 @@ public class CustomerPointsServiceImpl extends BaseServiceImpl<CustomerPoints, L
 			return new EasyuiPageOutput(total, resultList.subList(startIndex, startIndex + rows));
 		}
 		return new EasyuiPageOutput(total, resultList);
+	}
+	@Override
+	public int[] batchSaveCustomerPointsDTO(List<CustomerPointsDTO> dtoList) {
+		int[]result=new int[dtoList.size()];
+    	for(int i=0;i<dtoList.size();i++) {
+    		result[i]=this.saveCustomerPointsDTO(dtoList.get(i));
+    	}
+    	return result;
+	}
+	@Override
+	public int saveCustomerPointsDTO(CustomerPointsDTO dto) {
+		//构建客户积分查询条件
+		CustomerPoints example = DTOUtils.newDTO(CustomerPoints.class);
+		example.setYn(1);
+		example.setCertificateNumber(dto.getCertificateNumber());
+
+		CustomerPoints item = 	this.list(example).stream().findFirst().orElseGet(()->{
+			CustomerPointsDTO obj=DTOUtils.clone(dto, CustomerPointsDTO.class);
+			obj.setId(null);
+			obj.setBuyerPoints(0);
+			obj.setSellerPoints(0);
+			obj.setAvailable(0);
+			obj.setFrozen(0);
+			
+			return obj;
+		});
+		if(dto.isBuyer()) {
+			item.setBuyerPoints(item.getBuyerPoints()+dto.getActualPoints());
+		}else {
+			item.setSellerPoints(item.getSellerPoints()+dto.getActualPoints());
+		}
+		item.setAvailable(item.getBuyerPoints()+item.getSellerPoints());
+		if(item.getId()==null) {
+			return this.getActualDao().insertExact(item);
+		}else {
+			return this.updateExact(item);
+		}
 	}
 }

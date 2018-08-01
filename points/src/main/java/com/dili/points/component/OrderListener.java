@@ -9,12 +9,14 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Optional;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import org.apache.commons.beanutils.BeanUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -33,12 +35,16 @@ import com.dili.points.converter.DtoMessageConverter;
 import com.dili.points.domain.Category;
 import com.dili.points.domain.Customer;
 import com.dili.points.domain.CustomerFirmPoints;
+import com.dili.points.domain.CustomerPoints;
 import com.dili.points.domain.Order;
 import com.dili.points.domain.OrderItem;
+import com.dili.points.domain.PointsDetail;
+import com.dili.points.domain.PointsException;
 import com.dili.points.domain.PointsRule;
 import com.dili.points.domain.RuleCondition;
 import com.dili.points.domain.dto.CustomerCategoryPointsDTO;
 import com.dili.points.domain.dto.CustomerFirmPointsDTO;
+import com.dili.points.domain.dto.CustomerPointsDTO;
 import com.dili.points.domain.dto.OrderPointsDataInfo;
 import com.dili.points.domain.dto.PointsDetailDTO;
 import com.dili.points.provider.DataDictionaryValueProvider;
@@ -46,9 +52,11 @@ import com.dili.points.rpc.CustomerRpc;
 import com.dili.points.service.CategoryService;
 import com.dili.points.service.CustomerCategoryPointsService;
 import com.dili.points.service.CustomerFirmPointsService;
+import com.dili.points.service.CustomerPointsService;
 import com.dili.points.service.OrderItemService;
 import com.dili.points.service.OrderService;
 import com.dili.points.service.PointsDetailService;
+import com.dili.points.service.PointsExceptionService;
 import com.dili.points.service.PointsRuleService;
 import com.dili.points.service.RuleConditionService;
 import com.dili.ss.domain.BaseOutput;
@@ -82,6 +90,8 @@ public class OrderListener {
 	CategoryService categoryService;
 	@Autowired CustomerFirmPointsService customerFirmPointsService;
 	@Autowired CustomerCategoryPointsService customerCategoryPointsService;
+	@Autowired PointsExceptionService pointsExceptionService;
+	@Autowired CustomerPointsService customerPointsService;
 
 	@RabbitListener(queues = "#{rabbitConfiguration.ORDER_TOPIC_QUEUE}")
 	public void processBootTask(Message message) throws UnsupportedEncodingException {
@@ -218,41 +228,55 @@ public class OrderListener {
 		}
 
 	}
+	@Transactional(timeout = 90, propagation = Propagation.REQUIRED)
 	protected void saveData(Map<Order, List<OrderItem>>orderMap,String customerType) {
 		this.saveOrderAndItem(orderMap,customerType);
-		Map<Boolean,List<OrderPointsDataInfo>>map=this.calculatePoints(orderMap, customerType)
+		Map<Boolean,List<OrderPointsDataInfo>>map = this.calculatePoints(orderMap, customerType)
 				.stream()
 				.filter(data->{return data.getPoints().intValue()>0;})
 				.collect(Collectors.partitioningBy(data->{return (data.getCustomer()==null);}));
 		
 		
+		List<OrderPointsDataInfo>pointsDataInfoList = map.get(Boolean.FALSE);
 		
-		List<OrderPointsDataInfo>pointsDataInfoList =map.get(Boolean.FALSE);
+		List<OrderPointsDataInfo>withoutCustomerExceptionList = map.get(Boolean.TRUE);
+	
 		
-		List<PointsDetailDTO>exceptionList=map.get(Boolean.TRUE).stream().map(data->{
-			PointsDetailDTO pointsDetail=DTOUtils.newDTO(PointsDetailDTO.class);
-			pointsDetail.setNotes("未能通过证件号["+data.getCertificateNumber()+"]查询到客户信息");
-			pointsDetail.setException(1);
-			pointsDetail.setNeedRecover(1);// 将会保存到异常积分表,并在某个时间进行恢复
-			
-			pointsDetail.setCertificateNumber(data.getCertificateNumber());
-//			pointsDetail.setCustomerIll);
-			pointsDetail.setCustomerType(data.getCustomerType());
-			pointsDetail.setFirmCode(data.getFirmCode());
-			pointsDetail.setGenerateWay(data.getGenerateWay());
-			pointsDetail.setInOut(data.getInOut());
-			pointsDetail.setOrderCode(data.getOrderCode());
-			pointsDetail.setOrderType(data.getOrderType());
-			pointsDetail.setPoints(data.getPoints().intValue());
-			pointsDetail.setSourceSystem(data.getSourceSystem());
-			pointsDetail.setWeightType(data.getWeightType());
-			return pointsDetail;
-			})
-		.collect(Collectors.toList());
+	
+		List<OrderPointsDataInfo>list = this.saveCustomerFirmPoints(pointsDataInfoList);
+		
+		Map<Boolean,List<OrderPointsDataInfo>>afterSaveMap = list.stream()
+				.collect(Collectors.partitioningBy((OrderPointsDataInfo data)->{
+					return (data.getActualPoints().equals(0));}));
+		
+		List<OrderPointsDataInfo>zeroPointsExceptionList=afterSaveMap.get(Boolean.TRUE);
+		
+		this.savePointsException(withoutCustomerExceptionList, zeroPointsExceptionList);
 		
 		
-		List<Entry<OrderPointsDataInfo,CustomerFirmPoints>>list=pointsDataInfoList.stream().map(data->{
-			CustomerFirmPointsDTO customerFirmPoints=DTOUtils.newDTO(CustomerFirmPointsDTO.class);
+		List<OrderPointsDataInfo>orderPointsDataInfoList = afterSaveMap.get(Boolean.FALSE);
+		
+		this.saveCustomPoints(orderPointsDataInfoList);
+		
+		
+		this.savePointsDetail(orderPointsDataInfoList);
+		
+		
+		this.saveCustomerCategoryPoints(orderPointsDataInfoList);
+		
+		
+	}
+	
+	/**
+	 * 保存CustomerFirmPoints信息
+	 * @param pointsDataInfoList
+	 * @return 返回带有actualPoints的OrderPointsDataInfo
+	 */
+	private List<OrderPointsDataInfo> saveCustomerFirmPoints(
+			List<OrderPointsDataInfo> pointsDataInfoList) {
+		logger.debug("开始保存CustomerFirmPoints信息");
+		return pointsDataInfoList.stream().map(data->{
+			CustomerFirmPointsDTO customerFirmPoints = DTOUtils.newDTO(CustomerFirmPointsDTO.class);
 			customerFirmPoints.setBuyer(data.isBuyer());
 			customerFirmPoints.setPoints(data.getPoints().intValue());
 			customerFirmPoints.setBuyerPoints(0);
@@ -260,15 +284,37 @@ public class OrderListener {
 			customerFirmPoints.setCertificateNumber(data.getCertificateNumber());			
 			customerFirmPoints.setCustomerId(data.getCustomer().getId());
 			customerFirmPoints.setTradingFirmCode(data.getFirmCode());
-			customerFirmPointsService.saveCustomerFirmPoints(customerFirmPoints);
-			data.setActualPoints(customerFirmPoints.getActualPoints());
-			Entry<OrderPointsDataInfo,CustomerFirmPoints>entry=new AbstractMap.SimpleEntry<>(data, customerFirmPoints);
-			return entry;
-		}).collect(Collectors.toList());
-		
+			int value = customerFirmPointsService.saveCustomerFirmPoints(customerFirmPoints);
+			if(value>0) {
+				//插入成功后，将实际插入的数据通过customerFirmPoints.actualPoints 传递回来
+				data.setActualPoints(customerFirmPoints.getActualPoints());
+			}
 
-		List<PointsDetailDTO>pointsDetailList=list.stream().map(e->{
-			OrderPointsDataInfo data=e.getKey();
+//			Entry<OrderPointsDataInfo,CustomerFirmPoints>entry=new AbstractMap.SimpleEntry<>(data, customerFirmPoints);
+			return data;
+		}).collect(Collectors.toList());
+	}
+	/**
+	 * 保存CustomerCategoryPointsDTO信息
+	 * @param orderPointsDataInfoList
+	 */
+	private void saveCustomerCategoryPoints(List<OrderPointsDataInfo> orderPointsDataInfoList) {
+		logger.debug("开始保存CustomerCategoryPointsDTO信息");
+		List<CustomerCategoryPointsDTO>customerCategoryList = orderPointsDataInfoList.stream().flatMap(data->{
+				List<CustomerCategoryPointsDTO>combineList = this.combineOrderItemByCategory(data);
+				List<CustomerCategoryPointsDTO>resultList = this.reCalculateCategoryPoints(data, combineList);
+				return resultList.stream();
+				
+		}).collect(Collectors.toList());
+		this.customerCategoryPointsService.batchSaveCustomerCategoryPointsDTO(customerCategoryList);
+	}
+	/**
+	 * 保存PointsDetailDTO信息
+	 * @param orderPointsDataInfoList
+	 */
+	private void savePointsDetail(List<OrderPointsDataInfo> orderPointsDataInfoList) {
+		logger.debug("开始保存PointsDetailDTO信息");
+		List<PointsDetail>pointsDetailList = orderPointsDataInfoList.stream().map(data->{
 			PointsDetailDTO pointsDetail=DTOUtils.newDTO(PointsDetailDTO.class);
 			
 			pointsDetail.setCertificateNumber(data.getCertificateNumber());
@@ -281,6 +327,8 @@ public class OrderListener {
 			pointsDetail.setOrderType(data.getOrderType());
 			
 			pointsDetail.setActualPoints(data.getActualPoints());
+			pointsDetail.setPoints(data.getActualPoints());
+			
 			pointsDetail.setSourceSystem(data.getSourceSystem());
 			pointsDetail.setWeightType(data.getWeightType());
 			pointsDetail.setCreatedId(0L);
@@ -288,18 +336,85 @@ public class OrderListener {
 			return pointsDetail;
 			})
 		.collect(Collectors.toList());
-		this.pointsDetailService.batchSavePointsDetailDTO(pointsDetailList);
+		this.pointsDetailService.batchInsert(pointsDetailList);
+	}
+	/**
+	 * 保存CustomerPointsDTO信息
+	 * @param orderPointsDataInfoList
+	 */
+	private void saveCustomPoints(List<OrderPointsDataInfo> orderPointsDataInfoList) {
+		logger.debug("开始保存CustomerPointsDTO信息");
+		List<CustomerPointsDTO>customerPointsDTOList = orderPointsDataInfoList.stream().map(data->{
+			CustomerPointsDTO pointsDetail=DTOUtils.newDTO(CustomerPointsDTO.class);
+			
+			
+			pointsDetail.setId(data.getCustomer().getId());
+			pointsDetail.setCertificateNumber(data.getCertificateNumber());
+			pointsDetail.setBuyerPoints(0);
+			pointsDetail.setSellerPoints(0);
+			pointsDetail.setResetTime(new Date());
+			pointsDetail.setCreated(new Date());
+			pointsDetail.setModifiedId(0L);
+			pointsDetail.setYn(1);
+			pointsDetail.setName(data.getCustomer().getName());
+			pointsDetail.setOrganizationType(data.getCustomer().getOrganizationType());
+			
+			pointsDetail.setProfession(data.getCustomer().getProfession());
+			pointsDetail.setType(data.getCustomer().getType());
+			
+			pointsDetail.setCertificateType(data.getCustomer().getCertificateType());
+			pointsDetail.setPhone(data.getCustomer().getPhone());
+			
+			pointsDetail.setBuyer(data.isBuyer());
+			pointsDetail.setActualPoints(data.getActualPoints());
+			return pointsDetail;
+			})
+		.collect(Collectors.toList());
 		
-		List<CustomerCategoryPointsDTO>customerCategoryList=list.stream().flatMap(e->{
-			    OrderPointsDataInfo data=e.getKey();
-				List<CustomerCategoryPointsDTO>combineList=this.combineOrderItemByCategory(data);
-				List<CustomerCategoryPointsDTO>resultList=this.reCalculateCategoryPoints(data, combineList);
-				return resultList.stream();
-				
-		}).collect(Collectors.toList());
-		this.customerCategoryPointsService.batchSaveCustomerCategoryPointsDTO(customerCategoryList);
+		this.customerPointsService.batchSaveCustomerPointsDTO(customerPointsDTOList);
+	}
+	/**
+	 * 保存PointsException信息
+	 * @param withoutCustomerExceptionList
+	 * @param zeroPointsExceptionList
+	 */
+	private void savePointsException(List<OrderPointsDataInfo> withoutCustomerExceptionList,
+			List<OrderPointsDataInfo> zeroPointsExceptionList) {
+		logger.debug("开始保存PointsException信息");
+		List<PointsException>exceptionList=Stream.concat(withoutCustomerExceptionList.stream(), zeroPointsExceptionList.stream())
+		.map(data->{
+			PointsDetailDTO pointsDetail = DTOUtils.newDTO(PointsDetailDTO.class);
+			if(data.getCustomer()==null) {
+				pointsDetail.setNotes("未能通过证件号[" + data.getCertificateNumber() + "]查询到客户信息");
+				pointsDetail.setException(1);
+				pointsDetail.setNeedRecover(1);// 将会保存到异常积分表,并在某个时间进行恢复
+				pointsDetail.setCustomerId(null);
+			}else {
+				pointsDetail.setNeedRecover(0);
+				pointsDetail.setCustomerId(data.getCustomer().getId());
+			}
+
+			pointsDetail.setCertificateNumber(data.getCertificateNumber());
+			pointsDetail.setCustomerType(data.getCustomerType());
+			pointsDetail.setFirmCode(data.getFirmCode());
+			pointsDetail.setGenerateWay(data.getGenerateWay());
+			pointsDetail.setInOut(data.getInOut());
+			pointsDetail.setOrderCode(data.getOrderCode());
+			pointsDetail.setOrderType(data.getOrderType());
+			pointsDetail.setPoints(data.getPoints().intValue());
+			pointsDetail.setSourceSystem(data.getSourceSystem());
+			pointsDetail.setWeightType(data.getWeightType());
+			
+			PointsException exceptionalPoints = DTOUtils.as(pointsDetail, PointsException.class);
+			if(exceptionalPoints.getNeedRecover()==null) {
+				exceptionalPoints.setNeedRecover(0);
+			}
+			
+			return exceptionalPoints;
+			})
+		.collect(Collectors.toList());
 		
-		
+		this.pointsExceptionService.batchInsert(exceptionList);
 	}
 	
 	private List<CustomerCategoryPointsDTO>reCalculateCategoryPoints(OrderPointsDataInfo data,List<CustomerCategoryPointsDTO>categoryList){
@@ -313,7 +428,7 @@ public class OrderListener {
 		}
 		
 		//累加进行总金额总重量计算
-		CustomerCategoryPointsDTO total=DTOUtils.newDTO(CustomerCategoryPointsDTO.class);
+		CustomerCategoryPointsDTO total = DTOUtils.newDTO(CustomerCategoryPointsDTO.class);
 		total.setTotalMoney(0L);
 		total.setWeight(BigDecimal.ZERO);
 		total.setBuyerPoints(0);
@@ -341,8 +456,8 @@ public class OrderListener {
 			}else {
 				continue;
 			}
-			BigDecimal percentage=pointsDecimal.divide(new BigDecimal(totalPoints),10,RoundingMode.HALF_EVEN);
-			int points=pointsDecimal.intValue();
+			BigDecimal percentage = pointsDecimal.divide(new BigDecimal(totalPoints), 10, RoundingMode.HALF_EVEN);
+			int points = pointsDecimal.intValue();
 			logger.info("CertificateNumber {},CustomerType {},Category1Id {},Category1Name {},TotalPoints,{},Percentage:{},Points: {}"
 					,data.getCertificateNumber(),data.getCustomerType(),dto.getCategory3Id(),dto.getCategory3Name(),totalPoints,percentage.toPlainString(),points);
 			//10:采购,20:销售
@@ -354,7 +469,7 @@ public class OrderListener {
 		
 		//对积分进行修正(最后一个的积分等于总积分减去前面积分之和)
 		if(!resultList.isEmpty()) {
-			CustomerCategoryPointsDTO lastCategoryPointsDTO=categoryList.get(categoryList.size()-1);
+			CustomerCategoryPointsDTO lastCategoryPointsDTO = categoryList.get(categoryList.size()-1);
 			lastCategoryPointsDTO.setActualPoints(totalPoints-(total.getActualPoints()-lastCategoryPointsDTO.getActualPoints()));
 			
 //			lastCategoryPointsDTO.setAvailable(lastCategoryPointsDTO.getPoints());
@@ -386,7 +501,7 @@ public class OrderListener {
 	 * 
 	 * @param orderMap
 	 */
-	@Transactional(timeout = 90, propagation = Propagation.REQUIRED)
+	
 	private Map<Order, List<OrderItem>> saveOrderAndItem(Map<Order, List<OrderItem>>orderMap,String customerType) {
 		
 		

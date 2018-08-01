@@ -1,8 +1,11 @@
 package com.dili.points.service;
 
+import java.util.List;
+
 import com.dili.points.domain.Customer;
 import com.dili.points.domain.CustomerPoints;
 import com.dili.points.domain.dto.CustomerApiDTO;
+import com.dili.points.domain.dto.CustomerCategoryPointsDTO;
 import com.dili.points.domain.dto.CustomerPointsDTO;
 import com.dili.ss.base.BaseService;
 import com.dili.ss.domain.EasyuiPageOutput;
@@ -15,4 +18,19 @@ public interface CustomerPointsService extends BaseService<CustomerPoints, Long>
 	public EasyuiPageOutput listCustomerPointsByCustomer(CustomerApiDTO customer);
 
 	public CustomerPointsDTO findCustomerPointsByCertificateNumber(String certificateNumber);
+	
+	
+    /**
+     * 批量保存CustomerPointsDTO
+     * @param dtoList
+     * @return
+     */
+	public int[] batchSaveCustomerPointsDTO(List<CustomerPointsDTO> dtoList);
+	
+	/**
+	 * 保存CustomerPointsDTO
+	 * @param customerPointsDTO
+	 * @return
+	 */
+	public int saveCustomerPointsDTO(CustomerPointsDTO customerPointsDTO);
 }

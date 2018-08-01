@@ -121,12 +121,7 @@ public class OrderPointsDataInfo {
 	public void setSourceSystem(String sourceSystem) {
 		this.sourceSystem = sourceSystem;
 	}
-//	public Long getCustomerId() {
-//		return customerId;
-//	}
-//	public void setCustomerId(Long customerId) {
-//		this.customerId = customerId;
-//	}
+
 	public String getCertificateNumber() {
 		return certificateNumber;
 	}
@@ -168,6 +163,15 @@ public class OrderPointsDataInfo {
 	}
 	public void setOrderType(String orderType) {
 		this.orderType = orderType;
+	}
+	@Override
+	public String toString() {
+		return "OrderPointsDataInfo [certificateNumber=" + certificateNumber + ", inOut=" + inOut + ", created="
+				+ created + ", customerType=" + customerType + ", points=" + points + ", actualPoints=" + actualPoints
+				+ ", sourceSystem=" + sourceSystem + ", firmCode=" + firmCode + ", notes=" + notes + ", generateWay="
+				+ generateWay + ", weightType=" + weightType + ", orderCode=" + orderCode + ", orderType=" + orderType
+				+ ", totalMoney=" + totalMoney + ", weight=" + weight + ", payment=" + payment + ", customer="
+				+ customer + ", orderItems=" + orderItems + ", pointsRule=" + pointsRule + ", isBuyer=" + isBuyer + "]";
 	}
 	
 	

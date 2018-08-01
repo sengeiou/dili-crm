@@ -405,31 +405,5 @@ public class PointsDetailServiceImpl extends BaseServiceImpl<PointsDetail, Long>
 	    EasyuiPageOutput easyuiPageOutput = super.listEasyuiPageByExample(pointsDetail, useProvider);
 	    return easyuiPageOutput;
     }
-    @Override
-    public int savePointsDetailDTO(PointsDetailDTO dto) {
-    	PointsDetail condition=DTOUtils.newDTO(PointsDetail.class);
-		
-    	PointsDetail item=null;//this.getActualDao().selectOne(condition);
-		if(item==null) {
-			item=DTOUtils.clone(dto, PointsDetail.class);
-			item.setId(null);
-		}
-		item.setPoints(dto.getActualPoints());
-		if(item.getId()==null) {
-			return this.getActualDao().insertExact(item);
-		}else {
-			return this.updateExact(item);
-		}
-    }
-    @Override
-	public int[] batchSavePointsDetailDTO(List<PointsDetailDTO>dtoList) {
-		int[]result=new int[dtoList.size()];
-    	for(int i=0;i<dtoList.size();i++) {
-    		result[i]=this.savePointsDetailDTO(dtoList.get(i));
-    	}
-    	return result;
-		
-		
-	}
 
 }
