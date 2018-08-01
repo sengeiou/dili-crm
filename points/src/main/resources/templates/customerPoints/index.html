@@ -1,5 +1,39 @@
  <#body>
+    <script type="text/javascript">
+        /**
+         * 积分调整，市场选择框change事件
+         * 根据所选市场，获取客户在该市场的可用积分
+         * @param newValue
+         * @param oldValue
+         */
+        function changeTradingFirmCode(newValue, oldValue) {
+            if (typeof(newValue) == "undefined" || null == newValue || ''== newValue){
+                //清除 "调整前积分"
+                $('#_available').textbox("setValue",'');
+                return;
+            }
+            var customerId = $('#_customerId').val();
+            $.ajax({
+                type: "POST",
+                url: "${contextPath}/customerFirmPoints/getByCustomerAndFirm.action",
+                data: {customerId: customerId, firmCode: newValue},
+                processData: true,
+                dataType: "json",
+                async: true,
+                success: function (ret) {
+                    if (ret.success) {
+                        $('#_available').textbox("setValue", ret.data.available);
+                    } else {
+                        $.messager.alert('错误', ret.result);
+                    }
+                },
+                error: function () {
+                    $.messager.alert('错误', '远程访问失败');
+                }
+            });
 
+        }
+    </script>
     <div class="easyui-layout" fit="true">
         <!-- ====================================================================================================================== -->
         <!-- 上方布局 -->
@@ -105,18 +139,11 @@
       <!-- 隐藏编辑框 -->
     <div id="dlg" class="easyui-dialog" resizable="false" constrain="true" shadow="true" draggable="false" title="积分调整" style="padding:20px" modal="true" border="thin" closed="true"
          data-options="
-				iconCls: 'icon-save',
-				height: 360,
+				height: 400,
 				buttons: [{
 					text:'确认',
 					iconCls:'icon-ok',
 					handler:savePointsDetail
-				},{
-					text:'取消',
-					iconCls:'icon-cancel',
-					handler:function(){
-						$('#dlg').dialog('close');
-					}
 				}]
 			">
     <form id="_form" class="easyui-form" method="post" fit="true">
@@ -124,27 +151,33 @@
         <table width="360px">
             <tr>
                 <td style="padding:5px;">
-                    <input class="easyui-textbox" name="_certificateNumber" id="_certificateNumber" style="width:100%" data-options="label:'客户证件号:',readonly:true, validType:'length[0,40]'" />
+                    <input class="easyui-textbox" name="_certificateNumber" id="_certificateNumber" style="width:100%" data-options="labelAlign:'right',label:'客户证件号:',readonly:true, validType:'length[0,40]'" />
                 </td>
             </tr>
             <tr>
                 <td style="padding:5px;">
-                    <input class="easyui-textbox" name="_name" id="_name" style="width:100%" data-options="label:'客户名称:',readonly:true, validType:'length[0,40]'" />
+                    <input class="easyui-textbox" name="_name" id="_name" style="width:100%" data-options="labelAlign:'right',label:'客户名称:',readonly:true, validType:'length[0,40]'" />
                 </td>
             </tr>
             <tr>
                 <td style="padding:5px;">
-                    <input class="easyui-numberbox" name="_available" id="_available" style="width:100%" data-options="label:'调整前积分:',readonly:true," />
+                    <input name="_firmCode" id="_tradingFirmCode" style="width:100%;" data-options="labelAlign:'right', editable:false,onChange:changeTradingFirmCode" panelWidth="auto" panelHeight="auto" label="&lowast;积分市场:" required/>
+                    <#comboProvider _id="_tradingFirmCode" _provider='firmProvider' />
+                </td>
+            </tr>
+            <tr>
+                <td style="padding:5px;">
+                    <input class="easyui-numberbox" name="_available" id="_available" style="width:100%" data-options="labelAlign:'right',label:'调整前积分:',readonly:true" />
                 </td>
             </tr>
              <tr>
                 <td style="padding:5px;">
-                    <input class="easyui-numberbox" name="_points" id="_points" style="width:100%" data-options="label:'调整积分:', max:1000000" />
+                    <input class="easyui-numberbox" name="_points" id="_points" style="width:100%" data-options="labelAlign:'right',label:'调整积分:',max:1000000" />
                 </td>
             </tr>
            <tr>
                 <td style="padding:5px;">
-                    <input class="easyui-textbox" name="_notes" id="_notes" style="width:100%" data-options="label:'备注:',height:80, validType:'length[0,120]'" required="true" />
+                    <input class="easyui-textbox" name="_notes" id="_notes" style="width:100%" data-options="labelAlign:'right',label:'&lowast;备注:',multiline:true,height:80, validType:'length[0,120]'" required="true" />
                 </td>
             </tr>
           
@@ -172,10 +205,9 @@
      <form id="_formClear" class="easyui-form" method="post" fit="true">
          <table width="360px">
              <tr>
-
                  <td style="padding:5px;">
-                     <input name="_firmCode" id="_firmCode" style="width:100%;" data-options="labelAlign:'right', editable:false" panelWidth="auto" panelHeight="auto" label="&lowast;所属市场:" required/>
-                     <#comboProvider _id="_firmCode" _provider='firmProvider' />
+                     <input name="_firmCode" id="_firmCodeClear" style="width:100%;" data-options="labelAlign:'right', editable:false" panelWidth="auto" panelHeight="auto" label="&lowast;所属市场:" required/>
+                     <#comboProvider _id="_firmCodeClear" _provider='firmProvider' />
                  </td>
              </tr>
              <tr>
@@ -259,7 +291,7 @@
                 return;
             }
             var _formData = removeKeyStartWith($("#_formClear").serializeObject(),"_");
-            var firm =  $("#_firmCode").textbox("getText");
+            var firm =  $("#_firmCodeClear").textbox("getText");
             $.messager.confirm('确认', '此操作将清空所有客户在【'+firm+'】的所有积分，是否继续？', function (r) {
                 if (r) {
                     $.ajax({
@@ -317,6 +349,7 @@
          var formData = $.extend({},selected);
          formData = addKeyStartWith(getOriginalData(formData),"_");
          $('#_form').form('load', formData);
+         $('#_available').textbox("setValue",'');
          </#resource>     
      }
 

@@ -3,6 +3,7 @@ package com.dili.points.domain;
 import com.alibaba.fastjson.annotation.JSONField;
 import com.dili.ss.domain.annotation.Operator;
 import com.dili.ss.dto.IBaseDomain;
+import com.dili.ss.dto.IMybatisForceParams;
 import com.dili.ss.metadata.FieldEditor;
 import com.dili.ss.metadata.annotation.EditMode;
 import com.dili.ss.metadata.annotation.FieldDef;
@@ -21,7 +22,7 @@ import javax.persistence.Id;
  * This file was generated on 2018-03-20 11:29:30.
  */
 @Table(name = "`customer_points`")
-public interface CustomerPoints extends IBaseDomain {
+public interface CustomerPoints extends IBaseDomain, IMybatisForceParams {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "`id`")

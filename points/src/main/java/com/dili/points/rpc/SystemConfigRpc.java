@@ -6,7 +6,7 @@ import com.dili.ss.retrofitful.annotation.POST;
 import com.dili.ss.retrofitful.annotation.Restful;
 import com.dili.ss.retrofitful.annotation.VOSingleParameter;
 
-@Restful("${crm.contextPath}")
+@Restful("${uap.contextPath}")
 public interface SystemConfigRpc {
 
 	@POST("/systemConfigApi/getByCode.api")

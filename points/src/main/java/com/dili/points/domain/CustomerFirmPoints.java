@@ -4,11 +4,15 @@ import com.dili.ss.dto.IBaseDomain;
 import com.dili.ss.metadata.FieldEditor;
 import com.dili.ss.metadata.annotation.EditMode;
 import com.dili.ss.metadata.annotation.FieldDef;
+import com.dili.uap.sdk.validator.AddView;
+
 import javax.persistence.*;
 import javax.persistence.Column;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import java.util.Date;
 
 /**
@@ -30,6 +34,7 @@ public interface CustomerFirmPoints extends IBaseDomain {
     @Column(name = "`customer_id`")
     @FieldDef(label="客户id")
     @EditMode(editor = FieldEditor.Number, required = true)
+    @NotNull(message = "客户ID不能为空")
     Long getCustomerId();
 
     void setCustomerId(Long customerId);
@@ -37,6 +42,7 @@ public interface CustomerFirmPoints extends IBaseDomain {
     @Column(name = "`certificate_number`")
     @FieldDef(label="证件号码", maxLength = 40)
     @EditMode(editor = FieldEditor.Text, required = true)
+    @NotBlank(message = "客户证件号不能为空")
     String getCertificateNumber();
 
     void setCertificateNumber(String certificateNumber);
@@ -44,6 +50,7 @@ public interface CustomerFirmPoints extends IBaseDomain {
     @Column(name = "`trading_firm_code`")
     @FieldDef(label="交易市场编码", maxLength = 20)
     @EditMode(editor = FieldEditor.Text, required = true)
+    @NotBlank(message = "交易市场不能为空")
     String getTradingFirmCode();
 
     void setTradingFirmCode(String tradingFirmCode);

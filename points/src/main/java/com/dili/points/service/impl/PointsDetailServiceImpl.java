@@ -11,6 +11,7 @@ import com.dili.points.domain.dto.CustomerPointsDTO;
 import com.dili.points.domain.dto.PointsDetailDTO;
 import com.dili.points.rpc.CustomerRpc;
 import com.dili.points.rpc.SystemConfigRpc;
+import com.dili.points.service.CustomerFirmPointsService;
 import com.dili.points.service.CustomerPointsService;
 import com.dili.points.service.PointsDetailService;
 import com.dili.ss.base.BaseServiceImpl;
@@ -63,7 +64,7 @@ public class PointsDetailServiceImpl extends BaseServiceImpl<PointsDetail, Long>
 	AsyncTask asyncTask;
 
 	@Autowired
-	CustomerFirmPointsMapper customerFirmPointsMapper;
+	CustomerFirmPointsService customerFirmPointsService;
 
 	@Transactional(propagation = Propagation.REQUIRED)
 	@Override
@@ -215,22 +216,17 @@ public class PointsDetailServiceImpl extends BaseServiceImpl<PointsDetail, Long>
 	}
 	@Transactional(propagation = Propagation.REQUIRED)
 	@Override
-	public Optional<PointsDetailDTO> insert(PointsDetailDTO pointsDetail) { 
-		if(pointsDetail.getException()!=null&&pointsDetail.getException().equals(1)) {
+	public Optional<PointsDetailDTO> insert(PointsDetailDTO pointsDetail) {
+		if (pointsDetail.getException() != null && pointsDetail.getException().equals(1)) {
 			//异常积分信息保存
-			 this.insertPointsException(pointsDetail);
-			 return Optional.empty();
+			this.insertPointsException(pointsDetail);
+			return Optional.empty();
 		}
 		Long customerId = pointsDetail.getCustomerId();
 		CustomerPoints example = DTOUtils.newDTO(CustomerPoints.class);
 		example.setCertificateNumber(pointsDetail.getCertificateNumber());
 		// 如果用户积分不存在,则先插入用户积分
 		CustomerPoints customerPoints = this.customerPointsService.list(example).stream().findFirst().orElseGet(() -> {
-			// CustomerApiDTO customer=DTOUtils.newDTO(CustomerApiDTO.class);
-			// customer.setCertificateNumber(pointsDetail.getCertificateNumber());
-			// Customer
-			// c=customerRpc.list(customer).getData().stream().findFirst().orElseGet(null);
-			// if(c!=null) {
 			CustomerPoints cp = DTOUtils.newDTO(CustomerPoints.class);
 			cp.setAvailable(0);
 			cp.setId(customerId);
@@ -244,52 +240,49 @@ public class PointsDetailServiceImpl extends BaseServiceImpl<PointsDetail, Long>
 			cp.setBuyerPoints(0);
 			cp.setSellerPoints(0);
 			cp.setYn(1);
-			this.customerPointsService.insertExact(cp);
+			this.customerPointsService.insertExactSimple(cp);
 			return cp;
-			// }
-			// return null;
 		});
-		
+
 		Integer points = pointsDetail.getPoints();
 		if (points == null) {
 			pointsDetail.setPoints(0);
 			points = 0;
 		}
-		if (pointsDetail.getInOut().equals(10)) {//收入
-			points=Math.abs(points);
-		} else {//支出
-			points=0-Math.abs(points);
+		points = Math.abs(points);
+		//支出
+		if (pointsDetail.getInOut().equals(20)) {
+			points = 0 - points;
 		}
-		BaseOutput<SystemConfig>output=this.systemConfigRpc.getByCode("customerPoints.day.limits");
-		if(!output.isSuccess()||output.getData()==null) {
+		BaseOutput<SystemConfig> output = this.systemConfigRpc.getByCode("customerPoints.day.limits");
+		if (!output.isSuccess() || output.getData() == null) {
 			throw new AppException("远程查询积分上限出错!");
 		}
-		int total = Integer.parseInt(output.getData().getValue());// 积分上限
-		
-		
-		Integer dayPoints = customerPoints.getDayPoints();// 当天积分总和
-		if(dayPoints==null) {
-			dayPoints=0;
+		// 积分上限
+		int total = Integer.parseInt(output.getData().getValue());
+		//查询客户所在市场的积分情况
+		CustomerFirmPoints customerFirmPoints = customerFirmPointsService.getByCustomerAndFirm(pointsDetail.getCustomerId(), pointsDetail.getFirmCode());
+		// 当天积分总和
+		Integer dayPoints = customerFirmPoints.getDayPoints();
+		if (dayPoints == null) {
+			dayPoints = 0;
 		}
 		//修改时间
-		Instant instant=Instant.now();
-		if(customerPoints.getResetTime()!=null) {
-			instant = customerPoints.getResetTime().toInstant();
-		}else {
+		Instant instant = Instant.now();
+		if (customerFirmPoints.getResetTime() != null) {
+			instant = customerFirmPoints.getResetTime().toInstant();
+		} else {
 			//如果RestTime为空则把当前时间减少一天,做为resttime
-			TemporalAmount tm=Duration.ofDays(1);
-			instant =instant.minus(tm); 
+			TemporalAmount tm = Duration.ofDays(1);
+			instant = instant.minus(tm);
 		}
-		 
-		
-		 ZoneId defaultZoneId = ZoneId.systemDefault();
-	     LocalDate resetDate = instant.atZone(defaultZoneId).toLocalDate();
+
+		ZoneId defaultZoneId = ZoneId.systemDefault();
+		LocalDate resetDate = instant.atZone(defaultZoneId).toLocalDate();
 		//当前时间
 		LocalDate currentDate = LocalDate.now();
-		
-		
-		if(!pointsDetail.getGenerateWay().equals(50)&&points>0) {//50手工调整(对于手工调整,不做累加不做判断)
-	
+		//50手工调整(对于手工调整,不做累加不做判断)
+		if (!pointsDetail.getGenerateWay().equals(50) && points > 0) {
 			// 如果上次累积积分的时间为今天时,进行积分上限处理
 			if (resetDate.isEqual(currentDate)) {
 				// 如果当天积分总和已经超过上限,当前积分详情的积分归为0,当天积分总和分为total
@@ -307,38 +300,29 @@ public class PointsDetailServiceImpl extends BaseServiceImpl<PointsDetail, Long>
 				}
 			} else {
 				//单次积分超过最大值
-				if(total<points) {
-					points=total;
-					dayPoints=total;
-				}else {
-					dayPoints = points;	
+				if (total < points) {
+					points = total;
+					dayPoints = total;
+				} else {
+					dayPoints = points;
 				}
-				
 			}
-		}else {
+		} else {
 			// 如果上次修改积分的时间不是今天时,初始化积分上限到0
 			if (!resetDate.isEqual(currentDate)) {
 				dayPoints = 0;
-			} 
+			}
 		}
-
-		
-		customerPoints.setResetTime(new Date());
-		customerPoints.setModified(new Date());
-		customerPoints.setDayPoints(dayPoints);
-
-		
-
+		customerFirmPoints.setResetTime(new Date());
+		customerFirmPoints.setDayPoints(dayPoints);
+		customerFirmPoints.setAvailable(customerFirmPoints.getAvailable() + points);
+		customerFirmPoints.setCertificateNumber(pointsDetail.getCertificateNumber());
 		// 计算用户可用积分和总积分
 		customerPoints.setAvailable(customerPoints.getAvailable() + points);
-		// // 如果可用积分小于0,则重设置为0
-		// if (customerPoints.getAvailable() < 0) {
-		// customerPoints.setAvailable(0);
-		// }
+		customerPoints.setModified(new Date());
 		customerPoints.setTotal(customerPoints.getAvailable() + customerPoints.getFrozen());
 		pointsDetail.setPoints(points);
 		pointsDetail.setBalance(customerPoints.getTotal());
-		
 		//10:采购,20:销售
 		if("purchase".equals(pointsDetail.getCustomerType())) {
 			customerPoints.setBuyerPoints((customerPoints.getBuyerPoints()==null?0:customerPoints.getBuyerPoints())+points);
@@ -351,6 +335,7 @@ public class PointsDetailServiceImpl extends BaseServiceImpl<PointsDetail, Long>
 		}else {
 			// pointsDetail.setId(System.currentTimeMillis());
 			this.customerPointsService.update(customerPoints);
+			customerFirmPointsService.saveOrUpdate(customerFirmPoints);
 			// return 0;
 			// pointsDetail.setId(null);
 			super.insertSelective(pointsDetail);	
@@ -369,7 +354,7 @@ public class PointsDetailServiceImpl extends BaseServiceImpl<PointsDetail, Long>
 		//查询在需要清除积分的市场的客户信息
 		CustomerFirmPoints customerFirmPoints = DTOUtils.newDTO(CustomerFirmPoints.class);
 		customerFirmPoints.setTradingFirmCode(firmCode);
-		List<CustomerFirmPoints> firmPointsList = customerFirmPointsMapper.select(customerFirmPoints);
+		List<CustomerFirmPoints> firmPointsList = customerFirmPointsService.list(customerFirmPoints);
 		//如果没有客户在此市场产生过积分，则直接返回
 		if (CollectionUtils.isEmpty(firmPointsList)){
 			return 1;
@@ -398,7 +383,7 @@ public class PointsDetailServiceImpl extends BaseServiceImpl<PointsDetail, Long>
 		Example example = new Example(CustomerPoints.class);
 		Example.Criteria criteria = example.createCriteria();
 		criteria.andIn("certificateNumber",map.keySet());
-		customerFirmPointsMapper.deleteByExample(example);
+		customerFirmPointsService.deleteByExample(example);
         asyncTask.generatePointsDetail(firmPointsList,notes);
 		return 1;
 	}
