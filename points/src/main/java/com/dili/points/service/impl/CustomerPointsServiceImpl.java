@@ -263,7 +263,7 @@ public class CustomerPointsServiceImpl extends BaseServiceImpl<CustomerPoints, L
 		example.setCertificateNumber(dto.getCertificateNumber());
 
 		CustomerPoints item = 	this.list(example).stream().findFirst().orElseGet(()->{
-			CustomerPointsDTO obj=DTOUtils.clone(dto, CustomerPointsDTO.class);
+			CustomerPoints obj=DTOUtils.clone(dto, CustomerPoints.class);
 			obj.setId(null);
 			obj.setBuyerPoints(0);
 			obj.setSellerPoints(0);
@@ -278,10 +278,11 @@ public class CustomerPointsServiceImpl extends BaseServiceImpl<CustomerPoints, L
 			item.setSellerPoints(item.getSellerPoints()+dto.getActualPoints());
 		}
 		item.setAvailable(item.getBuyerPoints()+item.getSellerPoints());
+		item.setTotal(item.getAvailable()+item.getFrozen());
 		if(item.getId()==null) {
-			return this.getActualDao().insertExact(item);
+			return this.insertExactSimple(item);
 		}else {
-			return this.updateExact(item);
+			return this.updateExactSimple(item);
 		}
 	}
 }

@@ -228,9 +228,9 @@ public class OrderListener {
 		}
 
 	}
-	@Transactional(timeout = 90, propagation = Propagation.REQUIRED)
-	protected void saveData(Map<Order, List<OrderItem>>orderMap,String customerType) {
-		this.saveOrderAndItem(orderMap,customerType);
+	
+	protected void savePointsData(Map<Order, List<OrderItem>>orderMap,String customerType) {
+		
 		Map<Boolean,List<OrderPointsDataInfo>>map = this.calculatePoints(orderMap, customerType)
 				.stream()
 				.filter(data->{return data.getPoints().intValue()>0;})
@@ -336,7 +336,9 @@ public class OrderListener {
 			return pointsDetail;
 			})
 		.collect(Collectors.toList());
-		this.pointsDetailService.batchInsert(pointsDetailList);
+		if(!pointsDetailList.isEmpty()) {
+			this.pointsDetailService.batchInsert(pointsDetailList);
+		}
 	}
 	/**
 	 * 保存CustomerPointsDTO信息
@@ -348,7 +350,7 @@ public class OrderListener {
 			CustomerPointsDTO pointsDetail=DTOUtils.newDTO(CustomerPointsDTO.class);
 			
 			
-			pointsDetail.setId(data.getCustomer().getId());
+			pointsDetail.setCustomerId(data.getCustomer().getId());
 			pointsDetail.setCertificateNumber(data.getCertificateNumber());
 			pointsDetail.setBuyerPoints(0);
 			pointsDetail.setSellerPoints(0);
@@ -359,7 +361,7 @@ public class OrderListener {
 			pointsDetail.setName(data.getCustomer().getName());
 			pointsDetail.setOrganizationType(data.getCustomer().getOrganizationType());
 			
-			pointsDetail.setProfession(data.getCustomer().getProfession());
+//			pointsDetail.setProfession(data.getCustomer().getProfession());
 			pointsDetail.setType(data.getCustomer().getType());
 			
 			pointsDetail.setCertificateType(data.getCustomer().getCertificateType());
@@ -413,8 +415,10 @@ public class OrderListener {
 			return exceptionalPoints;
 			})
 		.collect(Collectors.toList());
+		if(exceptionList.size()>0) {
+			this.pointsExceptionService.batchInsert(exceptionList);	
+		}
 		
-		this.pointsExceptionService.batchInsert(exceptionList);
 	}
 	
 	private List<CustomerCategoryPointsDTO>reCalculateCategoryPoints(OrderPointsDataInfo data,List<CustomerCategoryPointsDTO>categoryList){
@@ -486,15 +490,21 @@ public class OrderListener {
 	protected void calAndSaveData(Map<Order, List<OrderItem>> orderMap) {
 		// 对所有订单进行合计(针对买家)得到买家订单
 		Map<Order, List<OrderItem>> purchaseOrdersMap = this.sumOrdersForPurchase(orderMap);
-
-		// 卖家订单
+		//卖家订单信息
 		Map<Order, List<OrderItem>> saleOrdersMap = orderMap;
 		
-		// 计算买家积分
-		this.saveData(purchaseOrdersMap,  "purchase");
+		//保存所有数据
+		this.saveAllData(orderMap, purchaseOrdersMap, saleOrdersMap);
+	}
+	@Transactional(timeout = 90, propagation = Propagation.REQUIRED)
+	private void saveAllData(Map<Order, List<OrderItem>> orderMap,Map<Order, List<OrderItem>> purchaseOrdersMap,Map<Order, List<OrderItem>> saleOrdersMap) {
+		//保存订单信息
+		this.saveOrderAndItem(orderMap);
+		// 计算并保存买家积分
+		this.savePointsData(purchaseOrdersMap,  "purchase");
+		// 计算并保存卖家积分
+		this.savePointsData(saleOrdersMap,  "sale");
 		
-		// 计算卖家积分
-		this.saveData(saleOrdersMap,  "sale");
 	}
 	/**
 	 * 进行订单数据保存
@@ -502,7 +512,7 @@ public class OrderListener {
 	 * @param orderMap
 	 */
 	
-	private Map<Order, List<OrderItem>> saveOrderAndItem(Map<Order, List<OrderItem>>orderMap,String customerType) {
+	private Map<Order, List<OrderItem>> saveOrderAndItem(Map<Order, List<OrderItem>>orderMap ) {
 		
 		
 		orderMap.forEach((order, orderItemList) -> {

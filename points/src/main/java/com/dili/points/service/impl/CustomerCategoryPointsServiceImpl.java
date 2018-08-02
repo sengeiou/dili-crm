@@ -73,9 +73,9 @@ public class CustomerCategoryPointsServiceImpl extends BaseServiceImpl<CustomerC
 		item.setAvailable(item.getBuyerPoints()+item.getSellerPoints());
 		
 		if(item.getId()==null) {
-			return this.getActualDao().insertExact(item);
+			return this.insertExactSimple(item);
 		}else {
-			return this.updateExact(item);
+			return this.updateExactSimple(item);
 		}
     }
 }

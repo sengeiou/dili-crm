@@ -26,11 +26,17 @@ public interface CustomerPoints extends IBaseDomain, IMybatisForceParams {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "`id`")
-    @FieldDef(label="客户ID")
+    @FieldDef(label="ID")
     @EditMode(editor = FieldEditor.Number, required = true)
     Long getId();
 
     void setId(Long id);
+
+    @Column(name = "`customer_id`")
+    @FieldDef(label="客户ID")
+    @EditMode(editor = FieldEditor.Number, required = true)
+	Long getCustomerId();
+	void setCustomerId(Long customerId);
     
 
     @Column(name = "`certificate_number`")
