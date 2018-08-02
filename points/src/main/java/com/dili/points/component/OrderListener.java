@@ -34,8 +34,6 @@ import com.alibaba.fastjson.JSONObject;
 import com.dili.points.converter.DtoMessageConverter;
 import com.dili.points.domain.Category;
 import com.dili.points.domain.Customer;
-import com.dili.points.domain.CustomerFirmPoints;
-import com.dili.points.domain.CustomerPoints;
 import com.dili.points.domain.Order;
 import com.dili.points.domain.OrderItem;
 import com.dili.points.domain.PointsDetail;
@@ -288,6 +286,7 @@ public class OrderListener {
 			if(value>0) {
 				//插入成功后，将实际插入的数据通过customerFirmPoints.actualPoints 传递回来
 				data.setActualPoints(customerFirmPoints.getActualPoints());
+				data.setAvailable(customerFirmPoints.getAvailable());
 			}
 
 //			Entry<OrderPointsDataInfo,CustomerFirmPoints>entry=new AbstractMap.SimpleEntry<>(data, customerFirmPoints);
@@ -328,6 +327,7 @@ public class OrderListener {
 			
 			pointsDetail.setActualPoints(data.getActualPoints());
 			pointsDetail.setPoints(data.getActualPoints());
+			pointsDetail.setBalance(data.getAvailable());
 			
 			pointsDetail.setSourceSystem(data.getSourceSystem());
 			pointsDetail.setWeightType(data.getWeightType());
@@ -824,6 +824,7 @@ public class OrderListener {
 				orderPointsDataInfo.setTotalMoney(order.getTotalMoney());
 				orderPointsDataInfo.setWeight(order.getWeight());
 				orderPointsDataInfo.setPayment(order.getPayment());
+				orderPointsDataInfo.setAvailable(0);
 				orderList.add(orderPointsDataInfo);
 			});
 			

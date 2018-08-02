@@ -36,7 +36,7 @@ public class CustomerFirmPointsServiceImpl extends BaseServiceImpl<CustomerFirmP
         query.setCustomerId(customerId);
         CustomerFirmPoints customerPoints = getActualDao().select(query).stream().findFirst().orElseGet(() -> {
             CustomerFirmPoints temp = DTOUtils.newDTO(CustomerFirmPoints.class);
-            temp.setAvailable(0L);
+            temp.setAvailable(0);
             temp.setSellerPoints(0);
             temp.setBuyerPoints(0);
             temp.setCustomerId(customerId);
@@ -134,9 +134,10 @@ public class CustomerFirmPointsServiceImpl extends BaseServiceImpl<CustomerFirmP
 		}
 		item.setResetTime(new Date());
 		item.setDayPoints(dayPoints);
-		item.setAvailable(Long.valueOf(item.getBuyerPoints())+Long.valueOf(item.getSellerPoints()));
+		item.setAvailable(item.getBuyerPoints()+item.getSellerPoints());
+		//将实际积分和余额通过dto传回去
 		dto.setActualPoints(actualPoints);
-		
+		dto.setAvailable(item.getAvailable());
 		if(item.getId()==null) {
 			return this.getActualDao().insertExact(item);
 		}else {

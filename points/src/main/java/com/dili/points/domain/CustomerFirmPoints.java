@@ -58,9 +58,9 @@ public interface CustomerFirmPoints extends IBaseDomain {
     @Column(name = "`available`")
     @FieldDef(label="可用积分")
     @EditMode(editor = FieldEditor.Number, required = true)
-    Long getAvailable();
+    Integer getAvailable();
 
-    void setAvailable(Long available);
+    void setAvailable(Integer available);
 
     @Column(name = "`buyer_points`")
     @FieldDef(label="买方积分")

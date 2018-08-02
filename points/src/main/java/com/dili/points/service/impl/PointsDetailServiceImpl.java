@@ -361,7 +361,7 @@ public class PointsDetailServiceImpl extends BaseServiceImpl<PointsDetail, Long>
 		}
 
 		//转换出 证件号-积分 结构的map
-		Map<String, Long> map = firmPointsList.stream().collect(Collectors.toMap(CustomerFirmPoints::getCertificateNumber, CustomerFirmPoints::getAvailable));
+		Map<String, Integer> map = firmPointsList.stream().collect(Collectors.toMap(CustomerFirmPoints::getCertificateNumber, CustomerFirmPoints::getAvailable));
 		/**
 		 * 更改客户积分表中的可用积分
 		 */

@@ -21,6 +21,7 @@ public class OrderPointsDataInfo {
 	private String customerType;
 	private BigDecimal points;
 	private Integer actualPoints;
+	private Integer available;
 	private String sourceSystem;
 	private String firmCode;
 	private String notes;
@@ -43,6 +44,12 @@ public class OrderPointsDataInfo {
 	private boolean isBuyer;
 	
 	
+	public Integer getAvailable() {
+		return available;
+	}
+	public void setAvailable(Integer available) {
+		this.available = available;
+	}
 	public Integer getPayment() {
 		return payment;
 	}
