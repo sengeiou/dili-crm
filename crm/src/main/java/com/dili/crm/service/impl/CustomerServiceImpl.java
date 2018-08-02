@@ -238,7 +238,7 @@ public class CustomerServiceImpl extends BaseServiceImpl<Customer, Long> impleme
 		}
 		//查询客户可用积分
 		CustomerPointsApiDTO customerPointsApiDTO = DTOUtils.newDTO(CustomerPointsApiDTO.class);
-		customerPointsApiDTO.setIds(Lists.newArrayList(customer.getId().toString()));
+		customerPointsApiDTO.setCustomerIds(Lists.newArrayList(customer.getId()));
 		BaseOutput<List<CustomerPoints>> output = customerPointsRpc.listCustomerPoints(customerPointsApiDTO);
 		if(output.isSuccess() && !output.getData().isEmpty()){
 			customerMap.put("available", output.getData().get(0).getAvailable());

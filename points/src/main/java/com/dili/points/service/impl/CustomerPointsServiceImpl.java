@@ -142,7 +142,8 @@ public class CustomerPointsServiceImpl extends BaseServiceImpl<CustomerPoints, L
 			// 如果客户没有对应的积分信息,则创建一个新的默认积分信息显示到页面
 			CustomerPointsDTO cpdto = DTOUtils.newDTO(CustomerPointsDTO.class);
 			if (cp == null) {
-				cpdto.setId(c.getId());
+				cpdto.setCustomerId(c.getId());
+//				cpdto.setId(c.getId());
 				cpdto.setCertificateNumber(c.getCertificateNumber());
 				cpdto.setAvailable(0);
 				cpdto.setFrozen(0);
@@ -213,7 +214,8 @@ public class CustomerPointsServiceImpl extends BaseServiceImpl<CustomerPoints, L
 			CustomerPointsDTO cpdto = DTOUtils.newDTO(CustomerPointsDTO.class);
 			CustomerPoints customerPoints = certificateNumber2CustomerPointsMap.get(c.getCertificateNumber());
 			if (customerPoints == null) {
-				cpdto.setId(c.getId());
+				cpdto.setCustomerId(c.getId());
+//				cpdto.setId(c.getId());
 				cpdto.setCertificateNumber(c.getCertificateNumber());
 				cpdto.setAvailable(0);
 				cpdto.setFrozen(0);

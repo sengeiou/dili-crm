@@ -12,6 +12,8 @@ import org.springframework.stereotype.Component;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
+import java.util.stream.Collectors;
 
 /**
  * 客户积分批量提供者
@@ -25,10 +27,24 @@ public class CustomerPointsProvider extends BatchDisplayTextProviderAdaptor {
 
 	@Override
 	protected List getFkList(List<String> relationIds, Map metaMap) {
-		CustomerPointsApiDTO customerPointsApiDTO = DTOUtils.newDTO(CustomerPointsApiDTO.class);
-		customerPointsApiDTO.setIds(relationIds);
-		BaseOutput<List<CustomerPoints>> userOutput = customerPointsRpc.listCustomerPoints(customerPointsApiDTO);
-		return userOutput.isSuccess() ? userOutput.getData() : null;
+		if(relationIds!=null) {
+			List<Long>customerIds = relationIds.stream().filter(Objects::nonNull)
+			.map(s->{
+				try {
+					return Long.parseLong(s);
+				}catch(Exception e) {
+					return null;
+				}
+			})
+			.filter(Objects::nonNull).collect(Collectors.toList());
+			if(!customerIds.isEmpty()) {
+				CustomerPointsApiDTO customerPointsApiDTO = DTOUtils.newDTO(CustomerPointsApiDTO.class);
+				customerPointsApiDTO.setCustomerIds(customerIds);
+				BaseOutput<List<CustomerPoints>> userOutput = customerPointsRpc.listCustomerPoints(customerPointsApiDTO);
+				return userOutput.isSuccess() ? userOutput.getData() : null;
+			}
+		}
+		return null;
 	}
 
 	@Override

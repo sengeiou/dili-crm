@@ -113,11 +113,15 @@ public class CustomerPointsApi {
     @RequestMapping(value = "/deleteCustomerPoints.api", method = { RequestMethod.POST })
     public @ResponseBody
     BaseOutput<CustomerPoints> deleteCustomerPoints(@RequestBody Long customerId) {
-    	CustomerPoints customerPoints=customerPointsService.get(customerId);
-    	if(customerPoints!=null&&Integer.valueOf(1).equals(customerPoints.getYn())) {
-    		customerPoints.setYn(0);
-    		this.customerPointsService.update(customerPoints);
-    		 return BaseOutput.success().setData(customerPoints);
+    	if(customerId!=null) {
+        	CustomerPointsApiDTO example=DTOUtils.newDTO(CustomerPointsApiDTO.class);
+        	example.setCustomerId(customerId);	
+        	CustomerPoints  customerPoints = customerPointsService.listByExample(example).stream().findFirst().orElse(null);
+        	if(customerPoints!=null&&Integer.valueOf(1).equals(customerPoints.getYn())) {
+        		customerPoints.setYn(0);
+        		this.customerPointsService.update(customerPoints);
+        		 return BaseOutput.success().setData(customerPoints);
+        	}
     	}
     	 return BaseOutput.failure("更新客户积分信息失败");
     }

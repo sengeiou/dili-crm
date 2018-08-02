@@ -11,9 +11,8 @@ import java.util.List;
  */
 public interface CustomerPointsApiDTO extends IBaseDomain {
 
-    List<String> getIds();
+    List<Long> getCustomerIds();
 
-    void setIds(List<String> ids);
-    
+    void setCustomerIds(List<Long> customerIds);
 
 }

@@ -19,11 +19,9 @@ import java.util.List;
 @Table(name = "`customer_points`")
 public interface CustomerPointsApiDTO extends CustomerPoints {
     @Id
-    @Column(name = "`id`")
+    @Column(name = "`customer_id`")
     @Operator(Operator.IN)
-    List<Long> getIds();
-
-    void setIds(List<Long> ids);
-    
+    List<Long> getCustomerIds();
+    void setCustomerIds(List<Long> customerIds);
 
 }
