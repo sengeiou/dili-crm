@@ -353,7 +353,7 @@
         <dependency>
             <groupId>com.dili</groupId>
             <artifactId>uap-sdk</artifactId>
-            <version>1.0.0</version>
+            <version>1.0.0-SNAPSHOT</version>
         </dependency>
 
     </dependencies>
