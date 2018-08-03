@@ -58,7 +58,7 @@ public class CustomerFirmPointsServiceImpl extends BaseServiceImpl<CustomerFirmP
     }
 	/**
 	 * 保存数据
-	 * @param customerFirmPoints
+	 * @param dto
 	 * @return
 	 */
 	
@@ -96,14 +96,6 @@ public class CustomerFirmPointsServiceImpl extends BaseServiceImpl<CustomerFirmP
     		
     	});
     	
-		DataDictionaryValue condtion = DTOUtils.newDTO(DataDictionaryValue.class);
-		condtion.setDdCode("customerPoints.day.limits");
-		condtion.setName(dto.getTradingFirmCode());
-		
-		BaseOutput<List<DataDictionaryValue>> output = this.dataDictionaryRpc.list(condtion);
-		if (!output.isSuccess() || output.getData() == null) {
-			throw new AppException("远程查询积分上限出错!");
-		}
 		// 积分上限
 		int total = this.findDailyLimit(dto.getTradingFirmCode());
 		// 已有当天积分总和
@@ -173,6 +165,11 @@ public class CustomerFirmPointsServiceImpl extends BaseServiceImpl<CustomerFirmP
 		}
     	
     }
+	  /**
+	   * 查询指定市场的每天积分上限值
+	   * @param firmCode
+	   * @return
+	   */
 	  private Integer findDailyLimit(String firmCode) {
 
 		DataDictionaryValue condtion = DTOUtils.newDTO(DataDictionaryValue.class);
