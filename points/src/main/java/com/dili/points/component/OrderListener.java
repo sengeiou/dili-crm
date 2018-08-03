@@ -203,6 +203,7 @@ public class OrderListener {
 	 *            原始json字符串
 	 * @return 订单列表Map
 	 */
+	@SuppressWarnings("unchecked")
 	protected Map<Order, List<OrderItem>> convertOrder(String json) {
 		Map<Order, List<OrderItem>> resultMap = new HashMap<>();
 		Map<String, Object> jsonMap = DtoMessageConverter.convertAsMap(json);

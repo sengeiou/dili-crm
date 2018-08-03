@@ -3,7 +3,6 @@ package com.dili.points.service;
 import com.dili.points.domain.CustomerFirmPoints;
 import com.dili.points.domain.dto.CustomerFirmPointsDTO;
 import com.dili.ss.base.BaseService;
-import com.dili.ss.domain.BaseOutput;
 
 /**
  * 由MyBatis Generator工具自动生成

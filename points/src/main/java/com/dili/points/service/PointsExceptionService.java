@@ -1,7 +1,5 @@
 package com.dili.points.service;
 
-import java.util.List;
-
 import com.dili.points.domain.PointsException;
 import com.dili.ss.base.BaseService;
 

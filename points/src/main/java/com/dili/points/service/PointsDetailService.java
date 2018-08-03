@@ -1,14 +1,12 @@
 package com.dili.points.service;
 
+import java.util.List;
+import java.util.Optional;
+
 import com.dili.points.domain.PointsDetail;
-import com.dili.points.domain.dto.CustomerCategoryPointsDTO;
 import com.dili.points.domain.dto.PointsDetailDTO;
 import com.dili.ss.base.BaseService;
 import com.dili.ss.domain.EasyuiPageOutput;
-
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
 
 /**
  * 由MyBatis Generator工具自动生成

@@ -1,9 +1,20 @@
 package com.dili.points.service.impl;
 
+import java.math.BigDecimal;
+import java.util.Comparator;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
 import com.alibaba.fastjson.JSONObject;
 import com.dili.points.dao.CustomerPointsMapper;
 import com.dili.points.domain.Customer;
-import com.dili.points.domain.CustomerFirmPoints;
 import com.dili.points.domain.CustomerPoints;
 import com.dili.points.domain.dto.CustomerApiDTO;
 import com.dili.points.domain.dto.CustomerPointsDTO;
@@ -15,20 +26,9 @@ import com.dili.ss.domain.BaseOutput;
 import com.dili.ss.domain.EasyuiPageOutput;
 import com.dili.ss.dto.DTO;
 import com.dili.ss.dto.DTOUtils;
-
-import java.math.BigDecimal;
-import java.util.*;
-import java.util.stream.Collectors;
-
 import com.dili.ss.exception.AppException;
-import com.dili.ss.metadata.ValueProviderUtils;
 import com.dili.uap.sdk.session.SessionContext;
 import com.google.common.collect.Lists;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
 
 /**
  * 由MyBatis Generator工具自动生成 This file was generated on 2018-03-20 11:29:30.
@@ -259,6 +259,7 @@ public class CustomerPointsServiceImpl extends BaseServiceImpl<CustomerPoints, L
 	}
 	@Override
 	public int saveCustomerPointsDTO(CustomerPointsDTO dto) {
+		LOG.debug("保存CustomerPointsDTO");
 		//构建客户积分查询条件
 		CustomerPoints example = DTOUtils.newDTO(CustomerPoints.class);
 		example.setYn(1);
