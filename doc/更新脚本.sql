@@ -1,0 +1,1 @@
+update `menu` set `url` = replace(url, 'crmweb.diligrp.com', 'crm.diligrp.com')

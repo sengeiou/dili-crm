@@ -1,0 +1,36 @@
+/*
+* @Author: Teaism
+* @Date:   2017-12-20 11:01:26
+* @Last Modified by:   Teaism
+* @Last Modified time: 2017-12-20 11:37:39
+*/
+
+.ap_find .ivu-form-item-content {
+    float: left;
+}
+.ap_find_attr {
+    float: left;
+    display: inline-block;
+    max-width: calc(100% - 170px);
+}
+.ap_find_btn {
+    float: left;
+    display: inline-block;
+    width: 170px;
+}
+body,
+/*.app-main,*/
+.ap_title,
+.ivu-form-item-label,
+.ivu-input,
+.ivu-btn,
+.ivu-tabs-nav-container,
+.ivu-select-single .ivu-select-selection .ivu-select-placeholder, .ivu-select-single .ivu-select-selection .ivu-select-selected-value,
+.ivu-page-options-elevator input{
+    font-size: 15px!important;
+}
+
+/*日期input */
+.ivu-date-picker {
+    width: 335px!important;
+}
