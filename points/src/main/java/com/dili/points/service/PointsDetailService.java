@@ -25,8 +25,6 @@ public interface PointsDetailService extends BaseService<PointsDetail, Long> {
 	 */
 	int clear(String firmCode,String notes);
 
-	int batchInsertPointsDetailDTO(List<PointsDetailDTO> pointsDetail) ;
-	public int batchInsertPointsDetailDTO(Map<PointsDetailDTO,List<CustomerCategoryPointsDTO>> pointsDetailMap);
 	/**
 	 * 
 	 * @param pointsDetail 查询example

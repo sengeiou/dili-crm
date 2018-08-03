@@ -3,9 +3,13 @@ package com.dili.points.service.impl;
 import com.dili.points.dao.CustomerFirmPointsMapper;
 import com.dili.points.domain.CustomerFirmPoints;
 import com.dili.points.domain.dto.CustomerFirmPointsDTO;
+import com.dili.points.rpc.DataDictionaryRpc;
 import com.dili.points.service.CustomerFirmPointsService;
 import com.dili.ss.base.BaseServiceImpl;
+import com.dili.ss.domain.BaseOutput;
 import com.dili.ss.dto.DTOUtils;
+import com.dili.ss.exception.AppException;
+import com.dili.uap.sdk.domain.DataDictionaryValue;
 
 import java.time.Duration;
 import java.time.Instant;
@@ -13,9 +17,11 @@ import java.time.LocalDate;
 import java.time.ZoneId;
 import java.time.temporal.TemporalAmount;
 import java.util.Date;
+import java.util.List;
 import java.util.Optional;
 
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 /**
@@ -24,7 +30,7 @@ import org.springframework.stereotype.Service;
  */
 @Service
 public class CustomerFirmPointsServiceImpl extends BaseServiceImpl<CustomerFirmPoints, Long> implements CustomerFirmPointsService {
-
+	@Autowired DataDictionaryRpc dataDictionaryRpc;
     public CustomerFirmPointsMapper getActualDao() {
         return (CustomerFirmPointsMapper)getDao();
     }
@@ -52,7 +58,7 @@ public class CustomerFirmPointsServiceImpl extends BaseServiceImpl<CustomerFirmP
     }
 	/**
 	 * 保存数据
-	 * @param customerFirmPoints
+	 * @param dto
 	 * @return
 	 */
 	
@@ -62,6 +68,10 @@ public class CustomerFirmPointsServiceImpl extends BaseServiceImpl<CustomerFirmP
 		}
 		if(StringUtils.isBlank(dto.getTradingFirmCode())) {
 			return 0;
+		}
+		//数据设置默认值
+		if(dto.getPoints()==null) {
+			dto.setPoints(0);
 		}
  		if(dto.getBuyerPoints()==null) {
  			dto.setBuyerPoints(0);
@@ -78,28 +88,32 @@ public class CustomerFirmPointsServiceImpl extends BaseServiceImpl<CustomerFirmP
     	
     	//查询
     	CustomerFirmPoints item=this.list(example).stream().findFirst().orElseGet(()->{
-    		CustomerFirmPoints customerFirmPoints=DTOUtils.clone(dto, CustomerFirmPoints.class);
-    		customerFirmPoints.setId(null);
-    		customerFirmPoints.setDayPoints(0);
-    		customerFirmPoints.setResetTime(new Date());
-    		return customerFirmPoints;
+			CustomerFirmPoints customerFirmPoints = DTOUtils.clone(dto, CustomerFirmPoints.class);
+			customerFirmPoints.setId(null);
+			customerFirmPoints.setDayPoints(0);
+			customerFirmPoints.setResetTime(new Date());
+			return customerFirmPoints;
     		
     	});
-    	int total = Integer.parseInt("1000");// 积分上限
-		Integer dayPoints = item.getDayPoints();// 已有当天积分总和
+    	
+		// 积分上限
+		int total = this.findDailyLimit(dto.getTradingFirmCode());
+		// 已有当天积分总和
+		Integer dayPoints = item.getDayPoints();
 		//修改时间
 		 LocalDate resetDate = Optional.ofNullable(item.getResetTime().toInstant()).orElseGet(()->{
 			TemporalAmount tm=Duration.ofDays(1);
 			return Instant.now().minus(tm); 
 		}).atZone(ZoneId.systemDefault()).toLocalDate();
 		 
-	     //本次可积分
-	     Integer points=dto.getPoints();
-	     
-	     //本次实际积分
-	     Integer actualPoints=0;
-		//当前时间
-		 LocalDate currentDate = LocalDate.now();
+		// 本次可积分
+		Integer points = dto.getPoints();
+		// 本次实际积分
+		Integer actualPoints = 0;
+		//在积分值大于零的时候进行上限判断是否超过上限
+	     if(points>0) {
+	    	//当前时间
+			 LocalDate currentDate = LocalDate.now();
 			// 如果上次累积积分的时间为今天时,进行积分上限处理
 			if (resetDate.isEqual(currentDate)) {
 				// 如果当天积分总和已经超过上限,当前积分详情的积分归为0,当天积分总和分为total
@@ -126,6 +140,12 @@ public class CustomerFirmPointsServiceImpl extends BaseServiceImpl<CustomerFirmP
 					dayPoints = points;	
 				}
 			}
+	     }else {
+	    	 //针对扣分的情况
+	    	 actualPoints=points;
+	     }
+
+		
 		 
 		if(dto.isBuyer()) {
 			item.setBuyerPoints(item.getBuyerPoints()+actualPoints);
@@ -145,4 +165,23 @@ public class CustomerFirmPointsServiceImpl extends BaseServiceImpl<CustomerFirmP
 		}
     	
     }
+	  /**
+	   * 查询指定市场的每天积分上限值
+	   * @param firmCode
+	   * @return
+	   */
+	  private Integer findDailyLimit(String firmCode) {
+
+		DataDictionaryValue condtion = DTOUtils.newDTO(DataDictionaryValue.class);
+		condtion.setDdCode("customerPoints.day.limits");
+		condtion.setName(firmCode);
+
+		BaseOutput<List<DataDictionaryValue>> output = this.dataDictionaryRpc.list(condtion);
+		if (!output.isSuccess() || output.getData() == null || output.getData().size() != 1) {
+			throw new AppException("远程查询积分上限出错!");
+		}
+		String code = output.getData().get(0).getCode();
+		int limits = Integer.parseInt(code);
+		return limits;
+	  }
 }
