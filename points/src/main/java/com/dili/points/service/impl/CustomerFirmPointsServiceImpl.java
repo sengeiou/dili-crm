@@ -174,14 +174,14 @@ public class CustomerFirmPointsServiceImpl extends BaseServiceImpl<CustomerFirmP
 
 		DataDictionaryValue condtion = DTOUtils.newDTO(DataDictionaryValue.class);
 		condtion.setDdCode("customerPoints.day.limits");
-		condtion.setName(firmCode);
+		condtion.setCode(firmCode);
 
 		BaseOutput<List<DataDictionaryValue>> output = this.dataDictionaryRpc.list(condtion);
 		if (!output.isSuccess() || output.getData() == null || output.getData().size() != 1) {
 			throw new AppException("远程查询积分上限出错!");
 		}
-		String code = output.getData().get(0).getCode();
-		int limits = Integer.parseInt(code);
+		String name = output.getData().get(0).getName();
+		int limits = Integer.parseInt(name);
 		return limits;
 	  }
 }
