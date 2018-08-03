@@ -104,39 +104,39 @@ public class OrderListener {
 			}
 			if (!this.checkData(orderMap)) {
 				logger.error("收到的交易订单信息数据错误: " + orderJson);
-				List<PointsDetailDTO> list=this.exceptionalPointsDetails(orderMap, orderJson);
-				this.pointsDetailService.batchInsertPointsDetailDTO(list);
+				List<PointsException> list=this.pointsExceptions(orderMap, orderJson);
+				this.pointsExceptionService.batchInsert(list);
 				return;
 			}
 			this.calAndSaveData(orderMap);
 		} catch (Exception e) {
 			logger.error("根据订单信息" + orderJson + ",计算积分出错", e);
-			PointsDetailDTO detailDTO=DTOUtils.newDTO(PointsDetailDTO.class);
+			PointsException detailDTO=DTOUtils.newDTO(PointsException.class);
 			detailDTO.setNotes("异常信息:"+e.getMessage()+",数据:"+orderJson);
-			detailDTO.setException(1);
 			detailDTO.setNeedRecover(0);
+			detailDTO.setPoints(0);
 			try {
-				this.pointsDetailService.insert(detailDTO);
+				this.pointsExceptionService.insert(detailDTO);
 			}catch(Exception e2) {
 				logger.error("保存异常信息出错:"+e2.getMessage(),e2);	
 			}
 		}
 	}
-	protected List<PointsDetailDTO> exceptionalPointsDetails(Map<Order, List<OrderItem>> orderMap,String orderJson) {
-		List<PointsDetailDTO>list=new ArrayList<>();
+	protected List<PointsException> pointsExceptions(Map<Order, List<OrderItem>> orderMap,String orderJson) {
+		List<PointsException>list=new ArrayList<>();
 		orderMap.forEach((order,item)->{
-			PointsDetailDTO detailDTO=DTOUtils.newDTO(PointsDetailDTO.class);
+			PointsException exceptionObj=DTOUtils.newDTO(PointsException.class);
 			
 			if(this.isSettlementOrder(order)) {
-				detailDTO.setOrderCode(order.getSettlementCode());
+				exceptionObj.setOrderCode(order.getSettlementCode());
 			}else {
-				detailDTO.setOrderCode(order.getCode());
+				exceptionObj.setOrderCode(order.getCode());
 			}
-			detailDTO.setSourceSystem(order.getSourceSystem());
-			detailDTO.setException(1);
-			detailDTO.setNotes("数据格式错误:"+orderJson);
-			detailDTO.setNeedRecover(0);
-			list.add(detailDTO);
+			exceptionObj.setSourceSystem(order.getSourceSystem());
+			exceptionObj.setNotes("数据格式错误:"+orderJson);
+			exceptionObj.setPoints(0);
+			exceptionObj.setNeedRecover(0);
+			list.add(exceptionObj);
 		});
 		return list;
 		
