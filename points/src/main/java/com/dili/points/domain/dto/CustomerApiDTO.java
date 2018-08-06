@@ -26,6 +26,19 @@ public interface CustomerApiDTO extends Customer {
 	List<String> getCertificateNumbers();
 	void setCertificateNumbers(List<String> certificateNumbers);
 
+	@Column(name = "`trading_firm_code`")
+	@FieldDef(label="交易市场编码", maxLength = 20)
+	@EditMode(editor = FieldEditor.Text, required = true)
+	String getTradingFirmCode();
+	void setTradingFirmCode(String tradingFirmCode);
+
+	@Operator(Operator.IN)
+	@Column(name = "`trading_firm_code`")
+	@FieldDef(label="交易市场编码", maxLength = 20)
+	@EditMode(editor = FieldEditor.Text, required = true)
+	List<String> getTradingFirmCodes();
+	void setTradingFirmCodes(List<String> tradingFirmCodes);
+
 	/**
 	 * 操作用户ID
 	 * @return

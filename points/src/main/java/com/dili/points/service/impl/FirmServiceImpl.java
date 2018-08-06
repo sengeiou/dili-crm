@@ -1,11 +1,13 @@
 package com.dili.points.service.impl;
 
 import com.alibaba.fastjson.JSONObject;
+import com.dili.points.domain.dto.FirmDto;
 import com.dili.points.rpc.DataAuthRpc;
 import com.dili.points.rpc.FirmRpc;
 import com.dili.points.service.FirmService;
 import com.dili.ss.domain.BaseOutput;
 import com.dili.ss.dto.DTOUtils;
+import com.dili.ss.retrofitful.annotation.VOBody;
 import com.dili.uap.sdk.domain.Firm;
 import com.dili.uap.sdk.domain.UserDataAuth;
 import com.dili.uap.sdk.domain.UserTicket;
@@ -34,6 +36,12 @@ public class FirmServiceImpl implements FirmService {
     DataAuthRpc dataAuthRpc;
     @Autowired
     FirmRpc firmRpc;
+
+    @Override
+    public List<Firm> listByExample(FirmDto firm){
+        BaseOutput<List<Firm>> output = firmRpc.listByExample(firm);
+        return output.isSuccess() ? output.getData() : null;
+    }
 
     @Override
     public List<String> getCurrentUserFirmCodes() {
@@ -119,4 +127,6 @@ public class FirmServiceImpl implements FirmService {
             return Collections.emptyList();
         }
     }
+
+
 }

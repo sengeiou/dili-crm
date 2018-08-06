@@ -1,17 +1,14 @@
 package com.dili.points.rpc;
 
+import com.dili.points.domain.dto.FirmDto;
 import com.dili.ss.domain.BaseOutput;
-import com.dili.ss.domain.EasyuiPageOutput;
 import com.dili.ss.retrofitful.annotation.POST;
 import com.dili.ss.retrofitful.annotation.Restful;
 import com.dili.ss.retrofitful.annotation.VOBody;
 import com.dili.ss.retrofitful.annotation.VOSingleParameter;
-import com.dili.uap.sdk.domain.DataDictionaryValue;
 import com.dili.uap.sdk.domain.Firm;
 
 import java.util.List;
-
-import org.springframework.web.bind.annotation.RequestBody;
 
 /**
  * <B>Description</B>
@@ -27,8 +24,8 @@ public interface FirmRpc {
 
 
 	    @POST("/firmApi/listByExample.api")
-	    public BaseOutput<List<Firm>> listByExample(@VOBody Firm firm) ;
+	    BaseOutput<List<Firm>> listByExample(@VOBody FirmDto firm);
 	    
 	    @POST("/firmApi/getByCode.api")
-	    public BaseOutput<Firm> getByCode(@VOSingleParameter String code);
+	    BaseOutput<Firm> getByCode(@VOSingleParameter String code);
 	}

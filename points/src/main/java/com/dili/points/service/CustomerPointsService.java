@@ -12,9 +12,10 @@ import com.dili.ss.domain.EasyuiPageOutput;
  * 由MyBatis Generator工具自动生成 This file was generated on 2018-03-20 11:29:30.
  */
 public interface CustomerPointsService extends BaseService<CustomerPoints, Long> {
-	public EasyuiPageOutput listCustomerPointsByCustomer(CustomerApiDTO customer);
 
-	public CustomerPointsDTO findCustomerPointsByCertificateNumber(String certificateNumber);
+	EasyuiPageOutput listCustomerPointsByCustomer(CustomerApiDTO customer);
+
+	CustomerPointsDTO findCustomerPointsByCertificateNumber(String certificateNumber);
 	
 	
     /**
@@ -22,12 +23,12 @@ public interface CustomerPointsService extends BaseService<CustomerPoints, Long>
      * @param dtoList
      * @return
      */
-	public int[] batchSaveCustomerPointsDTO(List<CustomerPointsDTO> dtoList);
+	int[] batchSaveCustomerPointsDTO(List<CustomerPointsDTO> dtoList);
 	
 	/**
 	 * 保存CustomerPointsDTO
 	 * @param customerPointsDTO
 	 * @return
 	 */
-	public int saveCustomerPointsDTO(CustomerPointsDTO customerPointsDTO);
+	int saveCustomerPointsDTO(CustomerPointsDTO customerPointsDTO);
 }

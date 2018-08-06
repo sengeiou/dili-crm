@@ -60,8 +60,7 @@ public class CustomerPointsController {
     @RequestMapping(value="/listPage.action", method = {RequestMethod.GET, RequestMethod.POST})
     public @ResponseBody String listPage(CustomerApiDTO customer) throws Exception {
         customer.setUserId(SessionContext.getSessionContext().getUserTicket().getId());
-    	EasyuiPageOutput easyuiPageOutput = this.customerPointsService.listCustomerPointsByCustomer(customer);
-        return easyuiPageOutput.toString();
+        return this.customerPointsService.listCustomerPointsByCustomer(customer).toString();
     }
 
     @ApiOperation("新增CustomerPoints")

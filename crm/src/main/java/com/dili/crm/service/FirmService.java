@@ -1,5 +1,6 @@
 package com.dili.crm.service;
 
+import com.dili.crm.domain.dto.FirmDto;
 import com.dili.uap.sdk.domain.Firm;
 
 import java.util.List;
@@ -14,6 +15,14 @@ import java.util.Optional;
  * @createTime 2018/7/19 10:23
  */
 public interface FirmService {
+
+    /**
+     * 根据条件查询市场
+     * @param firm
+     * @author wangmi
+     * @return
+     */
+    List<Firm> listByExample(FirmDto firm);
 
     /**
      * 当前用户拥有访问权限的firmcode

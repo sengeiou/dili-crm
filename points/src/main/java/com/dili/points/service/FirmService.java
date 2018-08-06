@@ -1,5 +1,6 @@
 package com.dili.points.service;
 
+import com.dili.points.domain.dto.FirmDto;
 import com.dili.uap.sdk.domain.Firm;
 
 import java.util.List;
@@ -40,6 +41,13 @@ public interface FirmService {
      * @return
      */
     String getCurrentUserDefaultFirmCode();
+
+    /**
+     * 根据条件查询市场
+     * @param firm
+     * @return
+     */
+    List<Firm> listByExample(FirmDto firm);
 
     /**
      * 通过code查询firm

@@ -15,30 +15,29 @@ public interface CustomerPointsDTO extends CustomerPoints{
     List<String> getCertificateNumbers();
     void setCertificateNumbers(List<String> certificateNumbers);
 	//客户名称
-	public String getName();
-	public void setName(String name) ;
+	String getName();
+	void setName(String name) ;
 	//组织类型
-	public String getOrganizationType();
-	public void setOrganizationType(String organizationType);
+	String getOrganizationType();
+	void setOrganizationType(String organizationType);
 	//行业类型
-	public String getProfession();
-	public void setProfession(String profession);
+	String getProfession();
+	void setProfession(String profession);
 	
 	//客户类型
-	public String getType();
-	public void setType(String type) ;
+	String getType();
+	void setType(String type) ;
 	
 	//证件类型
-	public String getCertificateType();
-	public void setCertificateType(String certificateType) ;
+	String getCertificateType();
+	void setCertificateType(String certificateType) ;
 	//电话
-	public String getPhone();
-	public void setPhone(String phone) ;
-	
-	
+	String getPhone();
+	void setPhone(String phone) ;
+
 	@Transient
-	public boolean isBuyer();
-	public void setBuyer(boolean isBuyer);
+	boolean isBuyer();
+	void setBuyer(boolean isBuyer);
 
 	@Transient
     Integer getActualPoints();

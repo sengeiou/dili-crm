@@ -1,8 +1,10 @@
 package com.dili.points.service;
 
 import com.dili.points.domain.CustomerFirmPoints;
+import com.dili.points.domain.dto.CustomerApiDTO;
 import com.dili.points.domain.dto.CustomerFirmPointsDTO;
 import com.dili.ss.base.BaseService;
+import com.dili.ss.domain.EasyuiPageOutput;
 
 /**
  * 由MyBatis Generator工具自动生成
@@ -18,17 +20,23 @@ public interface CustomerFirmPointsService extends BaseService<CustomerFirmPoint
     CustomerFirmPoints getByCustomerAndFirm(Long customerId,String firmCode);
 
     /**
+     * 根据客户条件查询客户市场积分
+     * @param customer
+     * @return
+     */
+    EasyuiPageOutput listCustomerFirmPointsByCustomer(CustomerApiDTO customer);
+    /**
      * 根据条件删除信息
      * @param example
      * @return
      */
-    Integer deleteByExample(Object example);
+    int deleteByExample(Object example);
     
     /**
      * 保存CustomerFirmPointsDTO信息
      * @param customerFirmPoints
      * @return
      */
-    public int saveCustomerFirmPoints(CustomerFirmPointsDTO customerFirmPoints);
+    int saveCustomerFirmPoints(CustomerFirmPointsDTO customerFirmPoints);
 	 
 }

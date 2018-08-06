@@ -1,6 +1,7 @@
 package com.dili.crm.service.impl;
 
 import com.alibaba.fastjson.JSONObject;
+import com.dili.crm.domain.dto.FirmDto;
 import com.dili.crm.rpc.DataAuthRpc;
 import com.dili.crm.rpc.FirmRpc;
 import com.dili.crm.service.FirmService;
@@ -33,6 +34,12 @@ public class FirmServiceImpl implements FirmService {
     DataAuthRpc dataAuthRpc;
     @Autowired
     FirmRpc firmRpc;
+
+    @Override
+    public List<Firm> listByExample(FirmDto firm){
+        BaseOutput<List<Firm>> output = firmRpc.listByExample(firm);
+        return output.isSuccess() ? output.getData() : null;
+    }
 
     @Override
     public List<String> getCurrentUserFirmCodes() {

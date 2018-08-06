@@ -1,325 +1,586 @@
- <#body>
-    <div class="easyui-layout" fit="true">
-        <!-- ====================================================================================================================== -->
-        <!-- 上方布局 -->
-        <!-- ====================================================================================================================== -->
-        <div region="north" height="auto" align="center">
-            <!-- =========================================================表单========================================================= -->
-            <div class="easyui-panel" style="width:100%;" align="left">
-                <form id="form" class="easyui-form" method="post" fit="true">
-                    <table style="padding:10px;">
-                        <tr>
-                            <td style="padding:5px;">
-                                <input class="easyui-numberbox" name="customerId" id="customerId" style="width:100%" labelAlign="right" data-options="label:'客户id:', validType:'length[0,19]'" />
+<#body>
+<script type="text/javascript">
+    /**
+     * 积分调整，市场选择框change事件
+     * 根据所选市场，获取客户在该市场的可用积分
+     * @param newValue
+     * @param oldValue
+     */
+    function changeTradingFirmCode(newValue, oldValue) {
+        if (typeof(newValue) == "undefined" || null == newValue || ''== newValue){
+            //清除 "调整前积分"
+            $('#_available').textbox("setValue",'');
+            return;
+        }
+        var customerId = $('#_customerId').val();
+        $.ajax({
+            type: "POST",
+            url: "${contextPath}/customerFirmPoints/getByCustomerAndFirm.action",
+            data: {customerId: customerId, firmCode: newValue},
+            processData: true,
+            dataType: "json",
+            async: true,
+            success: function (ret) {
+                if (ret.success) {
+                    $('#_available').textbox("setValue", ret.data.available);
+                } else {
+                    $.messager.alert('错误', ret.result);
+                }
+            },
+            error: function () {
+                $.messager.alert('错误', '远程访问失败');
+            }
+        });
 
-                            </td>
-                            <td style="padding:5px;">
-                                <input class="easyui-textbox" name="certificateNumber" id="certificateNumber" style="width:100%" labelAlign="right" data-options="label:'证件号码:', validType:'length[0,40]'" />
-
-                            </td>
-                            <td style="padding:5px;">
-                                <input class="easyui-textbox" name="tradingFirmCode" id="tradingFirmCode" style="width:100%" labelAlign="right" data-options="label:'交易市场编码:', validType:'length[0,20]'" />
-
-                            </td>
-                            <td style="padding:5px;">
-                                <input class="easyui-numberbox" name="available" id="available" style="width:100%" labelAlign="right" data-options="label:'可用积分:', validType:'length[0,19]'" />
-
-                            </td>
-                        </tr>
-                        <tr>
-                            <td style="padding-left:28px;padding-top: 10px; padding-bottom: 10px;">
-                                <a href="#" class="easyui-linkbutton" iconCls="icon-search" id="queryBtn"
-                                   onclick="queryGrid()">查询</a>&nbsp;&nbsp;
-                                <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-clear" onclick="clearForm()">清除</a>
-                            </td>
-                        </tr>
-                    </table>
-                </form>
-            </div>
+    }
+</script>
+<div class="easyui-layout" fit="true">
+    <!-- ====================================================================================================================== -->
+    <!-- 上方布局 -->
+    <!-- ====================================================================================================================== -->
+    <div region="north" height="auto" align="center" border="false">
+        <div id="nav" style="padding-left:15px;padding-top:10px;" align="left">
+            <#nav/>
         </div>
-        <!-- ====================================================================================================================== -->
-        <!-- 中央布局 -->
-        <!-- ====================================================================================================================== -->
-        <!-- 表格 -->
-        <div region="center" style="width:100%;" height="auto">
-            <!-- =========================================================表格========================================================= -->
-            <table class="easyui-datagrid" title="CustomerFirmPoints列表" id="grid" fitColumns="true" noheader="true"
-                   pagination="true" pageSize="30" pageNumber="1" pagePosition="top" rownumbers="true" remoteSort="false"
-                   loadMsg="数据加载中..." singleSelect="true" method="post" multiSort="false" sortName="customerId"
-                   align="center" fit="true" striped="true" toolbar="#toolbar" idField="id" data-options="onDblClickRow:openUpdate, onHeaderContextMenu:headerContextMenu">
-                <thead>
+        <!-- =========================================================表单========================================================= -->
+        <div class="easyui-panel" style="width:100%;border: 0px;" align="left" border="false">
+            <form id="form" class="easyui-form" method="post" fit="true">
+                <table style="padding:10px;">
                     <tr>
-                        <th data-options="field:'customerId',   sortable:true, order:'asc', align:'center', resizable:'true', fixed:'false'">
-                            客户id
-                        </th>
-                        <th data-options="field:'certificateNumber',   sortable:true, order:'asc', align:'center', resizable:'true', fixed:'false'">
-                            证件号码
-                        </th>
-                        <th data-options="field:'tradingFirmCode',   sortable:true, order:'asc', align:'center', resizable:'true', fixed:'false'">
-                            交易市场编码
-                        </th>
-                        <th data-options="field:'available',   sortable:true, order:'asc', align:'center', resizable:'true', fixed:'false'">
-                            可用积分
-                        </th>
+                        <td style="padding:5px;">
+                            <input class="easyui-textbox" name="name" id="name" style="width:100%"
+                                   data-options="label:'客户名称:', labelAlign:'right', validType:'length[0,40]'"/>
+                        </td>
+                        <td style="padding:5px;">
+                            <input class="easyui-textbox" name="certificateNumber" id="certificateNumber" style="width:100%"
+                                   data-options="label:'证件号:', labelAlign:'right', validType:'length[0,40]'"/>
+                        </td>
+                        <td style="padding:5px;">
+                            <input name="type" id="type" style="width:100%;" panelWidth="auto" data-options="editable:false, labelAlign:'right'"
+                                   panelHeight="auto" label="客户类型:"/>
+                            <#comboProvider _id="type" _provider='dataDictionaryValueProvider' _queryParams='{dd_code:"customer_type"}'/>
+                        </td>
+                        <td style="padding:5px;">
+                            <input name="profession" id="profession" style="width:100%;" data-options="labelAlign:'right', editable:false" panelWidth="auto"
+                                   panelHeight="auto" label="客户行业:"/>
+                            <#comboProvider _id="profession" _provider='dataDictionaryValueProvider' _queryParams='{dd_code:"customer_profession"}'/>
+                        </td>
+                        <td style="padding:5px;">
+                            <input name="organizationType" id="organizationType" style="width:100%;" data-options="labelAlign:'right', editable:false"
+                                   panelWidth="auto" panelHeight="auto" label="组织类型:"/>
+                            <#comboProvider _id="organizationType" _provider='dataDictionaryValueProvider' _queryParams='{dd_code:"customer_organization_type"}'/>
+                        </td>
+
                     </tr>
-                </thead>
-            </table>
-            <!-- datagrid工具栏 -->
-            <div id="toolbar" style="padding:2px 5px;">
-                <a href="#" class="easyui-linkbutton" iconCls="icon-add" onclick="openInsert()" plain="true"></a>
-                <a href="#" class="easyui-linkbutton" iconCls="icon-edit" onclick="openUpdate()" plain="true"></a>
-                <a href="#" class="easyui-linkbutton" iconCls="icon-remove" onclick="del()" plain="true"></a>
-                <a href="#" class="easyui-linkbutton" iconCls="icon-export" onclick="doExport('grid')" plain="true"></a>
-                <div style="float:right">
-                边框显示:<select onchange="changeBorder('grid',this.value)">
-                    <option value="lines-both">全边框</option>
-                    <option value="lines-no">无边框</option>
-                    <option value="lines-right">右边框</option>
-                    <option value="lines-bottom">下边框</option>
-                </select>
-                行条纹:<input type="checkbox" checked="checked" onclick="$('#grid').datagrid({striped:$(this).is(':checked')})">
-                </div>
-            </div>
+
+                    <tr>
+                        <td style="padding:5px;">
+                            <input name="tradingFirmCode" id="tradingFirmCode" style="width:100%;" data-options="labelAlign:'right', editable:false" panelWidth="auto" panelHeight="auto" label="所属市场:"/>
+                            <#comboProvider _id="tradingFirmCode" _provider='firmProvider' />
+                        </td>
+                        <td style="padding-left:30px;">
+                            <a href="#" class="easyui-linkbutton" iconCls="icon-search" id="queryBtn"
+                               onclick="queryGrid()">查询</a>&nbsp;&nbsp;
+                            <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-clear" onclick="clearForm()">清除</a>
+                        </td>
+                    </tr>
+                </table>
+            </form>
         </div>
     </div>
-    <!-- 隐藏编辑框 -->
-    <div id="dlg" class="easyui-dialog" resizable="false" constrain="true" shadow="true" draggable="false" title="CustomerFirmPoints信息" style="padding:20px" modal="true" border="thin" closed="true"
-         data-options="
-				iconCls: 'icon-save',
-				height: 480,
+    <!-- ====================================================================================================================== -->
+    <!-- 中央布局 -->
+    <!-- ====================================================================================================================== -->
+    <!-- 表格 -->
+    <div region="center" style="width: 100%;" height="auto"  align="center" border="false">
+        <div class="easyui-panel" align="center" style="width:96%;height:100%;" border="false">
+            <!-- =========================================================表格========================================================= -->
+            <table class="easyui-datagrid" title="客户积分" id="grid" fitColumns="true" noheader="true"
+                   pagination="true" pageSize="30" pageList="[30,50,100,200]" pageNumber="1" pagePosition="top" rownumbers="false" remoteSort="true"
+                   loadMsg="数据加载中..." singleSelect="true" method="post" multiSort="false" sortName="modified" sortOrder="desc"
+                   align="center" fit="true" striped="true"  idField="id" data-options="onDblClickRow:openDetailChange,rowStyler:statsGridRowStyler,onHeaderContextMenu:headerContextMenu,showFooter:true,view:footerView">
+                <thead>
+                <tr>
+
+                    <th width="10%" data-options="field:'name',   sortable:true, order:'asc', align:'center', resizable:'true', fixed:'false'">
+                        客户名称
+                    </th>
+                    <th width="10%" data-options="field:'organizationType',  _provider:'dataDictionaryValueProvider', _queryParams:{'dd_code':'customer_organization_type'},  sortable:true, order:'asc', align:'center', resizable:'true', fixed:'false'">
+                        组织类型
+                    </th>
+                    <th width="10%" data-options="field:'certificateType',   _provider:'dataDictionaryValueProvider', _queryParams:{'dd_code':'certificate_type'}, sortable:true, order:'asc', align:'center', resizable:'true', fixed:'false'">
+                        证件类型
+                    </th>
+                    <th width="10%" data-options="field:'type', _provider:'dataDictionaryValueProvider', _queryParams:{'dd_code':'customer_type'}, sortable:true, order:'asc', align:'center', resizable:'true', fixed:'false'">
+                        客户类型
+                    </th>
+                    <th width="10%" data-options="field:'profession', _provider:'dataDictionaryValueProvider', _queryParams:{'dd_code':'customer_profession'}, sortable:true, order:'asc', align:'center', resizable:'true', fixed:'false'">
+                        客户行业
+                    </th>
+                    <th width="11%" data-options="field:'certificateNumber',   sortable:true, order:'asc', align:'center', resizable:'true', fixed:'false'">
+                        证件号
+                    </th>
+                    <th width="10%" data-options="field:'tradingFirmCode', _provider:'firmProvider', sortable:true, order:'asc', align:'center', resizable:'true', fixed:'false'">
+                        所属市场
+                    </th>
+                    <th width="10%" data-options="field:'available', sortable:true,  order:'desc', align:'center', resizable:'true', fixed:'false'">
+                        可用积分
+                    </th>
+                    <th width="10%" data-options="field:'buyerPoints', sortable:true,  order:'desc', align:'center', resizable:'true', fixed:'false'">
+                        采购积分
+                    </th>
+                    <th width="10%" data-options="field:'sellerPoints', sortable:true,  order:'desc', align:'center', resizable:'true', fixed:'false'">
+                        销售积分
+                    </th>
+                </tr>
+                </thead>
+            </table>
+        </div>
+    </div>
+</div>
+
+<!-- 隐藏编辑框 -->
+<div id="dlg" class="easyui-dialog" resizable="false" constrain="true" shadow="true" draggable="false" title="积分调整" style="padding:20px" modal="true" border="thin" closed="true"
+     data-options="
+				height: 400,
 				buttons: [{
 					text:'确认',
 					iconCls:'icon-ok',
-					handler:saveOrUpdate
+					handler:savePointsDetail
+				}]
+			">
+    <form id="_form" class="easyui-form" method="post" fit="true">
+        <input name="_customerId" id="_customerId" type="hidden">
+        <table width="360px">
+            <tr>
+                <td style="padding:5px;">
+                    <input class="easyui-textbox" name="_certificateNumber" id="_certificateNumber" style="width:100%" data-options="labelAlign:'right',label:'客户证件号:',readonly:true, validType:'length[0,40]'" />
+                </td>
+            </tr>
+            <tr>
+                <td style="padding:5px;">
+                    <input class="easyui-textbox" name="_name" id="_name" style="width:100%" data-options="labelAlign:'right',label:'客户名称:',readonly:true, validType:'length[0,40]'" />
+                </td>
+            </tr>
+            <tr>
+                <td style="padding:5px;">
+                    <input name="_firmCode" id="_tradingFirmCode" style="width:100%;" data-options="labelAlign:'right', editable:false,onChange:changeTradingFirmCode" panelWidth="auto" panelHeight="auto" label="&lowast;积分市场:" required/>
+                    <#comboProvider _id="_tradingFirmCode" _provider='firmProvider' />
+                </td>
+            </tr>
+            <tr>
+                <td style="padding:5px;">
+                    <input class="easyui-numberbox" name="_available" id="_available" style="width:100%" data-options="labelAlign:'right',label:'当前市场积分:',readonly:true" />
+                </td>
+            </tr>
+            <tr>
+                <td style="padding:5px;">
+                    <input class="easyui-numberbox" name="_points" id="_points" style="width:100%" data-options="labelAlign:'right',label:'调整积分:',max:1000000" />
+                </td>
+            </tr>
+            <tr>
+                <td style="padding:5px;">
+                    <input class="easyui-textbox" name="_notes" id="_notes" style="width:100%" data-options="labelAlign:'right',label:'&lowast;备注:',multiline:true,height:80, validType:'length[0,120]'" required="true" />
+                </td>
+            </tr>
+
+        </table>
+    </form>
+
+</div>
+
+<div id="dlg_clear" class="easyui-dialog" resizable="false" constrain="true" shadow="true" draggable="false" title="积分清零" style="padding:20px" modal="true" border="thin" closed="true"
+     data-options="
+				iconCls: 'icon-save',
+				height: 280,
+				buttons: [{
+					text:'确认',
+					iconCls:'icon-ok',
+					handler:saveClear
 				},{
 					text:'取消',
 					iconCls:'icon-cancel',
 					handler:function(){
-						$('#dlg').dialog('close');
+						$('#dlg_clear').dialog('close');
 					}
 				}]
 			">
-    <form id="_form" class="easyui-form" method="post" fit="true">
-        <input name="_id" id="_id" type="hidden">
+    <form id="_formClear" class="easyui-form" method="post" fit="true">
         <table width="360px">
             <tr>
                 <td style="padding:5px;">
-                    <input class="easyui-numberbox" name="_customerId" id="_customerId" style="width:100%" data-options="label:'客户id:'" 
-                        required="true" />
+                    <input name="_firmCode" id="_firmCodeClear" style="width:100%;" data-options="labelAlign:'right', editable:false" panelWidth="auto" panelHeight="auto" label="&lowast;所属市场:" required/>
+                    <#comboProvider _id="_firmCodeClear" _provider='firmProvider' />
                 </td>
             </tr>
             <tr>
                 <td style="padding:5px;">
-                    <input class="easyui-textbox" name="_certificateNumber" id="_certificateNumber" style="width:100%" data-options="label:'证件号码:', validType:'length[0,40]'" 
-                        required="true" />
+                    <input class="easyui-textbox" name="_notes" id="_notesClear" style="width:100%" data-options="labelAlign:'right',label:'&lowast;清零原因:',multiline:true,height:80, validType:'length[0,120]'" required="true" />
                 </td>
             </tr>
-            <tr>
-                <td style="padding:5px;">
-                    <input class="easyui-textbox" name="_tradingFirmCode" id="_tradingFirmCode" style="width:100%" data-options="label:'交易市场编码:', validType:'length[0,20]'" 
-                        required="true" />
-                </td>
-            </tr>
-            <tr>
-                <td style="padding:5px;">
-                    <input class="easyui-numberbox" name="_available" id="_available" style="width:100%" data-options="label:'可用积分:'" 
-                        required="true" />
-                </td>
-            </tr>
+
         </table>
     </form>
 
-    </div>
-    <!-- ====================================================================================================================== -->
-    <!-- style & script 分隔线 -->
-    <!-- ====================================================================================================================== -->
-    <script type="text/javascript">
-        //打开新增窗口
-        function openInsert(){
-            $('#dlg').dialog('open');
-            $('#dlg').dialog('center');
-            $('#_form').form('clear');
-            formFocus("_form", "_customerId");
+</div>
+<!-- ====================================================================================================================== -->
+<!-- style & script 分隔线 -->
+<!-- ====================================================================================================================== -->
+<script type="text/javascript">
+    //合计行样式（加粗）
+    function statsGridRowStyler(index, row) {
+        if (row.name=='总可用积分:'){
+            return 'font-weight:bold;';
         }
-
-        //打开修改窗口
-        function openUpdate(){
-            var selected = $("#grid").datagrid("getSelected");
-            if (null == selected) {
-                $.messager.alert('警告','请选中一条数据');
-                return;
-            }
-            $('#dlg').dialog('open');
-            $('#dlg').dialog('center');
-            formFocus("_form", "_customerId");
-            var formData = $.extend({},selected);
-            formData = addKeyStartWith(getOriginalData(formData),"_");
-            $('#_form').form('load', formData);
+    }
+    //打开明细窗口
+    function openDetail(){
+        var selected = $("#grid").treegrid("getSelected");
+        if (null == selected) {
+            $.messager.alert('警告','请选中一条数据');
+            return;
         }
+        var exist = checkCertificateNumberExist(selected);
+        if (!exist){
+            $.messager.alert('警告','客户证件号为空，此操作需要维护客户证件号');
+            return;
+        }
+        var certificateNumber=encodeURIComponent(selected["certificateNumber"]);
+        window.location.href="${contextPath}/pointsDetail/detail.html?certificateNumber="+certificateNumber;
+    }
 
-        function saveOrUpdate(){
-            if(!$('#_form').form("validate")){
-                return;
+    function pointsFormatter(value) {
+
+        if (value == "" || value == undefined) {
+            return 0;
+        }else {return value}
+    }
+
+    function savePointsDetail(){
+        if(!$('#_form').form("validate")){
+            return;
+        }
+        var _formData = removeKeyStartWith($("#_form").serializeObject(),"_");
+        var _url = null;
+        //没有id就新增
+        //if(_formData.id == null || _formData.id==""){
+        _url = "${contextPath}/customerFirmPoints/mannuallyAdjust.action";
+        //}else{//有id就修改
+        //     _url = "${contextPath}/customerPoints/update.action";
+        //}
+        $.ajax({
+            type: "POST",
+            url: _url,
+            data: _formData,
+            processData:true,
+            dataType: "json",
+            async : true,
+            success: function (data) {
+                if(data.code=="200"){
+                    $("#grid").datagrid("reload");
+                    $('#dlg').dialog('close');
+                }else{
+                    $.messager.alert('错误',data.result);
+                }
+            },
+            error: function(){
+                $.messager.alert('错误','远程访问失败');
             }
-            var _formData = removeKeyStartWith($("#_form").serializeObject(),"_");
-            var _url = null;
-            //没有id就新增
-            if(_formData.id == null || _formData.id==""){
-                _url = "${contextPath}/customerFirmPoints/insert";
-            }else{//有id就修改
-                _url = "${contextPath}/customerFirmPoints/update";
-            }
-            $.ajax({
-                type: "POST",
-                url: _url,
-                data: _formData,
-                processData:true,
-                dataType: "json",
-                async : true,
-                success: function (data) {
-                    if(data.code=="200"){
-                        $("#grid").datagrid("reload");
-                        $('#dlg').dialog('close');
-                    }else{
-                        $.messager.alert('错误',data.result);
+        });
+    }
+
+    function saveClear(){
+        if(!$('#_formClear').form("validate")){
+            return;
+        }
+        var _formData = removeKeyStartWith($("#_formClear").serializeObject(),"_");
+        var firm =  $("#_firmCodeClear").textbox("getText");
+        $.messager.confirm('确认', '此操作将清空所有客户在【'+firm+'】的所有积分，是否继续？', function (r) {
+            if (r) {
+                $.ajax({
+                    type: "POST",
+                    url: "${contextPath}/pointsDetail/clearPoints.action",
+                    data: _formData,
+                    processData:true,
+                    dataType: "json",
+                    async : true,
+                    success: function (data) {
+                        if(data.code=="200"){
+                            $("#grid").datagrid("reload");
+                            $('#dlg_clear').dialog('close');
+                        }else{
+                            $.messager.alert('错误',data.result);
+                        }
+                    },
+                    error: function(){
+                        $.messager.alert('错误','远程访问失败');
                     }
-                },
-                error: function(){
-                    $.messager.alert('错误','远程访问失败');
+                });
+            }else {
+                $('#dlg_clear').dialog('close');
+            }
+
+        });
+    }
+
+    //打开调整窗口窗口
+
+    function openDetailChange(){
+    <#resource code="changeCustomerPoints">
+        var selected = $("#grid").datagrid("getSelected");
+        if (null == selected) {
+            $.messager.alert('警告','请选中一条数据');
+            return;
+        }
+        if (null == selected) {
+            $.messager.alert('警告','请选中一条数据');
+            return;
+        }
+        var exist = checkCertificateNumberExist(selected);
+        if (!exist){
+            $.messager.alert('警告','客户证件号为空，此操作需要维护客户证件号');
+            return;
+        }
+        $('#dlg').dialog('open');
+        $('#dlg').dialog('center');
+        $('#_form').form('clear');
+        formFocus("_form", "_certificateNumber");
+
+        $('#_customerId').val(selected['id']);
+        $('#_points').textbox('setValue','');
+        $('#_notes').textbox('setValue','');
+        var formData = $.extend({},selected);
+        formData = addKeyStartWith(getOriginalData(formData),"_");
+        $('#_form').form('load', formData);
+        $('#_available').textbox("setValue",'');
+    </#resource>
+    }
+
+    /**
+     * 检查客户的证件号，是否为空
+     * true - 存在
+     */
+    function checkCertificateNumberExist(customer) {
+        if (typeof(customer.certificateNumber) == "undefined" || null == customer.certificateNumber || ''==customer.certificateNumber){
+            return false;
+        }
+        return true;
+    }
+
+
+    function openClear(){
+    <#resource code="clearPoints">
+            $('#dlg_clear').dialog('open');
+        $('#dlg_clear').dialog('center');
+        $('#_formClear').form('clear');
+    </#resource>
+    }
+    //打开新增窗口
+    function openInsert(){
+        $('#dlg').dialog('open');
+        $('#dlg').dialog('center');
+        $('#_form').form('clear');
+        formFocus("_form", "_certificateNumber");
+    }
+
+    //打开修改窗口
+    function openUpdate(){
+        var selected = $("#grid").datagrid("getSelected");
+        if (null == selected) {
+            $.messager.alert('警告','请选中一条数据');
+            return;
+        }
+        $('#dlg').dialog('open');
+        $('#dlg').dialog('center');
+        $('#_form').form('clear');
+        formFocus("_form", "_certificateNumber");
+        var formData = $.extend({},selected);
+        formData = addKeyStartWith(getOriginalData(formData),"_");
+        $('#_form').form('load', formData);
+    }
+
+    function saveOrUpdate(){
+        if(!$('#_form').form("validate")){
+            return;
+        }
+        var _formData = removeKeyStartWith($("#_form").serializeObject(),"_");
+        var _url = null;
+        //没有id就新增
+        if(_formData.id == null || _formData.id==""){
+            _url = "${contextPath}/customerFirmPoints/insert.action";
+        }else{//有id就修改
+            _url = "${contextPath}/customerFirmPoints/update.action";
+        }
+        $.ajax({
+            type: "POST",
+            url: _url,
+            data: _formData,
+            processData:true,
+            dataType: "json",
+            async : true,
+            success: function (data) {
+                if(data.code=="200"){
+                    $("#grid").datagrid("reload");
+                    $('#dlg').dialog('close');
+                }else{
+                    $.messager.alert('错误',data.result);
                 }
-            });
-        }
-
-        //根据主键删除
-        function del() {
-            var selected = $("#grid").datagrid("getSelected");
-            if (null == selected) {
-                $.messager.alert('警告','请选中一条数据');
-                return;
+            },
+            error: function(){
+                $.messager.alert('错误','远程访问失败');
             }
-            $.messager.confirm('确认','您确认想要删除记录吗？',function(r){
-                if (r){
-                    $.ajax({
-                        type: "POST",
-                        url: "${contextPath}/customerFirmPoints/delete",
-                        data: {id:selected.id},
-                        processData:true,
-                        dataType: "json",
-                        async : true,
-                        success: function (data) {
-                            if(data.code=="200"){
-                                $("#grid").datagrid("reload");
-                                $('#dlg').dialog('close');
-                            }else{
-                                $.messager.alert('错误',data.result);
-                            }
-                        },
-                        error: function(){
-                            $.messager.alert('错误','远程访问失败');
-                        }
-                    });
-                }
-            });
+        });
+    }
 
+    //根据主键删除
+    function del() {
+        var selected = $("#grid").datagrid("getSelected");
+        if (null == selected) {
+            $.messager.alert('警告','请选中一条数据');
+            return;
         }
-        //表格查询
-        function queryGrid() {
-            var opts = $("#grid").datagrid("options");
-            if (null == opts.url || "" == opts.url) {
-                opts.url = "${contextPath}/customerFirmPoints/listPage";
-            }
-            if(!$('#form').form("validate")){
-                return;
-            }
-            $("#grid").datagrid("load", bindGridMeta2Form("grid", "form"));
-        }
-
-
-        //清空表单
-        function clearForm() {
-            $('#form').form('clear');
-        }
-
-        //表格表头右键菜单
-        function headerContextMenu(e, field){
-            e.preventDefault();
-            if (!cmenu){
-                createColumnMenu("grid");
-            }
-            cmenu.menu('show', {
-                left:e.pageX,
-                top:e.pageY
-            });
-        }
-
-        //全局按键事件
-        function getKey(e){
-            e = e || window.event;
-            var keycode = e.which ? e.which : e.keyCode;
-            if(keycode == 46){ //如果按下删除键
-                var selected = $("#grid").datagrid("getSelected");
-                if(selected && selected!= null){
-                    del();
-                }
-            }
-        }
-
-        /**
-         * 绑定页面回车事件，以及初始化页面时的光标定位
-         * @formId
-         *          表单ID
-         * @elementName
-         *          光标定位在指点表单元素的name属性的值
-         * @submitFun
-         *          表单提交需执行的任务
-         */
-        $(function () {
-            bindFormEvent("form", "customerId", queryGrid);
-            bindFormEvent("_form", "_customerId", saveOrUpdate, function (){$('#dlg').dialog('close');});
-            if (document.addEventListener) {
-                document.addEventListener("keyup",getKey,false);
-            } else if (document.attachEvent) {
-                document.attachEvent("onkeyup",getKey);
-            } else {
-                document.onkeyup = getKey;
-            }
-            var pager = $('#grid').datagrid('getPager');    // get the pager of treegrid
-                pager.pagination({
-                    <#controls_paginationOpts/>,
-                    buttons:[
-                    {
-                        iconCls:'icon-add',
-                        text:'新增',
-                        handler:function(){
-                            openInsert();
+        $.messager.confirm('确认','您确认想要删除记录吗？',function(r){
+            if (r){
+                $.ajax({
+                    type: "POST",
+                    url: "${contextPath}/customerFirmPoints/delete",
+                    data: {id:selected.id},
+                    processData:true,
+                    dataType: "json",
+                    async : true,
+                    success: function (data) {
+                        if(data.code=="200"){
+                            $("#grid").datagrid("reload");
+                            $('#dlg').dialog('close');
+                        }else{
+                            $.messager.alert('错误',data.result);
                         }
                     },
-                    {
-                        iconCls:'icon-edit',
-                        text:'修改',
-                        handler:function(){
-                            openUpdate();
-                        }
-                    },
-                    {
-                        iconCls:'icon-remove',
-                        text:'删除',
-                        handler:function(){
-                            del();
-                        }
-                    },
-                    {
-                        iconCls:'icon-export',
-                        text:'导出',
-                        handler:function(){
-                            doExport('grid');
-                        }
+                    error: function(){
+                        $.messager.alert('错误','远程访问失败');
                     }
-                ]
-            });
-            //表格仅显示下边框
-            $('#grid').datagrid('getPanel').removeClass('lines-both lines-no lines-right lines-bottom').addClass("lines-bottom");
-            queryGrid();
-        })
-    </script>
+                });
+            }
+        });
+
+    }
+    //表格查询
+    function queryGrid() {
+        var opts = $("#grid").datagrid("options");
+        if (null == opts.url || "" == opts.url) {
+            opts.url = "${contextPath}/customerFirmPoints/listPage.action";
+        }
+        if(!$('#form').form("validate")){
+            return;
+        }
+        //查询时重置排序
+        // opts.sortName = "created";
+        // opts.sortOrder = "desc";
+        $("#grid").datagrid("load", bindGridMeta2Form("grid", "form"));
+    }
+
+
+    //清空表单
+    function clearForm() {
+        $('#form').form('clear');
+    }
+
+    //表格表头右键菜单
+    function headerContextMenu(e, field){
+        e.preventDefault();
+        if (!cmenu){
+            createColumnMenu("grid");
+        }
+        cmenu.menu('show', {
+            left:e.pageX,
+            top:e.pageY
+        });
+    }
+
+    //全局按键事件
+    function getKey(e){
+        e = e || window.event;
+        var keycode = e.which ? e.which : e.keyCode;
+        if(keycode == 46){ //如果按下删除键
+            var selected = $("#grid").datagrid("getSelected");
+            if(selected && selected!= null){
+                del();
+            }
+        }
+    }
+
+    /**
+     * 绑定页面回车事件，以及初始化页面时的光标定位
+     * @formId
+     *          表单ID
+     * @elementName
+     *          光标定位在指点表单元素的name属性的值
+     * @submitFun
+     *          表单提交需执行的任务
+     */
+    $(function () {
+        bindFormEvent("form", "certificateNumber", queryGrid);
+        bindFormEvent("_form", "_certificateNumber", saveOrUpdate, function (){$('#dlg').dialog('close');});
+        if (document.addEventListener) {
+            document.addEventListener("keyup",getKey,false);
+        } else if (document.attachEvent) {
+            document.attachEvent("onkeyup",getKey);
+        } else {
+            document.onkeyup = getKey;
+        }
+        var pager = $('#grid').datagrid('getPager');    // get the pager of treegrid
+        pager.pagination({
+            <#controls_paginationOpts/>,
+            buttons:[
+        <#resource code="customerPointsDetails">
+            {
+                iconCls:'icon-detail',
+                text:'明细',
+                handler:function(){
+                    openDetail();
+                }
+            },
+    </#resource>
+        <#resource code="changeCustomerPoints">
+            {
+                iconCls:'icon-detail',
+                text:'积分调整',
+                handler:function(){
+                    openDetailChange();
+                }
+            },
+    </#resource>
+        <#resource code="clearPoints">
+            {
+                iconCls:'icon-detail',
+                text:'积分清零',
+                handler:function(){
+                    openClear();
+                }
+            },
+    </#resource>
+        <#resource code="exportCustomerPoints">
+            {
+                iconCls:'icon-export',
+                text:'导出',
+                handler:function(){
+                    doExport('grid');
+                }
+            },
+    </#resource>
+
+//                    {
+//                        iconCls:'icon-export',
+//                        text:'导出',
+//                        handler:function(){
+//                            doExport('grid');
+//                        }
+//                    }
+    ]
+    })
+        //表格仅显示下边框
+        $('#grid').datagrid('getPanel').removeClass('lines-both lines-no lines-right lines-bottom').addClass("lines-bottom");
+        queryGrid();
+    })
+</script>
 </#body>

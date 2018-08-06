@@ -33,7 +33,8 @@ import java.util.List;
 public class PointsDetailController {
     @Autowired
     PointsDetailService pointsDetailService;
-    @Autowired CustomerPointsService customerPointsService;
+    @Autowired
+    CustomerPointsService customerPointsService;
     @Autowired
     FirmService firmService;
 
@@ -91,55 +92,6 @@ public class PointsDetailController {
        return this.pointsDetailService.listEasyuiPageByExample(pointsDetail, true, firmCodes).toString();
     }
 
-    
-    @ApiOperation("手工调整PointsDetail")
-    @ApiImplicitParams({
-		@ApiImplicitParam(name="PointsDetail", paramType="form", value = "PointsDetail的form信息", required = true, dataType = "string")
-	})
-    @RequestMapping(value="/mannuallyInsert.action", method = {RequestMethod.GET, RequestMethod.POST})
-    public @ResponseBody BaseOutput mannuallyInsert(PointsDetailDTO pointsDetail) {
-    	//先进行基本属性判断
-    	if(pointsDetail.getPoints()==null||pointsDetail.getPoints()==0) {
-    		return BaseOutput.failure("调整积分不能为0");
-    	}
-    	if(StringUtils.trimToNull(pointsDetail.getNotes())==null) {
-    		return BaseOutput.failure("备注不能为空");
-    	}
-		UserTicket userTicket = SessionContext.getSessionContext().getUserTicket();
-		if (userTicket == null) {
-			throw new RuntimeException("未登录");
-		}
-		pointsDetail.setCreatedId(userTicket.getId());//操作人
-    	pointsDetail.setGenerateWay(50);//50 手工调整
-    	
-		if(pointsDetail.getPoints() > 0) {
-			pointsDetail.setInOut(10);// 收入
-		} else {
-			pointsDetail.setInOut(20);// 支出
-		}
-        pointsDetail.setSourceSystem("points");
-        pointsDetailService.insert(pointsDetail);
-        return BaseOutput.success("新增成功");
-    }
-
-    /**
-     * 客户积分清零
-     * @param notes
-     * @return
-     */
-    @RequestMapping(value="/clearPoints.action", method = {RequestMethod.GET, RequestMethod.POST})
-    public @ResponseBody BaseOutput clearPoints(String firmCode,String notes) {
-        if (StringUtils.isBlank(firmCode) || StringUtils.trimToNull(notes) == null) {
-            return BaseOutput.failure("参数不正确");
-        }
-        UserTicket userTicket = SessionContext.getSessionContext().getUserTicket();
-        if (userTicket == null) {
-            throw new RuntimeException("未登录");
-        }
-        pointsDetailService.clear(firmCode, notes);
-        return BaseOutput.success("新增成功");
-    }
-    
     @ApiOperation("新增PointsDetail")
     @ApiImplicitParams({
 		@ApiImplicitParam(name="PointsDetail", paramType="form", value = "PointsDetail的form信息", required = true, dataType = "string")

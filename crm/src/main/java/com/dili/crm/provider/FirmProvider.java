@@ -1,19 +1,18 @@
 package com.dili.crm.provider;
 
 import com.alibaba.fastjson.JSONPath;
+import com.dili.crm.domain.dto.FirmDto;
 import com.dili.crm.service.FirmService;
+import com.dili.ss.dto.DTOUtils;
 import com.dili.ss.metadata.FieldMeta;
 import com.dili.ss.metadata.ValuePair;
 import com.dili.ss.metadata.ValuePairImpl;
-import com.dili.ss.metadata.ValueProvider;
+import com.dili.ss.metadata.provider.BatchDisplayTextProviderAdaptor;
 import com.dili.uap.sdk.domain.Firm;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -21,14 +20,16 @@ import java.util.stream.Collectors;
  * Created by guofeng on 2018/07/12.
  */
 @Component
-public class FirmProvider implements ValueProvider {
+public class FirmProvider extends BatchDisplayTextProviderAdaptor {
 
 	@Autowired
 	private FirmService firmService;
 
 	@Override
 	public List<ValuePair<?>> getLookupList(Object obj, Map metaMap, FieldMeta fieldMeta) {
+		//是否要请选择
 		Object withEmptyOptValue=JSONPath.read(String.valueOf(metaMap.get("queryParams")), "/withEmptyOpt");
+		//是否要显示集团
 		Object withGroupOptValue=JSONPath.read(String.valueOf(metaMap.get("queryParams")), "/withGroupOpt");
 		List<Firm> list = firmService.getCurrentUserFirms();
 		List<ValuePair<?>> resultList = list.stream().filter((f)->{
@@ -36,7 +37,6 @@ public class FirmProvider implements ValueProvider {
 				return false;
 			}
 			return true;
-
 		}).map(f->{
 			return (ValuePair<?>)new ValuePairImpl(f.getName(), f.getCode());
 		}).collect(Collectors.toCollection(()->new ArrayList<ValuePair<?>>()));
@@ -47,12 +47,30 @@ public class FirmProvider implements ValueProvider {
 	}
 
 	@Override
-	public String getDisplayText(Object obj, Map metaMap, FieldMeta fieldMeta) {
-		if (obj == null || "".equals(obj)) {
-			return null;
+	protected List getFkList(List<String> relationIds, Map metaMap) {
+		if(relationIds != null) {
+			List<String> firmCodes = relationIds.stream()
+					.filter(Objects::nonNull)
+					.distinct()
+					.collect(Collectors.toList());
+			if(!firmCodes.isEmpty()) {
+				FirmDto firmDto = DTOUtils.newDTO(FirmDto.class);
+				firmDto.setCodes(firmCodes);
+				List<Firm> firms = firmService.listByExample(firmDto);
+				return firms;
+			}
 		}
-		String code = obj.toString();
-		Optional<Firm> opt = firmService.getFirmByCode(code);
-		return opt.map(Firm::getName).orElse(null);
+		return null;
+	}
+
+	@Override
+	protected Map<String, String> getEscapeFileds(Map metaMap) {
+		if(metaMap.get(ESCAPE_FILEDS_KEY) instanceof Map){
+			return (Map)metaMap.get(ESCAPE_FILEDS_KEY);
+		}else {
+			Map<String, String> map = new HashMap<>();
+			map.put(metaMap.get(FIELD_KEY).toString(), "name");
+			return map;
+		}
 	}
 }

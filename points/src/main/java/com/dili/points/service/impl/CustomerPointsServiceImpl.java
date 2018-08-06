@@ -38,7 +38,8 @@ public class CustomerPointsServiceImpl extends BaseServiceImpl<CustomerPoints, L
 	private static final Logger LOG=LoggerFactory.getLogger(CustomerPointsServiceImpl.class);
 	@Autowired
 	CustomerRpc customerRpc;
-	@Autowired CommonMapper commonMapper;
+	@Autowired
+	CommonMapper commonMapper;
 
 	public CustomerPointsMapper getActualDao() {
 		return (CustomerPointsMapper) getDao();
@@ -66,7 +67,6 @@ public class CustomerPointsServiceImpl extends BaseServiceImpl<CustomerPoints, L
 			cp.setFrozen(0);
 			cp.setTotal(0);
 			return cp;
-
 		});
 	}
 

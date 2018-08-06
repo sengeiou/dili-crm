@@ -8,43 +8,52 @@
     <id column="id" jdbcType="BIGINT" property="id" />
     <result column="customer_id" jdbcType="BIGINT" property="customerId" />
     <result column="certificate_number" jdbcType="VARCHAR" property="certificateNumber" />
+    <result column="yn" jdbcType="INTEGER" property="yn" />
     <result column="trading_firm_code" jdbcType="VARCHAR" property="tradingFirmCode" />
     <result column="available" jdbcType="BIGINT" property="available" />
+    <result column="frozen" jdbcType="INTEGER" property="frozen" />
+    <result column="total" jdbcType="INTEGER" property="total" />
+    <result column="modified_id" jdbcType="BIGINT" property="modifiedId" />
+    <result column="modified" jdbcType="TIMESTAMP" property="modified" />
+    <result column="created" jdbcType="TIMESTAMP" property="created" />
+    <result column="buyer_points" jdbcType="INTEGER" property="buyerPoints" />
+    <result column="day_points" jdbcType="INTEGER" property="dayPoints" />
+    <result column="reset_time" jdbcType="TIMESTAMP" property="resetTime" />
+    <result column="seller_points" jdbcType="INTEGER" property="sellerPoints" />
   </resultMap>
   <sql id="Base_Column_List">
     <!--
       WARNING - @mbg.generated
     -->
-    id, customer_id, certificate_number, trading_firm_code, available
+    id, customer_id, certificate_number, yn, trading_firm_code, available, frozen, total, 
+    modified_id, modified, created, buyer_points, day_points, reset_time, seller_points
   </sql>
-  <select id="selectBy" parameterType="java.lang.Long" resultMap="BaseResultMap">
-    <!--
-      WARNING - @mbg.generated
-    -->
-    select 
-    <include refid="Base_Column_List" />
-    from customer_firm_points
-    where id = #{id,jdbcType=BIGINT}
+  <select id="listByPage" parameterType="com.dili.points.domain.dto.CustomerApiDTO" resultType="Map">
+    select c.name, c.organization_type organizationType, c.certificate_type certificateType, c.`type`,
+    c.certificate_number certificateNumber, c.profession, cfp.trading_firm_code tradingFirmCode, cfp.available,
+    cfp.buyer_points buyerPoints, cfp.seller_points sellerPoints
+    from customer_firm_points cfp left join customer c on cfp.customer_id = c.id
+    where c.yn = 1
+    and cfp.yn = 1
+    <if test="name != null and name != ''">
+      and c.name like CONCAT('%',#{name},'%')
+    </if>
+    <if test="certificateNumber != null and certificateNumber != ''">
+      and c.certificate_number = #{certificateNumber}
+    </if>
+    <if test="type != null">
+      and c.`type` = #{type}
+    </if>
+    <if test="profession != null">
+      and c.`profession` = #{profession}
+    </if>
+    <if test="organizationType != null">
+      and c.`organization_type` = #{organizationType}
+    </if>
+    <if test="sort != null and order != null">
+      ORDER BY ${sort} ${order}
+    </if>
+
   </select>
-  <update id="updateBy" parameterType="com.dili.points.domain.CustomerFirmPoints">
-    <!--
-      WARNING - @mbg.generated
-    -->
-    update customer_firm_points
-    <set>
-      <if test="customerId != null">
-        customer_id = #{customerId,jdbcType=BIGINT},
-      </if>
-      <if test="certificateNumber != null">
-        certificate_number = #{certificateNumber,jdbcType=VARCHAR},
-      </if>
-      <if test="tradingFirmCode != null">
-        trading_firm_code = #{tradingFirmCode,jdbcType=VARCHAR},
-      </if>
-      <if test="available != null">
-        available = #{available,jdbcType=BIGINT},
-      </if>
-    </set>
-    where id = #{id,jdbcType=BIGINT}
-  </update>
+
 </mapper>

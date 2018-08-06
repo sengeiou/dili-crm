@@ -2,10 +2,13 @@ package com.dili.crm.controller;
 
 import com.dili.crm.domain.Customer;
 import com.dili.crm.domain.dto.CustomerTreeDto;
+import com.dili.crm.domain.dto.FirmDto;
 import com.dili.crm.rpc.UserRpc;
 import com.dili.crm.service.CustomerService;
+import com.dili.crm.service.FirmService;
 import com.dili.ss.domain.BaseOutput;
 import com.dili.ss.dto.DTOUtils;
+import com.dili.uap.sdk.domain.Firm;
 import com.dili.uap.sdk.domain.User;
 import com.dili.uap.sdk.session.SessionContext;
 import org.apache.commons.lang3.StringUtils;
@@ -20,6 +23,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * 选择对话框控制器
@@ -33,6 +37,9 @@ public class SelectDialogController {
 
 	@Autowired
 	private CustomerService customerService;
+
+	@Autowired
+	private FirmService firmService;
 
 	// ================================  用户  ====================================
 
@@ -80,6 +87,9 @@ public class SelectDialogController {
 	public String listCustomer(ModelMap modelMap, Customer customer) throws Exception {
 		CustomerTreeDto dto = DTOUtils.as(customer,CustomerTreeDto.class);
 		dto.setUserId(SessionContext.getSessionContext().getUserTicket().getId());
+		//查询所有市场的客户
+		List<Firm> list = firmService.listByExample(DTOUtils.newDTO(FirmDto.class));
+		dto.setFirmCodes(list.stream().map(Firm::getCode).collect(Collectors.toList()));
 		return this.customerService.listEasyuiPageByExample(dto, true).toString();
 	}
 }

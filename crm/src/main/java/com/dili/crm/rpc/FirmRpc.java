@@ -1,5 +1,6 @@
 package com.dili.crm.rpc;
 
+import com.dili.crm.domain.dto.FirmDto;
 import com.dili.ss.domain.BaseOutput;
 import com.dili.ss.domain.EasyuiPageOutput;
 import com.dili.ss.retrofitful.annotation.POST;
@@ -27,7 +28,7 @@ public interface FirmRpc {
 
 
 	    @POST("/firmApi/listByExample.api")
-	    public BaseOutput<List<Firm>> listByExample(@VOBody Firm firm) ;
+	    public BaseOutput<List<Firm>> listByExample(@VOBody FirmDto firm) ;
 	    
 	    @POST("/firmApi/getByCode.api")
 	    public BaseOutput<Firm> getByCode(@VOSingleParameter String code);
