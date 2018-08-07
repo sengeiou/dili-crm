@@ -89,13 +89,13 @@
                         <th data-options="field:'ownerId', _provider:'ownerProvider', sortable:'true', order:'asc', align:'center', resizable:'true', fixed:'false'">
                             所有者
                         </th>
-                        <th data-options="field:'certificateNumber',   sortable:'true', order:'asc', align:'center', resizable:'true', fixed:'false'">
+                        <th data-options="field:'certificateNumber', formatter:certificateNumberFmt,   sortable:'true', order:'asc', align:'center', resizable:'true', fixed:'false'">
                             证件号
                         </th>
                         <th data-options="field:'certificateType', _provider:'dataDictionaryValueProvider', _queryParams:{'dd_code':'certificate_type'}, sortable:'true', order:'asc', align:'center', resizable:'true', fixed:'false'">
                             证件类型
                         </th>
-                        <th data-options="field:'phone', sortable:'true', order:'asc', align:'center', resizable:'true', fixed:'false'">
+                        <th data-options="field:'phone', formatter:mobilePhoneFmt, sortable:'true', order:'asc', align:'center', resizable:'true', fixed:'false'">
                             电话
                         </th>
                         <th data-options="field:'organizationType', _provider:'dataDictionaryValueProvider', _queryParams:{'dd_code':'customer_organization_type'},  sortable:'true', order:'asc', align:'center', resizable:'true', fixed:'false'">

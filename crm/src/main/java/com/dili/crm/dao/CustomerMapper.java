@@ -15,6 +15,12 @@ public interface CustomerMapper extends MyMapper<Customer> {
 	List<CustomerChartDTO>selectCustomersGroupByProfession(List<String>firmCodes );
 
 	/**
+	 * 根据客户id查询客户市场积分
+	 * @param customerId
+	 * @return
+	 */
+	List<Map> listCustomerFirmPoints(Long customerId);
+	/**
 	 * 获取父客户id，以逗号分隔,包含自己
 	 * @param id
 	 * @return

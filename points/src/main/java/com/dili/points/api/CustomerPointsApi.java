@@ -2,10 +2,12 @@ package com.dili.points.api;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
+import com.dili.points.domain.CustomerFirmPoints;
 import com.dili.points.domain.CustomerPoints;
 import com.dili.points.domain.PointsDetail;
 import com.dili.points.domain.dto.CustomerPointsApiDTO;
 import com.dili.points.service.CustomerCategoryPointsService;
+import com.dili.points.service.CustomerFirmPointsService;
 import com.dili.points.service.CustomerPointsService;
 import com.dili.points.service.PointsDetailService;
 import com.dili.ss.domain.BaseOutput;
@@ -40,6 +42,8 @@ public class CustomerPointsApi {
     private CustomerPointsService customerPointsService;
     @Autowired
     private PointsDetailService pointsDetailService;
+    @Autowired
+    private CustomerFirmPointsService customerFirmPointsService;
 
     @Autowired
     private CustomerCategoryPointsService customerCategoryPointsService;
@@ -133,5 +137,13 @@ public class CustomerPointsApi {
         JSONObject jsonObject = JSON.parseObject(paramJson);
         customerCategoryPointsService.updateCustomerName(jsonObject.getString("name"),jsonObject.getLong("id"));
         return BaseOutput.success();
+    }
+
+    @ApiOperation(value = "查询客户市场积分信息", notes = "查询客户市场积分信息")
+    @ApiImplicitParams({ @ApiImplicitParam(name = "CustomerFirmPoints", paramType = "form", value = "客户市场积分条件对象", dataType = "CustomerFirmPoints") })
+    @RequestMapping(value = "/listCustomerFirmPoints.api", method = { RequestMethod.POST })
+    public @ResponseBody
+    BaseOutput<List<CustomerFirmPoints>> listCustomerFirmPoints(CustomerFirmPoints customerFirmPoints) {
+        return BaseOutput.success().setData(customerFirmPointsService.listByExample(customerFirmPoints));
     }
 }

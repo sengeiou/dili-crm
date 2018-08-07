@@ -6,6 +6,8 @@ import com.dili.points.rpc.CustomerRpc;
 import com.dili.ss.domain.BaseOutput;
 import com.dili.ss.dto.DTOUtils;
 import com.dili.ss.metadata.provider.BatchDisplayTextProviderAdaptor;
+import com.dili.uap.sdk.domain.UserTicket;
+import com.dili.uap.sdk.session.SessionContext;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -25,9 +27,14 @@ public class CustomerNumberProvider extends BatchDisplayTextProviderAdaptor {
 
 	@Override
 	protected List getFkList(List<String> relationIds, Map metaMap) {
+		UserTicket userTicket = SessionContext.getSessionContext().getUserTicket();
+		if(userTicket == null){
+			return null;
+		}
 		CustomerApiDTO customerApiDTO = DTOUtils.newDTO(CustomerApiDTO.class);
 		customerApiDTO.setCertificateNumbers(relationIds);
 		customerApiDTO.setYn(1);
+		customerApiDTO.setUserId(userTicket.getId());
 		BaseOutput<List<Customer>> output = customerRpc.list(customerApiDTO);
 		return output.isSuccess() ? output.getData() : null;
 	}

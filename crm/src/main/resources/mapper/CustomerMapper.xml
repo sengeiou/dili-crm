@@ -48,99 +48,14 @@
     type, profession, operating_area, other_title, main_category, notes, created_id, 
     modified_id, created, modified, yn
   </sql>
-  <select id="selectBy" parameterType="java.lang.Long" resultMap="BaseResultMap">
-    <!--
-      WARNING - @mbg.generated
-    -->
-    select 
-    <include refid="Base_Column_List" />
-    from customer
-    where id = #{id,jdbcType=BIGINT}
+
+  <select id="listCustomerFirmPoints" parameterType="java.lang.Long" resultType="map">
+    select c.name, c.code, c.organization_type organizationType, c.certificate_type certificateType, c.`type`,c.id,
+    c.certificate_number certificateNumber, c.profession, cfp.trading_firm_code tradingFirmCode, cfp.available,
+    cfp.buyer_points buyerPoints, cfp.seller_points sellerPoints
+    from customer c left join customer_firm_points cfp on c.id = cfp.customer_id
+    where c.id = #{id,jdbcType=BIGINT}
   </select>
-  <update id="updateBy" parameterType="com.dili.crm.domain.Customer">
-    <!--
-      WARNING - @mbg.generated
-    -->
-    update customer
-    <set>
-      <if test="parentId != null">
-        parent_id = #{parentId,jdbcType=BIGINT},
-      </if>
-      <if test="ownerId != null">
-        owner_id = #{ownerId,jdbcType=BIGINT},
-      </if>
-      <if test="certificateNumber != null">
-        certificate_number = #{certificateNumber,jdbcType=VARCHAR},
-      </if>
-      <if test="certificateType != null">
-        certificate_type = #{certificateType,jdbcType=VARCHAR},
-      </if>
-      <if test="certificateTime != null">
-        certificate_time = #{certificateTime,jdbcType=TIMESTAMP},
-      </if>
-      <if test="certificateAddr != null">
-        certificate_addr = #{certificateAddr,jdbcType=VARCHAR},
-      </if>
-      <if test="code != null">
-        code = #{code,jdbcType=VARCHAR},
-      </if>
-      <if test="name != null">
-        name = #{name,jdbcType=VARCHAR},
-      </if>
-      <if test="sex != null">
-        sex = #{sex,jdbcType=VARCHAR},
-      </if>
-      <if test="nation != null">
-        nation = #{nation,jdbcType=VARCHAR},
-      </if>
-      <if test="phone != null">
-        phone = #{phone,jdbcType=VARCHAR},
-      </if>
-      <if test="organizationType != null">
-        organization_type = #{organizationType,jdbcType=VARCHAR},
-      </if>
-      <if test="source != null">
-        source = #{source,jdbcType=VARCHAR},
-      </if>
-      <if test="market != null">
-        market = #{market,jdbcType=VARCHAR},
-      </if>
-      <if test="type != null">
-        type = #{type,jdbcType=VARCHAR},
-      </if>
-      <if test="profession != null">
-        profession = #{profession,jdbcType=VARCHAR},
-      </if>
-      <if test="operatingArea != null">
-        operating_area = #{operatingArea,jdbcType=VARCHAR},
-      </if>
-      <if test="otherTitle != null">
-        other_title = #{otherTitle,jdbcType=VARCHAR},
-      </if>
-      <if test="mainCategory != null">
-        main_category = #{mainCategory,jdbcType=VARCHAR},
-      </if>
-      <if test="notes != null">
-        notes = #{notes,jdbcType=VARCHAR},
-      </if>
-      <if test="createdId != null">
-        created_id = #{createdId,jdbcType=BIGINT},
-      </if>
-      <if test="modifiedId != null">
-        modified_id = #{modifiedId,jdbcType=BIGINT},
-      </if>
-      <if test="created != null">
-        created = #{created,jdbcType=TIMESTAMP},
-      </if>
-      <if test="modified != null">
-        modified = #{modified,jdbcType=TIMESTAMP},
-      </if>
-      <if test="yn != null">
-        yn = #{yn,jdbcType=INTEGER},
-      </if>
-    </set>
-    where id = #{id,jdbcType=BIGINT}
-  </update>
   
   <select id="selectCustomersGroupByType" parameterType="list" resultMap="CustomerChartResultMap">
     select type,count(1) AS `count`

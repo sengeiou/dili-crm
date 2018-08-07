@@ -20,7 +20,7 @@
             <th width="<%if(has(action) && (action=="edit" || action=="add")){%>25%<%}else{%>30%<%}%>" data-options="field:'code',   sortable:'true', order:'asc', align:'center', resizable:'true', fixed:'false'">
                 客户编码
             </th>
-            <th width="<%if(has(action) && (action=="edit" || action=="add")){%>30%<%}else{%>36%<%}%>" data-options="field:'phone',   sortable:'true', order:'asc', align:'center', resizable:'true', fixed:'false'">
+            <th width="<%if(has(action) && (action=="edit" || action=="add")){%>30%<%}else{%>36%<%}%>" data-options="field:'phone', formatter:mobilePhoneFmt,  sortable:'true', order:'asc', align:'center', resizable:'true', fixed:'false'">
                 电话
             </th>
             <%if(has(action) && (action=="edit" || action=="add")){%>

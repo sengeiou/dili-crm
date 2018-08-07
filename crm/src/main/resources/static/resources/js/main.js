@@ -51,3 +51,64 @@ function disableEasyUiControl(controlId,isDisable) {
         $("#" + controlId).linkbutton("enable");
     }
 }
+
+/**
+ * 号码加星隐藏
+ * @param str
+ * @param frontLen 前面保留位数
+ * @param endLen 后面保留位数
+ * @return {string}
+ */
+function plusXing(str,frontLen,endLen) {
+    if(str == undefined || str == null){
+        return null;
+    }
+    var len = str.length-frontLen-endLen;
+    if(len <= 0){
+        return str;
+    }
+    var xing = '';
+    for (var i=0;i<len;i++) {
+        xing+='*';
+    }
+    return str.substring(0,frontLen)+xing+str.substring(str.length-endLen);
+}
+
+
+/**
+ * 证件号码格式化
+ * 如果提供了证件类型(certificateType)， 可以判断`certificateType != id` 为其它证件号
+ * 1.	身份证隐藏规则：如果为15位证件号隐藏第7-12位用*表示，例如342123******123；如果为18位证件号隐藏第7-14位用*表示，例如：342112********1234；
+ * 2.	其他证件号隐藏规则：保留最后四位显示状态，前面都用*表示，例如：*********1234；
+ */
+
+function certificateNumberFmt(value,row,index) {
+    var certificateType = row[orginal_key_prefix+"certificateType"];
+    if(certificateType != null && certificateType != "id"){
+        return plusXing(value, 0, 4);
+    }
+    // 如果为15位证件号隐藏第7-12位用*表示，例如342123******123
+    if(value.length <= 15){
+        return plusXing(value, 6, 3);
+    }//如果为18位证件号隐藏第7-14位用*表示，例如：342112********1234
+    else{
+        return plusXing(value, 6, 4);
+    }
+}
+
+/**
+ * 手机号码格式化
+ * 隐藏手机号码第4-7位用*表示，例如：136****1212
+ */
+function mobilePhoneFmt(value,row,index) {
+    var reg = /^(\d{3})\d{4}(\d{4})$/;
+    return value.replace(reg, "$1****$2");
+}
+
+/**
+ * 座机号码格式化
+ * 座机号码隐藏第5-7位用*表示，例如：0288****212
+ */
+function telephoneFmt(value,row,index) {
+    return plusXing(value, 4, 3);
+}

@@ -462,6 +462,19 @@ public class CustomerServiceImpl extends BaseServiceImpl<Customer, Long> impleme
 		return super.listByExample(dto);
 	}
 
+	@Override
+	public String listCustomerFirmPoints(Long customerId){
+		List<Map> list = getActualDao().listCustomerFirmPoints(customerId);
+		Map meta = new HashMap();
+		meta.put("tradingFirmCode", "firmProvider");
+		try {
+			return new EasyuiPageOutput(list.size(), ValueProviderUtils.buildDataByProvider(meta, list)).toString();
+		} catch (Exception e) {
+			e.printStackTrace();
+			return null;
+		}
+	}
+
 	// ========================================== 私有方法 ==========================================
 
 	/**

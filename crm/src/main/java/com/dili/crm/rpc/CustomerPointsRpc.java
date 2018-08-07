@@ -1,5 +1,6 @@
 package com.dili.crm.rpc;
 
+import com.dili.crm.domain.dto.CustomerFirmPoints;
 import com.dili.crm.domain.dto.CustomerPoints;
 import com.dili.crm.domain.dto.CustomerPointsApiDTO;
 import com.dili.ss.domain.BaseOutput;
@@ -23,6 +24,10 @@ public interface CustomerPointsRpc {
 
     @POST("/customerPointsApi/listCustomerPoints.api")
     BaseOutput<List<CustomerPoints>> listCustomerPoints(@VOBody CustomerPointsApiDTO customer);
+
+    @POST("/customerPointsApi/listCustomerFirmPoints.api")
+    BaseOutput<List<CustomerFirmPoints>> listCustomerFirmPoints(@VOBody CustomerFirmPoints customerFirmPoints);
+
     @POST("/customerPointsApi/deleteCustomerPoints.api")
     BaseOutput<CustomerPoints> deleteCustomerPoints(@VOBody Long customerId);
 

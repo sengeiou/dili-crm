@@ -1,10 +1,14 @@
 package com.dili.points.controller;
 
 import com.dili.points.domain.dto.CustomerApiDTO;
+import com.dili.points.domain.dto.FirmDto;
 import com.dili.points.rpc.CustomerRpc;
 import com.dili.points.rpc.UserRpc;
+import com.dili.points.service.FirmService;
 import com.dili.ss.domain.BaseOutput;
 import com.dili.ss.domain.EasyuiPageOutput;
+import com.dili.ss.dto.DTOUtils;
+import com.dili.uap.sdk.domain.Firm;
 import com.dili.uap.sdk.domain.User;
 import com.dili.uap.sdk.session.SessionContext;
 import org.apache.commons.lang3.StringUtils;
@@ -19,6 +23,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * 选择对话框控制器
@@ -33,6 +38,8 @@ public class SelectDialogController {
 	@Autowired
 	private CustomerRpc customerRpc;
 
+	@Autowired
+	private FirmService firmService;
 	// ================================  用户  ====================================
 
 	@RequestMapping(value = "/user.html", method = RequestMethod.GET)
@@ -78,6 +85,9 @@ public class SelectDialogController {
 	@RequestMapping(value = "/listCustomer.action", method = { RequestMethod.GET, RequestMethod.POST }, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
 	public String listCustomer(CustomerApiDTO customer) throws Exception {
 		customer.setUserId(SessionContext.getSessionContext().getUserTicket().getId());
+		//查询所有市场的客户
+//		List<Firm> list = firmService.listByExample(DTOUtils.newDTO(FirmDto.class));
+//		customer.setFirmCodes(list.stream().map(Firm::getCode).collect(Collectors.toList()));
 		BaseOutput<EasyuiPageOutput> output =  this.customerRpc.listPage(customer);
 		return output.isSuccess() ? output.getData().toString() : null;
 	}

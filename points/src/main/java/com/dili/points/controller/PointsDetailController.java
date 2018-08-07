@@ -39,85 +39,92 @@ public class PointsDetailController {
     FirmService firmService;
 
     @ApiOperation("跳转到PointsDetail页面")
-    @RequestMapping(value="/index.html", method = RequestMethod.GET)
+    @RequestMapping(value = "/index.html", method = RequestMethod.GET)
     public String index(ModelMap modelMap) {
         return "pointsDetail/index";
     }
 
     @ApiOperation("跳转到积分明细页面")
-    @RequestMapping(value="/adjustRecord.html", method = RequestMethod.GET)
+    @RequestMapping(value = "/adjustRecord.html", method = RequestMethod.GET)
     public String adjustRecord(ModelMap modelMap) {
         return "pointsDetail/adjustRecord";
     }
 
     @ApiOperation("跳转到detail页面")
-    @RequestMapping(value="/detail.html", method = RequestMethod.GET)
-    public String detail(ModelMap modelMap,String certificateNumber) {
-    	CustomerPointsDTO customerPoints=this.customerPointsService.findCustomerPointsByCertificateNumber(certificateNumber);
-    	modelMap.put("customerPoints", customerPoints);
+    @RequestMapping(value = "/detail.html", method = RequestMethod.GET)
+    public String detail(ModelMap modelMap, String certificateNumber) {
+        CustomerPointsDTO customerPoints = this.customerPointsService.findCustomerPointsByCertificateNumber(certificateNumber);
+        modelMap.put("customerPoints", customerPoints);
         return "pointsDetail/detail";
     }
+
     @ApiOperation("跳转到manullyDetail页面")
-    @RequestMapping(value="/manullyDetail.html", method = RequestMethod.GET)
+    @RequestMapping(value = "/manullyDetail.html", method = RequestMethod.GET)
     public String manullyDetail(ModelMap modelMap) {
         return "pointsDetail/manullyDetail";
     }
-    @ApiOperation(value="查询PointsDetail", notes = "查询PointsDetail，返回列表信息")
+
+    @ApiOperation(value = "查询PointsDetail", notes = "查询PointsDetail，返回列表信息")
     @ApiImplicitParams({
-		@ApiImplicitParam(name="PointsDetail", paramType="form", value = "PointsDetail的form信息", required = false, dataType = "string")
-	})
-    @RequestMapping(value="/list.action", method = {RequestMethod.GET, RequestMethod.POST})
-    public @ResponseBody List<PointsDetail> list(PointsDetail pointsDetail) {
+            @ApiImplicitParam(name = "PointsDetail", paramType = "form", value = "PointsDetail的form信息", required = false, dataType = "string")
+    })
+    @RequestMapping(value = "/list.action", method = {RequestMethod.GET, RequestMethod.POST})
+    public @ResponseBody
+    List<PointsDetail> list(PointsDetail pointsDetail) {
         return pointsDetailService.list(pointsDetail);
     }
 
-    @ApiOperation(value="分页查询PointsDetail", notes = "分页查询PointsDetail，返回easyui分页信息")
+    @ApiOperation(value = "分页查询PointsDetail", notes = "分页查询PointsDetail，返回easyui分页信息")
     @ApiImplicitParams({
-		@ApiImplicitParam(name="PointsDetail", paramType="form", value = "PointsDetail的form信息", required = false, dataType = "string")
-	})
-    @RequestMapping(value="/listPage.action", method = {RequestMethod.GET, RequestMethod.POST})
-    public @ResponseBody String listPage(PointsDetailDTO pointsDetail) throws Exception {
-    	return this.pointsDetailService.listEasyuiPageByExample(pointsDetail, true, this.firmService.getCurrentUserFirmCodes()).toString();
+            @ApiImplicitParam(name = "PointsDetail", paramType = "form", value = "PointsDetail的form信息", required = false, dataType = "string")
+    })
+    @RequestMapping(value = "/listPage.action", method = {RequestMethod.GET, RequestMethod.POST})
+    public @ResponseBody
+    String listPage(PointsDetailDTO pointsDetail) throws Exception {
+        return this.pointsDetailService.listEasyuiPageByExample(pointsDetail, true, this.firmService.getCurrentUserFirmCodes()).toString();
     }
 
-    @ApiOperation(value="分页查询调整记录", notes = "分页查询调整记录，返回easyui分页信息")
+    @ApiOperation(value = "分页查询调整记录", notes = "分页查询调整记录，返回easyui分页信息")
     @ApiImplicitParams({
-            @ApiImplicitParam(name="PointsDetail", paramType="form", value = "PointsDetailDTO的form信息", required = false, dataType = "string")
+            @ApiImplicitParam(name = "PointsDetail", paramType = "form", value = "PointsDetailDTO的form信息", required = false, dataType = "string")
     })
-    @RequestMapping(value="/listAdjustRecordPage.action", method = {RequestMethod.GET, RequestMethod.POST})
-    public @ResponseBody String listAdjustRecordPage(PointsDetailDTO pointsDetail) throws Exception {
+    @RequestMapping(value = "/listAdjustRecordPage.action", method = {RequestMethod.GET, RequestMethod.POST})
+    public @ResponseBody
+    String listAdjustRecordPage(PointsDetailDTO pointsDetail) throws Exception {
         pointsDetail.setGenerateWay(50);
-        
-       List<String>firmCodes=this.firmService.getCurrentUserAvaliableFirmCodes(pointsDetail.getFirmCode());
-       return this.pointsDetailService.listEasyuiPageByExample(pointsDetail, true, firmCodes).toString();
+        List<String> firmCodes = this.firmService.getCurrentUserAvaliableFirmCodes(pointsDetail.getFirmCode());
+        return this.pointsDetailService.listEasyuiPageByExample(pointsDetail, true, firmCodes).toString();
     }
 
     @ApiOperation("新增PointsDetail")
     @ApiImplicitParams({
-		@ApiImplicitParam(name="PointsDetail", paramType="form", value = "PointsDetail的form信息", required = true, dataType = "string")
-	})
-    @RequestMapping(value="/insert.action", method = {RequestMethod.GET, RequestMethod.POST})
-    public @ResponseBody BaseOutput insert(PointsDetail pointsDetail) {
+            @ApiImplicitParam(name = "PointsDetail", paramType = "form", value = "PointsDetail的form信息", required = true, dataType = "string")
+    })
+    @RequestMapping(value = "/insert.action", method = {RequestMethod.GET, RequestMethod.POST})
+    public @ResponseBody
+    BaseOutput insert(PointsDetail pointsDetail) {
         pointsDetailService.insertSelective(pointsDetail);
         return BaseOutput.success("新增成功");
     }
 
     @ApiOperation("修改PointsDetail")
     @ApiImplicitParams({
-		@ApiImplicitParam(name="PointsDetail", paramType="form", value = "PointsDetail的form信息", required = true, dataType = "string")
-	})
-    @RequestMapping(value="/update.action", method = {RequestMethod.GET, RequestMethod.POST})
-    public @ResponseBody BaseOutput update(PointsDetail pointsDetail) {
+            @ApiImplicitParam(name = "PointsDetail", paramType = "form", value = "PointsDetail的form信息", required = true, dataType = "string")
+    })
+    @RequestMapping(value = "/update.action", method = {RequestMethod.GET, RequestMethod.POST})
+    public @ResponseBody
+    BaseOutput update(PointsDetail pointsDetail) {
         pointsDetailService.updateSelective(pointsDetail);
         return BaseOutput.success("修改成功");
     }
 
     @ApiOperation("删除PointsDetail")
     @ApiImplicitParams({
-		@ApiImplicitParam(name="id", paramType="form", value = "PointsDetail的主键", required = true, dataType = "long")
-	})
-    @RequestMapping(value="/delete.action", method = {RequestMethod.GET, RequestMethod.POST})
-    public @ResponseBody BaseOutput delete(Long id) {
+            @ApiImplicitParam(name = "id", paramType = "form", value = "PointsDetail的主键", required = true, dataType = "long")
+    })
+    @RequestMapping(value = "/delete.action", method = {RequestMethod.GET, RequestMethod.POST})
+    public @ResponseBody
+    BaseOutput delete(Long id) {
         pointsDetailService.delete(id);
         return BaseOutput.success("删除成功");
     }

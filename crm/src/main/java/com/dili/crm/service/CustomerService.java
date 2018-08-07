@@ -127,4 +127,11 @@ public interface CustomerService extends BaseService<Customer, Long> {
 	 * @param ids 客户ID集合
 	 */
 	Integer deleteWithCascade(List<Long> ids);
+
+	/**
+	 * 根据客户id查询客户市场积分
+	 * @param customerId
+	 * @return
+	 */
+	String listCustomerFirmPoints(Long customerId);
 }

@@ -3,6 +3,7 @@ package com.dili.crm.controller;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.dili.crm.domain.Customer;
+import com.dili.crm.domain.dto.CustomerFirmPoints;
 import com.dili.crm.domain.dto.MembersDto;
 import com.dili.crm.provider.FirmProvider;
 import com.dili.crm.rpc.CustomerPointsRpc;
@@ -265,6 +266,11 @@ public class CustomerController {
     		return customerService.listEasyuiPageByExample(membersDto, true).toString();
 		}
 		return customerService.listParentCustomerPage(membersDto).toString();
+	}
+
+	@RequestMapping(value="/listCustomerPoints.action", method = {RequestMethod.GET, RequestMethod.POST})
+	public @ResponseBody String listCustomerPoints(@RequestParam(name="customerId") Long customerId) throws Exception {
+		return customerService.listCustomerFirmPoints(customerId);
 	}
 
 	//获取时间提供者
