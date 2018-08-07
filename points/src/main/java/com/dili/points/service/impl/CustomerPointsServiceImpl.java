@@ -190,7 +190,6 @@ public class CustomerPointsServiceImpl extends BaseServiceImpl<CustomerPoints, L
 		BaseOutput<EasyuiPageOutput> baseOut = customerRpc.listPage(customer);
 		if (!baseOut.isSuccess()) {
 			throw new AppException("远程调用失败:"+baseOut.getResult());
-//			return new EasyuiPageOutput(0, Collections.emptyList());
 		}
 		List<JSONObject> jsonList = baseOut.getData().getRows();
 		//构建客户列表
@@ -215,7 +214,6 @@ public class CustomerPointsServiceImpl extends BaseServiceImpl<CustomerPoints, L
 			CustomerPoints customerPoints = certificateNumber2CustomerPointsMap.get(c.getCertificateNumber());
 			if (customerPoints == null) {
 				cpdto.setCustomerId(c.getId());
-//				cpdto.setId(c.getId());
 				cpdto.setCertificateNumber(c.getCertificateNumber());
 				cpdto.setAvailable(0);
 				cpdto.setFrozen(0);
@@ -265,14 +263,13 @@ public class CustomerPointsServiceImpl extends BaseServiceImpl<CustomerPoints, L
 		example.setYn(1);
 		example.setCertificateNumber(dto.getCertificateNumber());
 
-		CustomerPoints item = 	this.list(example).stream().findFirst().orElseGet(()->{
-			CustomerPoints obj=DTOUtils.clone(dto, CustomerPoints.class);
+		CustomerPoints item = this.list(example).stream().findFirst().orElseGet(()->{
+			CustomerPoints obj = DTOUtils.clone(dto, CustomerPoints.class);
 			obj.setId(null);
 			obj.setBuyerPoints(0);
 			obj.setSellerPoints(0);
 			obj.setAvailable(0);
 			obj.setFrozen(0);
-			
 			return obj;
 		});
 		if(dto.isBuyer()) {

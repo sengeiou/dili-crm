@@ -19,6 +19,7 @@ import com.dili.ss.domain.EasyuiPageOutput;
 import com.dili.ss.dto.DTO;
 import com.dili.ss.dto.DTOUtils;
 import com.dili.ss.exception.AppException;
+import com.dili.ss.metadata.ValueProviderUtils;
 import com.dili.uap.sdk.domain.DataDictionaryValue;
 
 import java.math.BigDecimal;
@@ -94,6 +95,11 @@ public class CustomerFirmPointsServiceImpl extends BaseServiceImpl<CustomerFirmP
         }
         List<Map> list = getActualDao().listByPage(customer);
         Page<Map> pageList = (Page) list;
+        try {
+            list = ValueProviderUtils.buildDataByProvider(customer, list);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         EasyuiPageOutput easyuiPageOutput = new EasyuiPageOutput(Integer.parseInt(String.valueOf(pageList.getTotal())), list);
         //页脚汇总
         List<Map<String,Object>> footers = Lists.newArrayList();
@@ -154,7 +160,6 @@ public class CustomerFirmPointsServiceImpl extends BaseServiceImpl<CustomerFirmP
             customerFirmPoints.setDayPoints(0);
             customerFirmPoints.setResetTime(new Date());
             return customerFirmPoints;
-
         });
 
         // 积分上限
@@ -405,7 +410,7 @@ public class CustomerFirmPointsServiceImpl extends BaseServiceImpl<CustomerFirmP
      */
     private Integer findDailyLimit(String firmCode) {
         DataDictionaryValue condtion = DTOUtils.newDTO(DataDictionaryValue.class);
-        condtion.setDdCode("customerPoints.day.limits");
+        condtion.setDdCode("points_daily_limits");
         condtion.setCode(firmCode);
 
         BaseOutput<List<DataDictionaryValue>> output = this.dataDictionaryRpc.list(condtion);

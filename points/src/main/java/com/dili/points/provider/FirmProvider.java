@@ -73,4 +73,14 @@ public class FirmProvider extends BatchDisplayTextProviderAdaptor {
 			return map;
 		}
 	}
+
+	/**
+	 * 关联(数据库)表的主键的字段名
+	 * 默认取id，子类可自行实现
+	 * @return
+	 */
+	@Override
+	protected String getRelationTablePkField(Map metaMap) {
+		return "code";
+	}
 }

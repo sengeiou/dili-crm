@@ -53,6 +53,7 @@ public interface CustomerFirmPointsDTO extends CustomerFirmPoints{
     Integer getPoints();
     void setPoints(Integer points);
 
+    //调整时的实际积分(可能会由于每日积分上限限制)，用于调整积分,保存CustomerFirmPointsDTO之后将实际保存的积分通过actualPoints传递回来
 	@Transient
     Integer getActualPoints();
     void setActualPoints(Integer actualPoints);

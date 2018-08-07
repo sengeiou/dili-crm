@@ -29,7 +29,7 @@
     modified_id, modified, created, buyer_points, day_points, reset_time, seller_points
   </sql>
   <select id="listByPage" parameterType="com.dili.points.domain.dto.CustomerApiDTO" resultType="Map">
-    select c.name, c.organization_type organizationType, c.certificate_type certificateType, c.`type`,
+    select c.name, c.organization_type organizationType, c.certificate_type certificateType, c.`type`,c.id customerId,
     c.certificate_number certificateNumber, c.profession, cfp.trading_firm_code tradingFirmCode, cfp.available,
     cfp.buyer_points buyerPoints, cfp.seller_points sellerPoints
     from customer_firm_points cfp left join customer c on cfp.customer_id = c.id
