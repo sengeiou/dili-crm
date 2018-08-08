@@ -50,6 +50,9 @@
     <if test="organizationType != null">
       and c.`organization_type` = #{organizationType}
     </if>
+    <if test="tradingFirmCode != null">
+      and cfp.`trading_firm_code` = #{tradingFirmCode}
+    </if>
     <if test="sort != null and order != null">
       ORDER BY ${sort} ${order}
     </if>

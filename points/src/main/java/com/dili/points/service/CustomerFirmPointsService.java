@@ -6,6 +6,8 @@ import com.dili.points.domain.dto.CustomerFirmPointsDTO;
 import com.dili.ss.base.BaseService;
 import com.dili.ss.domain.EasyuiPageOutput;
 
+import java.util.Map;
+
 /**
  * 由MyBatis Generator工具自动生成
  * This file was generated on 2018-07-30 16:20:03.
@@ -38,5 +40,11 @@ public interface CustomerFirmPointsService extends BaseService<CustomerFirmPoint
      * @return
      */
     int saveCustomerFirmPoints(CustomerFirmPointsDTO customerFirmPoints);
-	 
+
+    /**
+     * 查询客户市场积分明细
+     * @param certificateNumber
+     * @return
+     */
+    Map findCustomerFirmPointsByCertificateNumber(String certificateNumber);
 }

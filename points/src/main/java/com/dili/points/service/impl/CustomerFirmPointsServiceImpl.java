@@ -85,6 +85,23 @@ public class CustomerFirmPointsServiceImpl extends BaseServiceImpl<CustomerFirmP
     }
 
     @Override
+    public Map findCustomerFirmPointsByCertificateNumber(String certificateNumber) {
+        CustomerApiDTO dto = DTOUtils.newDTO(CustomerApiDTO.class);
+        dto.setCertificateNumber(certificateNumber);
+        EasyuiPageOutput output = this.listCustomerFirmPointsByCustomer(dto);
+        List<Map> list = output.getRows();
+        return list.stream().findFirst().orElseGet(() -> {
+            CustomerFirmPointsDTO cp = DTOUtils.newDTO(CustomerFirmPointsDTO.class);
+            cp.setId(0L);
+            cp.setCertificateNumber(certificateNumber);
+            cp.setAvailable(0);
+            cp.setFrozen(0);
+            cp.setTotal(0);
+            return DTOUtils.go(cp);
+        });
+    }
+
+    @Override
     public EasyuiPageOutput listCustomerFirmPointsByCustomer(CustomerApiDTO customer) {
         customer.setSort(combineSortPrefix(customer.getSort()));
         Integer page = customer.getPage();
@@ -92,6 +109,8 @@ public class CustomerFirmPointsServiceImpl extends BaseServiceImpl<CustomerFirmP
         if(customer.getRows() != null && customer.getRows() >= 1) {
             //为了线程安全,请勿改动下面两行代码的顺序
             PageHelper.startPage(page, customer.getRows());
+        }else{
+            PageHelper.startPage(1, 10000);
         }
         List<Map> list = getActualDao().listByPage(customer);
         Page<Map> pageList = (Page) list;

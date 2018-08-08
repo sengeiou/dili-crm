@@ -19,13 +19,16 @@
                         <td style="padding:5px;">
                             <input class="easyui-textbox"   style="width:100%" labelAlign="right" data-options="label:'客户名称:',value:'${customerPoints.name}',cls:'noborder', editable:false, readonly:true,hasDownArrow:false, validType:'length[0,40]'" />
                         </td>
-
+                        <td style="padding:5px;">
+                            <input name="firmCode" id="firmCode" style="width:100%;" data-options="labelAlign:'right', value:'${customerPoints.tradingFirmCode}', cls:'noborder', editable:false, readonly:true,hasDownArrow:false" panelWidth="auto" panelHeight="auto" label="所属市场:"/>
+                            <#comboProvider _id="firmCode" _provider='firmProvider' />
+                        </td>
                         <td style="padding:5px;">
                             <input class="easyui-textbox"  style="width:100%" labelAlign="right" data-options="label:'客户证件号:',value:'${customerPoints.certificateNumber}',                 cls:'noborder', editable:false, readonly:true,hasDownArrow:false, validType:'length[0,40]'" />
                             <input type="hidden"  name="certificateNumber" id="certificateNumber" value="${customerPoints.certificateNumber}"/>
                         </td>
                         <td style="padding:5px;">
-                            <input class="easyui-textbox"                        style="width:100%" labelAlign="right" data-options="label:'电话:',value:'${customerPoints.phone}',                 cls:'noborder', editable:false, readonly:true,hasDownArrow:false, validType:'length[0,40]'" />
+                            <input class="easyui-textbox" style="width:100%" labelAlign="right" data-options="label:'电话:',value:'${customerPoints.phone}',                 cls:'noborder', editable:false, readonly:true,hasDownArrow:false, validType:'length[0,40]'" />
                         </td>
                         <td style="padding:5px;">
                             <input class="easyui-numberbox"   style="width:100%" labelAlign="right" data-options="label:'积分:',value:'${customerPoints.available}',cls:'noborder', editable:false, readonly:true,hasDownArrow:false, validType:'length[0,10]'" />
@@ -46,82 +49,71 @@
     <!-- 表格 -->
     <div style="width: 100%;height: 90%;" align="center" border="false">
         <div class="easyui-panel" style="width:96%;height:95%;" border="false" title="积分明细">
-        <div id="pointsTabs" class="easyui-tabs" style="width:100%;height:95%" data-options="onSelect:switchTab">   
-    <div title="获得" id="pointsIn" style="padding:0px;display:none;">   
-           
-            <table class="easyui-datagrid" title="获得积分列表" id="gridin" fitColumns="true" noheader="true"
-                   pagination="true" pageSize="30" pageNumber="1" pagePosition="top" rownumbers="false" remoteSort="true"
-                   loadMsg="数据加载中..." singleSelect="true" method="post" multiSort="false" sortName="created"  sortOrder="desc"
-                   align="center" fit="true" striped="true" toolbar="#toolbar" idField="id" data-options="onHeaderContextMenu:headerContextMenu">
-                <thead>
-                <tr>
-                      <th data-options="width:'12%',field:'created',  _provider:'datetimeProvider', sortable:true, order:'desc', align:'center', resizable:'true', fixed:'false'">
-                        获得时间
-                    </th>
-                    <th data-options="width:'10%',field:'points',   sortable:true, order:'asc', align:'center', resizable:'true', fixed:'false',formatter: pointsFormatter">
-                        积分
-                    </th>
-                                                          <th data-options="field:'firmCode', width:'10%',  sortable:true, order:'asc', align:'center', resizable:'true', fixed:'false',_provider:'firmProvider', _queryParams:{}">
-                        来源市场	
-                    </th>
-                      <th data-options="width:'10%',field:'generateWay',   _provider:'dataDictionaryValueProvider', _queryParams:{'dd_code':'generate_way'},  sortable:true, order:'asc', align:'center', resizable:'true', fixed:'false'">
-                        来源
-                    </th>
-                    <th data-options="formatter: customerTypeFormatter,width:'10%',field:'customerType',   _provider:'dataDictionaryValueProvider', _queryParams:{'dd_code':'customer_type'},  sortable:true, order:'asc', align:'center', resizable:'true', fixed:'false'">
-                        订单客户类型
-                    </th>
-                    <th data-options="width:'10%',field:'balance',   sortable:true, order:'asc', align:'center', resizable:'true', fixed:'false'">
-                        积分余额
-                    </th>
-                    <th data-options="field:'notes',   sortable:true, order:'asc', align:'center', resizable:'true', fixed:'false'">
-                        备注
-                    </th>
+            <div id="pointsTabs" class="easyui-tabs" style="width:100%;height:95%" data-options="onSelect:switchTab">
+                <div title="获得" id="pointsIn" style="padding:0px;display:none;">
 
-                  
-                  
+                    <table class="easyui-datagrid" title="获得积分列表" id="gridin" fitColumns="true" noheader="true"
+                           pagination="true" pageSize="30" pageNumber="1" pagePosition="top" rownumbers="false" remoteSort="true"
+                           loadMsg="数据加载中..." singleSelect="true" method="post" multiSort="false" sortName="created"  sortOrder="desc"
+                           align="center" fit="true" striped="true" toolbar="#toolbar" idField="id" data-options="">
+                        <thead>
+                        <tr>
+                              <th data-options="width:'12%',field:'created',  _provider:'datetimeProvider', sortable:true, order:'desc', align:'center', resizable:'true', fixed:'false'">
+                                获得时间
+                            </th>
+                            <th data-options="width:'10%',field:'points',   sortable:true, order:'asc', align:'center', resizable:'true', fixed:'false',formatter: pointsFormatter">
+                                积分
+                            </th>
+                                                                  <th data-options="field:'firmCode', width:'10%',  sortable:true, order:'asc', align:'center', resizable:'true', fixed:'false',_provider:'firmProvider', _queryParams:{}">
+                                来源市场
+                            </th>
+                              <th data-options="width:'10%',field:'generateWay',   _provider:'dataDictionaryValueProvider', _queryParams:{'dd_code':'generate_way'},  sortable:true, order:'asc', align:'center', resizable:'true', fixed:'false'">
+                                来源
+                            </th>
+                            <th data-options="formatter: customerTypeFormatter,width:'10%',field:'customerType',   _provider:'dataDictionaryValueProvider', _queryParams:{'dd_code':'customer_type'},  sortable:true, order:'asc', align:'center', resizable:'true', fixed:'false'">
+                                订单客户类型
+                            </th>
+                            <th data-options="width:'10%',field:'balance',   sortable:true, order:'asc', align:'center', resizable:'true', fixed:'false'">
+                                积分余额
+                            </th>
+                            <th data-options="field:'notes',   sortable:true, order:'asc', align:'center', resizable:'true', fixed:'false'">
+                                备注
+                            </th>
 
-                </tr>
-                </thead>
-            </table>
-    </div>   
-    <div title="使用"  id="pointsOut"  data-options="closable:false" style="overflow:auto;padding:0px;display:none;">   
-
-            <table class="easyui-datagrid" title="使用积分列表" id="gridout" fitColumns="true" noheader="true"
-                   pagination="true" pageSize="30" pageNumber="1" pagePosition="top" rownumbers="false" remoteSort="true" 
-                   loadMsg="数据加载中..." singleSelect="true" method="post" multiSort="false" sortName="created"  sortOrder="desc"
-                   align="center" fit="true" striped="true" toolbar="#toolbar" idField="id" data-options=" onHeaderContextMenu:headerContextMenu">
-                <thead>
-                <tr>
-                    <th data-options="width:'12%',field:'created',  _provider:'datetimeProvider', sortable:true, order:'desc', align:'center', resizable:'true', fixed:'false'">
-                        使用时间
-                    </th>
-                    <th data-options="width:'10%',field:'points',   sortable:true, order:'asc', align:'center', resizable:'true', fixed:'false'">
-                        积分
-                    </th>
-                     <th data-options="field:'firmCode', width:'10%',  sortable:true, order:'asc', align:'center', resizable:'true', fixed:'false',_provider:'firmProvider', _queryParams:{}">
-                        使用市场
-                    </th>
-                     <th data-options="width:'10%',field:'generateWay',   _provider:'dataDictionaryValueProvider', _queryParams:{'dd_code':'generate_way'},  sortable:true, order:'asc', align:'center', resizable:'true', fixed:'false'">
-                        使用方式
-                    </th>
-                    <th data-options="width:'10%',field:'balance',   sortable:true, order:'asc', align:'center', resizable:'true', fixed:'false'">
-                        积分余额
-                    </th>                    
-                    <th data-options="field:'notes',   sortable:true, order:'asc', align:'center', resizable:'true', fixed:'false'">
-                        备注
-                    </th>
-
-     
-
-                   
-
-                </tr>
-                </thead>
-            </table>
-    </div>   
-       
-</div>  
-           
+                        </tr>
+                        </thead>
+                    </table>
+                </div>
+                <div title="使用"  id="pointsOut"  data-options="closable:false" style="overflow:auto;padding:0px;display:none;">
+                    <table class="easyui-datagrid" title="使用积分列表" id="gridout" fitColumns="true" noheader="true"
+                           pagination="true" pageSize="30" pageNumber="1" pagePosition="top" rownumbers="false" remoteSort="true"
+                           loadMsg="数据加载中..." singleSelect="true" method="post" multiSort="false" sortName="created"  sortOrder="desc"
+                           align="center" fit="true" striped="true" toolbar="#toolbar" idField="id" data-options="">
+                        <thead>
+                        <tr>
+                            <th data-options="width:'12%',field:'created',  _provider:'datetimeProvider', sortable:true, order:'desc', align:'center', resizable:'true', fixed:'false'">
+                                使用时间
+                            </th>
+                            <th data-options="width:'10%',field:'points',   sortable:true, order:'asc', align:'center', resizable:'true', fixed:'false'">
+                                积分
+                            </th>
+                             <th data-options="field:'firmCode', width:'10%',  sortable:true, order:'asc', align:'center', resizable:'true', fixed:'false',_provider:'firmProvider', _queryParams:{}">
+                                使用市场
+                            </th>
+                             <th data-options="width:'10%',field:'generateWay',   _provider:'dataDictionaryValueProvider', _queryParams:{'dd_code':'generate_way'},  sortable:true, order:'asc', align:'center', resizable:'true', fixed:'false'">
+                                使用方式
+                            </th>
+                            <th data-options="width:'10%',field:'balance',   sortable:true, order:'asc', align:'center', resizable:'true', fixed:'false'">
+                                积分余额
+                            </th>
+                            <th data-options="field:'notes',   sortable:true, order:'asc', align:'center', resizable:'true', fixed:'false'">
+                                备注
+                            </th>
+                        </tr>
+                        </thead>
+                    </table>
+                </div>
+            </div>
         </div>
     </div>
 </div>
@@ -293,7 +285,6 @@
 
     }
     function switchTab(title,index){
-
     	if(title=='获得'){
     		queryGrid('in');
     	}else if(title='使用'){
@@ -321,7 +312,6 @@
         }
         else
         {
-
            // generateWaycolumn.title='使用方式';
           //  createdcolumn.title='使用时间';
             $("#inOut").combobox("setText", '支出');
@@ -354,29 +344,7 @@
        // $("#orderCode").textbox("setValue", "");
     }
 
-    //表格表头右键菜单
-    function headerContextMenu(e, field){
-        e.preventDefault();
-        if (!cmenu){
-            createColumnMenu("grid");
-        }
-        cmenu.menu('show', {
-            left:e.pageX,
-            top:e.pageY
-        });
-    }
 
-    //全局按键事件
-    function getKey(e){
-        e = e || window.event;
-        var keycode = e.which ? e.which : e.keyCode;
-        if(keycode == 46){ //如果按下删除键
-            var selected = $("#grid").datagrid("getSelected");
-            if(selected && selected!= null){
-                del();
-            }
-        }
-    }
 	function paginationGrid(gridId){
 		
         var pager = $('#'+gridId).datagrid('getPager');    // get the pager of treegrid
@@ -421,16 +389,7 @@
      *          表单提交需执行的任务
      */
     $(function () {
-        //$('#inOut').next(".combo").hide();
-        bindFormEvent("form", "certificateNumber", queryGrid);
-        bindFormEvent("_form", "_certificateNumber", saveOrUpdate, function (){$('#dlg').dialog('close');});
-        if (document.addEventListener) {
-            document.addEventListener("keyup",getKey,false);
-        } else if (document.attachEvent) {
-            document.attachEvent("onkeyup",getKey);
-        } else {
-            document.onkeyup = getKey;
-        }
+
         paginationGrid('gridin');
         paginationGrid('gridout');
         //queryGrid();

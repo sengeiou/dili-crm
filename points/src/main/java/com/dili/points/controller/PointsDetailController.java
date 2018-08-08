@@ -1,19 +1,15 @@
 package com.dili.points.controller;
 
 import com.dili.points.domain.PointsDetail;
-import com.dili.points.domain.dto.CustomerPointsDTO;
 import com.dili.points.domain.dto.PointsDetailDTO;
-import com.dili.points.service.CustomerPointsService;
+import com.dili.points.service.CustomerFirmPointsService;
 import com.dili.points.service.FirmService;
 import com.dili.points.service.PointsDetailService;
 import com.dili.ss.domain.BaseOutput;
-import com.dili.uap.sdk.domain.UserTicket;
-import com.dili.uap.sdk.session.SessionContext;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
@@ -22,6 +18,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * 由MyBatis Generator工具自动生成
@@ -34,7 +31,7 @@ public class PointsDetailController {
     @Autowired
     PointsDetailService pointsDetailService;
     @Autowired
-    CustomerPointsService customerPointsService;
+    CustomerFirmPointsService customerFirmPointsService;
     @Autowired
     FirmService firmService;
 
@@ -53,8 +50,8 @@ public class PointsDetailController {
     @ApiOperation("跳转到detail页面")
     @RequestMapping(value = "/detail.html", method = RequestMethod.GET)
     public String detail(ModelMap modelMap, String certificateNumber) {
-        CustomerPointsDTO customerPoints = this.customerPointsService.findCustomerPointsByCertificateNumber(certificateNumber);
-        modelMap.put("customerPoints", customerPoints);
+        Map customerFirmPoints = this.customerFirmPointsService.findCustomerFirmPointsByCertificateNumber(certificateNumber);
+        modelMap.put("customerPoints", customerFirmPoints);
         return "pointsDetail/detail";
     }
 
