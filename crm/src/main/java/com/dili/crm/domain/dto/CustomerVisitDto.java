@@ -17,14 +17,10 @@ import java.util.List;
  */
 public interface CustomerVisitDto extends CustomerVisit {
 
-    @Column(name = "`market`")
+    @Column(name = "`firm_code`")
     @Operator(Operator.IN)
     @FieldDef(label="市场code集合")
     List<String> getFirmCodes();
     void setFirmCodes(List<String> firmCodes);
 
-    @Column(name = "`market`")
-    @FieldDef(label="单个市场信息")
-    String getMarket();
-    void setMarket(String market);
 }

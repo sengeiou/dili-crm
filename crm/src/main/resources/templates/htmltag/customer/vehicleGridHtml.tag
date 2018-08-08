@@ -1,3 +1,4 @@
+<p />
 <div id="vehicleDiv" class="easyui-panel" style="width: 100%;" border="false" header="#vehicleHeader">
     <% var insertFunction = "";
     if(has(action) && (action=="edit" || action=="add")){

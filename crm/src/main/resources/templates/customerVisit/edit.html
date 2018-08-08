@@ -213,16 +213,16 @@
             $("#eventDiv").panel("destroy");
         }
 
-        //全局按键事件
-        function getKey(e){
-            e = e || window.event;
-            var keycode = e.which ? e.which : e.keyCode;
-            if(keycode == 46){ //如果按下删除键
-                var selected = $("#grid").treegrid("getSelected");
-                if(selected && selected!= null){
-                    del();
-                }
+        /**
+         * 打开用户选择框
+         */
+        function _selectUserByFirmCode(){
+            var firmCode = $("#_firmCode").combobox("getValue");
+            if(firmCode == null || firmCode == ""){
+                $.messager.alert('警告','请选择所属市场');
+                return;
             }
+            showUserDlg(firmCode);
         }
 
         /**

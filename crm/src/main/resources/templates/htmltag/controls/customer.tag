@@ -3,19 +3,19 @@ function _selectCustomer(callback, args) {
 	if (callback) {
 		eval("(" + callback + "(args))");
 	} else {
-		showCustomerDlg($(this)[0].id);
+		showCustomerDlg();
 	}
 }
 // 确认选择事件
-function confirmCustomerBtn(id) {
+function confirmCustomerBtn() {
 	var selected = $('#selectCustomerGrid').datagrid('getSelected');
 	if (null == selected) {
 		$.messager.alert('警告','请选中一条数据');
 		return;
 	}
-	$('#' + id).textbox('initValue', selected.id);
-	$('#' + id).textbox('setText', selected.name);
-	var icon = $('#' + id).textbox('getIcon',0);
+	$('#${controlId}').textbox('initValue', selected.id);
+	$('#${controlId}').textbox('setText', selected.name);
+	var icon = $('#${controlId}').textbox('getIcon',0);
 	icon.css('visibility','visible');
 	$('#${dlgId}').dialog('close');
 }
@@ -24,13 +24,13 @@ function closeCustomerSelectDlg(){
 	$('#${dlgId}').dialog('close');
 }
 // 根据id打开用户选择
-function showCustomerDlg(id) {
+function showCustomerDlg() {
 	$('#${dlgId}').dialog({
 				title : '客户选择',
 				width : 800,
 				height : 400,
 				queryParams : {
-					textboxId : id
+					textboxId : ""
 					<%if(has(dataUrl) && dataUrl != ""){%>
 						,dataUrl:'${dataUrl}'
 					<%}%>

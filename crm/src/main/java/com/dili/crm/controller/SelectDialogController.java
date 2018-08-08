@@ -10,6 +10,8 @@ import com.dili.ss.domain.BaseOutput;
 import com.dili.ss.dto.DTOUtils;
 import com.dili.uap.sdk.domain.Firm;
 import com.dili.uap.sdk.domain.User;
+import com.dili.uap.sdk.domain.UserTicket;
+import com.dili.uap.sdk.exception.NotLoginException;
 import com.dili.uap.sdk.session.SessionContext;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -44,15 +46,25 @@ public class SelectDialogController {
 	// ================================  用户  ====================================
 
 	@RequestMapping(value = "/user.html", method = RequestMethod.GET)
-	public String user(ModelMap modelMap, @RequestParam("textboxId") String textboxId) {
-		modelMap.put("textboxId", textboxId);
+	public String user(ModelMap modelMap, @RequestParam(name="firmCode", required = false) String firmCode) {
+		if(StringUtils.isBlank(firmCode)) {
+			UserTicket userTicket = SessionContext.getSessionContext().getUserTicket();
+			if(userTicket == null){
+				throw new NotLoginException();
+			}
+			modelMap.put("firmCode", userTicket.getFirmCode());
+		}else{
+			modelMap.put("firmCode", firmCode);
+		}
 		return "controls/user";
 	}
 
 	@ResponseBody
 	@RequestMapping(value = "/listUser.action", method = { RequestMethod.GET, RequestMethod.POST }, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
 	public List<User> listUser(ModelMap modelMap, User user) {
-		user.setFirmCode(SessionContext.getSessionContext().getUserTicket().getFirmCode());
+		if(StringUtils.isBlank(user.getFirmCode())) {
+			user.setFirmCode(SessionContext.getSessionContext().getUserTicket().getFirmCode());
+		}
 		BaseOutput<List<User>> output = this.userRPC.listByExample(user);
 		if (output.isSuccess()) {
 			return output.getData();
@@ -66,14 +78,12 @@ public class SelectDialogController {
 	 * 根据条件检索对应的客户信息
 	 * @param modelMap
 	 * @param request
-	 * @param textboxId 控件ID
 	 * @param dataUrl  检索数据的url
 	 * @param id  客户ID(视情况而定，如有，则可能会使用，如无，则可忽略)
 	 * @return
 	 */
 	@RequestMapping(value = "/customer.html", method = RequestMethod.GET)
-	public String customer(ModelMap modelMap, HttpServletRequest request, @RequestParam(name="textboxId", required = false) String textboxId, @RequestParam(name="dataUrl", required = false) String dataUrl,@RequestParam(name="id", required = false) Long id) {
-		modelMap.put("textboxId", textboxId);
+	public String customer(ModelMap modelMap, HttpServletRequest request, @RequestParam(name="dataUrl", required = false) String dataUrl,@RequestParam(name="id", required = false) Long id) {
 		if (StringUtils.isBlank(dataUrl)){
 			dataUrl = request.getContextPath()+"/selectDialog/listCustomer.action";
 		}

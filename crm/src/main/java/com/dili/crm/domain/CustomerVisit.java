@@ -51,6 +51,11 @@ public interface CustomerVisit extends IBaseDomain {
 
     void setSubject(String subject);
 
+    @FieldDef(label="所属市场", maxLength = 20)
+    @Column(name = "`firm_code`")
+    String getFirmCode();
+    void setFirmCode(String firmCode);
+
     @Column(name = "`mode`")
     @FieldDef(label="回访方式", maxLength = 20)
     @EditMode(editor = FieldEditor.Combo, required = false, params="{\"provider\":\"dataDictionaryValueProvider\",\"queryParams\":{\"dd_id\":9}}")

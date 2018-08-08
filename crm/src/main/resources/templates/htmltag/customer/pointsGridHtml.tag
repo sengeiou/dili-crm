@@ -1,5 +1,5 @@
 <p />
-<div id="pointsDiv" class="easyui-panel" style="width: 96%;" border="false" header="#pointsHeader">
+<div id="pointsDiv" class="easyui-panel" style="width: 100%;" border="false" header="#pointsHeader">
 
     <#controls_panelHeader panelId="pointsDiv" headerId="pointsHeader" title="客户积分"></#controls_panelHeader>
     <!-- =========================================================成员客户表格========================================================= -->
@@ -10,19 +10,10 @@
         <thead>
         <tr>
             <th data-options="field:'id',hidden:true"></th>
-            <th width="20%" data-options="field:'name',   sortable:'true', order:'asc', align:'center', resizable:'true', fixed:'false'">
-                姓名
-            </th>
-            <th width="20%" data-options="field:'code',   sortable:'true', order:'asc', align:'center', resizable:'true', fixed:'false'">
-                客户编码
-            </th>
-            <th width="20%" data-options="field:'certificateNumber', formatter:certificateNumberFmt,  sortable:'true', order:'asc', align:'center', resizable:'true', fixed:'false'">
-                证件号码
-            </th>
-            <th width="20%" data-options="field:'tradingFirmCode', sortable:'true', order:'asc', align:'center', resizable:'true', fixed:'false'">
+            <th width="50%" data-options="field:'tradingFirmCode', sortable:'true', order:'asc', align:'center', resizable:'true', fixed:'false'">
                 所属市场
             </th>
-            <th width="21%" data-options="field:'available',  sortable:'true', order:'asc', align:'center', resizable:'true', fixed:'false'">
+            <th width="51%" data-options="field:'available',  sortable:'true', order:'asc', align:'center', resizable:'true', fixed:'false'">
                 可用积分
             </th>
         </tr>

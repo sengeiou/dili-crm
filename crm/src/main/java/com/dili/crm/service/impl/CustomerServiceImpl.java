@@ -465,6 +465,14 @@ public class CustomerServiceImpl extends BaseServiceImpl<Customer, Long> impleme
 	@Override
 	public String listCustomerFirmPoints(Long customerId){
 		List<Map> list = getActualDao().listCustomerFirmPoints(customerId);
+		Iterator<Map> it = list.iterator();
+		//去掉没积分的数据
+		while (it.hasNext()){
+			Map map = it.next();
+			if(!map.containsKey("available")){
+				it.remove();
+			}
+		}
 		Map meta = new HashMap();
 		meta.put("tradingFirmCode", "firmProvider");
 		try {

@@ -6,6 +6,7 @@
         <result column="user_id" jdbcType="BIGINT" property="userId"/>
         <result column="customer_id" jdbcType="BIGINT" property="customerId"/>
         <result column="subject" jdbcType="VARCHAR" property="subject"/>
+        <result column="firm_code" jdbcType="VARCHAR" property="firmCode"/>
         <result column="mode" jdbcType="VARCHAR" property="mode"/>
         <result column="priority" jdbcType="VARCHAR" property="priority"/>
         <result column="finish_time" jdbcType="TIMESTAMP" property="finishTime"/>
@@ -25,7 +26,7 @@
     </resultMap>
 
     <sql id="Base_Column_List">
-        id, user_id, customer_id, subject, mode, priority, finish_time, state, notes, created,
+        id, user_id, customer_id, subject, mode, priority, finish_time, state, notes, created,firm_code,
         modified, modified_id, created_id
     </sql>
 

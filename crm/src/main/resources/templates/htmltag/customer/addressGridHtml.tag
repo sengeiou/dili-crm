@@ -1,3 +1,4 @@
+<p />
 <div id="addressDiv" class="easyui-panel" style="width: 100%;" border="false" header="#addressHeader">
     <% var insertFunction = "";
     if(has(action) && (action=="edit" || action=="add")){

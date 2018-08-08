@@ -139,13 +139,7 @@
                                     <#comboProvider _id="_department" _provider='departmentProvider'/>
                                 </td>
                                 <td style="padding-top:10px;padding-left:15px;">
-                                    <!--<input name="_available" class="easyui-textbox" id="_available" style="width:96%;" data-options="label:'可用积分:', labelAlign:'right', cls:'noborder', editable:false, readonly:true" />-->
-                                    <input name="_available" class="easyui-textbox" id="_available" style="width:80px;" data-options="label:'可用积分:', labelAlign:'right', cls:'noborder', editable:false, readonly:true" />
-                                    <%if (has(certificateNumber)) {%>
-                                    <a href="<#config name="points.contextPath"/>/pointsDetail/detail.html?certificateNumber=${certificateNumber}">${available}</a>
-                                    <%}else{%>
-                                    ${available}
-                                    <%}%>
+
                                 </td>
                             </tr>
                             <tr>
@@ -166,12 +160,20 @@
             <#customer_contactsGridHtml />
             <!--  =========================================================成员客户表格div=========================================================  -->
             <#customer_membersGridHtml />
-            <!--  =========================================================业务系统账号表格div=========================================================  -->
-            <#customer_customerExtensionsGridHtml />
-            <!--  =========================================================积分表格div=========================================================  -->
-            <#customer_pointsGridHtml />
+
+
             <!--  =========================================================地址、车辆div=========================================================  -->
             <table width="96%" style="margin-top: 10px;">
+                <tr>
+                    <td width="50%" valign="top" style="padding-right:6px;box-sizing: border-box;">
+                        <!--  =========================================================业务系统账号表格div=========================================================  -->
+                        <#customer_customerExtensionsGridHtml />
+                    </td>
+                    <td width="50%" valign="top" style="padding-left:6px;box-sizing: border-box;">
+                        <!--  =========================================================积分表格div=========================================================  -->
+                        <#customer_pointsGridHtml />
+                    </td>
+                </tr>
                 <tr>
                     <td width="50%" valign="top" style="padding-right:6px;box-sizing: border-box;">
                         <!--  =========================================================地址表格div=========================================================  -->

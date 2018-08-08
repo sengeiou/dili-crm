@@ -121,22 +121,22 @@ public class CustomerVisitServiceImpl extends BaseServiceImpl<CustomerVisit, Lon
     public EasyuiPageOutput listEasyuiPage(CustomerVisit domain, boolean useProvider) throws Exception {
         CustomerVisitDto visitDto= DTOUtils.as(domain, CustomerVisitDto.class);
         //如果未传入市场信息，则只能查询当前用户有数据权限的市场的数据
-        if (StringUtils.isBlank(visitDto.getMarket()) && CollectionUtils.isEmpty(visitDto.getFirmCodes())){
+        if (StringUtils.isBlank(visitDto.getFirmCode()) && CollectionUtils.isEmpty(visitDto.getFirmCodes())){
             List<String> firmCodes = firmService.getCurrentUserFirmCodes();
             if (CollectionUtils.isEmpty(firmCodes)){
                 return new EasyuiPageOutput(0,null);
             }
             visitDto.setFirmCodes(firmCodes);
         }
-        if (visitDto.getRows() != null && visitDto.getRows() >= 1) {
-            PageHelper.startPage(visitDto.getPage(), visitDto.getRows());
-        }
         if (StringUtils.isNotBlank(visitDto.getSort())) {
             visitDto.setSort(POJOUtils.humpToLineFast(visitDto.getSort()));
         }
-        List<CustomerVisitDto> customerVisitDtos = getActualDao().selectForPage(visitDto);
-        long total = customerVisitDtos instanceof Page ? ((Page) customerVisitDtos).getTotal() : (long) customerVisitDtos.size();
-        List results = useProvider ? ValueProviderUtils.buildDataByProvider(visitDto, customerVisitDtos) : customerVisitDtos;
+        if (visitDto.getRows() != null && visitDto.getRows() >= 1) {
+            PageHelper.startPage(visitDto.getPage(), visitDto.getRows());
+        }
+        List<CustomerVisit> customerVisits = listByExample(visitDto);
+        long total = customerVisits instanceof Page ? ((Page) customerVisits).getTotal() : (long) customerVisits.size();
+        List results = useProvider ? ValueProviderUtils.buildDataByProvider(visitDto, customerVisits) : customerVisits;
         return new EasyuiPageOutput((int) total, results);
     }
 }

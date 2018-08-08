@@ -85,7 +85,7 @@
                             <#comboProvider _id="_organizationType" _provider='dataDictionaryValueProvider' _queryParams='{dd_code:"customer_organization_type"}'/>
                         </td>
                         <td style="padding-top:10px;padding-left:15px;">
-                            <input name="_market" id="_market" data-options="labelAlign:'right', editable:false,onLoadSuccess:onComboLoadSuccessSelectOne" style="width:70%;" panelWidth="auto" panelHeight="auto" label="所属市场:" />
+                            <input name="_market" id="_market" data-options="labelAlign:'right',required:true, editable:false,onLoadSuccess:onComboLoadSuccessSelectOne" style="width:70%;" panelWidth="auto" panelHeight="auto" label="*所属市场:" />
                             <#comboProvider _id="_market" _provider='firmProvider' />
                         </td>
                         <td style="padding-top:10px;padding-left:15px;">
@@ -157,7 +157,7 @@
                             <input class="easyui-textbox" name="departmentName" id="departmentName" style="width:70%;" disabled="true" data-options="label:'归属部门:', labelAlign:'right', readonly:true,editable:false" />
                         </td>
                         <td style="padding-top:10px;padding-left:15px;">
-                            <input name="_available" class="easyui-textbox" id="_available" style="width:70%;" disabled="true" data-options="label:'可用积分:', labelAlign:'right', editable:false, readonly:true" />
+
                         </td>
                     </tr>
                     <tr>
