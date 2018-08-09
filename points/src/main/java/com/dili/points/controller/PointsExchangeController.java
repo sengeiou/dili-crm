@@ -82,6 +82,7 @@ public class PointsExchangeController {
             }else{
                 object.put("points",0);
             }
+            object.put("tradingFirmCode", firmCode);
             return BaseOutput.success().setData(object);
         }
         return BaseOutput.failure("未获取到用户信息");

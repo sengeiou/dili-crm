@@ -1,13 +1,7 @@
 package com.dili.points.service.impl;
 
-import com.dili.points.dao.CustomerPointsMapper;
-import com.dili.points.dao.ExchangeCommoditiesMapper;
-import com.dili.points.dao.PointsDetailMapper;
-import com.dili.points.dao.PointsExchangeRecordMapper;
-import com.dili.points.domain.CustomerPoints;
-import com.dili.points.domain.ExchangeCommodities;
-import com.dili.points.domain.PointsDetail;
-import com.dili.points.domain.PointsExchangeRecord;
+import com.dili.points.dao.*;
+import com.dili.points.domain.*;
 import com.dili.points.domain.dto.PointsExchangeRecordDTO;
 import com.dili.points.domain.dto.PointsRuleDTO;
 import com.dili.points.service.PointsExchangeRecordService;
@@ -45,7 +39,7 @@ public class PointsExchangeRecordServiceImpl extends BaseServiceImpl<PointsExcha
     }
 
     @Autowired
-    private CustomerPointsMapper customerPointsMapper;
+    private CustomerFirmPointsMapper customerFirmPointsMapper;
     @Autowired
     private ExchangeCommoditiesMapper exchangeCommoditiesMapper;
     @Autowired
@@ -64,16 +58,17 @@ public class PointsExchangeRecordServiceImpl extends BaseServiceImpl<PointsExcha
         if (userTicket == null) {
             return BaseOutput.failure("兑换失败，登录超时");
         }
-        CustomerPoints query = DTOUtils.newDTO(CustomerPoints.class);
-        query.setId(pointsExchangeRecord.getCustomerId());
+        CustomerFirmPoints query = DTOUtils.newDTO(CustomerFirmPoints.class);
+        query.setCustomerId(pointsExchangeRecord.getCustomerId());
+        query.setTradingFirmCode(pointsExchangeRecord.getFirmCode());
         query.setYn(1);
         //查询客户的积分信息
-        List<CustomerPoints> select = customerPointsMapper.select(query);
-        CustomerPoints customerPoints = null;
+        List<CustomerFirmPoints> select = customerFirmPointsMapper.select(query);
+        CustomerFirmPoints customerFirmPoints = null;
         if (!CollectionUtils.isEmpty(select)){
-            customerPoints = select.get(0);
+            customerFirmPoints = select.get(0);
         }
-        if (null != customerPoints && customerPoints.getAvailable().intValue() < pointsExchangeRecord.getPoints().intValue()) {
+        if (null == customerFirmPoints || customerFirmPoints.getAvailable().intValue() < pointsExchangeRecord.getPoints().intValue()) {
             return BaseOutput.failure("兑换失败，客户不存在或可用积分不足");
         }
         //查询可兑换的商品
@@ -82,19 +77,19 @@ public class PointsExchangeRecordServiceImpl extends BaseServiceImpl<PointsExcha
             return BaseOutput.failure("兑换失败，兑换商品不存在或数量不足");
         }
         int i = 0;
-        if (null != customerPoints) {
+        if (null != customerFirmPoints) {
             //重新设置客户可用积分信息，并修改
-            customerPoints.setAvailable(customerPoints.getAvailable() - pointsExchangeRecord.getPoints());
-            customerPoints.setTotal(customerPoints.getTotal()-pointsExchangeRecord.getPoints());
+            customerFirmPoints.setAvailable(customerFirmPoints.getAvailable() - pointsExchangeRecord.getPoints());
+            customerFirmPoints.setTotal(customerFirmPoints.getTotal()-pointsExchangeRecord.getPoints());
             Example example = new Example(CustomerPoints.class);
             Example.Criteria criteria = example.createCriteria();
-            criteria.andEqualTo("id", customerPoints.getId());
-            if (null != customerPoints.getModified()) {
-                criteria.andEqualTo("modified", customerPoints.getModified());
+            criteria.andEqualTo("id", customerFirmPoints.getId());
+            if (null != customerFirmPoints.getModified()) {
+                criteria.andEqualTo("modified", customerFirmPoints.getModified());
             }
-            customerPoints.setModified(new Date());
-            customerPoints.setModifiedId(userTicket.getId());
-            i = customerPointsMapper.updateByExample(customerPoints, example);
+            customerFirmPoints.setModified(new Date());
+            customerFirmPoints.setModifiedId(userTicket.getId());
+            i = customerFirmPointsMapper.updateByExample(customerFirmPoints, example);
             if (i < 1) {
                 return BaseOutput.failure("兑换失败，客户积分扣减失败，请重新操作");
             }
@@ -118,8 +113,8 @@ public class PointsExchangeRecordServiceImpl extends BaseServiceImpl<PointsExcha
         pd.setCertificateNumber(pointsExchangeRecord.getCertificateNumber());
         pd.setPoints(0 - pointsExchangeRecord.getPoints());
         pd.setBalance(0);
-        if (null != customerPoints){
-            pd.setBalance(customerPoints.getAvailable());
+        if (null != customerFirmPoints){
+            pd.setBalance(customerFirmPoints.getAvailable());
         }
         //积分兑换
         pd.setGenerateWay(30);

@@ -39,7 +39,7 @@
                 <table style="padding:10px;width: 700px;">
                     <tr>
                         <td style="padding:5px;width: 230px;">
-                            <input name="firmCode" id="firmCode" style="width:220px;" panelWidth="auto" data-options="editable:false, labelAlign:'right'" panelHeight="auto" label="所属市场:"/>
+                            <input name="firmCode" id="firmCode" style="width:220px;" panelWidth="auto" data-options="editable:false, labelAlign:'right'" panelHeight="auto" label="积分市场:"/>
                             <#comboProvider _id="firmCode" _provider='firmProvider' _queryParams='{withEmptyOpt:true}'/>
                         </td>
                         <td style="padding:5px;width: 280px;">
@@ -57,7 +57,7 @@
     <!-- ====================================================================================================================== -->
     <!-- 中央布局 -->
     <!-- ====================================================================================================================== -->
-    <!-- 表格 -->
+    <!-- 客户信息表单 -->
     <div region="center" style="width:98%;" height="auto" align="center" border="false">
         <div id="customerDiv"   class="easyui-panel" style="width: 95%;" closed="true" title="客户基本信息" border="false" >
             <form id="_customerForm" class="easyui-form" method="post" fit="true">
@@ -65,7 +65,6 @@
                 <input type="hidden" id="_organizationType" name="_organizationType">
                 <input type="hidden" id="_certificateType" name="_certificateType">
                 <input type="hidden" id="_type" name="_type">
-                <input type="hidden" id="_market" name="_market">
                 <table width="96%" align="left">
                     <tr>
                         <td style="padding-top:10px;">
@@ -84,9 +83,22 @@
                     </tr>
                     <tr>
                         <td style="padding-top:10px;">
+                            <input name="_market" id="_market" style="width:90%;" panelWidth="auto" data-options="cls:'noborder', labelAlign:'left', editable:false, readonly:true, hasDownArrow:false" panelHeight="auto" label="所属市场:"/>
+                            <#comboProvider _id="_market" _provider='firmProvider' />
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="padding-top:10px;">
+                            <input name="_tradingFirmCode" id="_tradingFirmCode" style="width:90%;" panelWidth="auto" data-options="cls:'noborder', labelAlign:'left', editable:false, readonly:true, hasDownArrow:false" panelHeight="auto" label="积分市场:"/>
+                            <#comboProvider _id="_tradingFirmCode" _provider='firmProvider' />
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="padding-top:10px;">
                             <input class="easyui-textbox" name="_points" id="_points" style="width:90%"  data-options="labelAlign:'left',cls:'noborder',label:'积分余额:',readonly:true, editable:false" />
                         </td>
                     </tr>
+
                     <tr>
                         <td style="padding:10px;">
                             <a href="#" class="easyui-linkbutton"  id="exchangeBtn"
@@ -112,7 +124,13 @@
         <table width="360px">
             <tr>
                 <td style="padding:5px;">
-                    <select class="easyui-combobox" name="_exchange_exchangeCommoditiesId" id="_exchange_exchangeCommoditiesId" style="width:80%" required editable="false" labelAlign="right" panelWidth="auto" panelHeight="auto" data-options="label:'&lowast;兑换商品:',valueField:'id',textField:'name',onSelect:commodityChange">
+                    <input name="_firmCode" id="_firmCode" style="width:220px;" panelWidth="auto" data-options="cls:'noborder', labelAlign:'right', editable:false, readonly:true, hasDownArrow:false" panelHeight="auto" label="所属市场:"/>
+                    <#comboProvider _id="_firmCode" _provider='firmProvider' _queryParams='{withEmptyOpt:true}'/>
+                </td>
+            </tr>
+            <tr>
+                <td style="padding:5px;">
+                    <select class="easyui-combobox" name="_exchange_exchangeCommoditiesId" id="_exchange_exchangeCommoditiesId" style="width:80%" required editable="false" labelAlign="right" panelWidth="auto" panelHeight="auto" data-options="label:'&lowast;兑换商品:',valueField:'id',textField:'name',onSelect:commodityChange,onLoadSuccess:onComboLoadSuccessSelectOne">
                     </select>
                 </td>
             </tr>
@@ -173,6 +191,7 @@
         $.messager.confirm('确认',msg,function(r) {
             if(r){
                 var _url = "${contextPath}/pointsExchangeRecord/insert.action";
+                _formData["firmCode"] = $('#_firmCode').val();
                 _formData["customerId"] = $('#_id').val();
                 _formData["organizationType"] = $('#_organizationType').val();
                 _formData["certificateType"] = $('#_certificateType').val();
@@ -218,11 +237,11 @@
     function getCommodities() {
         //先清空下拉值
         $('#_exchange_exchangeCommoditiesId').combobox("loadData",[]);
-        var market = $('#_market').val();
+        var tradingFirmCode = $('#_tradingFirmCode').val();
         $.ajax({
             type: "POST",
             url: "${contextPath}/exchangeCommodities/list.action",
-            data: {firmCode:market},
+            data: {firmCode:tradingFirmCode},
             processData:true,
             dataType: "json",
             async : true,
@@ -230,6 +249,7 @@
                 if(null != ret && ret.length > 0){
                     $('#exchangeDlg').dialog('open');
                     $('#exchangeDlg').dialog('center');
+                    $("#_firmCode").combobox("setValue", tradingFirmCode);
                     $('#_available_points').textbox("setValue",$('#_points').textbox("getValue"));
                     $('#_exchange_exchangeCommoditiesId').combobox("loadData",ret);
                 }else{
