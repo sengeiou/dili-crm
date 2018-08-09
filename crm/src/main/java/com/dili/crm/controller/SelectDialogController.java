@@ -1,5 +1,6 @@
 package com.dili.crm.controller;
 
+import com.dili.crm.constant.CrmConstants;
 import com.dili.crm.domain.Customer;
 import com.dili.crm.domain.dto.CustomerTreeDto;
 import com.dili.crm.domain.dto.FirmDto;
@@ -98,8 +99,7 @@ public class SelectDialogController {
 		CustomerTreeDto dto = DTOUtils.as(customer,CustomerTreeDto.class);
 		dto.setUserId(SessionContext.getSessionContext().getUserTicket().getId());
 		//查询所有市场的客户
-		List<Firm> list = firmService.listByExample(DTOUtils.newDTO(FirmDto.class));
-		dto.setFirmCodes(list.stream().map(Firm::getCode).collect(Collectors.toList()));
+		dto.setMarket(CrmConstants.ALL_MARKET);
 		return this.customerService.listEasyuiPageByExample(dto, true).toString();
 	}
 }

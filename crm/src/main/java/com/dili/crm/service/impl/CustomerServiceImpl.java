@@ -2,6 +2,7 @@ package com.dili.crm.service.impl;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import com.dili.crm.constant.CrmConstants;
 import com.dili.crm.dao.CustomerMapper;
 import com.dili.crm.domain.Customer;
 import com.dili.crm.domain.Department;
@@ -83,13 +84,16 @@ public class CustomerServiceImpl extends BaseServiceImpl<Customer, Long> impleme
 		    customerTreeDto.mset(IDTO.NULL_VALUE_FIELD, "parent_id");
 	    }
 	    domain.setYn(1);
-	    //如果未传入市场信息，则只能查询当前用户有数据权限的市场的数据
-		if (StringUtils.isBlank(customerTreeDto.getMarket()) || CollectionUtils.isEmpty(customerTreeDto.getFirmCodes())){
+	    //如果不是查询所有市场，并且未传入市场信息，则只能查询当前用户有数据权限的市场的数据
+		if (!CrmConstants.ALL_MARKET.equals(customerTreeDto.getMarket()) && (StringUtils.isBlank(customerTreeDto.getMarket()) || CollectionUtils.isEmpty(customerTreeDto.getFirmCodes()))){
 			List<String> firmCodes = firmService.getCurrentUserFirmCodes(customerTreeDto.getUserId());
 			if (CollectionUtils.isEmpty(firmCodes)){
 				return new EasyuiPageOutput(0, null);
 			}
 			customerTreeDto.setFirmCodes(firmService.getCurrentUserFirmCodes(customerTreeDto.getUserId()));
+		}
+		if(CrmConstants.ALL_MARKET.equals(customerTreeDto.getMarket())){
+			customerTreeDto.setMarket(null);
 		}
 	    EasyuiPageOutput easyuiPageOutput = super.listEasyuiPageByExample(customerTreeDto, useProvider);
 	    for(Object rowObj : easyuiPageOutput.getRows()) {
@@ -208,7 +212,7 @@ public class CustomerServiceImpl extends BaseServiceImpl<Customer, Long> impleme
 
 	@Override
 	public BaseOutput<List<CustomerChartDTO>> selectCustomersGroupByProfession(String firmCode) {
-		List<String>firmCodes = this.firmService.getCurrentUserAvaliableFirmCodes(firmCode);
+		List<String> firmCodes = this.firmService.getCurrentUserAvaliableFirmCodes(firmCode);
 		if(firmCodes.isEmpty()) {
 			return new BaseOutput<>().setData(Collections.emptyList());
 		}
@@ -380,7 +384,7 @@ public class CustomerServiceImpl extends BaseServiceImpl<Customer, Long> impleme
 	 */
 	@Override
 	public List<Customer> listCustomerOperating(Set<String> types,String firmCode) {
-		List<String>firmCodes = this.firmService.getCurrentUserAvaliableFirmCodes(firmCode);
+		List<String> firmCodes = this.firmService.getCurrentUserAvaliableFirmCodes(firmCode);
 		if(firmCodes.isEmpty()){
 			return Collections.emptyList();
 		}
@@ -392,9 +396,7 @@ public class CustomerServiceImpl extends BaseServiceImpl<Customer, Long> impleme
 		criteria.andIsNotNull("operatingLng").andIsNotNull("operatingLat");
 		//状态为 可用
 		criteria.andCondition("yn=1");
-		criteria.andCondition("market in('"+String.join("','", firmCodes)+"')");
-
-
+		criteria.andIn("market", firmCodes);
 		if (CollectionUtils.isNotEmpty(types)){
 			StringBuilder condition = new StringBuilder();
 			condition.append("(");
@@ -452,12 +454,16 @@ public class CustomerServiceImpl extends BaseServiceImpl<Customer, Long> impleme
 	@Override
 	public List<Customer> listByExample(Customer domain) {
 		CustomerTreeDto dto = DTOUtils.as(domain, CustomerTreeDto.class);
-		if (StringUtils.isBlank(dto.getMarket()) && CollectionUtils.isEmpty(dto.getFirmCodes())) {
+		//如果不是查询所有市场，并且未传入市场信息，则只能查询当前用户有数据权限的市场的数据
+		if (!CrmConstants.ALL_MARKET.equals(dto.getMarket()) && (StringUtils.isBlank(dto.getMarket()) || CollectionUtils.isEmpty(dto.getFirmCodes()))){
 			List<String> firmCodes = firmService.getCurrentUserFirmCodes(dto.getUserId());
 			if (CollectionUtils.isEmpty(firmCodes)) {
 				return Collections.EMPTY_LIST;
 			}
 			dto.setFirmCodes(firmCodes);
+		}
+		if(CrmConstants.ALL_MARKET.equals(dto.getMarket())){
+			dto.setMarket(null);
 		}
 		return super.listByExample(dto);
 	}

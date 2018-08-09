@@ -1,7 +1,7 @@
 package com.dili.points.service.impl;
 
 import com.alibaba.fastjson.JSON;
-import com.dili.points.constant.Constants;
+import com.dili.points.constant.PointsConstants;
 import com.dili.points.dao.PointsRuleMapper;
 import com.dili.points.domain.PointsRule;
 import com.dili.points.domain.PointsRuleLog;
@@ -64,15 +64,15 @@ public class PointsRuleServiceImpl extends BaseServiceImpl<PointsRule, Long> imp
      */
     private void makeRuleCondition(PointsRule pointsRule, String numberJson, String moneyJson, String payMethodJson) {
         List<RuleCondition> numberRuleConditions = JSON.parseArray(numberJson, RuleCondition.class);
-        makeRuleCondition(pointsRule, numberRuleConditions, Constants.WeightType.NUMBER.getCode());
+        makeRuleCondition(pointsRule, numberRuleConditions, PointsConstants.WeightType.NUMBER.getCode());
 
         List<RuleCondition> moneyRuleConditions = JSON.parseArray(moneyJson, RuleCondition.class);
 
-        makeRuleCondition(pointsRule, moneyRuleConditions, Constants.WeightType.MONEY.getCode());
+        makeRuleCondition(pointsRule, moneyRuleConditions, PointsConstants.WeightType.MONEY.getCode());
 
         List<RuleCondition> payRuleConditions = JSON.parseArray(payMethodJson, RuleCondition.class);
 
-        makeRuleCondition(pointsRule, payRuleConditions, Constants.WeightType.PAYMETHOD.getCode());
+        makeRuleCondition(pointsRule, payRuleConditions, PointsConstants.WeightType.PAYMETHOD.getCode());
     }
 
     private void makeRuleCondition(PointsRule pointsRule, List<RuleCondition> numberRuleConditions, int weightTypeNumber) {
@@ -104,7 +104,7 @@ public class PointsRuleServiceImpl extends BaseServiceImpl<PointsRule, Long> imp
     @Override
     public void startPointRule(PointsRule pointsRule,int yn) {
         if(yn == 1) {
-            getActualDao().updateByYn(pointsRule);
+            getActualDao().disable(pointsRule);
         }
         pointsRule.setYn(yn);
         pointsRule.setModified(new Date());

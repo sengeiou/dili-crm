@@ -170,50 +170,44 @@ public class PointsRuleController {
 		return BaseOutput.success();
 	}
 
-//    @RequestMapping(value = "/checkName.action")
-//    public @ResponseBody
-//    Object checkName(String name,String firmCode, String org) {
-//        PointsRuleDTO ex = DTOUtils.newDTO(PointsRuleDTO.class);
-//        ex.setCheckName(name);
-//        ex.setFirmCode(firmCode);
-//        return checkDuplicate(name, org, ex);
-//    }
-//
-//    @RequestMapping(value = "/checkCode.action")
-//    public @ResponseBody
-//    Object checkCode(String code,String firmCode, String org) {
-//        PointsRuleDTO ex = DTOUtils.newDTO(PointsRuleDTO.class);
-//        ex.setCheckCode(code);
-//        ex.setFirmCode(firmCode);
-//        return checkDuplicate(code, org, ex);
-//    }
     @RequestMapping(value = "/checkPointsRuleCodeAndName.action")
 	public @ResponseBody boolean checkPointsRuleCodeAndName(String firmCode, String code, String name, Long id) {
 
-		List<PointsRule> ruleList = new ArrayList<>();
 		// 查询出所有在同一市场code相同的规则
 		if (StringUtils.isNotBlank(code)) {
 			PointsRuleDTO condition = DTOUtils.newDTO(PointsRuleDTO.class);
 			condition.setFirmCode(firmCode);
-			condition.setCheckCode(code);
-			ruleList.addAll(pointsRuleService.listByExample(condition));
+			condition.setCheckCode(code.trim());
+            List<PointsRule> ruleList = pointsRuleService.listByExample(condition);
+            //新增, 所有编码不能重复
+            if(id == null){
+                if(!CollectionUtils.isEmpty(ruleList)){
+                    return false;
+                }
+            }else {//修改,所有编码除了自己，其它都不能重复
+                if(!CollectionUtils.isEmpty(ruleList) && !ruleList.get(0).getId().equals(id)){
+                    return false;
+                }
+            }
 		}
 		// 查询出所有在同一市场name相同的规则
 		if (StringUtils.isNotBlank(name)) {
 			PointsRuleDTO condition = DTOUtils.newDTO(PointsRuleDTO.class);
 			condition.setFirmCode(firmCode);
-			condition.setCheckName(name);
-			ruleList.addAll(pointsRuleService.listByExample(condition));
+			condition.setCheckName(name.trim());
+            List<PointsRule>  ruleList = pointsRuleService.listByExample(condition);
+            //新增, 所有名称不能重复
+            if(id == null){
+                if(!CollectionUtils.isEmpty(ruleList)){
+                    return false;
+                }
+            }else {//修改,所有名称除了自己，其它都不能重复
+                if(!CollectionUtils.isEmpty(ruleList) && !ruleList.get(0).getId().equals(id)){
+                    return false;
+                }
+            }
 		}
-		// id转换为集合并去重
-		List<Long> ids = ruleList.stream().map(PointsRule::getId).distinct().collect(Collectors.toList());
-		// 更新
-		if (id != null) {
-			return ids.size() == 1 && ids.contains(id);
-		} else {
-			// 规则插入
-			return CollectionUtils.isEmpty(ids);
-		}
+		return true;
 	}
 //    private boolean checkDuplicate(String name, String org, PointsRuleDTO example) {
 //        if (StringUtils.isNotBlank(name) && StringUtils.isNotBlank(org)) {

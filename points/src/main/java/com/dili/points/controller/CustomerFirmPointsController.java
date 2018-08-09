@@ -1,5 +1,6 @@
 package com.dili.points.controller;
 
+import com.dili.points.constant.PointsConstants;
 import com.dili.points.domain.CustomerFirmPoints;
 import com.dili.points.domain.dto.CustomerApiDTO;
 import com.dili.points.domain.dto.PointsDetailDTO;
@@ -9,6 +10,7 @@ import com.dili.ss.domain.BaseOutput;
 import com.dili.ss.dto.DTOUtils;
 import com.dili.ss.dto.IDTO;
 import com.dili.uap.sdk.domain.UserTicket;
+import com.dili.uap.sdk.exception.NotLoginException;
 import com.dili.uap.sdk.session.SessionContext;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
@@ -96,16 +98,16 @@ public class CustomerFirmPointsController {
     })
     @RequestMapping(value="/mannuallyAdjust.action", method = {RequestMethod.GET, RequestMethod.POST})
     public @ResponseBody BaseOutput mannuallyAdjust(PointsDetailDTO pointsDetail) {
+        UserTicket userTicket = SessionContext.getSessionContext().getUserTicket();
+        if (userTicket == null) {
+            throw new NotLoginException("未登录");
+        }
         //先进行基本属性判断
         if(pointsDetail.getPoints()==null||pointsDetail.getPoints()==0) {
             return BaseOutput.failure("调整积分不能为0");
         }
         if(StringUtils.trimToNull(pointsDetail.getNotes())==null) {
             return BaseOutput.failure("备注不能为空");
-        }
-        UserTicket userTicket = SessionContext.getSessionContext().getUserTicket();
-        if (userTicket == null) {
-            throw new RuntimeException("未登录");
         }
         pointsDetail.setCreatedId(userTicket.getId());//操作人
         pointsDetail.setGenerateWay(50);//50 手工调整
@@ -115,7 +117,7 @@ public class CustomerFirmPointsController {
         } else {
             pointsDetail.setInOut(20);// 支出
         }
-        pointsDetail.setSourceSystem("points");
+        pointsDetail.setSourceSystem(PointsConstants.SYSTEM_CODE);
         pointsDetailService.insert(pointsDetail);
         return BaseOutput.success("新增成功");
     }

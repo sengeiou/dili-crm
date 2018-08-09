@@ -49,6 +49,14 @@ public interface CustomerFirmPointsDTO extends CustomerFirmPoints{
 	boolean isBuyer();
 	void setBuyer(boolean isBuyer);
 
+	/**
+	 * 判断是否积分调整操作，如果是，则不添加买卖积分
+	 * @return
+	 */
+	@Transient
+	boolean isAdjust();
+	void setAdjust(boolean adjust);
+
 	@Transient
     Integer getPoints();
     void setPoints(Integer points);

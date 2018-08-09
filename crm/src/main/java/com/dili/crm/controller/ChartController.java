@@ -177,7 +177,6 @@ public class ChartController {
 	@RequestMapping(value = "/customerTypeChart.action", method = { RequestMethod.GET, RequestMethod.POST })
 	public @ResponseBody Object customerTypeChart(String firmCode) {
 		List<CustomerChartDTO>data = this.customerService.selectCustomersGroupByType(firmCode).getData();
-
 		Map<Object, Object> metadata = this.getCustomerMetadata();
 		try {
 			List<Map> list = ValueProviderUtils.buildDataByProvider(metadata, data);
@@ -187,7 +186,7 @@ public class ChartController {
 		}
 
 	}
-	@ApiOperation(value = "查询客户类型分布", notes = "查询客户类型分布，返回客户类型分布信息")
+	@ApiOperation(value = "查询客户市场分布", notes = "查询客户市场分布")
 
 	@RequestMapping(value = "/customerMarketChart.action", method = { RequestMethod.GET, RequestMethod.POST })
 	public @ResponseBody Object customerMarketChart(String firmCode) {
@@ -269,7 +268,7 @@ public class ChartController {
 	private Map<Object, Object> getCustomerMetadata(){
 		Map<Object, Object> metadata = new HashMap<>();
 
-		metadata.put("market", getDDProvider("market"));
+		metadata.put("market", "firmProvider");
 		metadata.put("type", getDDProvider("customer_type"));
 		metadata.put("profession", getDDProvider("customer_profession"));
 		return metadata;

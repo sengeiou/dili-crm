@@ -1,11 +1,9 @@
 package com.dili.points.provider;
 
-import com.alibaba.fastjson.JSON;
-import com.dili.points.constant.Constants;
+import com.dili.points.constant.PointsConstants;
 import com.dili.points.domain.PointsRule;
 import com.dili.points.domain.RuleCondition;
 import com.dili.points.service.RuleConditionService;
-import com.dili.ss.dto.DTO;
 import com.dili.ss.dto.DTOUtils;
 import com.dili.ss.metadata.FieldMeta;
 import com.dili.ss.metadata.ValuePair;
@@ -36,7 +34,7 @@ public class RuleConditionProvider implements ValueProvider {
         StringBuilder sb = new StringBuilder();
         String splicer = ";";
         for (RuleCondition ruleCondition : ruleConditions) {
-            String nameByCode = Constants.WeightType.getNameByCode(ruleCondition.getWeightType());
+            String nameByCode = PointsConstants.WeightType.getNameByCode(ruleCondition.getWeightType());
             if (!sb.toString().contains(nameByCode + splicer)) {
                 sb.append(nameByCode);
                 sb.append(splicer);

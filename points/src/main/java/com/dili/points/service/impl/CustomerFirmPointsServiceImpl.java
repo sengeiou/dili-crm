@@ -173,13 +173,18 @@ public class CustomerFirmPointsServiceImpl extends BaseServiceImpl<CustomerFirmP
         example.setTradingFirmCode(dto.getTradingFirmCode());
 
         //查询
-        CustomerFirmPoints item = this.list(example).stream().findFirst().orElseGet(() -> {
+        CustomerFirmPoints item = super.list(example).stream().findFirst().orElseGet(() -> {
             CustomerFirmPoints customerFirmPoints = DTOUtils.clone(dto, CustomerFirmPoints.class);
             customerFirmPoints.setId(null);
             customerFirmPoints.setDayPoints(0);
             customerFirmPoints.setResetTime(new Date());
+            customerFirmPoints.setAvailable(0);
+            customerFirmPoints.setTotal(0);
+            customerFirmPoints.setFrozen(0);
             return customerFirmPoints;
         });
+        item.setTradingFirmCode(dto.getTradingFirmCode());
+        item.setModifiedId(dto.getModifiedId());
 
         // 积分上限
         int total = this.findDailyLimit(dto.getTradingFirmCode());
@@ -229,16 +234,19 @@ public class CustomerFirmPointsServiceImpl extends BaseServiceImpl<CustomerFirmP
             //针对扣分的情况
             actualPoints = points;
         }
-
-
-        if (dto.isBuyer()) {
-            item.setBuyerPoints(item.getBuyerPoints() + actualPoints);
-        } else {
-            item.setSellerPoints(item.getSellerPoints() + actualPoints);
+        //非积分调整才修改买卖方积分
+        if(!dto.isAdjust()) {
+            if (dto.isBuyer()) {
+                item.setBuyerPoints(item.getBuyerPoints() + actualPoints);
+            } else {
+                item.setSellerPoints(item.getSellerPoints() + actualPoints);
+            }
         }
         item.setResetTime(new Date());
         item.setDayPoints(dayPoints);
-        item.setAvailable(item.getBuyerPoints() + item.getSellerPoints());
+        item.setAvailable(item.getAvailable() + actualPoints);
+        item.setTotal(item.getAvailable());
+        item.setFrozen(0);
         //将实际积分和余额通过dto传回去
         dto.setActualPoints(actualPoints);
         dto.setAvailable(item.getAvailable());
@@ -251,163 +259,6 @@ public class CustomerFirmPointsServiceImpl extends BaseServiceImpl<CustomerFirmP
     }
 
 //===================================   私有方法分割  =========================================
-
-    /**
-     * 根据非可用积分排序的查询
-     * @param customer
-     * @return	返回总记录数
-     */
-    private EasyuiPageOutput sortByNoneAvailable(CustomerApiDTO customer){
-        //        客户积分列表的最终结果
-        List<CustomerFirmPointsDTO> resultList = Lists.newArrayList();
-        customer.setYn(1);
-        CustomerApiDTO apiDto=	DTOUtils.clone(customer, CustomerApiDTO.class);
-        BaseOutput<EasyuiPageOutput> baseOut = customerRpc.listPage(apiDto);
-        if (!baseOut.isSuccess()) {
-            throw new AppException("远程调用失败:"+baseOut.getResult());
-        }
-        //设置总数，计算完resultList后返回
-        int total = baseOut.getData().getTotal();
-        List<JSONObject> customerDataRows = baseOut.getData().getRows();
-        //构建客户列表
-        List<Customer> customerList = customerDataRows.stream().map(json -> {
-            return (Customer) DTOUtils.as(new DTO(json), Customer.class);
-        }).collect(Collectors.toList());
-        //客户列表的证件号码
-        List<String> certificateNumbers = customerList.stream()
-                .map(Customer::getCertificateNumber)
-                .collect(Collectors.toList());
-
-        //查询客户市场积分
-        CustomerFirmPointsDTO example = DTOUtils.newDTO(CustomerFirmPointsDTO.class);
-        example.setCertificateNumbers(certificateNumbers);
-        example.setPage(customer.getPage());
-        example.setRows(customer.getRows());
-        //如果没有交易市场，取当前数据权限范围内所有交易市场
-        if(customer.getTradingFirmCode() == null) {
-            example.setTradingFirmCodes(firmService.getCurrentUserFirmCodes());
-        }else{
-            example.setTradingFirmCode(customer.getTradingFirmCode());
-        }
-        example.setYn(1);
-        List<CustomerFirmPoints> customerFirmPoints = this.listByExample(example);
-
-        Map<String, CustomerFirmPoints> certificateNumber2CustomerPointsMap = customerFirmPoints.stream()
-                .collect(Collectors.toMap(CustomerFirmPoints::getCertificateNumber, cp -> cp));
-        resultList.addAll(customerList.stream().map(c -> {
-            CustomerFirmPoints cp = certificateNumber2CustomerPointsMap.get(c.getCertificateNumber());
-            // 如果客户没有对应的积分信息,则创建一个新的默认积分信息显示到页面
-            CustomerFirmPointsDTO cpdto = DTOUtils.newDTO(CustomerFirmPointsDTO.class);
-            if (cp == null) {
-                cpdto.setCustomerId(c.getId());
-                cpdto.setCertificateNumber(c.getCertificateNumber());
-                cpdto.setAvailable(0);
-                cpdto.setFrozen(0);
-                cpdto.setTotal(0);
-            } else {
-                cpdto = DTOUtils.link(cpdto, cp, CustomerFirmPointsDTO.class);
-            }
-            // 将客户的其他信息(名字,组织类型等信息附加到积分信息)
-            cpdto.setName(c.getName());
-            cpdto.setOrganizationType(c.getOrganizationType());
-            cpdto.setProfession(c.getProfession());
-            cpdto.setType(c.getType());
-            cpdto.setCertificateType(c.getCertificateType());
-            cpdto.setPhone(c.getPhone());
-            return cpdto;
-        }).collect(Collectors.toList()));
-        return new EasyuiPageOutput(total, resultList);
-    }
-
-    /**
-     * 根据可用积分排序的查询
-     * @param customer
-     * @return	返回EasyuiPageOutput
-     */
-    private EasyuiPageOutput sortByAvailable(CustomerApiDTO customer){
-//        客户积分列表的最终结果
-        List<CustomerFirmPointsDTO> resultList = Lists.newArrayList();
-        //如果是可用积分排序，需要去掉available字段，因为RPC调用CRM的客户时，会因为客户表没有available字段而报错
-        //这里先记录下来，后面会用于积分表的排序
-        String order = customer.getOrder();
-        //记录每页条数和页数
-        Integer rows = customer.getRows();
-        Integer page = customer.getPage();
-        //记录列表总数
-        int total = 0;
-        //客户表不能按可用积分列表，所以要去掉
-        customer.setSort(null);
-        customer.setOrder(null);
-        customer.setYn(1);
-        //关联积分表只能全查客户
-        customer.setRows(null);
-        customer.setPage(null);
-        BaseOutput<EasyuiPageOutput> baseOut = customerRpc.listPage(customer);
-        if (!baseOut.isSuccess()) {
-            throw new AppException("远程调用失败:"+baseOut.getResult());
-        }
-        List<JSONObject> jsonList = baseOut.getData().getRows();
-        //构建客户列表
-        List<Customer> customerList = jsonList.stream().map(json -> {
-            return (Customer) DTOUtils.as(new DTO(json), Customer.class);
-        }).collect(Collectors.toList());
-
-        //构建客户积分查询条件，查询所有客户积分
-        CustomerFirmPointsDTO example = DTOUtils.newDTO(CustomerFirmPointsDTO.class);
-        example.setPage(customer.getPage());
-        example.setRows(customer.getRows());
-        example.setOrder(order);
-        //如果没有交易市场，取当前数据权限范围内所有交易市场
-        if(customer.getTradingFirmCode() == null) {
-            example.setTradingFirmCodes(firmService.getCurrentUserFirmCodes());
-        }else{
-            example.setTradingFirmCode(customer.getTradingFirmCode());
-        }
-        example.setSort("available");
-        example.setYn(1);
-        List<CustomerFirmPoints> customerPointsList = this.listByExample(example);
-        //构建客户证件号为key，客户积分为value的Map
-        Map<String, CustomerFirmPoints> certificateNumber2CustomerPointsMap = customerPointsList.stream()
-                .collect(Collectors.toMap(CustomerFirmPoints::getCertificateNumber, c -> c));
-        //先根据客户积分表的数据构建客户积分结果列表
-        resultList.addAll(customerList.stream().map(c -> {
-            CustomerFirmPointsDTO cpdto = DTOUtils.newDTO(CustomerFirmPointsDTO.class);
-            CustomerFirmPoints customerPoints = certificateNumber2CustomerPointsMap.get(c.getCertificateNumber());
-            if (customerPoints == null) {
-                cpdto.setCustomerId(c.getId());
-                cpdto.setCertificateNumber(c.getCertificateNumber());
-                cpdto.setAvailable(0);
-                cpdto.setFrozen(0);
-                cpdto.setTotal(0);
-            } else {
-                cpdto = DTOUtils.as(customerPoints, CustomerFirmPointsDTO.class);
-            }
-            // 将客户的其他信息(名字,组织类型等信息附加到积分信息)
-            cpdto.setName(c.getName());
-            cpdto.setOrganizationType(c.getOrganizationType());
-            cpdto.setProfession(c.getProfession());
-            cpdto.setType(c.getType());
-            cpdto.setCertificateType(c.getCertificateType());
-            cpdto.setPhone(c.getPhone());
-            return cpdto;
-        }).collect(Collectors.toList()));
-        //排序
-        if("desc".equalsIgnoreCase(order)){
-            resultList.sort(Comparator.comparingInt(CustomerFirmPointsDTO::getAvailable).reversed());
-        }else{
-            resultList.sort(Comparator.comparingInt(CustomerFirmPointsDTO::getAvailable));
-        }
-        total = resultList.size();
-        if(rows != null && page != null) {
-            //根据分页信息进行本地分页
-            int startIndex = (page - 1) * rows;
-            if(rows > total){
-                rows = total;
-            }
-            return new EasyuiPageOutput(total, resultList.subList(startIndex, startIndex + rows));
-        }
-        return new EasyuiPageOutput(total, resultList);
-    }
 
     // 计算总可用积分
     private Long calculateTotalPoints() {

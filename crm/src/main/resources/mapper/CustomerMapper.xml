@@ -58,7 +58,7 @@
   </select>
   
   <select id="selectCustomersGroupByType" parameterType="list" resultMap="CustomerChartResultMap">
-    select type,count(1) AS `count`
+    select IFNULL(type, '未知') type,count(1) AS `count`
     from customer
     where yn=1
     <if test="list != null and list.size()>0">
@@ -83,7 +83,7 @@
     group by market
  </select>
   <select id="selectCustomersGroupByProfession" parameterType="list" resultMap="CustomerChartResultMap">
-    select profession,count(1) AS `count`
+    select IFNULL(profession, '未知') profession,count(1) AS `count`
     from customer
     where yn=1
     <if test="list != null and list.size()>0">

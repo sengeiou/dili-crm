@@ -1,7 +1,16 @@
 package com.dili.points.constant;
 
-public class Constants {
+public class PointsConstants {
 
+    /**
+     * 查询客户时，market为ALL_MARKET时，查询所有市场(不限制数据权限)
+     */
+    public static String ALL_MARKET = "all";
+
+    /**
+     * 当前系统编码(对应UAP中的系统编码)
+     */
+    public static String SYSTEM_CODE = "points";
 
     /**
      * 权重类型

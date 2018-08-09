@@ -36,9 +36,13 @@
         <!-- =========================================================表单========================================================= -->
         <div class="easyui-panel" style="width:98%;" align="left" border="false">
             <form id="form" class="easyui-form" method="post" fit="true">
-                <table style="padding:10px;width: 40%;">
+                <table style="padding:10px;width: 700px;">
                     <tr>
-                        <td style="padding:5px;width: 60%;">
+                        <td style="padding:5px;width: 230px;">
+                            <input name="firmCode" id="firmCode" style="width:220px;" panelWidth="auto" data-options="editable:false, labelAlign:'right'" panelHeight="auto" label="所属市场:"/>
+                            <#comboProvider _id="firmCode" _provider='firmProvider' _queryParams='{withEmptyOpt:true}'/>
+                        </td>
+                        <td style="padding:5px;width: 280px;">
                             <input class="easyui-textbox" name="certificate_number" id="certificate_number" style="width:100%" labelAlign="right" data-options="label:'客户证件号:'" />
                         </td>
                         <td style="padding:5px;">
@@ -244,19 +248,32 @@
      */
     function queryCustomer() {
         var certificate_number = $('#certificate_number').textbox("getValue");
+        var firmCode = $('#firmCode').combobox("getValue");
+        if(firmCode == null || firmCode == ''){
+            $.messager.alert('错误','请选择市场');
+            return;
+        }
         if (null != certificate_number && '' !=trim(certificate_number)){
             disableEasyUiControl('queryBtn',true);
             $('#_customerForm').form('clear');
             $.ajax({
                 type: "POST",
                 url: "${contextPath}/pointsExchange/getCustomerInfo.action",
-                data: {idCard:certificate_number},
+                data: {certificateNumber:certificate_number, firmCode:firmCode},
                 processData:true,
                 dataType: "json",
                 async : true,
                 success: function (ret) {
                     if(ret.success){
                         var formData = $.extend({},ret.data);
+                        //手机号隐藏
+                        if(formData["phone"] != null){
+                            formData["phone"] = mobilePhoneFmt(formData["phone"]);
+                        }
+                        //证件号隐藏
+                        if(formData["certificateNumber"] != null){
+                            formData["certificateNumber"] = certificateNumberFmt(formData["certificateNumber"], formData);
+                        }
                         formData = addKeyStartWith(getOriginalData(formData),"_");
                         $('#_customerForm').form('load', formData);
                         $('#customerDiv').panel("open");

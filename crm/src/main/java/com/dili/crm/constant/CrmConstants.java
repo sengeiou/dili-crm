@@ -11,5 +11,9 @@ public class CrmConstants {
      * 默认24小时以前的数据
      */
     public static Integer scanTime = 60 * 60 * 24;
+    /**
+     * 查询客户时，market为ALL_MARKET时，查询所有市场(不限制数据权限)
+     */
+    public static String ALL_MARKET = "all";
 
 }

@@ -109,7 +109,6 @@ public class PointsDetailServiceImpl extends BaseServiceImpl<PointsDetail, Long>
         PointsException pointsException = DTOUtils.newDTO(PointsException.class);
         pointsException.setPoints(pointsDetail.getPoints());
         pointsException.setCertificateNumber(pointsDetail.getCertificateNumber());
-        pointsException.setPoints(0);
         pointsException.setNeedRecover(0);
         pointsException.setFirmCode(pointsDetail.getFirmCode());
         pointsException.setGenerateWay(pointsDetail.getGenerateWay());
@@ -124,11 +123,14 @@ public class PointsDetailServiceImpl extends BaseServiceImpl<PointsDetail, Long>
         dto.setBuyer(pointsDetail.isBuyer());
         dto.setPoints(pointsDetail.getPoints());
         dto.setTradingFirmCode(pointsDetail.getFirmCode());
-        dto.setAvailable(0);
         dto.setCertificateNumber(pointsDetail.getCertificateNumber());
         dto.setCustomerId(pointsDetail.getCustomerId());
         dto.setSellerPoints(0);
         dto.setBuyerPoints(0);
+        dto.setYn(1);
+        dto.setFrozen(0);
+        dto.setAdjust(true);
+        dto.setModifiedId(pointsDetail.getCreatedId());
         this.customerFirmPointsService.saveCustomerFirmPoints(dto);
         return dto;
     }
@@ -186,6 +188,7 @@ public class PointsDetailServiceImpl extends BaseServiceImpl<PointsDetail, Long>
         Example example = new Example(CustomerPoints.class);
         Example.Criteria criteria = example.createCriteria();
         criteria.andIn("certificateNumber", map.keySet());
+        criteria.andCondition("trading_firm_code=", firmCode);
         customerFirmPointsService.deleteByExample(example);
         asyncTask.generatePointsDetail(firmPointsList, notes);
         return 1;

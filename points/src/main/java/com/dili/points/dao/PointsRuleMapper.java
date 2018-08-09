@@ -5,5 +5,5 @@ import com.dili.ss.base.MyMapper;
 
 public interface PointsRuleMapper extends MyMapper<PointsRule> {
 
-    void updateByYn(PointsRule pointsRule);
+    void disable(PointsRule pointsRule);
 }
