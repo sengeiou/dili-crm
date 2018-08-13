@@ -95,7 +95,7 @@
             if (r){
                 $.ajax({
                     type: "POST",
-                    url: "${contextPath}/customer/deleteMembers",
+                    url: "${contextPath}/customer/deleteMembers.action",
                     data: {id:selectedId},
                     processData:true,
                     dataType: "json",
