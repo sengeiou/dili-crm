@@ -245,6 +245,10 @@ public class CustomerListener {
 			if(customer.getSyncTime()==null) {
 				customer.setSyncTime(new Date());
 			}
+			//上报的客户类型和当前客户类型都不为空，并且不相等，合并客户类型为买卖家
+			if(StringUtils.isNotBlank(customer.getType()) && StringUtils.isNotBlank(customerItem.getType()) && !customerItem.getType().equalsIgnoreCase(customer.getType())) {
+				customerItem.setType("purchaseSale");
+			}
 			if(customerItem.getSyncTime().before(customer.getSyncTime())) {
 				String name=StringUtils.trimToEmpty(customer.getName());
 				String phone=StringUtils.trimToEmpty(customer.getPhone());
