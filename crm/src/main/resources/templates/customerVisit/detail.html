@@ -194,7 +194,7 @@
         function listEvents(){
             var opts = $("#eventGrid").datagrid("options");
             if (null == opts.url || "" == opts.url) {
-                opts.url = "${contextPath}/visitEvent/listPage";
+                opts.url = "${contextPath}/visitEvent/listPage.action";
             }
             //设置当前选择的回访id
             var visitId = $("#_id").val();
