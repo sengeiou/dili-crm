@@ -116,10 +116,15 @@
         if (organizationType == "individuals") {
             $(".individuals").show();
             $(".enterprise").hide();
+            //组织类型为'个人'时，证件号必填
+            $("#_certificateNumber").textbox("options").label = "&lowast;证件号:";
         } else if (organizationType == "enterprise") {
             $(".individuals").hide();
             $(".enterprise").show();
+            //组织类型为'企业'时，证件号非必填
+            $("#_certificateNumber").textbox("options").label = "证件号:";
         }
+        $("#_certificateNumber").textbox();
     }
 
     //根据组织类型加载证件类型
