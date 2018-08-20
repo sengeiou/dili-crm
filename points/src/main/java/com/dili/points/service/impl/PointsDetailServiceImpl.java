@@ -6,6 +6,7 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import com.dili.uap.sdk.rpc.SystemConfigRpc;
 import org.apache.commons.collections4.CollectionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -26,7 +27,6 @@ import com.dili.points.domain.dto.CustomerFirmPointsDTO;
 import com.dili.points.domain.dto.CustomerPointsDTO;
 import com.dili.points.domain.dto.PointsDetailDTO;
 import com.dili.points.rpc.CustomerRpc;
-import com.dili.points.rpc.SystemConfigRpc;
 import com.dili.points.service.CustomerFirmPointsService;
 import com.dili.points.service.CustomerPointsService;
 import com.dili.points.service.PointsDetailService;

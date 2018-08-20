@@ -8,8 +8,8 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
-import com.dili.crm.rpc.SystemConfigRpc;
 import com.dili.uap.sdk.domain.SystemConfig;
+import com.dili.uap.sdk.rpc.SystemConfigRpc;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
