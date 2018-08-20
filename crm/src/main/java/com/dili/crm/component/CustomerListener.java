@@ -174,7 +174,7 @@ public class CustomerListener {
 		return resultList;
 	}
 	private String getMarket() {
-		return SystemConfigUtils.getProperty("customer.market", "HD");
+		return SystemConfigUtils.getProperty("customer.market", "hd");
 	}
 	
 	/**

@@ -355,7 +355,7 @@ public class ICardETLServiceImpl implements ICardETLService{
 	
 	
 	private String getMarket() {
-		return SystemConfigUtils.getProperty("customer.market", "HD");
+		return SystemConfigUtils.getProperty("customer.market", "hd");
 	}
 	
 	/**
