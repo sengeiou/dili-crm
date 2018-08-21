@@ -16,6 +16,7 @@
                 $.messager.alert('警告','请选中一条数据');
                 return;
             }
+            row = selected;
         }
         saveOrUpdateMembers(row);
         closeMembersSelectDlg();
