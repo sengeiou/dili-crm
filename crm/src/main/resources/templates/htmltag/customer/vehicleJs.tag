@@ -45,6 +45,7 @@
             $.messager.alert('警告','请选中一条数据');
             return;
         }
+        $('#_vehicleForm').form('clear');
         $('#vehicleDlg').dialog('open');
         $('#vehicleDlg').dialog('center');
         formFocus("_vehicleForm", "_vehicle_name");
