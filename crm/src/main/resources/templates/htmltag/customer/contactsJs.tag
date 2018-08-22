@@ -45,6 +45,7 @@
         }
         $('#contactsDlg').dialog('open');
         $('#contactsDlg').dialog('center');
+        $('#_contactsForm').form('clear');
         formFocus("_contactsForm", "_contacts_name");
         var formData = $.extend({},selected);
         formData = addKeyStartWith(getOriginalData(formData),"_contacts_");
