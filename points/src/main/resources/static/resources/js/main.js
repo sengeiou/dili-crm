@@ -101,8 +101,20 @@ function certificateNumberFmt(value,row,index) {
  * 隐藏手机号码第4-7位用*表示，例如：136****1212
  */
 function mobilePhoneFmt(value,row,index) {
-    var reg = /^(\d{3})\d{4}(\d{4})$/;
-    return value.replace(reg, "$1****$2");
+    if (value == null || value.length == 0) {
+        return null;
+    }
+    if (value.length == 11) {
+        var reg = /^(\d{3})\d{4}(\d{4})$/;
+        return value.replace(reg, "$1****$2");
+    }
+    if (value.length > 3 && value.length < 7 ){
+        return plusXing(value, 0, 3);
+    }
+    if(value.length >=7){
+        return plusXing(value, value.length-7, 3);
+    }
+    return value;
 }
 
 /**
@@ -110,5 +122,14 @@ function mobilePhoneFmt(value,row,index) {
  * 座机号码隐藏第5-7位用*表示，例如：0288****212
  */
 function telephoneFmt(value,row,index) {
-    return plusXing(value, 4, 3);
+    if (value == null || value.length == 0) {
+        return null;
+    }
+    if (value.length > 3 && value.length < 7 ){
+        return plusXing(value, 0, 3);
+    }
+    if(value.length >=7){
+        return plusXing(value, value.length-7, 3);
+    }
+    return value;
 }
