@@ -367,17 +367,7 @@
         });
     }
 
-    //全局按键事件
-    function getKey(e){
-        e = e || window.event;
-        var keycode = e.which ? e.which : e.keyCode;
-        if(keycode == 46){ //如果按下删除键
-            var selected = $("#userGrid").datagrid("getSelected");
-            if(selected && selected!= null){
-                del();
-            }
-        }
-    }
+
 
     /**
      * 绑定页面回车事件，以及初始化页面时的光标定位
@@ -390,13 +380,6 @@
      */
     $(function () {
         bindFormEvent("_form", "_name", saveOrUpdate);
-        if (document.addEventListener) {
-            document.addEventListener("keyup",getKey,false);
-        } else if (document.attachEvent) {
-            document.attachEvent("onkeyup",getKey);
-        } else {
-            document.onkeyup = getKey;
-        }
         <%if(has(action) && action=="edit"){%>
         openUpdate();
         <%}else{%>
