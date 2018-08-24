@@ -92,9 +92,6 @@ public class CustomerServiceImpl extends BaseServiceImpl<Customer, Long> impleme
 			}
 			customerTreeDto.setFirmCodes(firmService.getCurrentUserFirmCodes(customerTreeDto.getUserId()));
 		}
-		if(CrmConstants.ALL_MARKET.equals(customerTreeDto.getMarket())){
-			customerTreeDto.setMarket(null);
-		}
 	    EasyuiPageOutput easyuiPageOutput = super.listEasyuiPageByExample(customerTreeDto, useProvider);
 	    for(Object rowObj : easyuiPageOutput.getRows()) {
 		    if(DTOUtils.isDTOProxy(rowObj)){

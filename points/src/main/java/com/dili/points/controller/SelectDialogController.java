@@ -1,5 +1,6 @@
 package com.dili.points.controller;
 
+import com.dili.points.constant.PointsConstants;
 import com.dili.points.domain.dto.CustomerApiDTO;
 import com.dili.points.domain.dto.FirmDto;
 import com.dili.points.rpc.CustomerRpc;
@@ -88,6 +89,8 @@ public class SelectDialogController {
 		//查询所有市场的客户
 //		List<Firm> list = firmService.listByExample(DTOUtils.newDTO(FirmDto.class));
 //		customer.setFirmCodes(list.stream().map(Firm::getCode).collect(Collectors.toList()));
+		//查询所有市场的客户
+		customer.setMarket(PointsConstants.ALL_MARKET);
 		BaseOutput<EasyuiPageOutput> output =  this.customerRpc.listPage(customer);
 		return output.isSuccess() ? output.getData().toString() : null;
 	}
