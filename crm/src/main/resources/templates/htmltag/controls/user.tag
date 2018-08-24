@@ -20,10 +20,12 @@ function closeUserSelectDlg(){
 	$('#${dlgId}').dialog('close');
 }
 // 根据id打开用户选择
+//查询数据权限拥有市场下的用户
 function showUserDlg(firmCode) {
 	if(firmCode == null){
 		//默认取当前用户的归属市场
-		firmCode = "${@com.dili.uap.sdk.session.SessionContext.getSessionContext().getUserTicket().getFirmCode()}";
+		//firmCode = "${@com.dili.uap.sdk.session.SessionContext.getSessionContext().getUserTicket().getFirmCode()}";
+		firmCode = "";
 	}
 	$('#${dlgId}').dialog({
 				title : '用户选择',

@@ -4,6 +4,7 @@ import com.dili.crm.constant.CrmConstants;
 import com.dili.crm.domain.Customer;
 import com.dili.crm.domain.dto.CustomerTreeDto;
 import com.dili.crm.domain.dto.FirmDto;
+import com.dili.crm.domain.dto.UserDto;
 import com.dili.crm.rpc.UserRpc;
 import com.dili.crm.service.CustomerService;
 import com.dili.crm.service.FirmService;
@@ -14,6 +15,7 @@ import com.dili.uap.sdk.domain.User;
 import com.dili.uap.sdk.domain.UserTicket;
 import com.dili.uap.sdk.exception.NotLoginException;
 import com.dili.uap.sdk.session.SessionContext;
+import com.google.common.collect.Lists;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
@@ -48,25 +50,33 @@ public class SelectDialogController {
 
 	@RequestMapping(value = "/user.html", method = RequestMethod.GET)
 	public String user(ModelMap modelMap, @RequestParam(name="firmCode", required = false) String firmCode) {
-		if(StringUtils.isBlank(firmCode)) {
-			UserTicket userTicket = SessionContext.getSessionContext().getUserTicket();
-			if(userTicket == null){
-				throw new NotLoginException();
-			}
-			modelMap.put("firmCode", userTicket.getFirmCode());
-		}else{
+//		if(StringUtils.isBlank(firmCode)) {
+//			UserTicket userTicket = SessionContext.getSessionContext().getUserTicket();
+//			if(userTicket == null){
+//				throw new NotLoginException();
+//			}
+//			modelMap.put("firmCode", userTicket.getFirmCode());
+//		}else{
 			modelMap.put("firmCode", firmCode);
-		}
+//		}
 		return "controls/user";
 	}
 
 	@ResponseBody
 	@RequestMapping(value = "/listUser.action", method = { RequestMethod.GET, RequestMethod.POST }, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-	public List<User> listUser(ModelMap modelMap, User user) {
+	public List<User> listUser(ModelMap modelMap, UserDto user) {
+		//没有市场编码，则查询所有有权限的市场下的用户
 		if(StringUtils.isBlank(user.getFirmCode())) {
-			user.setFirmCode(SessionContext.getSessionContext().getUserTicket().getFirmCode());
+			List<String> firmCodes = firmService.getCurrentUserFirmCodes();
+			if(firmCodes.isEmpty()){
+				return null;
+			}else {
+				user.setFirmCodes(firmCodes);
+			}
+		}else{
+			user.setFirmCodes(Lists.newArrayList(user.getFirmCode()));
 		}
-		BaseOutput<List<User>> output = this.userRPC.listByExample(user);
+ 			BaseOutput<List<User>> output = this.userRPC.listByExample(user);
 		if (output.isSuccess()) {
 			return output.getData();
 		}

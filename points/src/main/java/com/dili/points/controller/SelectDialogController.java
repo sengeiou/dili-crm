@@ -2,16 +2,15 @@ package com.dili.points.controller;
 
 import com.dili.points.constant.PointsConstants;
 import com.dili.points.domain.dto.CustomerApiDTO;
-import com.dili.points.domain.dto.FirmDto;
+import com.dili.points.domain.dto.UserDto;
 import com.dili.points.rpc.CustomerRpc;
 import com.dili.points.rpc.UserRpc;
 import com.dili.points.service.FirmService;
 import com.dili.ss.domain.BaseOutput;
 import com.dili.ss.domain.EasyuiPageOutput;
-import com.dili.ss.dto.DTOUtils;
-import com.dili.uap.sdk.domain.Firm;
 import com.dili.uap.sdk.domain.User;
 import com.dili.uap.sdk.session.SessionContext;
+import com.google.common.collect.Lists;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
@@ -24,7 +23,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
-import java.util.stream.Collectors;
 
 /**
  * 选择对话框控制器
@@ -44,15 +42,33 @@ public class SelectDialogController {
 	// ================================  用户  ====================================
 
 	@RequestMapping(value = "/user.html", method = RequestMethod.GET)
-	public String user(ModelMap modelMap, @RequestParam("textboxId") String textboxId) {
-		modelMap.put("textboxId", textboxId);
+	public String user(ModelMap modelMap, @RequestParam(name="firmCode", required = false) String firmCode) {
+//		if(StringUtils.isBlank(firmCode)) {
+//			UserTicket userTicket = SessionContext.getSessionContext().getUserTicket();
+//			if(userTicket == null){
+//				throw new NotLoginException();
+//			}
+//			modelMap.put("firmCode", userTicket.getFirmCode());
+//		}else{
+		modelMap.put("firmCode", firmCode);
+//		}
 		return "controls/user";
 	}
 
 	@ResponseBody
 	@RequestMapping(value = "/listUser.action", method = { RequestMethod.GET, RequestMethod.POST }, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-	public List<User> listUser(ModelMap modelMap, User user) {
-		user.setFirmCode(SessionContext.getSessionContext().getUserTicket().getFirmCode());
+	public List<User> listUser(ModelMap modelMap, UserDto user) {
+		//没有市场编码，则查询所有有权限的市场下的用户
+		if(StringUtils.isBlank(user.getFirmCode())) {
+			List<String> firmCodes = firmService.getCurrentUserFirmCodes();
+			if(firmCodes.isEmpty()){
+				return null;
+			}else {
+				user.setFirmCodes(firmCodes);
+			}
+		}else{
+			user.setFirmCodes(Lists.newArrayList(user.getFirmCode()));
+		}
 		BaseOutput<List<User>> output = this.userRPC.listByExample(user);
 		if (output.isSuccess()) {
 			return output.getData();
@@ -73,9 +89,8 @@ public class SelectDialogController {
 	 */
 	@RequestMapping(value = "/customer.html", method = RequestMethod.GET)
 	public String customer(ModelMap modelMap, HttpServletRequest request, @RequestParam(name="textboxId", required = false) String textboxId, @RequestParam(name="dataUrl", required = false) String dataUrl,@RequestParam(name="id", required = false) Long id) {
-		modelMap.put("textboxId", textboxId);
 		if (StringUtils.isBlank(dataUrl)){
-			dataUrl = request.getContextPath()+"/selectDialog/listCustomer";
+			dataUrl = request.getContextPath()+"/selectDialog/listCustomer.action";
 		}
 		modelMap.put("dataUrl",dataUrl);
 		modelMap.put("customerId",id);

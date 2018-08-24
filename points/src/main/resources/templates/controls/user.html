@@ -5,7 +5,7 @@
 				<input id="searchUserTextbox" label="真实姓名:" labelAlign="right" name="searchUserTextbox" class="easyui-textbox" style="width: 300px">
 				<a class="easyui-linkbutton"  data-options="width:80" iconCls="icon-search" onclick="searchUser();">查询</a>
 				&nbsp;&nbsp;
-				<a class="easyui-linkbutton"  data-options="width:80" iconCls="icon-ok" onclick="javascript:confirmUserBtn('${textboxId}');">确认</a>
+				<a class="easyui-linkbutton"  data-options="width:80" iconCls="icon-ok" onclick="javascript:confirmUserBtn();">确认</a>
 			</form>
 		</div>
 	</div>
@@ -25,19 +25,18 @@
 </div>
 <script type="text/javascript">
 	function dbClickUser(index, row) {
-		confirmUserBtn("${textboxId}");
+		confirmUserBtn();
 	}
 	function searchUser() {
 		var opts = $("#selectUserGrid").datagrid("options");
         if (null == opts.url || "" == opts.url) {
-            opts.url = '${contextPath!}/selectDialog/listUser';
+            opts.url = '${contextPath!}/selectDialog/listUser.action';
         }
 		var text = $('#searchUserTextbox').textbox('getText');
-		$('#selectUserGrid').datagrid('load', bindGridMeta2Data("selectUserGrid",{realName : text}));
+        $('#selectUserGrid').datagrid('load', bindGridMeta2Data("selectUserGrid",{realName : text, firmCode:"${firmCode!}"}));
 	}
 
 	$(function() {
-		$('#searchUserTextbox').textbox('addClearBtn', 'icon-clear');
 		$('#searchUserTextbox').textbox('textbox').focus();
         bindFormEvent("searchUserForm", "searchUserTextbox", searchUser, closeUserSelectDlg);
         searchUser();
