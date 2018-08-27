@@ -156,6 +156,11 @@
             }
         }
 
+        //修改firmCode事件
+        function changeFirmCode(newValue, oldValue) {
+            window.location.href="${contextPath}/customer/locations.html?firmCode="+newValue;
+        }
+
     </script>
     <script type="text/javascript">
         var contextPath = '';
@@ -184,6 +189,10 @@
     <!-- 上方导航栏 (锁定不滚动) -->
     <div id="nav" style="padding-left:15px;padding-top:10px;position:fixed;z-index:2008;width:100%;height:30px;background-color:white" align="left">
         <#nav/>
+        <div style="float:right;padding-right: 40px;">
+            <input name="firmCode" id="firmCode" style="width:100%;" panelWidth="auto" data-options="editable:false, labelAlign:'right', onChange:changeFirmCode" panelHeight="auto" label="所属市场:" value="${firmCode}"/>
+            <#comboProvider _id="firmCode" _provider='firmProvider' _queryParams='{withEmptyOpt:true}'/>
+        </div>
     </div>
     <!--<div class="mapwrap"  style="position: relative">-->
         <div id="mapDiv" style="width:100%;height:100%; "></div>
@@ -304,7 +313,6 @@
         $.each(types_t,function(i){
             $('input[name="type"][value="'+types_t[i]+'"]').prop('checked',true);
         });
-
     </script>
 </body>
 </html>

@@ -33,24 +33,24 @@
     <select id="selectCustomerVisitGroupByMode" parameterType="list" resultMap="CustomerVisitChartResultMap">
         select mode,count(1) AS `count`
         from customer_visit
+        WHERE 1=1
         <if test="list != null and list.size()>0">
-            WHERE exists(SELECT 1 from customer where customer_visit.customer_id=customer.id and customer.market IN
+            and customer_visit.firm_code IN
             <foreach collection="list" item="market" open="(" close=")" separator=",">
                 #{market}
             </foreach>
-            )
         </if>
         group by mode
     </select>
     <select id="selectCustomerVisitGroupByState" parameterType="list" resultMap="CustomerVisitChartResultMap">
         select state,count(1) AS `count`
         from customer_visit
+        WHERE 1=1
         <if test="list != null and list.size()>0">
-            WHERE exists(SELECT 1 from customer where customer_visit.customer_id=customer.id and customer.market IN
+            and customer_visit.firm_code IN
             <foreach collection="list" item="market" open="(" close=")" separator=",">
                 #{market}
             </foreach>
-            )
         </if>
         group by state
     </select>

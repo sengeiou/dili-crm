@@ -138,7 +138,8 @@
                    anchor: new BMap.Size(7, 20)
                });
                map.addEventListener("click", function(e){
-            	   window.location.href="${contextPath}/customer/locations.html";
+                   var firmCode = $("#firmCode").combobox("getValue");
+            	   window.location.href="${contextPath}/customer/locations.html?firmCode="+firmCode;
                });
                //所有客户地址信息
                var customerAddresses = ${customerAddress};

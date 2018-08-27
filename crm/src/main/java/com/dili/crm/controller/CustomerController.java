@@ -85,7 +85,7 @@ public class CustomerController {
 
 	@ApiOperation("客户分布页面")
 	@RequestMapping(value="/locations.html", method = {RequestMethod.GET, RequestMethod.POST})
-	public String locations(ModelMap modelMap, @RequestParam(value = "types",required=false) String[] types)  throws Exception{
+	public String locations(ModelMap modelMap, @RequestParam(value = "types",required=false) String[] types, @RequestParam(name="firmCode", required=false) String firmCode)  throws Exception{
     	Map<String,Object> params =  Maps.newHashMap();
 		JSONObject queryParams = new JSONObject();
 		queryParams.put("dd_code", "customer_type");
@@ -103,8 +103,9 @@ public class CustomerController {
 			});
 			sets.add("other");
 		}
+		modelMap.put("firmCode", firmCode);
 		modelMap.put("types",StringUtils.join(sets.toArray(), ";"));
-    	modelMap.put("customerAddress", JSONArray.toJSONString(customerService.listCustomerOperating(sets,null)));
+    	modelMap.put("customerAddress", JSONArray.toJSONString(customerService.listCustomerOperating(sets,firmCode)));
 		return "customer/locations";
 	}
 
