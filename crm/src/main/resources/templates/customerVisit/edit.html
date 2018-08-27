@@ -2,6 +2,17 @@
     <script>
         <#controls_user dlgId="userSelectDialog" controlId="userId"/>
         <#controls_customer dlgId="customerSelectDialog" controlId="customerId"/>
+        //判断是否第一次加载所属市场
+        var isFirstSelectFirmCode = true;
+        //选择所属市场时要清空回访人，第一次页面加载除外
+        var onSelectFirmCode = function(record){
+            if(isFirstSelectFirmCode){
+                isFirstSelectFirmCode = false;
+            }else{
+                $("#userId").textbox("clear");
+            }
+        }
+
     </script>
     <style>
         input{height: 18px;}
@@ -208,8 +219,8 @@
             $('#_form').form('clear');
             $("#_createdName").textbox("setValue", "${user.realName}");
             $("#_createdName").textbox("disable", true);
-            $("#userId").textbox("initValue", "${user.id}");
-            $("#userId").textbox("setText", "${user.realName}");
+            // $("#userId").textbox("initValue", "${user.id}");
+            // $("#userId").textbox("setText", "${user.realName}");
             $("#eventDiv").panel("destroy");
         }
 

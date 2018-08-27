@@ -20,7 +20,7 @@
             </tr>
             <tr>
                 <td style="padding-top:10px;">
-                    <input class="easyui-combobox inputWidth" name="_firmCode" id="_firmCode" data-options="labelAlign:'right',required:true, editable:false,onLoadSuccess:onComboLoadSuccessSelectOne" panelWidth="auto" panelHeight="auto" label="*所属市场:" />
+                    <input class="inputWidth" name="_firmCode" id="_firmCode" data-options="labelAlign:'right',required:true, editable:false,onSelect:onSelectFirmCode" panelWidth="auto" panelHeight="auto" label="*所属市场:" />
                     <#comboProvider _id="_firmCode" _provider='firmProvider' />
                 </td>
                 <td style="padding-top:10px;">

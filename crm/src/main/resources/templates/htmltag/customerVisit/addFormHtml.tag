@@ -7,7 +7,7 @@
                     <input class="easyui-textbox inputWidth" name="_subject" id="_subject"  data-options="labelAlign:'right',label:'&lowast;主题:', validType:'length[0,40]'" required="true" />
                 </td>
                 <td style="padding-top:10px;" width="33%">
-                    <input class="easyui-combobox inputWidth" name="_firmCode" id="_firmCode" data-options="labelAlign:'right',required:true, editable:false,onLoadSuccess:onComboLoadSuccessSelectOne" panelWidth="auto" panelHeight="auto" label="*所属市场:" />
+                    <input class="inputWidth" name="_firmCode" id="_firmCode" data-options="labelAlign:'right',required:true, editable:false,onLoadSuccess:onComboLoadSuccessSelectOne,onSelect:onSelectFirmCode" panelWidth="auto" panelHeight="auto" label="*所属市场:" />
                     <#comboProvider _id="_firmCode" _provider='firmProvider' />
                 </td>
                 <td style="padding-top:10px;padding-left:10px;" width="33%">
@@ -32,7 +32,7 @@
             </tr>
             <tr>
                 <td style="padding-top:10px;padding-left:10px;">
-                    <input class="easyui-combobox inputWidth" name="_priority" id="_priority"  data-options="labelAlign:'right',editable:false" panelWidth="auto" panelHeight="auto" label="优先级:" />
+                    <input class="inputWidth" name="_priority" id="_priority"  data-options="labelAlign:'right',editable:false" panelWidth="auto" panelHeight="auto" label="优先级:" />
                     <#comboProvider _id="_priority" _provider='dataDictionaryValueProvider' _queryParams='{dd_code:"priority"}'/>
                 </td>
                 <td style="padding-top:10px;">
