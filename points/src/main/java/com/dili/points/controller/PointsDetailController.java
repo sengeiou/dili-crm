@@ -49,8 +49,8 @@ public class PointsDetailController {
 
     @ApiOperation("跳转到detail页面")
     @RequestMapping(value = "/detail.html", method = RequestMethod.GET)
-    public String detail(ModelMap modelMap, String certificateNumber) {
-        Map customerFirmPoints = this.customerFirmPointsService.findCustomerFirmPointsByCertificateNumber(certificateNumber);
+    public String detail(ModelMap modelMap, String customerId, String tradingFirmCode) {
+        Map customerFirmPoints = this.customerFirmPointsService.findCustomerFirmPointsByCertificateNumber(customerId, tradingFirmCode);
         modelMap.put("customerPoints", customerFirmPoints);
         return "pointsDetail/detail";
     }

@@ -1,6 +1,7 @@
 package com.dili.points.service.impl;
 
 import com.alibaba.fastjson.JSONObject;
+import com.dili.points.constant.PointsConstants;
 import com.dili.points.dao.CustomerFirmPointsMapper;
 import com.dili.points.domain.Customer;
 import com.dili.points.domain.CustomerFirmPoints;
@@ -35,6 +36,7 @@ import com.dili.uap.sdk.session.SessionContext;
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
 import com.google.common.collect.Lists;
+import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -85,15 +87,16 @@ public class CustomerFirmPointsServiceImpl extends BaseServiceImpl<CustomerFirmP
     }
 
     @Override
-    public Map findCustomerFirmPointsByCertificateNumber(String certificateNumber) {
+    public Map findCustomerFirmPointsByCertificateNumber(String customerId, String tradingFirmCode) {
         CustomerApiDTO dto = DTOUtils.newDTO(CustomerApiDTO.class);
-        dto.setCertificateNumber(certificateNumber);
+        dto.setCustomerId(customerId);
+        dto.setTradingFirmCode(tradingFirmCode);
         EasyuiPageOutput output = this.listCustomerFirmPointsByCustomer(dto);
         List<Map> list = output.getRows();
         return list.stream().findFirst().orElseGet(() -> {
             CustomerFirmPointsDTO cp = DTOUtils.newDTO(CustomerFirmPointsDTO.class);
             cp.setId(0L);
-            cp.setCertificateNumber(certificateNumber);
+            cp.setCertificateNumber("");
             cp.setAvailable(0);
             cp.setFrozen(0);
             cp.setTotal(0);
@@ -104,6 +107,23 @@ public class CustomerFirmPointsServiceImpl extends BaseServiceImpl<CustomerFirmP
     @Override
     public EasyuiPageOutput listCustomerFirmPointsByCustomer(CustomerApiDTO customer) {
         customer.setSort(combineSortPrefix(customer.getSort()));
+
+        //如果不是查询所有市场，并且未传入市场信息，则只能查询当前用户有数据权限的市场的数据
+        if (!PointsConstants.ALL_MARKET.equals(customer.getTradingFirmCode()) && StringUtils.isBlank(customer.getTradingFirmCode()) && CollectionUtils.isEmpty(customer.getTradingFirmCodes())){
+            List<String> firmCodes = firmService.getCurrentUserFirmCodes(customer.getUserId());
+            if (CollectionUtils.isEmpty(firmCodes)) {
+                return new EasyuiPageOutput(0, Collections.EMPTY_LIST);
+            }
+            customer.setTradingFirmCodes(firmCodes);
+        }
+        if(PointsConstants.ALL_MARKET.equals(customer.getTradingFirmCode())){
+            customer.setTradingFirmCode(null);
+            customer.setTradingFirmCodes(null);
+        }
+        if(StringUtils.isNotBlank(customer.getTradingFirmCode())){
+            customer.setTradingFirmCodes(null);
+        }
+
         Integer page = customer.getPage();
         page = (page == null) ? Integer.valueOf(1) : page;
         if(customer.getRows() != null && customer.getRows() >= 1) {

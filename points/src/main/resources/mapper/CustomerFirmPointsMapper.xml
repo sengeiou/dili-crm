@@ -31,10 +31,13 @@
   <select id="listByPage" parameterType="com.dili.points.domain.dto.CustomerApiDTO" resultType="Map">
     select c.name, c.organization_type organizationType, c.certificate_type certificateType, c.`type`,c.id customerId,
     c.certificate_number certificateNumber, c.profession, cfp.trading_firm_code tradingFirmCode, cfp.available,
-    cfp.buyer_points buyerPoints, cfp.seller_points sellerPoints
+    cfp.buyer_points buyerPoints, cfp.seller_points sellerPoints, c.id customerId
     from customer_firm_points cfp left join customer c on cfp.customer_id = c.id
     where c.yn = 1
     and cfp.yn = 1
+    <if test="customerId != null">
+      and c.id =#{customerId}
+    </if>
     <if test="name != null and name != ''">
       and c.name like CONCAT('%',#{name},'%')
     </if>
@@ -52,6 +55,12 @@
     </if>
     <if test="tradingFirmCode != null">
       and cfp.`trading_firm_code` = #{tradingFirmCode}
+    </if>
+    <if test="tradingFirmCodes != null and tradingFirmCodes.size()>0">
+      and cfp.trading_firm_code IN
+      <foreach collection="tradingFirmCodes" item="tradingFirmCode" open="(" close=")" separator="," >
+        #{tradingFirmCode}
+      </foreach>
     </if>
     <if test="sort != null and order != null">
       ORDER BY ${sort} ${order}

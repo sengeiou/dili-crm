@@ -52,6 +52,7 @@ public class FirmProvider extends BatchDisplayTextProviderAdaptor {
 			List<String> firmCodes = relationIds.stream()
 					.filter(Objects::nonNull)
 					.distinct()
+					.map(String::toLowerCase)
 					.collect(Collectors.toList());
 			if(!firmCodes.isEmpty()) {
 				FirmDto firmDto = DTOUtils.newDTO(FirmDto.class);

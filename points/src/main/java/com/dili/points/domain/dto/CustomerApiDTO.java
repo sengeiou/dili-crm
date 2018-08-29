@@ -21,6 +21,9 @@ public interface CustomerApiDTO extends Customer {
 	List<String> getIds();
 	void setIds(List<String> ids);
 
+	Long getCustomerId();
+	void setCustomerId(String customerId);
+
 	@Operator(Operator.IN)
 	@Column(name = "`certificate_number`")
 	List<String> getCertificateNumbers();

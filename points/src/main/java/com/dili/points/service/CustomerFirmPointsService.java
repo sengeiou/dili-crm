@@ -43,8 +43,9 @@ public interface CustomerFirmPointsService extends BaseService<CustomerFirmPoint
 
     /**
      * 查询客户市场积分明细
-     * @param certificateNumber
+     * @param customerId
+     * @param tradingFirmCode
      * @return
      */
-    Map findCustomerFirmPointsByCertificateNumber(String certificateNumber);
+    Map findCustomerFirmPointsByCertificateNumber(String customerId, String tradingFirmCode);
 }

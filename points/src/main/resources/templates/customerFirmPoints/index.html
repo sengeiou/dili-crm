@@ -164,7 +164,7 @@
             </tr>
             <tr>
                 <td style="padding:5px;">
-                    <input name="_firmCode" id="_tradingFirmCode" style="width:100%;" data-options="labelAlign:'right', editable:false,onChange:changeTradingFirmCode" panelWidth="auto" panelHeight="auto" label="&lowast;积分市场:" required/>
+                    <input name="_tradingFirmCode" id="_tradingFirmCode" style="width:100%;" data-options="labelAlign:'right', editable:false,onChange:changeTradingFirmCode" panelWidth="auto" panelHeight="auto" label="&lowast;积分市场:" required/>
                     <#comboProvider _id="_tradingFirmCode" _provider='firmProvider' />
                 </td>
             </tr>
@@ -209,7 +209,7 @@
         <table width="360px">
             <tr>
                 <td style="padding:5px;">
-                    <input name="_firmCode" id="_firmCodeClear" style="width:100%;" data-options="labelAlign:'right', editable:false" panelWidth="auto" panelHeight="auto" label="&lowast;所属市场:" required/>
+                    <input name="_firmCodeClear" id="_firmCodeClear" style="width:100%;" data-options="labelAlign:'right', editable:false" panelWidth="auto" panelHeight="auto" label="&lowast;所属市场:" required/>
                     <#comboProvider _id="_firmCodeClear" _provider='firmProvider' />
                 </td>
             </tr>
@@ -245,8 +245,8 @@
             $.messager.alert('警告','客户证件号为空，此操作需要维护客户证件号');
             return;
         }
-        var certificateNumber=encodeURIComponent(selected["certificateNumber"]);
-        window.location.href="${contextPath}/pointsDetail/detail.html?certificateNumber="+certificateNumber;
+        // var certificateNumber=encodeURIComponent(selected["certificateNumber"]);
+        window.location.href="${contextPath}/pointsDetail/detail.html?customerId="+selected["customerId"]+"&tradingFirmCode="+selected["$_tradingFirmCode"];
     }
 
 
