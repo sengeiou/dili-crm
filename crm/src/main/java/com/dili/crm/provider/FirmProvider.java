@@ -75,6 +75,11 @@ public class FirmProvider extends BatchDisplayTextProviderAdaptor {
 		}
 	}
 
+	@Override
+	protected boolean ignoreCaseToRef() {
+		return true;
+	}
+
 	/**
 	 * 关联(数据库)表的主键的字段名
 	 * 默认取id，子类可自行实现

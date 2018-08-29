@@ -64,7 +64,12 @@ public class FirmProvider extends BatchDisplayTextProviderAdaptor {
 		return null;
 	}
 
-	@Override
+    @Override
+    protected boolean ignoreCaseToRef() {
+        return true;
+    }
+
+    @Override
 	protected Map<String, String> getEscapeFileds(Map metaMap) {
 		if(metaMap.get(ESCAPE_FILEDS_KEY) instanceof Map){
 			return (Map)metaMap.get(ESCAPE_FILEDS_KEY);
