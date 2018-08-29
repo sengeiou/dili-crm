@@ -1,14 +1,14 @@
 package com.dili.points.controller;
 
 import com.dili.points.constant.PointsConstants;
+import com.dili.points.domain.Customer;
 import com.dili.points.domain.CustomerFirmPoints;
 import com.dili.points.domain.dto.CustomerApiDTO;
 import com.dili.points.domain.dto.PointsDetailDTO;
+import com.dili.points.rpc.CustomerRpc;
 import com.dili.points.service.CustomerFirmPointsService;
 import com.dili.points.service.PointsDetailService;
 import com.dili.ss.domain.BaseOutput;
-import com.dili.ss.dto.DTOUtils;
-import com.dili.ss.dto.IDTO;
 import com.dili.uap.sdk.domain.UserTicket;
 import com.dili.uap.sdk.exception.NotLoginException;
 import com.dili.uap.sdk.session.SessionContext;
@@ -16,13 +16,11 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
-import java.util.List;
 
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -39,6 +37,8 @@ public class CustomerFirmPointsController {
     CustomerFirmPointsService customerFirmPointsService;
     @Autowired
     PointsDetailService pointsDetailService;
+    @Autowired
+    CustomerRpc customerRpc;
 
     @ApiOperation("跳转到CustomerFirmPoints页面")
     @RequestMapping(value="/index.html", method = RequestMethod.GET)
@@ -86,10 +86,22 @@ public class CustomerFirmPointsController {
         return BaseOutput.success("删除成功");
     }
 
-    @ApiOperation("根据客户及市场，获取客户在此市场的积分信息")
-    @RequestMapping(value="/getByCustomerAndFirm.action", method = {RequestMethod.GET, RequestMethod.POST})
-    public @ResponseBody BaseOutput getByCustomerAndFirm(Long customerId,String firmCode) {
-        return BaseOutput.success().setData(customerFirmPointsService.getByCustomerAndFirm(customerId,firmCode));
+    @ApiOperation("根据客户id及市场，获取客户在此市场的积分信息")
+    @RequestMapping(value="/getByCustomerIdAndFirm.action", method = {RequestMethod.GET, RequestMethod.POST})
+    public @ResponseBody BaseOutput getByCustomerIdAndFirm(Long customerId,String firmCode) {
+        return BaseOutput.success().setData(customerFirmPointsService.getByCustomerIdAndFirm(customerId, firmCode));
+    }
+
+    @ApiOperation("根据客户证件号及市场，获取客户在此市场的积分信息")
+    @RequestMapping(value="/getByCertificateNumberAndFirm.action", method = {RequestMethod.GET, RequestMethod.POST})
+    public @ResponseBody BaseOutput getByCertificateNumberAndFirm(String certificateNumber,String firmCode) {
+        return BaseOutput.success().setData(customerFirmPointsService.getByCertificateNumberAndFirm(certificateNumber, firmCode));
+    }
+
+    @ApiOperation("根据客户证件号查询客户信息")
+    @RequestMapping(value="/getCustomerByCertificateNumber.action", method = {RequestMethod.GET, RequestMethod.POST})
+    public @ResponseBody BaseOutput<Customer> getCustomerByCertificateNumber(String certificateNumber) {
+        return customerRpc.getByCertificateNumber(certificateNumber);
     }
 
     @ApiOperation("手工调整PointsDetail")
@@ -109,9 +121,19 @@ public class CustomerFirmPointsController {
         if(StringUtils.trimToNull(pointsDetail.getNotes())==null) {
             return BaseOutput.failure("备注不能为空");
         }
+        if(pointsDetail.getCertificateNumber() == null){
+            return BaseOutput.failure("证件号码不能为空");
+        }
         pointsDetail.setCreatedId(userTicket.getId());//操作人
         pointsDetail.setGenerateWay(50);//50 手工调整
-
+        if(pointsDetail.getCustomerId() == null){
+            BaseOutput<Customer> output = customerRpc.getByCertificateNumber(pointsDetail.getCertificateNumber());
+            if(output.isSuccess()){
+                pointsDetail.setCustomerId(output.getData().getId());
+            }else{
+                return BaseOutput.failure("远程查询客户信息失败");
+            }
+        }
         if(pointsDetail.getPoints() > 0) {
             pointsDetail.setInOut(10);// 收入
         } else {

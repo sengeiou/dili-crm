@@ -7,22 +7,28 @@
      * @param oldValue
      */
     function changeTradingFirmCode(newValue, oldValue) {
+        //清除可用积分
+        $('#_available').textbox("setValue",'');
         if (typeof(newValue) == "undefined" || null == newValue || ''== newValue){
-            //清除 "调整前积分"
-            $('#_available').textbox("setValue",'');
             return;
         }
-        var customerId = $('#_customerId').val();
+        var certificateNumber = $("#_certificateNumber").textbox("getValue");
+        //如果证件号为空，不响应
+        if(certificateNumber == null || certificateNumber == ""){
+            return;
+        }
         $.ajax({
             type: "POST",
-            url: "${contextPath}/customerFirmPoints/getByCustomerAndFirm.action",
-            data: {customerId: customerId, firmCode: newValue},
+            url: "${contextPath}/customerFirmPoints/getByCertificateNumberAndFirm.action",
+            data: {certificateNumber: certificateNumber, firmCode: newValue},
             processData: true,
             dataType: "json",
             async: true,
             success: function (ret) {
                 if (ret.success) {
-                    $('#_available').textbox("setValue", ret.data.available);
+                    if(ret.data != null){
+                        $('#_available').textbox("setValue", ret.data.available);
+                    }
                 } else {
                     $.messager.alert('错误', ret.result);
                 }
@@ -31,7 +37,6 @@
                 $.messager.alert('错误', '远程访问失败');
             }
         });
-
     }
 </script>
 <div class="easyui-layout" fit="true">
@@ -150,16 +155,15 @@
 				}]
 			">
     <form id="_form" class="easyui-form" method="post" fit="true">
-        <input name="_customerId" id="_customerId" type="hidden">
         <table width="360px">
             <tr>
                 <td style="padding:5px;">
-                    <input class="easyui-textbox" name="_certificateNumber" id="_certificateNumber" style="width:100%" data-options="labelAlign:'right',label:'客户证件号:',readonly:true, validType:'length[0,40]'" />
+                    <input class="easyui-textbox" name="_certificateNumber" id="_certificateNumber" style="width:100%" data-options="labelAlign:'right',label:'*客户证件号:',required:true,validType:'length[1,40]'" />
                 </td>
             </tr>
             <tr>
                 <td style="padding:5px;">
-                    <input class="easyui-textbox" name="_name" id="_name" style="width:100%" data-options="labelAlign:'right',label:'客户名称:',readonly:true, validType:'length[0,40]'" />
+                    <input class="easyui-textbox" name="_name" id="_name" style="width:100%" data-options="labelAlign:'right',label:'客户名称:',readonly:true,required:true" />
                 </td>
             </tr>
             <tr>
@@ -175,7 +179,7 @@
             </tr>
             <tr>
                 <td style="padding:5px;">
-                    <input class="easyui-numberbox" name="_points" id="_points" style="width:100%" data-options="labelAlign:'right',label:'调整积分:',max:1000000" />
+                    <input class="easyui-numberbox" name="_points" id="_points" style="width:100%" data-options="labelAlign:'right',label:'*调整积分:',max:1000000, min:1, required:true" />
                 </td>
             </tr>
             <tr>
@@ -249,7 +253,7 @@
         window.location.href="${contextPath}/pointsDetail/detail.html?customerId="+selected["customerId"]+"&tradingFirmCode="+selected["$_tradingFirmCode"];
     }
 
-
+    //确认调整积分
     function savePointsDetail(){
         if(!$('#_form').form("validate")){
             return;
@@ -317,36 +321,32 @@
         });
     }
 
-    //打开调整窗口窗口
-
+    //打开积分调整窗口
     function openDetailChange(){
     <#resource code="changeCustomerPoints">
         var selected = $("#grid").datagrid("getSelected");
-        if (null == selected) {
-            $.messager.alert('警告','请选中一条数据');
-            return;
-        }
-        if (null == selected) {
-            $.messager.alert('警告','请选中一条数据');
-            return;
-        }
-        var exist = checkCertificateNumberExist(selected);
-        if (!exist){
-            $.messager.alert('警告','客户证件号为空，此操作需要维护客户证件号');
-            return;
-        }
+        // if (null == selected) {
+        //     $.messager.alert('警告','请选中一条数据');
+        //     return;
+        // }
+        // var exist = checkCertificateNumberExist(selected);
+        // if (!exist){
+        //     $.messager.alert('警告','客户证件号为空，此操作需要维护客户证件号');
+        //     return;
+        // }
         $('#dlg').dialog('open');
         $('#dlg').dialog('center');
         $('#_form').form('clear');
         formFocus("_form", "_certificateNumber");
-
-        $('#_customerId').val(selected['id']);
-        $('#_points').textbox('setValue','');
-        $('#_notes').textbox('setValue','');
-        var formData = $.extend({},selected);
-        formData = addKeyStartWith(getOriginalData(formData),"_");
-        $('#_form').form('load', formData);
-        $('#_available').textbox("setValue",'');
+        //如果选择了行，则加载行数据
+        if(selected != null){
+            $('#_points').textbox('setValue','');
+            $('#_notes').textbox('setValue','');
+            var formData = $.extend({},selected);
+            formData = addKeyStartWith(getOriginalData(formData),"_");
+            $('#_form').form('load', formData);
+            // $('#_available').textbox("setValue",'');
+        }
     </#resource>
     }
 
@@ -522,6 +522,43 @@
         } else {
             document.onkeyup = getKey;
         }
+        //证件号码鼠标离开时加载可用积分
+        $("input",$("#_certificateNumber").next("span")).blur(function(){
+            var certificateNumber = $("#_certificateNumber").textbox("getValue");
+            var tradingFirmCode = $("#_tradingFirmCode").combobox("getValue");
+            //证件号码小于四位不处理
+            if(certificateNumber == null || certificateNumber.length < 4){
+                return;
+            }
+            if(tradingFirmCode == null || tradingFirmCode == ""){
+                return;
+            }
+            //根据证件号查询客户姓名
+            $('#_name').textbox("setValue", "");
+            $.ajax({
+                type: "POST",
+                url: "${contextPath}/customerFirmPoints/getCustomerByCertificateNumber.action",
+                data: {certificateNumber: certificateNumber},
+                processData: true,
+                dataType: "json",
+                async: true,
+                success: function (ret) {
+                    if (ret.success) {
+                        if(ret.data != null){
+                            $('#_name').textbox("setValue", ret.data.name);
+                        }
+                    } else {
+                        $.messager.alert('错误', ret.result);
+                    }
+                },
+                error: function () {
+                    $.messager.alert('错误', '远程访问失败');
+                }
+            });
+            //查询客户可用积分
+            changeTradingFirmCode(tradingFirmCode);
+        })
+
         var pager = $('#grid').datagrid('getPager');    // get the pager of treegrid
         pager.pagination({
             <#controls_paginationOpts/>,

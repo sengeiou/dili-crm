@@ -19,8 +19,15 @@ public interface CustomerFirmPointsService extends BaseService<CustomerFirmPoint
      * @param firmCode 市场code
      * @return
      */
-    CustomerFirmPoints getByCustomerAndFirm(Long customerId,String firmCode);
+    CustomerFirmPoints getByCustomerIdAndFirm(Long customerId, String firmCode);
 
+    /**
+     * 根据客户及市场，获取客户在此市场的积分信息
+     * @param certificateNumber 客户证件号
+     * @param firmCode 市场code
+     * @return
+     */
+    CustomerFirmPoints getByCertificateNumberAndFirm(String certificateNumber, String firmCode);
     /**
      * 根据客户条件查询客户市场积分
      * @param customer

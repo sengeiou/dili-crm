@@ -24,7 +24,7 @@
                             <#comboProvider _id="firmCode" _provider='firmProvider' />
                         </td>
                         <td style="padding:5px;">
-                            <input class="easyui-textbox"  style="width:100%" labelAlign="right" data-options="label:'客户证件号:',value:'${customerPoints.certificateNumber}',                 cls:'noborder', editable:false, readonly:true,hasDownArrow:false, validType:'length[0,40]'" />
+                            <input class="easyui-textbox" name="certificateNumberTxt" id="certificateNumberTxt"  style="width:100%" labelAlign="right" data-options="label:'客户证件号:', cls:'noborder', editable:false, readonly:true" />
                             <input type="hidden"  name="certificateNumber" id="certificateNumber" value="${customerPoints.certificateNumber}"/>
                         </td>
                         <td style="padding:5px;">
@@ -389,9 +389,10 @@
      *          表单提交需执行的任务
      */
     $(function () {
-
         paginationGrid('gridin');
         paginationGrid('gridout');
+        //证件号隐藏
+        $("#certificateNumberTxt").textbox("setValue", certificateNumberFmt('${customerPoints.certificateNumber}'))
         //queryGrid();
     })
 </script>

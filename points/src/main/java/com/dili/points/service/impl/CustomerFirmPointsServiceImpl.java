@@ -21,6 +21,7 @@ import com.dili.ss.dto.DTO;
 import com.dili.ss.dto.DTOUtils;
 import com.dili.ss.exception.AppException;
 import com.dili.ss.metadata.ValueProviderUtils;
+import com.dili.ss.util.POJOUtils;
 import com.dili.uap.sdk.domain.DataDictionaryValue;
 
 import java.math.BigDecimal;
@@ -65,18 +66,37 @@ public class CustomerFirmPointsServiceImpl extends BaseServiceImpl<CustomerFirmP
     }
 
     @Override
-    public CustomerFirmPoints getByCustomerAndFirm(Long customerId, String firmCode) {
+    public CustomerFirmPoints getByCustomerIdAndFirm(Long customerId, String firmCode) {
         CustomerFirmPoints query = DTOUtils.newDTO(CustomerFirmPoints.class);
         query.setTradingFirmCode(firmCode);
         query.setCustomerId(customerId);
         CustomerFirmPoints customerPoints = getActualDao().select(query).stream().findFirst().orElseGet(() -> {
-            CustomerFirmPoints temp = DTOUtils.newDTO(CustomerFirmPoints.class);
-            temp.setAvailable(0);
-            temp.setSellerPoints(0);
-            temp.setBuyerPoints(0);
-            temp.setCustomerId(customerId);
-            temp.setTradingFirmCode(firmCode);
-            return temp;
+//            CustomerFirmPoints temp = DTOUtils.newDTO(CustomerFirmPoints.class);
+//            temp.setAvailable(0);
+//            temp.setSellerPoints(0);
+//            temp.setBuyerPoints(0);
+//            temp.setCustomerId(customerId);
+//            temp.setTradingFirmCode(firmCode);
+//            return temp;
+            return null;
+        });
+        return customerPoints;
+    }
+
+    @Override
+    public CustomerFirmPoints getByCertificateNumberAndFirm(String certificateNumber, String firmCode) {
+        CustomerFirmPoints query = DTOUtils.newDTO(CustomerFirmPoints.class);
+        query.setTradingFirmCode(firmCode);
+        query.setCertificateNumber(certificateNumber);
+        CustomerFirmPoints customerPoints = getActualDao().select(query).stream().findFirst().orElseGet(() -> {
+//            CustomerFirmPoints temp = DTOUtils.newDTO(CustomerFirmPoints.class);
+//            temp.setAvailable(0);
+//            temp.setSellerPoints(0);
+//            temp.setBuyerPoints(0);
+//            temp.setCertificateNumber(certificateNumber);
+//            temp.setTradingFirmCode(firmCode);
+//            return temp;
+            return null;
         });
         return customerPoints;
     }
@@ -161,8 +181,8 @@ public class CustomerFirmPointsServiceImpl extends BaseServiceImpl<CustomerFirmP
         }
         List<String> cPrefix = Lists.newArrayList("name", "organization_type", "certificate_type", "type", "certificate_number", "profession");
 
-        List<String> cSort = cPrefix.stream().filter( item -> sort.equalsIgnoreCase(item)).map(item -> "c."+item).collect(Collectors.toList());
-        return (cSort == null || cSort.isEmpty()) ? "cfp."+sort : cSort.get(0);
+        List<String> cSort = cPrefix.stream().filter( item -> POJOUtils.humpToLine(sort).equalsIgnoreCase(item)).map(item -> "c."+item).collect(Collectors.toList());
+        return (cSort == null || cSort.isEmpty()) ? "cfp."+POJOUtils.humpToLine(sort) : cSort.get(0);
     }
 
     /**

@@ -79,7 +79,7 @@ public class PointsDetailServiceImpl extends BaseServiceImpl<PointsDetail, Long>
         if (pointsDetail.getPoints() == null) {
             pointsDetail.setPoints(0);
         }
-
+        pointsDetail.setFirmCode(pointsDetail.getTradingFirmCode());
         //支出(如果是支出则为积分值设置为负数)
         if (pointsDetail.getInOut().equals(20)) {
             pointsDetail.setPoints(0 - Math.abs(pointsDetail.getPoints()));
@@ -122,7 +122,7 @@ public class PointsDetailServiceImpl extends BaseServiceImpl<PointsDetail, Long>
         CustomerFirmPointsDTO dto = DTOUtils.newDTO(CustomerFirmPointsDTO.class);
         dto.setBuyer(pointsDetail.isBuyer());
         dto.setPoints(pointsDetail.getPoints());
-        dto.setTradingFirmCode(pointsDetail.getFirmCode());
+        dto.setTradingFirmCode(pointsDetail.getTradingFirmCode());
         dto.setCertificateNumber(pointsDetail.getCertificateNumber());
         dto.setCustomerId(pointsDetail.getCustomerId());
         dto.setSellerPoints(0);
