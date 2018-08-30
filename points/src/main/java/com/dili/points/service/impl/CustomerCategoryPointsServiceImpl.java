@@ -57,6 +57,7 @@ public class CustomerCategoryPointsServiceImpl extends BaseServiceImpl<CustomerC
     	CustomerCategoryPoints condition=DTOUtils.newDTO(CustomerCategoryPoints.class);
 		condition.setCategory3Id(dto.getCategory3Id());
 		condition.setCertificateNumber(dto.getCertificateNumber());
+		condition.setFirmCode(dto.getFirmCode());
 		CustomerCategoryPoints item=this.getActualDao().selectOne(condition);
 		if(item==null) {
 			item=DTOUtils.clone(dto, CustomerCategoryPoints.class);
