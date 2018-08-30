@@ -83,7 +83,7 @@ function plusXing(str,frontLen,endLen) {
  */
 
 function certificateNumberFmt(value,row,index) {
-    var certificateType = row == null ? "id" : row[orginal_key_prefix+"certificateType"];
+    var certificateType = row == null ? "id" : row[orginal_key_prefix+"certificateType"] ? row[orginal_key_prefix+"certificateType"] : row["certificateType"];
     if(certificateType != null && certificateType != "id"){
         return plusXing(value, 0, 4);
     }
