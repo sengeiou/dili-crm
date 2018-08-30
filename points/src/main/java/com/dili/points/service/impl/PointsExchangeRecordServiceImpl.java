@@ -124,6 +124,7 @@ public class PointsExchangeRecordServiceImpl extends BaseServiceImpl<PointsExcha
         pd.setSourceSystem("points");
         pd.setNotes("兑换" + commodities.getName());
         pd.setCreatedId(userTicket.getId());
+        pd.setFirmCode(commodities.getFirmCode());
         //保存客户积分明细信息
         pointsDetailMapper.insertSelective(pd);
         //保存客户兑换信息

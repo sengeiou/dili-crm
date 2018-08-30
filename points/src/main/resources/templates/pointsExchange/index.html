@@ -74,6 +74,7 @@
                     <tr>
                         <td style="padding-top:10px;">
                             <input class="easyui-textbox" name="_certificateNumber" id="_certificateNumber"  label="证件号:" style="width: 80%;" data-options="labelAlign:'left',cls:'noborder', readonly:true, editable:false" />
+                            <input type="hidden" id="certificateNumber" name="certificateNumber"/>
                         </td>
                     </tr>
                     <tr>
@@ -196,7 +197,7 @@
                 _formData["organizationType"] = $('#_organizationType').val();
                 _formData["certificateType"] = $('#_certificateType').val();
                 _formData["type"] = $('#_type').val();
-                _formData["certificateNumber"] = $('#_certificateNumber').textbox("getValue");
+                _formData["certificateNumber"] = $('#certificateNumber').val();
                 _formData["name"] = $('#_name').textbox("getValue");
                 $.ajax({
                     type: "POST",
@@ -286,6 +287,7 @@
                 success: function (ret) {
                     if(ret.success){
                         var formData = $.extend({},ret.data);
+                        var certificateNumber = formData["certificateNumber"];
                         //手机号隐藏
                         if(formData["phone"] != null){
                             formData["phone"] = mobilePhoneFmt(formData["phone"]);
@@ -295,6 +297,7 @@
                             formData["certificateNumber"] = certificateNumberFmt(formData["certificateNumber"], formData);
                         }
                         formData = addKeyStartWith(getOriginalData(formData),"_");
+                        formData["certificateNumber"] = certificateNumber;
                         $('#_customerForm').form('load', formData);
                         $('#customerDiv').panel("open");
                     }else{
