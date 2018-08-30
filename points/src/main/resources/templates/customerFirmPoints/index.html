@@ -525,7 +525,6 @@
         //证件号码鼠标离开时加载可用积分
         $("input",$("#_certificateNumber").next("span")).blur(function(){
             var certificateNumber = $("#_certificateNumber").textbox("getValue");
-            var tradingFirmCode = $("#_tradingFirmCode").combobox("getValue");
             //证件号码小于四位不处理
             if(certificateNumber == null || certificateNumber.length < 4){
                 return;
@@ -552,6 +551,7 @@
                     $.messager.alert('错误', '远程访问失败');
                 }
             });
+            var tradingFirmCode = $("#_tradingFirmCode").combobox("getValue");
             if(tradingFirmCode == null || tradingFirmCode == ""){
                 return;
             }
