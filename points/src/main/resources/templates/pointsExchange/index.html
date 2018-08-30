@@ -84,7 +84,7 @@
                     <tr>
                         <td style="padding-top:10px;">
                             <input name="_market" id="_market" style="width:90%;" panelWidth="auto" data-options="cls:'noborder', labelAlign:'left', editable:false, readonly:true, hasDownArrow:false" panelHeight="auto" label="所属市场:"/>
-                            <#comboProvider _id="_market" _provider='firmProvider' />
+                            <#comboProvider _id="_market" _provider='firmProvider' _queryParams='{showAll:true}' />
                         </td>
                     </tr>
                     <tr>
