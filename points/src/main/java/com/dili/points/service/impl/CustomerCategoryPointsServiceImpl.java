@@ -42,7 +42,7 @@ public class CustomerCategoryPointsServiceImpl extends BaseServiceImpl<CustomerC
     		return new EasyuiPageOutput(0,Collections.emptyList());
     	}
     	customerCategoryPoints.setFirmCodes(firmCodes);
-    	return super.listEasyuiPage(customerCategoryPoints, useProvider);
+    	return super.listEasyuiPageByExample(customerCategoryPoints, useProvider);
     }
     @Override
     public int[] batchSaveCustomerCategoryPointsDTO(List<CustomerCategoryPointsDTO> dtoList) {
