@@ -391,8 +391,10 @@
     $(function () {
         paginationGrid('gridin');
         paginationGrid('gridout');
+        var row = {};
+        row[orginal_key_prefix+"certificateType"] = "${customerPoints.certificateType}";
         //证件号隐藏
-        $("#certificateNumberTxt").textbox("setValue", certificateNumberFmt('${customerPoints.certificateNumber}'))
+        $("#certificateNumberTxt").textbox("setValue", certificateNumberFmt('${customerPoints.certificateNumber}', row))
         //queryGrid();
     })
 </script>
