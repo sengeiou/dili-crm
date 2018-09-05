@@ -72,14 +72,14 @@ public class IndexController {
         //为第三方报表url添加开始结束日期参数，如果url为空则不添加
         String indexPurchasingTopChartUrl= this.chartService.getIndexPurchasingTopChartUrl(firmCode);
         if(StringUtils.isNotBlank(indexPurchasingTopChartUrl)) {
-        	indexPurchasingTopChartUrl=indexPurchasingTopChartUrl+"?dt="+startDate+" - "+startDate +"&rows=10";
+        	indexPurchasingTopChartUrl=indexPurchasingTopChartUrl+"?dt="+startDate+" - "+endDate +"&rows=10";
         }
         modelMap.put("indexPurchasingTopChartUrl",indexPurchasingTopChartUrl);
         
         //为第三方报表url添加开始结束日期参数，如果url为空则不添加
         String indexSalesTopChartUrl=this.chartService.getIndexSalesTopChartUrl(firmCode);
         if(StringUtils.isNotBlank(indexSalesTopChartUrl)) {
-        	indexSalesTopChartUrl=indexSalesTopChartUrl+"?dt="+startDate+" - "+startDate+"&rows=10";
+        	indexSalesTopChartUrl=indexSalesTopChartUrl+"?dt="+startDate+" - "+endDate+"&rows=10";
         }
         
         modelMap.put("indexSalesTopChartUrl", indexSalesTopChartUrl);
