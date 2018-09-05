@@ -207,7 +207,7 @@
     <script type="text/javascript">
 
         var onBeforeExpand = function(row,param){
-            $("#grid").treegrid("options").url ="${contextPath}/city/expand?parentId="+row.id;
+            $("#grid").treegrid("options").url ="${contextPath}/city/expand.action?parentId="+row.id;
         };
         var onBeforeLoad = function(row,param){
             if(param['id']){
