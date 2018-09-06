@@ -315,7 +315,7 @@
                             marker.meta={id:customerAddress.id, name:customerAddress.name};
 //                            map.addOverlay(marker);
                             //标签显示在图标下方
-                            label = new window.BMap.Label(customerAddress.name, { offset: new window.BMap.Size(-10, 25) });
+                            label = new window.BMap.Label(customerAddress.name, { offset: new window.BMap.Size(0, 28) });
                             label.setStyle({border:'0px',background: "transparent none repeat"});
                             marker.setLabel(label);
                             //鼠标悬停时显示
