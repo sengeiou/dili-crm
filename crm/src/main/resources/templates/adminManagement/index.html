@@ -1,31 +1,31 @@
- <#body>
+<#body>
 
-    <div class="easyui-layout" fit="true">
-        <!-- ====================================================================================================================== -->
-        <!-- 上方布局 -->
-        <!-- ====================================================================================================================== -->
-        <div region="north" height="auto" align="center" border="false">
-            <div id="nav" style="padding-left:15px;padding-top:10px;" align="left">
+<div class="easyui-layout" fit="true">
+    <!-- ====================================================================================================================== -->
+    <!-- 上方布局 -->
+    <!-- ====================================================================================================================== -->
+    <div region="north" height="auto" align="center" border="false">
+        <div id="nav" style="padding-left:15px;padding-top:10px;" align="left">
             <#nav/>
-            </div>
-            <!-- =========================================================表单========================================================= -->
-             <div class="easyui-panel" style="width:100%;border: 0px;" align="left" border="false">
-                <form id="form" class="easyui-form" method="post" fit="true">
-                   
-                </form>
-            </div>
         </div>
-        <!-- ====================================================================================================================== -->
-        <!-- 中央布局 -->
-        <!-- ====================================================================================================================== -->
-        <!-- 表格 -->
-      <div region="center" style="width: 100%;" height="auto"  align="center" border="false">
+        <!-- =========================================================表单========================================================= -->
+        <div class="easyui-panel" style="width:100%;border: 0px;" align="left" border="false">
+            <form id="form" class="easyui-form" method="post" fit="true">
 
-            <!-- =========================================================表格========================================================= -->
-            <table width="100%" style="padding: 10px;height: 100%;">
-                <tr>
-                    <td width="20%">
-                        <div id="grid" class="easyui-panel" align="center" style="width:96%;height:100%;" border="false">
+            </form>
+        </div>
+    </div>
+    <!-- ====================================================================================================================== -->
+    <!-- 中央布局 -->
+    <!-- ====================================================================================================================== -->
+    <!-- 表格 -->
+    <div region="center" style="width: 100%;" height="auto" align="center" border="false">
+
+        <!-- =========================================================表格========================================================= -->
+        <table width="100%" style="padding: 10px;height: 100%;">
+            <tr>
+                <td width="20%">
+                    <div id="grid" class="easyui-panel" align="center" style="width:96%;height:100%;" border="false">
                         <table class="easyui-datagrid" singleSelect="true">
                             <thead>
                             <tr>
@@ -35,85 +35,96 @@
                             </thead>
                             <tbody>
                             <tr>
-                                <td>同步电子结算及神农客户信息</td><td><a href="javascript:void(0);" onclick="loadCustomers();">同步</a></td>
+                                <td>同步电子结算及神农客户信息</td>
+                                <td><a href="javascript:void(0);" onclick="loadCustomers();">同步</a></td>
                             </tr>
                             <tr>
-                                <td>发送客户信息(Json)到MQ</td><td><a  href="javascript:void(0);" onclick="openInsert('customer');">发送</a></td>
+                                <td>发送客户信息(Json)到MQ</td>
+                                <td><a href="javascript:void(0);" onclick="openInsert('customer');">发送</a></td>
                             </tr>
                             <tr>
-                                <td>发送订单信息(Json)到MQ</td><td><a  href="javascript:void(0);" onclick="openInsert('order');">发送</a></td>
+                                <td>发送订单信息(Json)到MQ</td>
+                                <td><a href="javascript:void(0);" onclick="openInsert('order');">发送</a></td>
                             </tr>
                             <tr>
-                                <td>发送品类信息(Json)到MQ</td><td><a  href="javascript:void(0);" onclick="openInsert('category');">发送</a></td>
+                                <td>发送品类信息(Json)到MQ</td>
+                                <td><a href="javascript:void(0);" onclick="openInsert('category');">发送</a></td>
+                            </tr>
+                            <tr>
+                                <td>测试发送客户信息(Json)到MQ</td>
+                                <td><a href="javascript:void(0);" onclick="performanceTest();">发送</a></td>
                             </tr>
                             </tbody>
                         </table>
-                        </div>
-                    </td>
-                    <td width="60%" style="height: 100%;vertical-align: top;">
-                        <form id="_form" class="easyui-form" method="post" fit="true">
-                            <input name="_customerId" id="_customerId" type="hidden">
-                            <table width="90%">
+                    </div>
+                </td>
+                <td width="60%" style="height: 100%;vertical-align: top;">
+                    <form id="_form" class="easyui-form" method="post" fit="true">
+                        <input name="_customerId" id="_customerId" type="hidden">
+                        <table width="90%">
 
-                                <tr>
-                                    <td style="padding:5px">
-                                        <input class="easyui-textbox" name="_type" required id="_type" style="width:90%" data-options="label:'消息类型:',readonly:true, validType:'length[0,40]'" />
-                                    </td>
-                                </tr>
+                            <tr>
+                                <td style="padding:5px">
+                                    <input class="easyui-textbox" name="_type" required id="_type" style="width:90%"
+                                           data-options="label:'消息类型:',readonly:true, validType:'length[0,40]'"/>
+                                </td>
+                            </tr>
 
-                                <tr>
-                                    <td style="padding:5px;">
-                                        <input class="easyui-textbox" name="_json" id="_json" style="width:90%" required data-options="label:'消息内容:',multiline:true,height:400, validType:'length[0,2000]'" />
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td style="padding:5px;">
-                                        <a href="#" class="easyui-linkbutton" id="queryBtn" data-options="width:80" iconCls="icon-search"
-                                           onclick="saveOrUpdate()">发送</a>
-                                    </td>
-                                </tr>
+                            <tr>
+                                <td style="padding:5px;">
+                                    <input class="easyui-textbox" name="_json" id="_json" style="width:90%" required
+                                           data-options="label:'消息内容:',multiline:true,height:400, validType:'length[0,2000]'"/>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td style="padding:5px;">
+                                    <a href="#" class="easyui-linkbutton" id="queryBtn" data-options="width:80"
+                                       iconCls="icon-search"
+                                       onclick="saveOrUpdate()">发送</a>
+                                </td>
+                            </tr>
 
-                            </table>
-                        </form>
-                    </td>
-                </tr>
-            </table>
-
-       </div>
-            
-            
+                        </table>
+                    </form>
+                </td>
+            </tr>
+        </table>
 
     </div>
-    
 
-    <!-- ====================================================================================================================== -->
-    <!-- style & script 分隔线 -->
-    <!-- ====================================================================================================================== -->
-    <script type="text/javascript">
 
-    function loadCustomers(){
-   
-       
-        var _url ="${contextPath}/adminManagement/loadCustomers.action";
+</div>
+
+
+<!-- ====================================================================================================================== -->
+<!-- style & script 分隔线 -->
+<!-- ====================================================================================================================== -->
+<script type="text/javascript">
+
+    function loadCustomers() {
+
+
+        var _url = "${contextPath}/adminManagement/loadCustomers.action";
         $.ajax({
             type: "POST",
             url: _url,
             data: {},
-            processData:true,
+            processData: true,
             dataType: "json",
-            async : true,
+            async: true,
             success: function (data) {
-                if(data.code=="200"){
-                	  $.messager.alert('提示',data.result);
-                }else{
-                    $.messager.alert('错误',data.result);
+                if (data.code == "200") {
+                    $.messager.alert('提示', data.result);
+                } else {
+                    $.messager.alert('错误', data.result);
                 }
             },
-            error: function(){
-                $.messager.alert('错误','远程访问失败');
+            error: function () {
+                $.messager.alert('错误', '远程访问失败');
             }
         });
     }
+
     var categoryJson = '{\n' +
         '    "type": "json",\n' +
         '    "from": "settlement",\n' +
@@ -196,122 +207,152 @@
         '        }\n' +
         '    ]\n' +
         '}';
+
     //打开新增窗口
-    function openInsert(type){
-        $('#_type').textbox('initValue',type);
-        switch (type){
+    function openInsert(type) {
+        $('#_type').textbox('initValue', type);
+        switch (type) {
             case 'customer':
-                $('#_type').textbox('setText',"发送客户信息");
-                $('#_json').textbox('setValue',customerJson);
+                $('#_type').textbox('setText', "发送客户信息");
+                $('#_json').textbox('setValue', customerJson);
                 break;
             case 'order':
-                $('#_type').textbox('setText',"发送订单信息");
-                $('#_json').textbox('setValue',orderJson);
+                $('#_type').textbox('setText', "发送订单信息");
+                $('#_json').textbox('setValue', orderJson);
                 break;
             case 'category':
-                $('#_type').textbox('setText',"发送品类信息");
-                $('#_json').textbox('setValue',categoryJson);
+                $('#_type').textbox('setText', "发送品类信息");
+                $('#_json').textbox('setValue', categoryJson);
                 break;
-            default:break;
+            default:
+                break;
         }
         $('#sendCustomer').dialog('open');
         $('#sendCustomer').dialog('center');
         formFocus("_form", "_json");
     }
-    
-        function saveOrUpdate(){
-            if(!$('#_form').form("validate")){
-                return;
-            }
-            disableEasyUiControl('queryBtn',true);
-            var _formData = removeKeyStartWith($("#_form").serializeObject(),"_");
-            var _url ="${contextPath}/adminManagement/sendJsonToMQ.action";
-            $.ajax({
-                type: "POST",
-                url: _url,
-                data: _formData,
-                processData:true,
-                dataType: "json",
-                async : true,
-                success: function (data) {
-                    disableEasyUiControl('queryBtn',false);
-                    if(data.code=="200"){
-                        $("#grid").datagrid("reload");
-                        $('#dlg').dialog('close');
-                    }else{
-                        $.messager.alert('错误',data.result);
-                    }
 
-                },
-                error: function(){
-                    $.messager.alert('错误','远程访问失败');
-                    disableEasyUiControl('queryBtn',false);
+    //性能测试客户数据
+    function performanceTest(){
+        disableEasyUiControl('queryBtn', true);
+        var _formData = removeKeyStartWith($("#_form").serializeObject(), "_");
+        var _url = "${contextPath}/adminManagement/sendJsonToMQTest.action";
+        $.ajax({
+            type: "POST",
+            url: _url,
+            dataType: "json",
+            async: true,
+            success: function (data) {
+                disableEasyUiControl('queryBtn', false);
+                if (data.code == "200") {
+                    $("#grid").datagrid("reload");
+                    $('#dlg').dialog('close');
+                } else {
+                    $.messager.alert('错误', data.result);
                 }
-            });
-        }
-
-        //根据主键删除
-        function del() {
-            var selected = $("#grid").datagrid("getSelected");
-            if (null == selected) {
-                $.messager.alert('警告','请选中一条数据');
-                return;
+            },
+            error: function () {
+                $.messager.alert('错误', '远程访问失败');
+                disableEasyUiControl('queryBtn', false);
             }
-            $.messager.confirm('确认','您确认想要删除记录吗？',function(r){
-                if (r){
-                    $.ajax({
-                        type: "POST",
-                        url: "${contextPath}/customerPoints/delete",
-                        data: {id:selected.id},
-                        processData:true,
-                        dataType: "json",
-                        async : true,
-                        success: function (data) {
-                            if(data.code=="200"){
-                                $("#grid").datagrid("reload");
-                                $('#dlg').dialog('close');
-                            }else{
-                                $.messager.alert('错误',data.result);
-                            }
-                        },
-                        error: function(){
-                            $.messager.alert('错误','远程访问失败');
+        });
+    }
+
+    //发送数据到MQ
+    function saveOrUpdate() {
+        if (!$('#_form').form("validate")) {
+            return;
+        }
+        disableEasyUiControl('queryBtn', true);
+        var _formData = removeKeyStartWith($("#_form").serializeObject(), "_");
+        var _url = "${contextPath}/adminManagement/sendJsonToMQ.action";
+        $.ajax({
+            type: "POST",
+            url: _url,
+            data: _formData,
+            processData: true,
+            dataType: "json",
+            async: true,
+            success: function (data) {
+                disableEasyUiControl('queryBtn', false);
+                if (data.code == "200") {
+                    $("#grid").datagrid("reload");
+                    $('#dlg').dialog('close');
+                } else {
+                    $.messager.alert('错误', data.result);
+                }
+
+            },
+            error: function () {
+                $.messager.alert('错误', '远程访问失败');
+                disableEasyUiControl('queryBtn', false);
+            }
+        });
+    }
+
+    //根据主键删除
+    function del() {
+        var selected = $("#grid").datagrid("getSelected");
+        if (null == selected) {
+            $.messager.alert('警告', '请选中一条数据');
+            return;
+        }
+        $.messager.confirm('确认', '您确认想要删除记录吗？', function (r) {
+            if (r) {
+                $.ajax({
+                    type: "POST",
+                    url: "${contextPath}/customerPoints/delete",
+                    data: {id: selected.id},
+                    processData: true,
+                    dataType: "json",
+                    async: true,
+                    success: function (data) {
+                        if (data.code == "200") {
+                            $("#grid").datagrid("reload");
+                            $('#dlg').dialog('close');
+                        } else {
+                            $.messager.alert('错误', data.result);
                         }
-                    });
-                }
-            });
-
-        }
-        //表格查询
-        function queryGrid() {
-            var opts = $("#grid").datagrid("options");
-            if (null == opts.url || "" == opts.url) {
-                opts.url = "${contextPath}/customerPoints/listPage";
+                    },
+                    error: function () {
+                        $.messager.alert('错误', '远程访问失败');
+                    }
+                });
             }
-            if(!$('#form').form("validate")){
-                return;
-            }
-            $("#grid").datagrid("load", bindGridMeta2Form("grid", "form"));
+        });
+
+    }
+
+    //表格查询
+    function queryGrid() {
+        var opts = $("#grid").datagrid("options");
+        if (null == opts.url || "" == opts.url) {
+            opts.url = "${contextPath}/customerPoints/listPage";
         }
-
-
-        //清空表单
-        function clearForm() {
-            $('#form').form('clear');
+        if (!$('#form').form("validate")) {
+            return;
         }
+        $("#grid").datagrid("load", bindGridMeta2Form("grid", "form"));
+    }
 
-        //表格表头右键菜单
-        function headerContextMenu(e, field){
-            e.preventDefault();
-            if (!cmenu){
-                createColumnMenu("grid");
-            }
-            cmenu.menu('show', {
-                left:e.pageX,
-                top:e.pageY
-            });
+
+    //清空表单
+    function clearForm() {
+        $('#form').form('clear');
+    }
+
+    //表格表头右键菜单
+    function headerContextMenu(e, field) {
+        e.preventDefault();
+        if (!cmenu) {
+            createColumnMenu("grid");
         }
+        cmenu.menu('show', {
+            left: e.pageX,
+            top: e.pageY
+        });
+    }
 
 
-    </script>
+</script>
 </#body>

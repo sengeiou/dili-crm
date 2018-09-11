@@ -224,7 +224,6 @@ public class AddressServiceImpl extends BaseServiceImpl<Address, Long> implement
             return cities.get(0);
         }
         return null;
-
     }
 
 

@@ -11,7 +11,7 @@ import java.util.UUID;
 /**
  * Created by asiam on 2018/3/14 0014.
  */
-@Configuration
+//@Configuration
 public class RabbitConfiguration {
 
 //    public static final String DEFAULT_FANOUT_EXCHANGE = "diligrp.crm.fanout";

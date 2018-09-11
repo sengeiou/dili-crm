@@ -15,8 +15,8 @@ import java.util.UUID;
 /**
  * Created by asiam on 2018/3/14 0014.
  */
-@Configuration
-@ConditionalOnExpression("'${mq.enable}'=='true'")
+//@Configuration
+//@ConditionalOnExpression("'${mq.enable}'=='true'")
 public class RabbitConfiguration {
 
     public static final String DEFAULT_TOPIC_EXCHANGE = "diligrp.points.topicExchange";

@@ -42,7 +42,6 @@ public class DtoMessageConverter {
 	}
 	/**
 	 * @param json 要进行转换为Map的原json字符串
-	 * @param clz   要进行转换的目标Map的类型
 	 * @return 返回转换后的Optional<Map>
 	 */
 	public static  Optional<Map<String,Object>> convertAsMap(String json) {
