@@ -10,13 +10,16 @@ import com.dili.ss.metadata.ValuePairImpl;
 import com.dili.ss.metadata.provider.BatchDisplayTextProviderAdaptor;
 import com.dili.uap.sdk.domain.DataDictionaryValue;
 import com.google.common.collect.Lists;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 /**
  * 远程数据字典批量提供者
@@ -27,6 +30,9 @@ public class DataDictionaryValueProvider extends BatchDisplayTextProviderAdaptor
 
     //前台需要传入的参数
     protected static final String DD_CODE_KEY = "dd_code";
+    //根据编码排除获取下拉列表项
+    protected static final String EXCLUDE_CODES_KEY = "exclude_codes";
+
     @Autowired
     private DataDictionaryRpc dataDictionaryRpc;
 
@@ -36,7 +42,6 @@ public class DataDictionaryValueProvider extends BatchDisplayTextProviderAdaptor
         if(queryParams == null) {
             return Lists.newArrayList();
         }
-
         String ddCode = getDdCode(queryParams.toString());
         DataDictionaryValue dataDictionaryValue = DTOUtils.newDTO(DataDictionaryValue.class);
         dataDictionaryValue.setDdCode(ddCode);
@@ -47,9 +52,19 @@ public class DataDictionaryValueProvider extends BatchDisplayTextProviderAdaptor
         List<ValuePair<?>> valuePairs = Lists.newArrayList();
         valuePairs.add(0, new ValuePairImpl(EMPTY_ITEM_TEXT, null));
         List<DataDictionaryValue> dataDictionaryValues = output.getData();
+        String excludeCodes = JSONObject.parseObject(queryParams.toString()).getString(EXCLUDE_CODES_KEY);
+        List<String> excludeCodeList = null;
+        if(StringUtils.isNotBlank(excludeCodes)){
+            excludeCodeList = Arrays.asList(excludeCodes.trim().split(","));
+            //去掉每个项两边的空格
+            excludeCodeList = excludeCodeList.stream().map(t -> t.trim()).collect(Collectors.toList());
+        }
         for(int i=0; i<dataDictionaryValues.size(); i++) {
             DataDictionaryValue dataDictionaryValue1 = dataDictionaryValues.get(i);
-            valuePairs.add(i+1, new ValuePairImpl(dataDictionaryValue1.getName(), dataDictionaryValue1.getCode()));
+            //排除指定编码项
+            if(excludeCodeList == null || (excludeCodeList != null && !excludeCodeList.contains(dataDictionaryValue1.getCode()))){
+                valuePairs.add(i+1, new ValuePairImpl(dataDictionaryValue1.getName(), dataDictionaryValue1.getCode()));
+            }
         }
         return valuePairs;
     }
@@ -92,8 +107,7 @@ public class DataDictionaryValueProvider extends BatchDisplayTextProviderAdaptor
      * 获取数据字典编码
      * @return
      */
-    public String getDdCode(String queryParams){
-        //清空缓存
+    private String getDdCode(String queryParams){
         String ddCode = JSONObject.parseObject(queryParams).getString(DD_CODE_KEY);
         if(ddCode == null){
             throw new RuntimeException("dd_code属性为空");
