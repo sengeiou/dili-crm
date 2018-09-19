@@ -67,7 +67,7 @@ public class CategoryListener {
 					//如果是更新，则需要更新客户品类积分表的品类名称
 					if(categoryDto.getId() != null){
 						//更新一级品类
-						if(categoryDto.getParentCategoryId() == null){
+						if(categoryDto.getParentCategoryId() == null || categoryDto.getParentCategoryId().equals("0")){
 							CustomerCategoryPoints customerCategoryPoints = DTOUtils.newDTO(CustomerCategoryPoints.class);
 							customerCategoryPoints.setCategory1Name(category.getName());
 							CustomerCategoryPoints condition = DTOUtils.newDTO(CustomerCategoryPoints.class);
