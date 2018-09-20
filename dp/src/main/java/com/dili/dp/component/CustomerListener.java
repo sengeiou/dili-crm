@@ -224,18 +224,18 @@ public class CustomerListener {
         List<Customer> list = this.customerService.list(customerQueryCondition);
         if (list != null && list.size() == 1) {
             Customer customerItem = list.get(0);
-            //更新用户信息
-            if (customerItem.getSyncTime() == null) {
-                customerItem.setSyncTime(customerItem.getCreated());
-            }
-            if (customer.getSyncTime() == null) {
-                customer.setSyncTime(new Date());
-            }
+//            //更新用户信息
+//            if (customerItem.getSyncTime() == null) {
+//                customerItem.setSyncTime(customerItem.getCreated());
+//            }
+//            if (customer.getSyncTime() == null) {
+//                customer.setSyncTime(new Date());
+//            }
             //上报的客户类型和当前客户类型都不为空，并且不相等，合并客户类型为买卖家
             if (StringUtils.isNotBlank(customer.getType()) && StringUtils.isNotBlank(customerItem.getType()) && !customerItem.getType().equalsIgnoreCase(customer.getType())) {
                 customerItem.setType("purchaseSale");
             }
-            if (customerItem.getSyncTime().before(customer.getSyncTime())) {
+//            if (customerItem.getSyncTime().before(customer.getSyncTime())) {
                 String name = StringUtils.trimToEmpty(customer.getName());
                 String phone = StringUtils.trimToEmpty(customer.getPhone());
                 String sex = StringUtils.trimToEmpty(customer.getSex());
@@ -249,19 +249,18 @@ public class CustomerListener {
                 if (StringUtils.isNotBlank(sex) && !sex.equals(customerItem.getSex())) {
                     customerItem.setSex(sex);
                 }
-
-            }
+//            }
             customerItem.setSyncTime(customer.getSyncTime());
             customer = customerItem;
         }
-        logger.info("customer id:{},name:{},certificateNumber:{},system:{}", customer.getId(), customer.getName(), customer.getCertificateNumber(), customer.getSourceSystem());
+//        logger.info("customer id:{},name:{},certificateNumber:{},system:{}", customer.getId(), customer.getName(), customer.getCertificateNumber(), customer.getSourceSystem());
         this.customerService.saveOrUpdate(customer);
 
         //对账号信息做插入或者更新的判断
         List<CustomerExtensions> insertExtensionList = new ArrayList<>();
 
         List<CustomerExtensions> updateExtensionList = new ArrayList<>();
-        logger.info("customerExtensionsList size:{}", customerExtensionsList.size());
+//        logger.info("customerExtensionsList size:{}", customerExtensionsList.size());
         for (CustomerExtensions customerExtensions : customerExtensionsList) {
             CustomerExtensions extensionsQueryCondition = DTOUtils.newDTO(CustomerExtensions.class);
 
@@ -280,11 +279,11 @@ public class CustomerListener {
                 }
             }
         }
-        logger.info("insertExtensionList size:{}", insertExtensionList.size());
+//        logger.info("insertExtensionList size:{}", insertExtensionList.size());
         if (insertExtensionList.size() > 0) {
             this.customerExtensionsService.batchInsert(insertExtensionList);
         }
-        logger.info("updateExtensionList size:{}", updateExtensionList.size());
+//        logger.info("updateExtensionList size:{}", updateExtensionList.size());
         if (updateExtensionList.size() > 0) {
             this.customerExtensionsService.batchUpdate(updateExtensionList);
         }
