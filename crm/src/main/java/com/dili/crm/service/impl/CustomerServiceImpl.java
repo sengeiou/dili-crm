@@ -231,12 +231,17 @@ public class CustomerServiceImpl extends BaseServiceImpl<Customer, Long> impleme
 		}
 		List<Map> list = ValueProviderUtils.buildDataByProvider(getCustomerMetadata(), Lists.newArrayList(customer));
 		Map customerMap = list.get(0);
-		if(customerMap.get("createdId") != null){
-			BaseOutput<User> userBaseOutput = userRpc.get(Long.parseLong(customerMap.get("createdId").toString()));
-			if(userBaseOutput.isSuccess() || userBaseOutput.getData() != null) {
-				customerMap.put("createdName", userBaseOutput.getData().getRealName());
-			}
-		}
+		//界面不显示创建人姓名，暂时停用
+//		if(customerMap.get("createdId") != null){
+//			BaseOutput<User> userBaseOutput = userRpc.get(Long.parseLong(customerMap.get("createdId").toString()));
+//			if(userBaseOutput.isSuccess()) {
+//				if(userBaseOutput.getData() == null){
+//					customerMap.put("createdName", customerMap.get("createdId"));
+//				}else {
+//					customerMap.put("createdName", userBaseOutput.getData().getRealName());
+//				}
+//			}
+//		}
 		//查询客户可用积分
 		CustomerPointsApiDTO customerPointsApiDTO = DTOUtils.newDTO(CustomerPointsApiDTO.class);
 		customerPointsApiDTO.setCustomerIds(Lists.newArrayList(customer.getId()));
