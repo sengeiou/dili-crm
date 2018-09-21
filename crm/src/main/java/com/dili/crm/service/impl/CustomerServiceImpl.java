@@ -233,7 +233,7 @@ public class CustomerServiceImpl extends BaseServiceImpl<Customer, Long> impleme
 		Map customerMap = list.get(0);
 		if(customerMap.get("createdId") != null){
 			BaseOutput<User> userBaseOutput = userRpc.get(Long.parseLong(customerMap.get("createdId").toString()));
-			if(userBaseOutput.isSuccess()) {
+			if(userBaseOutput.isSuccess() || userBaseOutput.getData() != null) {
 				customerMap.put("createdName", userBaseOutput.getData().getRealName());
 			}
 		}
