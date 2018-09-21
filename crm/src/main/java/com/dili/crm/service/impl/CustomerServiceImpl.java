@@ -234,7 +234,7 @@ public class CustomerServiceImpl extends BaseServiceImpl<Customer, Long> impleme
 		if(customerMap.get("createdId") != null){
 			BaseOutput<User> userBaseOutput = userRpc.get(Long.parseLong(customerMap.get("createdId").toString()));
 			if(userBaseOutput.isSuccess()) {
-				customerMap.put("createdName", userRpc.get(Long.parseLong(customerMap.get("createdId").toString())).getData().getRealName());
+				customerMap.put("createdName", userBaseOutput.getData().getRealName());
 			}
 		}
 		//查询客户可用积分
