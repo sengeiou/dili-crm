@@ -471,6 +471,11 @@ public class CustomerServiceImpl extends BaseServiceImpl<Customer, Long> impleme
 	}
 
 	@Override
+	public List<Customer> listByExample(CustomerDto domain) {
+		return super.listByExample(domain);
+	}
+
+	@Override
 	public String listCustomerFirmPoints(Long customerId){
 		List<Map> list = getActualDao().listCustomerFirmPoints(customerId);
 		Iterator<Map> it = list.iterator();

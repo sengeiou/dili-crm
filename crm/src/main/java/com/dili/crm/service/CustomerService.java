@@ -27,6 +27,13 @@ public interface CustomerService extends BaseService<Customer, Long> {
 	BaseOutput insertSelectiveWithOutput(Customer customer,Long memberIds[]);
 
 	/**
+	 * 查询客户，用于临时客户扫描器
+	 * @param domain
+	 * @return
+	 */
+	List<Customer> listByExample(CustomerDto domain);
+
+	/**
 	 * 按需修改客户，返回BaseOutput
 	 * @param customer
 	 * @return

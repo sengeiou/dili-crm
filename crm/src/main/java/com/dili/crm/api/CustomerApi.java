@@ -81,6 +81,7 @@ public class CustomerApi {
         List<Customer> customers = customerService.listByExample(customer);
         if (CollectionUtils.isNotEmpty(customers)){
             List<Long> ids = customers.stream().map(Customer::getId).collect(Collectors.toList());
+            System.out.println("删除临时新增客户:"+ids);
             customerService.deleteWithCascade(ids);
         }
         return BaseOutput.success();
