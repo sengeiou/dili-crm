@@ -37,7 +37,7 @@
             <#echarts _id="customerStatsChart" _title="客户统计" _type="Line" _url="${contextPath}/customerStats/list.action?init=true" _data="[]" _options="{legend:{selectedMode:false}}" _groupField="firmCode" _nameField="date" _valueField="customerCount" _smooth="true"></#echarts>
         </div>
          <!-- 用户增量统计图表 -->
-         <div region="south" style="width:100%;" height="360" border="false">
+         <div region="south" style="width:100%;" height="280" border="false" split="true">
              <!-- =========================================================图表========================================================= -->
              <div id="incrementCustomerStatsChart" style="width:99%;height:99.9%;" ></div>
              <#echarts _id="incrementCustomerStatsChart" _title="客户增量统计" _type="Pie" _url="${contextPath}/customerStats/listIncrement.action?init=true" _data="[]" _options="{legend:{selectedMode:false}}" _nameField="firmCode" _valueField="customerCount" ></#echarts>
@@ -95,14 +95,23 @@
         $(function () {
             bindFormEvent("form", "startDate", query);
             //获取上个月日期
-            function getLastMonthDate() {
+            function lastMonthDate() {
                 var date = new Date();
                 var y = date.getFullYear();
                 var m = date.getMonth();
                 var d = date.getDate();
                 return y + '-' + m + '-' + d;
             }
-            $("#startDate").datebox("setValue", getLastMonthDate());
+            //获取当天日期
+            function currentDate() {
+                var date = new Date();
+                var y = date.getFullYear();
+                var m = date.getMonth()+1;
+                var d = date.getDate();
+                return y + '-' + m + '-' + d;
+            }
+            $("#startDate").datebox("setValue", lastMonthDate());
+            $("#endDate").datebox("setValue", currentDate());
             query();
         })
     </script>
