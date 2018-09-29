@@ -34,13 +34,13 @@
         <div region="center" style="width:100%;" border="false">
             <!-- =========================================================图表========================================================= -->
             <div id="customerStatsChart" style="width:99%;height:99.9%; " ></div>
-            <#echarts _id="customerStatsChart" _title="客户统计" _type="Line" _url="${contextPath}/customerStats/list.action?init=true" _options="{legend:{selectedMode:false}}" _groupField="firmCode" _nameField="date" _valueField="customerCount" _smooth="true"></#echarts>
+            <#echarts _id="customerStatsChart" _title="客户统计" _type="Line" _url="${contextPath}/customerStats/list.action?init=true" _data="[]" _options="{legend:{selectedMode:false}}" _groupField="firmCode" _nameField="date" _valueField="customerCount" _smooth="true"></#echarts>
         </div>
          <!-- 用户增量统计图表 -->
          <div region="south" style="width:100%;" height="360" border="false">
              <!-- =========================================================图表========================================================= -->
              <div id="incrementCustomerStatsChart" style="width:99%;height:99.9%;" ></div>
-             <#echarts _id="incrementCustomerStatsChart" _title="客户增量统计" _type="Pie" _url="${contextPath}/customerStats/listIncrement.action?init=true" _options="{legend:{selectedMode:false}}" _nameField="firmCode" _valueField="customerCount" ></#echarts>
+             <#echarts _id="incrementCustomerStatsChart" _title="客户增量统计" _type="Pie" _url="${contextPath}/customerStats/listIncrement.action?init=true" _data="[]" _options="{legend:{selectedMode:false}}" _nameField="firmCode" _valueField="customerCount" ></#echarts>
          </div>
     </div>
 
@@ -48,11 +48,33 @@
     <!-- style & script 分隔线 -->
     <!-- ====================================================================================================================== -->
     <script type="text/javascript">
-
         //图表查询
         function query() {
-            queryChart(customerStatsChart, "Line", "${contextPath}/customerStats/list.action", $("#form").serializeObject(), "date", "customerCount", "firmCode");
-            queryChart(incrementCustomerStatsChart, "Pie", "${contextPath}/customerStats/listIncrement.action", $("#form").serializeObject(), "firmCode", "customerCount");
+            if($("#startDate").datebox("getValue") == ""){
+                $.messager.alert('警告','请选择开始日期');
+                return;
+            }
+            $.messager.progress({
+                title : "提示",
+                msg : "数据加载中,请稍候...",
+                interval : 300
+            });
+            $(".window-mask").toggleClass("window-mask-opaque");
+            $.ajax({
+                type: "POST",
+                url: "${contextPath}/customerStats/pullData.action",
+                data: $("#form").serializeObject(),
+                dataType: "json",
+                success: function (data) {
+                    queryChart(customerStatsChart, "Line", "${contextPath}/customerStats/list.action", $("#form").serializeObject(), "date", "customerCount", "firmCode");
+                    queryChart(incrementCustomerStatsChart, "Pie", "${contextPath}/customerStats/listIncrement.action", $("#form").serializeObject(), "firmCode", "customerCount");
+                    $.messager.progress("close");
+                    $(".window-mask-opaque").toggleClass("window-mask");
+                },
+                error: function () {
+                    alert('远程拉取数据失败');
+                }
+            });
         }
 
         //清空表单
@@ -81,6 +103,7 @@
                 return y + '-' + m + '-' + d;
             }
             $("#startDate").datebox("setValue", getLastMonthDate());
+            query();
         })
     </script>
 </#body>

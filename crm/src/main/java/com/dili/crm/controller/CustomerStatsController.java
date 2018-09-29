@@ -60,6 +60,16 @@ public class CustomerStatsController {
         return customerStatsService.listCustomerStatsIncrement(customerStats);
     }
 
+    @ApiOperation(value="拉取各市场客户数据", notes = "拉取各市场客户数据")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name="CustomerStats", paramType="form", value = "CustomerStats的form信息", required = false, dataType = "string")
+    })
+    @RequestMapping(value="/pullData.action", method = {RequestMethod.GET, RequestMethod.POST})
+    public @ResponseBody
+    BaseOutput pullData(CustomerStatsDto customerStats) throws Exception {
+        return customerStatsService.pullData(customerStats);
+    }
+
     //初始化开始时间，默认查一个月
     private void initStartDate(CustomerStatsDto customerStats){
         if("true".equals(customerStats.aget("init"))){

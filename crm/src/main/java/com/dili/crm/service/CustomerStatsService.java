@@ -46,4 +46,10 @@ public interface CustomerStatsService extends BaseService<CustomerStats, Long> {
      * @param endDate
      */
     void customerStatsByDates(Date startDate, Date endDate);
+
+    /**
+     * 拉取数据
+     * @param customerStatsDto
+     */
+    BaseOutput pullData(CustomerStatsDto customerStatsDto);
 }

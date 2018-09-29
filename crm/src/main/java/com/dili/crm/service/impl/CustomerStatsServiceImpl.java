@@ -69,18 +69,21 @@ public class CustomerStatsServiceImpl extends BaseServiceImpl<CustomerStats, Lon
         if(customerStatsDto.getEndDate() == null) {
             customerStatsDto.setEndDate(new Date());
         }
-        //拉取开始时间的统计数据
-        customerStatsByDate(customerStatsDto.getStartDate(), false);
+//        //拉取开始时间的统计数据
+//        customerStatsByDate(customerStatsDto.getStartDate(), false);
+//        //拉取结束时间的统计数据
+//        customerStatsByDate(customerStatsDto.getEndDate(), false);
         //查询开始和结束日期的统计数据
         CustomerStatsDto customerStats = DTOUtils.newDTO(CustomerStatsDto.class);
         customerStats.setFirmCodes(firmCodes);
-        customerStats.setDate(DateUtils.formatDate2DateTimeStart(customerStatsDto.getStartDate()));
-        List<CustomerStats> startCustomerStatsList = listByExample(customerStats);
         customerStats.setDate(DateUtils.formatDate2DateTimeStart(customerStatsDto.getEndDate()));
         List<CustomerStats> endCustomerStatsList = listByExample(customerStats);
-        if(CollectionUtils.isEmpty(startCustomerStatsList) || CollectionUtils.isEmpty(endCustomerStatsList)){
-            return BaseOutput.failure("无开始或结束日期的统计数据");
+        if(CollectionUtils.isEmpty(endCustomerStatsList)){
+//            return BaseOutput.failure("无结束日期的统计数据");
+            return BaseOutput.success();
         }
+        customerStats.setDate(DateUtils.formatDate2DateTimeStart(customerStatsDto.getStartDate()));
+        List<CustomerStats> startCustomerStatsList = listByExample(customerStats);
         //用于保存增量市场客户统计
         List<CustomerStats> incrementList = Lists.newArrayList();
         for(CustomerStats endCustomerStats : endCustomerStatsList){
@@ -101,9 +104,9 @@ public class CustomerStatsServiceImpl extends BaseServiceImpl<CustomerStats, Lon
             customerStatsDto.setEndDate(new Date());
         }
         //有开始时间，则需要拉取统计数据
-        if(customerStatsDto.getStartDate() != null) {
-            pullData(customerStatsDto);
-        }
+//        if(customerStatsDto.getStartDate() != null) {
+//            pullData(customerStatsDto);
+//        }
         UserTicket userTicket = SessionContext.getSessionContext().getUserTicket();
         if(userTicket == null){
             return BaseOutput.failure("登录超时");
@@ -121,6 +124,55 @@ public class CustomerStatsServiceImpl extends BaseServiceImpl<CustomerStats, Lon
         getDates(startDate, endDate).stream().forEach(date -> customerStatsByDate(date, false));
     }
 
+
+    /**
+     * 拉取数据
+     * @param customerStatsDto
+     */
+    @Override
+    public BaseOutput pullData(CustomerStatsDto customerStatsDto){
+        //支持统计客户数的最早时间，2018年1月1日
+        Date EARLIEST_DATE = DateUtils.dateStr2Date("2018-1-1 0:0:0", "yyyy-MM-dd HH:mm:ss");
+        if(customerStatsDto.getStartDate().before(EARLIEST_DATE)){
+            customerStatsDto.setStartDate(EARLIEST_DATE);
+        }
+        //查询客户表客户的最早创建时间
+        Customer customer = DTOUtils.newDTO(Customer.class);
+        customer.setYn(1);
+        customer.setSelectColumns(Sets.newHashSet("min(created) created"));
+        List<Customer> customers = customerService.listByExample(customer);
+        //没有客户数据，就不用拉取了
+        if(CollectionUtils.isEmpty(customers) || customers.get(0) == null){
+            return BaseOutput.success();
+        }
+        //最早客户创建时间
+        Date earliestCreated = customers.get(0).getCreated();
+        //拉取的开始时间不早于最早的客户的创建时间，以提高性能
+        if(customerStatsDto.getStartDate().before(earliestCreated)){
+            customerStatsDto.setStartDate(earliestCreated);
+        }
+        //查询客户统计表已有数据的最早时间
+        CustomerStatsDto condition = DTOUtils.newDTO(CustomerStatsDto.class);
+        condition.setSelectColumns(Sets.newHashSet("min(date) date"));
+        List<CustomerStats> customerStats = listByExample(condition);
+        //客户统计表忆有数据最早时间，因为是min(date)聚合函数，所以一定会有一条数据，不过第一条可能是null
+        //如果客户统计表没数据，则取当前时间为统计表时间
+        Date earliestCustomerStats = customerStats.get(0) == null ? new Date() : customerStats.get(0).getDate();
+        //判断开始时间是否早于CustomerStats表中的已有数据最早时间，如果更早,则需要先拉取开始时间到已有数据最早时间的数据
+        if (customerStatsDto.getStartDate().before(earliestCustomerStats)) {
+            //拉取开始时间到已有数据最早时间的数据
+            customerStatsByDates(customerStatsDto.getStartDate(), earliestCustomerStats);
+        }
+        //拉取今天的最新实时数据
+        //获取今天的0点0分
+        Date today = DateUtils.formatDate2DateTimeStart(new Date());
+        //如果结束时间大于等于今天，则需要更新今天的客户统计
+        if(customerStatsDto.getEndDate() == null || customerStatsDto.getEndDate().getTime() >= today.getTime()) {
+            customerStats();
+        }
+        return BaseOutput.success();
+    }
+
     /**
      * 循环客户统计对象，根据firmCode获取
      * @param customerStatsList
@@ -134,49 +186,6 @@ public class CustomerStatsServiceImpl extends BaseServiceImpl<CustomerStats, Lon
             }
         }
         return null;
-    }
-
-    /**
-     * 拉取数据
-     * @param customerStatsDto
-     */
-    private void pullData(CustomerStatsDto customerStatsDto){
-        //支持统计客户数的最早时间，2018年1月1日
-        Date EARLIEST_DATE = DateUtils.dateStr2Date("2018-1-1 0:0:0", "yyyy-MM-dd HH:mm:ss");
-        if(customerStatsDto.getStartDate().before(EARLIEST_DATE)){
-            customerStatsDto.setStartDate(EARLIEST_DATE);
-        }
-        //查询客户统计表已有数据的最早时间
-        CustomerStatsDto condition = DTOUtils.newDTO(CustomerStatsDto.class);
-        condition.setSelectColumns(Sets.newHashSet("min(date) date"));
-        List<CustomerStats> customerStats = listByExample(condition);
-        //查询客户表客户的最早创建时间
-        Customer customer = DTOUtils.newDTO(Customer.class);
-        customer.setYn(1);
-        customer.setSelectColumns(Sets.newHashSet("min(created) created"));
-        List<Customer> customers = customerService.listByExample(customer);
-        //没有客户数据，就不用拉取了
-        if(CollectionUtils.isEmpty(customers)){
-            return;
-        }
-        //最早客户创建时间
-        Date earliestCreated = customers.get(0).getCreated();
-        //开始时间不早于最早的客户的创建时间
-        if(customerStatsDto.getStartDate().before(earliestCreated)){
-            customerStatsDto.setStartDate(earliestCreated);
-        }
-        //判断开始时间是否早于CustomerStats表中的已有数据最早时间，如果更早,则需要先拉取开始时间到已有数据最早时间的数据
-        if (!customerStats.isEmpty() && customerStatsDto.getStartDate().before(customerStats.get(0).getDate())) {
-            //拉取开始时间到已有数据最早时间的数据
-            customerStatsByDates(customerStatsDto.getStartDate(), customerStats.get(0).getDate());
-        }
-        //拉取今天的最新实时数据
-        //获取今天的0点0分
-        Date today = DateUtils.formatDate2DateTimeStart(new Date());
-        //如果结束时间大于等于今天，则需要更新今天的客户统计
-        if(customerStatsDto.getEndDate().getTime() >= today.getTime()) {
-            customerStats();
-        }
     }
 
     /**
