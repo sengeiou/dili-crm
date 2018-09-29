@@ -31,17 +31,17 @@
         <!-- 中央布局 -->
         <!-- ====================================================================================================================== -->
         <!-- 用户统计图表 -->
-        <div region="center" style="width:100%;" border="false">
-            <!-- =========================================================图表========================================================= -->
-            <div id="customerStatsChart" style="width:99%;height:99.9%; " ></div>
+        <div region="center" style="width:100%;" height="460" border="false">
+            <div style="height: 810px;">
+            <!-- =========================================================统计图表========================================================= -->
+            <div id="customerStatsChart" style="width:99%;height:59.9%; " ></div>
             <#echarts _id="customerStatsChart" _title="客户统计" _type="Line" _url="${contextPath}/customerStats/list.action?init=true" _data="[]" _options="{legend:{selectedMode:false}}" _groupField="firmCode" _nameField="date" _valueField="customerCount" _smooth="true"></#echarts>
+            <!-- =========================================================增量图表========================================================= -->
+            <div id="incrementCustomerStatsChart" style="width:99%;height:39.9%;" ></div>
+            <#echarts _id="incrementCustomerStatsChart" _title="客户增量统计" _type="Pie" _url="${contextPath}/customerStats/listIncrement.action?init=true" _data="[]" _options="{legend:{selectedMode:false}}" _nameField="firmCode" _valueField="customerCount" ></#echarts>
+            </div>
         </div>
-         <!-- 用户增量统计图表 -->
-         <div region="south" style="width:100%;" height="280" border="false" split="true">
-             <!-- =========================================================图表========================================================= -->
-             <div id="incrementCustomerStatsChart" style="width:99%;height:99.9%;" ></div>
-             <#echarts _id="incrementCustomerStatsChart" _title="客户增量统计" _type="Pie" _url="${contextPath}/customerStats/listIncrement.action?init=true" _data="[]" _options="{legend:{selectedMode:false}}" _nameField="firmCode" _valueField="customerCount" ></#echarts>
-         </div>
+
     </div>
 
     <!-- ====================================================================================================================== -->
