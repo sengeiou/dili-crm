@@ -1,7 +1,6 @@
 package com.dili.crm.domain.dto;
 
 import com.dili.crm.domain.Customer;
-import com.dili.ss.domain.annotation.Like;
 import com.dili.ss.domain.annotation.Operator;
 import com.dili.ss.metadata.FieldEditor;
 import com.dili.ss.metadata.annotation.EditMode;

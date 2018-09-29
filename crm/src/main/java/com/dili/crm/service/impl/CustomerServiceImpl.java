@@ -54,14 +54,10 @@ public class CustomerServiceImpl extends BaseServiceImpl<Customer, Long> impleme
 
     @Autowired
     private CacheService cacheService;
-    @Autowired ChartService chartService;
-
-	@Autowired
-	private UserRpc userRpc;
-
+    @Autowired
+	ChartService chartService;
 	@Autowired
 	private DepartmentRpc departmentRpc;
-
 	@Autowired
 	private CustomerPointsRpc customerPointsRpc;
 	@Autowired

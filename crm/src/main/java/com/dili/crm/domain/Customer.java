@@ -2,6 +2,7 @@ package com.dili.crm.domain;
 
 import com.dili.ss.domain.annotation.Like;
 import com.dili.ss.dto.IBaseDomain;
+import com.dili.ss.dto.IMybatisForceParams;
 import com.dili.ss.metadata.FieldEditor;
 import com.dili.ss.metadata.annotation.EditMode;
 import com.dili.ss.metadata.annotation.FieldDef;
@@ -15,7 +16,7 @@ import java.util.Date;
  * This file was generated on 2017-11-13 17:11:21.
  */
 @Table(name = "`customer`")
-public interface Customer extends IBaseDomain {
+public interface Customer extends IBaseDomain, IMybatisForceParams {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "`id`")

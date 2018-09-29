@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta name="viewport" content="initial-scale=1.0, user-scalable=no" />
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+        <title>多功能控件演示</title>
+        <style type="text/css">
+            html{height:100%}
+            body{height:100%;margin:0px;padding:0px}
+            #container{height:100%}
+        </style>
+        <script type="text/javascript" src="http://api.map.baidu.com/api?v=3.0&ak=751f403ffdb9688de9d69bf7bcb2b638">
+            //v2.0版本的引用方式：src="http://api.map.baidu.com/api?v=2.0&ak=您的密钥"
+        </script>
+        <script type="text/javascript" src="http://api.map.baidu.com/library/InfoBox/1.2/src/InfoBox_min.js"></script>
+    </head>
+
+<body>
+<div id="container"></div>
+<div id="content">内容</div>
+<script type="text/javascript">
+    // 创建地图实例
+    var map = new BMap.Map("container");
+    // 创建点坐标
+    var point = new BMap.Point(104.076985, 30.664729);
+    // 初始化地图，设置中心点坐标和地图级别
+    map.centerAndZoom(point, 15);
+    //允许缩放
+    map.enableScrollWheelZoom();
+    //定时移动到指定坐标
+//    window.setTimeout(function(){
+//        map.panTo(new BMap.Point(116.409, 39.918));
+//    }, 2000);
+//    平移缩放控件
+//    PC端默认位于地图左上方，它包含控制地图的平移和缩放的功能。移动端提供缩放控件，默认位于地图右下方
+    map.addControl(new BMap.NavigationControl());
+//    比例尺
+//    默认位于地图左下方，显示地图的比例关系
+    map.addControl(new BMap.ScaleControl());
+//    缩略地图
+//    默认位于地图右下方，是一个可折叠的缩略地图
+    map.addControl(new BMap.OverviewMapControl());
+//    地图类型
+//    默认位于地图右上方
+    map.addControl(new BMap.MapTypeControl());
+    map.setCurrentCity("成都"); // 仅当设置城市信息时，MapTypeControl的切换功能才能可用
+//    设置地图样式
+//    var mapStyle={  style : "midnight" };
+//    map.setMapStyle(mapStyle);
+
+    var myIcon = new BMap.Icon("${contextPath}/resources/images/icon/pos-icon.png", new BMap.Size(23, 25), {
+        // 指定定位位置。
+        // 当标注显示在地图上时，其所指向的地理位置距离图标左上
+        // 角各偏移7像素和20像素。
+        anchor: new BMap.Size(7, 20)
+    });
+    // 创建标注对象并添加到地图
+    var marker = new BMap.Marker(point, {icon: myIcon});
+    //绑定自定义属性
+    marker.meta={id:1, name:"名称"};
+    map.addOverlay(marker);
+    //允许拖动
+    marker.enableDragging();
+    //标签显示在图标下方
+    var label = new window.BMap.Label("标签", { offset: new window.BMap.Size(-10, 25) });
+    marker.setLabel(label);
+    //鼠标悬停时显示
+    marker.setTitle("标题");
+//    marker.setAnimation(BMAP_ANIMATION_BOUNCE); //跳动的动画
+    marker.addEventListener("click", function(e){
+//        alert("type:"+e.type);
+//        alert("target:"+e.target);
+//        alert(marker.meta.id+":"+marker.meta.name);
+//        var opts = {
+//            width : 250,     // 信息窗口宽度
+//            height: 100,     // 信息窗口高度
+//            title : "Hello"  // 信息窗口标题
+//        }
+//        var infoWindow = new BMap.InfoWindow("<B>B标签</B>", opts);  // 创建信息窗口对象
+//        map.openInfoWindow(infoWindow, point);
+        var infoWindow = new BMapLib.InfoBox(map, "<B>B标签</B>", {
+            boxStyle:{
+                background:"url('${contextPath}/resources/images/bg.png') no-repeat center top"
+                ,width: "270px"
+                ,height: "300px"
+            }
+            ,closeIconMargin: "1px 1px 0 0"
+            ,closeIconUrl:"${contextPath}/resources/images/login-user.png"
+            ,enableAutoPan: true
+            ,align: INFOBOX_AT_TOP
+        });
+        infoWindow.open(marker);
+    });
+
+
+    //浏览器定位
+//    var geolocation = new BMap.Geolocation();
+//    geolocation.getCurrentPosition(function(r){
+//        if(this.getStatus() == BMAP_STATUS_SUCCESS){
+//            var mk = new BMap.Marker(r.point);
+//            map.addOverlay(mk);
+//            map.panTo(r.point);
+//            alert('您的位置：'+r.point.lng+','+r.point.lat);
+//        }
+//        else {
+//            alert('failed'+this.getStatus());
+//        }
+//    });
+
+    //点击事件
+//    map.addEventListener("click", function(e){
+//        map.removeOverlay(marker);
+//        marker = new BMap.Marker(new BMap.Point(e.point.lng, e.point.lat), {icon: myIcon});
+//        map.addOverlay(marker);
+////        alert(e.point.lng + ", " + e.point.lat);
+//    });
+
+</script>
+</body>
+</html>
