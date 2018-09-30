@@ -33,7 +33,6 @@ public interface CustomerStats extends IBaseDomain {
     @Column(name = "`firm_code`")
     @FieldDef(label="所属市场", maxLength = 20)
     @EditMode(editor = FieldEditor.Text, required = false, provider = "firmProvider", index = 1)
-    @OrderBy
     String getFirmCode();
 
     void setFirmCode(String firmCode);
