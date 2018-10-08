@@ -2,6 +2,7 @@ package com.dili.crm.domain;
 
 import com.alibaba.fastjson.annotation.JSONField;
 import com.dili.ss.dto.IBaseDomain;
+import com.dili.ss.dto.IMybatisForceParams;
 import com.dili.ss.metadata.FieldEditor;
 import com.dili.ss.metadata.annotation.EditMode;
 import com.dili.ss.metadata.annotation.FieldDef;
@@ -20,7 +21,7 @@ import javax.persistence.Id;
  * This file was generated on 2018-09-26 11:58:22.
  */
 @Table(name = "`customer_stats`")
-public interface CustomerStats extends IBaseDomain {
+public interface CustomerStats extends IBaseDomain, IMybatisForceParams {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "`id`")
@@ -41,7 +42,6 @@ public interface CustomerStats extends IBaseDomain {
     @FieldDef(label="日期")
     @EditMode(editor = FieldEditor.Date, required = false, provider = "dateProvider")
     @OrderBy
-//    @JsonFormat(timezone = "GMT+8", pattern = "yyyy-MM-dd")
     @JSONField(format = "yyyy-MM-dd")
     Date getDate();
 

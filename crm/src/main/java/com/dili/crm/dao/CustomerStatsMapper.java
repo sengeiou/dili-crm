@@ -3,7 +3,8 @@ package com.dili.crm.dao;
 import com.dili.crm.domain.CustomerStats;
 import com.dili.ss.base.MyMapper;
 
-import java.util.Date;
+import java.util.List;
+import java.util.Map;
 
 public interface CustomerStatsMapper extends MyMapper<CustomerStats> {
 
@@ -14,6 +15,14 @@ public interface CustomerStatsMapper extends MyMapper<CustomerStats> {
 
     /**
      * 插入指定日期客户数到客户统计表
+     * @param map date指定日期(必填), market市场编码(选填)
+     *
      */
-    void customerStatsByDate(Date date);
+    void customerStatsByDate(Map<String, Object> map);
+
+    /**
+     * 查询不同的市场类型
+     * @return
+     */
+    List<CustomerStats> selectDistinctFirmCode();
 }

@@ -27,7 +27,7 @@
   </insert>
 
   <!-- 插入统计数据 -->
-  <insert id="customerStatsByDate" parameterType="java.util.Date">
+  <insert id="customerStatsByDate" parameterType="map">
     insert into customer_stats (firm_code, date, customer_count)
     select market firm_code, date(#{date}) date, count(*) customer_count
     from customer
@@ -35,6 +35,13 @@
     <![CDATA[
     and created <= #{date}
     ]]>
+    <if test="market != null">
+      and market = #{market}
+    </if>
     group by market
   </insert>
+
+  <select id="selectDistinctFirmCode" resultMap="BaseResultMap">
+    select distinct firm_code from customer_stats
+  </select>
 </mapper>

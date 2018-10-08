@@ -8,6 +8,7 @@ import com.dili.crm.service.CustomerService;
 import com.dili.crm.service.CustomerStatsService;
 import com.dili.crm.service.FirmService;
 import com.dili.ss.base.BaseServiceImpl;
+import com.dili.ss.dao.ExampleExpand;
 import com.dili.ss.domain.BaseOutput;
 import com.dili.ss.domain.EasyuiPageOutput;
 import com.dili.ss.dto.DTOUtils;
@@ -16,8 +17,10 @@ import com.dili.ss.util.DateUtils;
 import com.dili.uap.sdk.domain.UserTicket;
 import com.dili.uap.sdk.session.SessionContext;
 import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
 import org.apache.commons.collections4.CollectionUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -43,12 +46,12 @@ public class CustomerStatsServiceImpl extends BaseServiceImpl<CustomerStats, Lon
 
     @Override
     public void customerStats(){
-        customerStatsByDate(new Date(), true);
+        customerStatsByDate(new Date(), null, true);
     }
 
     @Override
     public void customerStatsByDate(Date date) {
-        customerStatsByDate(date, true);
+        customerStatsByDate(date, null, true);
     }
 
     @Override
@@ -120,8 +123,8 @@ public class CustomerStatsServiceImpl extends BaseServiceImpl<CustomerStats, Lon
     }
 
     @Override
-    public void customerStatsByDates(Date startDate, Date endDate) {
-        getDates(startDate, endDate).stream().forEach(date -> customerStatsByDate(date, false));
+    public void customerStatsByDates(Date startDate, Date endDate, String firmCode) {
+        getDates(startDate, endDate).stream().forEach(date -> customerStatsByDate(date, firmCode, false));
     }
 
 
@@ -132,7 +135,7 @@ public class CustomerStatsServiceImpl extends BaseServiceImpl<CustomerStats, Lon
     @Override
     public BaseOutput pullData(CustomerStatsDto customerStatsDto){
         //支持统计客户数的最早时间，2018年1月1日
-        Date EARLIEST_DATE = DateUtils.dateStr2Date("2018-1-1 0:0:0", "yyyy-MM-dd HH:mm:ss");
+        final Date EARLIEST_DATE = DateUtils.dateStr2Date("2018-1-1 0:0:0", "yyyy-MM-dd HH:mm:ss");
         if(customerStatsDto.getStartDate().before(EARLIEST_DATE)){
             customerStatsDto.setStartDate(EARLIEST_DATE);
         }
@@ -151,19 +154,23 @@ public class CustomerStatsServiceImpl extends BaseServiceImpl<CustomerStats, Lon
         if(customerStatsDto.getStartDate().before(earliestCreated)){
             customerStatsDto.setStartDate(earliestCreated);
         }
-        //查询客户统计表已有数据的最早时间
-        CustomerStatsDto condition = DTOUtils.newDTO(CustomerStatsDto.class);
-        condition.setSelectColumns(Sets.newHashSet("min(date) date"));
-        List<CustomerStats> customerStats = listByExample(condition);
-        //客户统计表忆有数据最早时间，因为是min(date)聚合函数，所以一定会有一条数据，不过第一条可能是null
-        //如果客户统计表没数据，则取当前时间为统计表时间
-        Date earliestCustomerStats = customerStats.get(0) == null ? new Date() : customerStats.get(0).getDate();
-        //判断开始时间是否早于CustomerStats表中的已有数据最早时间，如果更早,则需要先拉取开始时间到已有数据最早时间的数据
-        if (customerStatsDto.getStartDate().before(earliestCustomerStats)) {
-            //拉取开始时间到已有数据最早时间的数据
-            customerStatsByDates(customerStatsDto.getStartDate(), earliestCustomerStats);
+        // == 先要判断是否有新的市场导入 ==
+        //查询客户表有哪些市场的客户
+        customer.setSelectColumns(Sets.newHashSet("distinct market"));
+        List<Customer> customerMarkets = customerService.listByExample(customer);
+        //如果客户表为空，则不需要拉取数据
+        if(CollectionUtils.isEmpty(customerMarkets)){
+            return BaseOutput.success();
         }
-        //拉取今天的最新实时数据
+        //查询客户统计表有哪些市场的数据
+        List<CustomerStats> customerStatsFirmCodes = getActualDao().selectDistinctFirmCode();
+        //没有新的市场，则直接拉更早的所有市场数据
+        if(CollectionUtils.isEmpty(customerStatsFirmCodes) || customerMarkets.size() == customerStatsFirmCodes.size()){
+            pullEarlyData(customerStatsDto);
+        }else{//有新的市场，则需要按客户表中的市场分别拉取
+            pullDistinctMarketData(customerStatsDto, customerMarkets);
+        }
+        //拉取今天所有市场的最新实时数据
         //获取今天的0点0分
         Date today = DateUtils.formatDate2DateTimeStart(new Date());
         //如果结束时间大于等于今天，则需要更新今天的客户统计
@@ -174,7 +181,61 @@ public class CustomerStatsServiceImpl extends BaseServiceImpl<CustomerStats, Lon
     }
 
     /**
+     * 分别拉取各市场数据
+     * @param customerStatsDto
+     * @param customerMarkets 客户表中的市场
+     */
+    private void pullDistinctMarketData(CustomerStatsDto customerStatsDto, List<Customer> customerMarkets){
+        for(Customer customerMarket : customerMarkets){
+            customerStatsDto.setFirmCode(customerMarket.getMarket());
+            pullEarlyData(customerStatsDto);
+        }
+    }
+
+    /**
+     * 判断是否包含市场编码
+     * @param customerStatsFirmCodes
+     * @param firmCode
+     * @return
+     */
+    private boolean containFirmCode(List<CustomerStats> customerStatsFirmCodes, String firmCode){
+        if(customerStatsFirmCodes == null){
+            return false;
+        }
+        for(CustomerStats customerStats : customerStatsFirmCodes){
+            if(firmCode.equals(customerStats.getFirmCode())){
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /**
+     * 拉取更早的数据
+     * @param customerStatsDto
+     * @return 是否需要继续拉取
+     */
+    private void pullEarlyData(CustomerStatsDto customerStatsDto){
+        //查询客户统计表已有数据的最早时间
+        CustomerStatsDto condition = DTOUtils.newDTO(CustomerStatsDto.class);
+        condition.setSelectColumns(Sets.newHashSet("min(date) date"));
+        if(StringUtils.isNotBlank(customerStatsDto.getFirmCode())){
+            condition.setFirmCode(customerStatsDto.getFirmCode());
+        }
+        List<CustomerStats> customerStats = listByExample(condition);
+        //客户统计表已有数据最早时间，因为是min(date)聚合函数，所以一定会有一条数据，不过第一条可能是null
+        //如果客户统计表没数据，则取当前时间为统计表时间
+        Date earliestCustomerStats = customerStats.get(0) == null ? new Date() : customerStats.get(0).getDate();
+        //判断开始时间是否早于CustomerStats表中的已有数据最早时间，如果更早,则需要先拉取开始时间到已有数据最早时间的数据
+        if (customerStatsDto.getStartDate().before(earliestCustomerStats)) {
+            //拉取开始时间到已有数据最早时间的数据
+            customerStatsByDates(customerStatsDto.getStartDate(), earliestCustomerStats, customerStatsDto.getFirmCode());
+        }
+    }
+
+    /**
      * 循环客户统计对象，根据firmCode获取
+     * 用于查询客户增量图表
      * @param customerStatsList
      * @param firmCode
      * @return
@@ -220,7 +281,7 @@ public class CustomerStatsServiceImpl extends BaseServiceImpl<CustomerStats, Lon
      * @param date
      * @param update    是否更新已有日期的统计
      */
-    private void customerStatsByDate(Date date, boolean update) {
+    private void customerStatsByDate(Date date, String market, boolean update) {
         CustomerStats customerStats = DTOUtils.newDTO(CustomerStats.class);
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
         String dateStr = sdf.format(date);
@@ -230,15 +291,20 @@ public class CustomerStatsServiceImpl extends BaseServiceImpl<CustomerStats, Lon
         }
         //是否存在指定日期的数据
         boolean contains = !getActualDao().select(customerStats).isEmpty();
+        Map<String, Object> map = new HashMap<>(2);
+        map.put("date", date);
+        if(StringUtils.isNotBlank(market)){
+            map.put("market", market);
+        }
         if(contains){
             //如果有数据，并且需要更新，则删了重新插入
             if(update) {
                 getActualDao().delete(customerStats);
-                getActualDao().customerStatsByDate(date);
+                getActualDao().customerStatsByDate(map);
             }//有数据，不需要更新
         }else {
             //无数据则直接插入
-            getActualDao().customerStatsByDate(date);
+            getActualDao().customerStatsByDate(map);
         }
     }
 }

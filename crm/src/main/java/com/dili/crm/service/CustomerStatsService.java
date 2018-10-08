@@ -41,11 +41,12 @@ public interface CustomerStatsService extends BaseService<CustomerStats, Long> {
     void customerStatsByDate(Date date);
 
     /**
-     * 统计时间范围内的客户数
+     * 统计时间范围内所有市场的客户数
      * @param startDate
      * @param endDate
+     * @param firmCode 拉取的市场，所有市场为null
      */
-    void customerStatsByDates(Date startDate, Date endDate);
+    void customerStatsByDates(Date startDate, Date endDate, String firmCode);
 
     /**
      * 拉取数据
