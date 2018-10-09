@@ -67,6 +67,10 @@ public class CustomerStatsServiceImpl extends BaseServiceImpl<CustomerStats, Lon
         if (CollectionUtils.isEmpty(firmCodes)){
             return BaseOutput.success();
         }
+        //开始时间不晚于结束时间
+        if(customerStatsDto.getStartDate().after(customerStatsDto.getEndDate())) {
+            customerStatsDto.setStartDate(customerStatsDto.getEndDate());
+        }
         customerStatsDto.setFirmCodes(firmCodes);
         //没有结束时间，则取今天为结束时间
         if(customerStatsDto.getEndDate() == null) {
@@ -93,7 +97,8 @@ public class CustomerStatsServiceImpl extends BaseServiceImpl<CustomerStats, Lon
             CustomerStats startCustomerStats = getByFirmCode(startCustomerStatsList, endCustomerStats.getFirmCode());
             Integer startCustomerCount = startCustomerStats == null ? 0 : startCustomerStats.getCustomerCount();
             CustomerStats increment = DTOUtils.newDTO(CustomerStats.class);
-            increment.setCustomerCount(endCustomerStats.getCustomerCount() - startCustomerCount);
+            int count = endCustomerStats.getCustomerCount() - startCustomerCount;
+            increment.setCustomerCount(count < 0 ? 0 : count);
             increment.setFirmCode(endCustomerStats.getFirmCode());
             incrementList.add(increment);
         }
