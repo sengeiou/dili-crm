@@ -430,6 +430,7 @@
         //设置经营地区的显示值
         formData["_operatingArea"] = selected["operatingArea"];
         $('#_form').form('load', formData);
+        $("#oldName").val(formData["_name"]);
         //设置父客户
         $("#_parentId").textbox("initValue", selected["$_parentId"]);
         $("#_parentId").textbox("setText", selected["parentId"]);
