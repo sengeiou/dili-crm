@@ -3,6 +3,7 @@ package com.dili.crm.controller;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.dili.crm.domain.Customer;
+import com.dili.crm.domain.CustomerStats;
 import com.dili.crm.domain.dto.CustomerFirmPoints;
 import com.dili.crm.domain.dto.MembersDto;
 import com.dili.crm.provider.FirmProvider;
@@ -10,12 +11,14 @@ import com.dili.crm.rpc.CustomerPointsRpc;
 import com.dili.crm.rpc.DepartmentRpc;
 import com.dili.crm.rpc.MapRpc;
 import com.dili.crm.service.CustomerService;
+import com.dili.crm.service.CustomerStatsService;
 import com.dili.ss.domain.BaseOutput;
 import com.dili.ss.domain.EasyuiPageOutput;
 import com.dili.ss.dto.DTOUtils;
 import com.dili.ss.metadata.ValuePair;
 import com.dili.ss.metadata.ValueProviderUtils;
 import com.dili.ss.util.AESUtil;
+import com.dili.ss.util.DateUtils;
 import com.dili.uap.sdk.domain.UserTicket;
 import com.dili.uap.sdk.session.SessionConstants;
 import com.dili.uap.sdk.session.SessionContext;
@@ -53,6 +56,10 @@ import java.util.Set;
 public class CustomerController {
     @Autowired
     CustomerService customerService;
+
+    @Autowired
+    CustomerStatsService customerStatsService;
+
 	@Autowired
 	private ValueProviderUtils valueProviderUtils;
 	
@@ -201,12 +208,26 @@ public class CustomerController {
 		@ApiImplicitParam(name="Customer", paramType="form", value = "Customer的form信息", required = true, dataType = "string")
 	})
     @RequestMapping(value="/update.action", method = {RequestMethod.GET, RequestMethod.POST})
-    public @ResponseBody BaseOutput update(Customer customer , String oldName) {
+    public @ResponseBody BaseOutput update(Customer customer, String oldName, String oldMarket) {
+		//修改了客户名称要通知积分系统修改客户品类积分
 		if(!StringUtils.equals(oldName,customer.getName())){
 			JSONObject jsonObject = new JSONObject();
 			jsonObject.put("id",customer.getId());
 			jsonObject.put("name",customer.getName());
 			customerPointsRpc.updateCategoryPoints(jsonObject.toJSONString());
+		}
+		//修改了市场，要修改客户统计表
+		if(!StringUtils.equals(oldMarket,customer.getMarket())){
+			CustomerStats domain = DTOUtils.newDTO(CustomerStats.class);
+			domain.setDate(DateUtils.formatDate2DateTimeStart(customer.getCreated()));
+			domain.setCustomerCount(-1);
+			domain.setFirmCode(oldMarket);
+			//设置老市场客户数-1
+			customerStatsService.updateCustomerCount(domain);
+			domain.setCustomerCount(1);
+			domain.setFirmCode(customer.getMarket());
+			//设置新市场客户数+1
+			customerStatsService.updateCustomerCount(domain);
 		}
 	    return customerService.updateSelectiveWithOutput(customer);
     }

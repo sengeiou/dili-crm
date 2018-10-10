@@ -53,4 +53,10 @@ public interface CustomerStatsService extends BaseService<CustomerStats, Long> {
      * @param customerStatsDto
      */
     BaseOutput pullData(CustomerStatsDto customerStatsDto);
+
+    /**
+     * 根据市场和日期修改客户数增量
+     * @param customerStats
+     */
+    void updateCustomerCount(CustomerStats customerStats);
 }

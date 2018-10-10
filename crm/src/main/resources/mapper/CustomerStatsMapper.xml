@@ -41,7 +41,15 @@
     group by market
   </insert>
 
+  <!-- 查询不同的市场 -->
   <select id="selectDistinctFirmCode" resultMap="BaseResultMap">
     select distinct firm_code from customer_stats
   </select>
+
+  <!-- 根据市场和日期修改客户数增量 -->
+  <update id="updateCustomerCount">
+    <![CDATA[
+    update customer_stats set customer_count = customer_count + (${customerCount}) where firm_code= #{firmCode} and `date` >= #{date}
+    ]]>
+  </update>
 </mapper>

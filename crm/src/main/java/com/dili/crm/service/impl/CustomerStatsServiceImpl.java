@@ -185,6 +185,11 @@ public class CustomerStatsServiceImpl extends BaseServiceImpl<CustomerStats, Lon
         return BaseOutput.success();
     }
 
+    @Override
+    public void updateCustomerCount(CustomerStats customerStats) {
+        getActualDao().updateCustomerCount(customerStats);
+    }
+
     /**
      * 分别拉取各市场数据
      * @param customerStatsDto

@@ -25,4 +25,10 @@ public interface CustomerStatsMapper extends MyMapper<CustomerStats> {
      * @return
      */
     List<CustomerStats> selectDistinctFirmCode();
+
+    /**
+     * 根据市场和日期修改客户数增量
+     * @param customerStats
+     */
+    void updateCustomerCount(CustomerStats customerStats);
 }
