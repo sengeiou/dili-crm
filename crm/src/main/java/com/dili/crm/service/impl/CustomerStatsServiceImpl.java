@@ -299,6 +299,9 @@ public class CustomerStatsServiceImpl extends BaseServiceImpl<CustomerStats, Lon
             customerStats.setDate(sdf.parse(dateStr));
         } catch (ParseException e) {
         }
+        if(StringUtils.isNotBlank(market)){
+            customerStats.setFirmCode(market);
+        }
         //是否存在指定日期的数据
         boolean contains = !getActualDao().select(customerStats).isEmpty();
         Map<String, Object> map = new HashMap<>(2);
