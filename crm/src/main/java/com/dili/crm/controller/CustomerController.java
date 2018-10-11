@@ -3,8 +3,6 @@ package com.dili.crm.controller;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.dili.crm.domain.Customer;
-import com.dili.crm.domain.CustomerStats;
-import com.dili.crm.domain.dto.CustomerFirmPoints;
 import com.dili.crm.domain.dto.MembersDto;
 import com.dili.crm.provider.FirmProvider;
 import com.dili.crm.rpc.CustomerPointsRpc;
@@ -17,11 +15,10 @@ import com.dili.ss.domain.EasyuiPageOutput;
 import com.dili.ss.dto.DTOUtils;
 import com.dili.ss.metadata.ValuePair;
 import com.dili.ss.metadata.ValueProviderUtils;
-import com.dili.ss.util.AESUtil;
-import com.dili.ss.util.DateUtils;
 import com.dili.uap.sdk.domain.UserTicket;
 import com.dili.uap.sdk.session.SessionConstants;
 import com.dili.uap.sdk.session.SessionContext;
+import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
 import io.swagger.annotations.Api;
@@ -40,10 +37,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 /**
  * 由MyBatis Generator工具自动生成
@@ -209,26 +203,35 @@ public class CustomerController {
 	})
     @RequestMapping(value="/update.action", method = {RequestMethod.GET, RequestMethod.POST})
     public @ResponseBody BaseOutput update(Customer customer, String oldName, String oldMarket) {
-		//修改了客户名称要通知积分系统修改客户品类积分
-		if(!StringUtils.equals(oldName,customer.getName())){
-			JSONObject jsonObject = new JSONObject();
-			jsonObject.put("id",customer.getId());
-			jsonObject.put("name",customer.getName());
-			customerPointsRpc.updateCategoryPoints(jsonObject.toJSONString());
-		}
-		//修改了市场，要修改客户统计表
-		if(!StringUtils.equals(oldMarket,customer.getMarket())){
-			CustomerStats domain = DTOUtils.newDTO(CustomerStats.class);
-			domain.setDate(DateUtils.formatDate2DateTimeStart(customer.getCreated()));
-			domain.setCustomerCount(-1);
-			domain.setFirmCode(oldMarket);
-			//设置老市场客户数-1
-			customerStatsService.updateCustomerCount(domain);
-			domain.setCustomerCount(1);
-			domain.setFirmCode(customer.getMarket());
-			//设置新市场客户数+1
-			customerStatsService.updateCustomerCount(domain);
-		}
+		//异步通知积分系统和拉取客户
+		new Thread(){
+			@Override
+			public void run() {
+				//修改了客户名称要通知积分系统修改客户品类积分
+				if(!StringUtils.equals(oldName,customer.getName())){
+					JSONObject jsonObject = new JSONObject();
+					jsonObject.put("id",customer.getId());
+					jsonObject.put("name",customer.getName());
+					customerPointsRpc.updateCategoryPoints(jsonObject.toJSONString());
+				}
+				//修改了市场，要修改客户统计表
+				//新市场需要增加客户数，老市场需要减少客户数，但是如果是修改客户数，可能会因为某个时间段没有客户统计，而漏掉，所以客户数需要重新统计
+				if(!StringUtils.equals(oldMarket,customer.getMarket())){
+					customerStatsService.pullCustomerStatsByMarkets(customer.getCreated(), new Date(), Lists.newArrayList(oldMarket, customer.getMarket()));
+		//			CustomerStats domain = DTOUtils.newDTO(CustomerStats.class);
+		//			domain.setDate(DateUtils.formatDate2DateTimeStart(customer.getCreated()));
+		//			domain.setCustomerCount(-1);
+		//			domain.setFirmCode(oldMarket);
+		//			//设置老市场客户数-1
+		//			customerStatsService.updateCustomerCount(domain);
+		//
+		//			domain.setCustomerCount(1);
+		//			domain.setFirmCode(customer.getMarket());
+		//			//设置新市场客户数+1
+		//			customerStatsService.updateCustomerCount(domain);
+				}
+			}
+		}.start();
 	    return customerService.updateSelectiveWithOutput(customer);
     }
 

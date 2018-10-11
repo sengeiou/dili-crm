@@ -190,6 +190,20 @@ public class CustomerStatsServiceImpl extends BaseServiceImpl<CustomerStats, Lon
         getActualDao().updateCustomerCount(customerStats);
     }
 
+    @Override
+    public void pullCustomerStatsByMarkets(Date startDate, Date endDate, List<String> firmCodes){
+        if(firmCodes == null){
+            return;
+        }
+        for(String firmCode : firmCodes){
+            //判断开始时间是否早于CustomerStats表中的已有数据最早时间，如果更早,则需要先拉取开始时间到已有数据最早时间的数据
+            if (startDate.before(endDate)) {
+                //拉取开始时间到已有数据最早时间的数据
+                getDates(startDate, endDate).stream().forEach(date -> customerStatsByDate(date, firmCode, true));
+            }
+        }
+    }
+
     /**
      * 分别拉取各市场数据
      * @param customerStatsDto

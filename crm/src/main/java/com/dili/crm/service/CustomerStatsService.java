@@ -55,6 +55,13 @@ public interface CustomerStatsService extends BaseService<CustomerStats, Long> {
     BaseOutput pullData(CustomerStatsDto customerStatsDto);
 
     /**
+     * 强制拉取指定市场在某时间段内的数据
+     * @param startDate
+     * @param endDate
+     * @param firmCodes
+     */
+    void pullCustomerStatsByMarkets(Date startDate, Date endDate, List<String> firmCodes);
+    /**
      * 根据市场和日期修改客户数增量
      * @param customerStats
      */
