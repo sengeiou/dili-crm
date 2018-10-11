@@ -56,6 +56,7 @@ public interface CustomerStatsService extends BaseService<CustomerStats, Long> {
 
     /**
      * 强制拉取指定市场在某时间段内的数据
+     * 注意: 如果拉取的开始时间早于现有统计数据的最早时间，则会统计其它所有市场从startDate到现有时间的数据
      * @param startDate
      * @param endDate
      * @param firmCodes

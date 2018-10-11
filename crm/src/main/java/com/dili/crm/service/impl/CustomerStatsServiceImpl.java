@@ -195,6 +195,12 @@ public class CustomerStatsServiceImpl extends BaseServiceImpl<CustomerStats, Lon
         if(firmCodes == null){
             return;
         }
+        //如果拉取的开始时间早于现有统计数据的最早时间，则会统计其它所有市场从startDate到现有时间的数据
+        //如果现有数据未统计，则统计startDate到当前时间的所有数据
+        CustomerStatsDto customerStatsDto = DTOUtils.newDTO(CustomerStatsDto.class);
+        customerStatsDto.setStartDate(startDate);
+        pullEarlyData(customerStatsDto);
+        //强制更新指定市场的数据
         for(String firmCode : firmCodes){
             //判断开始时间是否早于CustomerStats表中的已有数据最早时间，如果更早,则需要先拉取开始时间到已有数据最早时间的数据
             if (startDate.before(endDate)) {
@@ -217,27 +223,9 @@ public class CustomerStatsServiceImpl extends BaseServiceImpl<CustomerStats, Lon
     }
 
     /**
-     * 判断是否包含市场编码
-     * @param customerStatsFirmCodes
-     * @param firmCode
-     * @return
-     */
-    private boolean containFirmCode(List<CustomerStats> customerStatsFirmCodes, String firmCode){
-        if(customerStatsFirmCodes == null){
-            return false;
-        }
-        for(CustomerStats customerStats : customerStatsFirmCodes){
-            if(firmCode.equals(customerStats.getFirmCode())){
-                return true;
-            }
-        }
-        return false;
-    }
-
-    /**
      * 拉取更早的数据
      * @param customerStatsDto
-     * @return 是否需要继续拉取
+     * @return
      */
     private void pullEarlyData(CustomerStatsDto customerStatsDto){
         //查询客户统计表已有数据的最早时间
