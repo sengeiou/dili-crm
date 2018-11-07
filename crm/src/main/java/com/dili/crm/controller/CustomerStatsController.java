@@ -43,8 +43,6 @@ public class CustomerStatsController {
     @RequestMapping(value="/list.action", method = {RequestMethod.GET, RequestMethod.POST})
     public @ResponseBody
     BaseOutput<List<Map>> list(CustomerStatsDto customerStats) throws Exception {
-        //默认查一个月
-        initStartDate(customerStats);
         return customerStatsService.listCustomerStats(customerStats);
     }
 
@@ -55,8 +53,6 @@ public class CustomerStatsController {
     @RequestMapping(value="/listIncrement.action", method = {RequestMethod.GET, RequestMethod.POST})
     public @ResponseBody
     BaseOutput<List<Map>> listIncrement(CustomerStatsDto customerStats) throws Exception {
-        //默认查一个月
-        initStartDate(customerStats);
         return customerStatsService.listCustomerStatsIncrement(customerStats);
     }
 
@@ -70,18 +66,6 @@ public class CustomerStatsController {
         return customerStatsService.pullData(customerStats);
     }
 
-    //初始化开始时间，默认查一个月
-    private void initStartDate(CustomerStatsDto customerStats){
-        if("true".equals(customerStats.aget("init"))){
-            Calendar calendar = Calendar.getInstance();
-            calendar.setTime(new Date());
-            calendar.add(Calendar.MONTH, -1);
-            calendar.set(Calendar.HOUR_OF_DAY, 0);
-            calendar.set(Calendar.MINUTE, 0);
-            calendar.set(Calendar.SECOND, 0);
-            calendar.set(Calendar.MILLISECOND, 0);
-            customerStats.setStartDate(calendar.getTime());
-        }
-    }
+
 
 }

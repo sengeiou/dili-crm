@@ -63,6 +63,8 @@ public class CustomerStatsServiceImpl extends BaseServiceImpl<CustomerStats, Lon
         if(userTicket == null){
             return BaseOutput.failure("登录超时");
         }
+        //默认查一个月
+        initStartDate(customerStatsDto);
         List<String> firmCodes = firmService.getCurrentUserFirmCodes(userTicket.getId());
         if (CollectionUtils.isEmpty(firmCodes)){
             return BaseOutput.success();
@@ -119,6 +121,8 @@ public class CustomerStatsServiceImpl extends BaseServiceImpl<CustomerStats, Lon
         if(userTicket == null){
             return BaseOutput.failure("登录超时");
         }
+        //默认查一个月
+        initStartDate(customerStatsDto);
         List<String> firmCodes = firmService.getCurrentUserFirmCodes(userTicket.getId());
         if (CollectionUtils.isEmpty(firmCodes)){
             return BaseOutput.success();
@@ -320,6 +324,20 @@ public class CustomerStatsServiceImpl extends BaseServiceImpl<CustomerStats, Lon
         }else {
             //无数据则直接插入
             getActualDao().customerStatsByDate(map);
+        }
+    }
+
+    //初始化开始时间，默认查一个月
+    private void initStartDate(CustomerStatsDto customerStats){
+        if("true".equals(customerStats.aget("init"))){
+            Calendar calendar = Calendar.getInstance();
+            calendar.setTime(new Date());
+            calendar.add(Calendar.MONTH, -1);
+            calendar.set(Calendar.HOUR_OF_DAY, 0);
+            calendar.set(Calendar.MINUTE, 0);
+            calendar.set(Calendar.SECOND, 0);
+            calendar.set(Calendar.MILLISECOND, 0);
+            customerStats.setStartDate(calendar.getTime());
         }
     }
 }
