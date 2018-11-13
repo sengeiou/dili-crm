@@ -137,7 +137,8 @@
 				}]
 			">
     <form id="_form" class="easyui-form" method="post" fit="true">
-        <input name="_id" id="_id" type="hidden">
+        <input  id="oldId" type="hidden" >
+        <input  id="_parentId" type="hidden" name="_parentId">
         <table width="360px">
             <tr>
                 <td style="padding:5px;">
@@ -293,7 +294,7 @@
            // formFocus("_form", "_created");
             var formData = $.extend({},selected);
             formData = addKeyStartWith(getOriginalData(formData),"_");
-
+            $("#oldId").val(selected.id);
             $('#_form').form('load', formData);
             $("#_yn").combobox("setValue", formData["_yn"]+"");
         }
@@ -319,8 +320,8 @@
                 async : true,
                 success: function (data) {
                     if(data.code=="200"){
-                        $("#grid").treegrid("reload");
                         $('#dlg').dialog('close');
+                        queryGrid();
                     }else{
                         $.messager.alert('错误',data.result);
                     }
@@ -342,15 +343,14 @@
                 if (r){
                     $.ajax({
                         type: "POST",
-                        url: "${contextPath}/city/delete",
+                        url: "${contextPath}/city/delete.action",
                         data: {id:selected.id},
                         processData:true,
                         dataType: "json",
                         async : true,
                         success: function (data) {
                             if(data.code=="200"){
-                                $("#grid").treegrid("reload");
-                                $('#dlg').dialog('close');
+                                queryGrid();
                             }else{
                                 $.messager.alert('错误',data.result);
                             }

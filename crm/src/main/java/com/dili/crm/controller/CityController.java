@@ -123,6 +123,9 @@ public class CityController {
     @RequestMapping(value="/insert.action", method = {RequestMethod.GET, RequestMethod.POST})
     public @ResponseBody BaseOutput insert(City city) {
 	    city.setYn(true);
+		if (null == city.getParentId()) {
+			city.setParentId(0L);
+		}
         cityService.insertSelective(city);
         return BaseOutput.success("新增成功");
     }
