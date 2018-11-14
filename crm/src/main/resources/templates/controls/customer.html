@@ -16,6 +16,7 @@
         $('#searchCustomerTextbox').textbox('addClearBtn', 'icon-clear');
         bindFormEvent("searchCustomerForm", "searchCustomerTextbox", searchCustomer, closeCustomerSelectDlg);
         searchCustomer();
+        $("#selectCustomerGrid").datagrid('getPanel').removeClass('lines-both lines-no lines-right lines-bottom').addClass("lines-bottom");
     })
 </script>
 <div class="easyui-layout" fit="true">
@@ -31,7 +32,7 @@
 	</div>
 	<div region="center" align="center" border="false">
 		<table class="easyui-datagrid" id="selectCustomerGrid" sortName="name" sortOrder="asc" fitColumns="true" remoteSort="false" loadMsg="数据加载中..." singleSelect="true" method="post" multiSort="true"
-			align="center" fit="true" striped="true" idField="id" pagination="true" pageSize="30" pageNumber="1" pagePosition="top" 
+			align="center" fit="true" striped="false" idField="id" pagination="true" pageSize="30" pageNumber="1" pagePosition="top"
 			   data-options="onDblClickRow:dbClickCustomer">
 			<thead>
 				<tr>

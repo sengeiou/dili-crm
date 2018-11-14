@@ -11,7 +11,7 @@
 	</div>
 	<div region="center" align="center" border="false">
 		<table class="easyui-datagrid" id="selectUserGrid" sortName="userName" sortOrder="asc" fitColumns="true" remoteSort="false" loadMsg="数据加载中..." singleSelect="true" method="post" multiSort="true"
-			align="center" fit="true" striped="true" idField="id" data-options="onDblClickRow:dbClickUser" >
+			align="center" fit="true" striped="false" idField="id" data-options="onDblClickRow:dbClickUser" >
 			<thead>
 				<tr>
 					<th data-options="field:'userName',width:50">用户名</th>
@@ -41,5 +41,6 @@
 		$('#searchUserTextbox').textbox('textbox').focus();
         bindFormEvent("searchUserForm", "searchUserTextbox", searchUser, closeUserSelectDlg);
         searchUser();
+        $("#selectUserGrid").datagrid('getPanel').removeClass('lines-both lines-no lines-right lines-bottom').addClass("lines-bottom");
 	})
 </script>

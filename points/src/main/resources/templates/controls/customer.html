@@ -1,7 +1,7 @@
 
 <script type="text/javascript">
     function dbClickCustomer(index, row) {
-        confirmCustomerBtn("${textboxId}");
+        confirmCustomerBtn();
     }
     function searchCustomer() {
         var opts = $("#selectCustomerGrid").datagrid("options");
@@ -16,6 +16,7 @@
         $('#searchCustomerTextbox').textbox('addClearBtn', 'icon-clear');
         bindFormEvent("searchCustomerForm", "searchCustomerTextbox", searchCustomer, closeCustomerSelectDlg);
         searchCustomer();
+        $("#selectCustomerGrid").datagrid('getPanel').removeClass('lines-both lines-no lines-right lines-bottom').addClass("lines-bottom");
     })
 </script>
 <div class="easyui-layout" fit="true">
@@ -25,13 +26,13 @@
 				<input id="searchCustomerTextbox" name="searchCustomerTextbox" label="客户名:" labelAlign="right" class="easyui-textbox" style="width: 300px"/>
 				<a class="easyui-linkbutton"  data-options="width:80" iconCls="icon-search" onclick="searchCustomer();">查询</a>
 				&nbsp;&nbsp;
-				<a class="easyui-linkbutton"  data-options="width:80" iconCls="icon-ok" onclick="javascript:confirmCustomerBtn('${textboxId}');">确认</a>
+				<a class="easyui-linkbutton"  data-options="width:80" iconCls="icon-ok" onclick="javascript:confirmCustomerBtn();">确认</a>
 			</form>
 		</div>
 	</div>
 	<div region="center" align="center" border="false">
 		<table class="easyui-datagrid" id="selectCustomerGrid" sortName="name" sortOrder="asc" fitColumns="true" remoteSort="false" loadMsg="数据加载中..." singleSelect="true" method="post" multiSort="true"
-			align="center" fit="true" striped="true" idField="id" pagination="true" pageSize="30" pageNumber="1" pagePosition="top" 
+			align="center" fit="true" striped="false" idField="id" pagination="true" pageSize="30" pageNumber="1" pagePosition="top"
 			   data-options="onDblClickRow:dbClickCustomer">
 			<thead>
 				<tr>

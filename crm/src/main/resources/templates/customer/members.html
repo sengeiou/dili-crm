@@ -11,7 +11,7 @@
 	</div>
 	<div region="center" align="center" border="false">
 		<table class="easyui-datagrid" id="selectMembersGrid" sortName="name" sortOrder="asc" fitColumns="true" remoteSort="false" loadMsg="数据加载中..." singleSelect="true" method="post" multiSort="true"
-			align="center" fit="true" striped="true" idField="id" pagination="true" pageSize="30" pageNumber="1" pagePosition="top"
+			align="center" fit="true" striped="false" idField="id" pagination="true" pageSize="30" pageNumber="1" pagePosition="top"
 			   style="height:400px;"
 			   data-options="onDblClickRow:dbClickMembers">
 			<thead>
@@ -44,5 +44,6 @@
 		$('#searchMembersTextbox').textbox('textbox').focus();
         bindFormEvent("searchMembersForm", "searchMembersTextbox", searchMember, closeMembersSelectDlg);
         searchMember();
+        $("#selectMembersGrid").datagrid('getPanel').removeClass('lines-both lines-no lines-right lines-bottom').addClass("lines-bottom");
 	})
 </script>
