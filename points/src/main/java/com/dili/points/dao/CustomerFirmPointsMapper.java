@@ -15,4 +15,11 @@ public interface CustomerFirmPointsMapper extends MyMapper<CustomerFirmPoints> {
      * @return
      */
     List<Map> listByPage(CustomerApiDTO customerApiDTO);
+
+    /**
+     * 查询客户积分统计
+     * @param customerApiDTO
+     * @return
+     */
+    Long calculateTotalPoints(CustomerApiDTO customerApiDTO);
 }

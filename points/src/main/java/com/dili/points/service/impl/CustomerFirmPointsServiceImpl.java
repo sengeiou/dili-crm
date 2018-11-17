@@ -164,7 +164,7 @@ public class CustomerFirmPointsServiceImpl extends BaseServiceImpl<CustomerFirmP
         List<Map<String,Object>> footers = Lists.newArrayList();
         Map<String,Object> footer = new HashMap<>(2);
         footer.put("name", "总可用积分:");
-        footer.put("organizationType", this.calculateTotalPoints());
+        footer.put("organizationType", this.calculateTotalPoints(customer));
         footers.add(footer);
         easyuiPageOutput.setFooter(footers);
         return easyuiPageOutput;
@@ -301,15 +301,17 @@ public class CustomerFirmPointsServiceImpl extends BaseServiceImpl<CustomerFirmP
 //===================================   私有方法分割  =========================================
 
     // 计算总可用积分
-    private Long calculateTotalPoints() {
-        BigDecimal totalAvailablePoints = commonMapper.selectMap("select sum(available) as available from customer_firm_points where yn=1").stream()
-                .filter(m -> m != null && m.containsKey("available"))
-                .map(m -> {
-                    return (BigDecimal) m.get("available");
-                })
-                .findFirst()
-                .orElse(BigDecimal.ZERO);
-        return totalAvailablePoints.longValue();
+    private Long calculateTotalPoints(CustomerApiDTO customer) {
+//        BigDecimal totalAvailablePoints = commonMapper.selectMap("select sum(available) as available from customer_firm_points where yn=1").stream()
+//                .filter(m -> m != null && m.containsKey("available"))
+//                .map(m -> {
+//                    return (BigDecimal) m.get("available");
+//                })
+//                .findFirst()
+//                .orElse(BigDecimal.ZERO);
+//        return totalAvailablePoints.longValue();
+        Long point = getActualDao().calculateTotalPoints(customer);
+        return point == null ? 0 : point;
     }
 
     /**
