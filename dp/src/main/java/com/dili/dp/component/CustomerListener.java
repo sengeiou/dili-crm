@@ -261,19 +261,21 @@ public class CustomerListener {
         List<CustomerExtensions> insertExtensionList = new ArrayList<>();
 
         List<CustomerExtensions> updateExtensionList = new ArrayList<>();
-//        logger.info("customerExtensionsList size:{}", customerExtensionsList.size());
+        logger.info("customerExtensionsList.size:" + customerExtensionsList.size());
         for (CustomerExtensions customerExtensions : customerExtensionsList) {
             CustomerExtensions extensionsQueryCondition = DTOUtils.newDTO(CustomerExtensions.class);
-
+            extensionsQueryCondition.setCustomerId(customer.getId());
             extensionsQueryCondition.setAcctId(customerExtensions.getAcctId());
             extensionsQueryCondition.setSystem(customerExtensions.getSystem());
             extensionsQueryCondition.setAcctType(customerExtensions.getAcctType());
             List<CustomerExtensions> extensions = this.customerExtensionsService.list(extensionsQueryCondition);
             if (extensions == null || extensions.size() == 0) {
+                logger.info("新增客户扩展信息:"+customerExtensions.toString());
                 customerExtensions.setCustomerId(customer.getId());
                 insertExtensionList.add(customerExtensions);
             } else if (extensions.size() == 1) {
                 CustomerExtensions extensionItem = extensions.get(0);
+                logger.info("修改客户扩展信息:"+extensionItem.toString());
                 if (!StringUtils.trimToEmpty(extensionItem.getNotes()).equals(StringUtils.trimToEmpty(customerExtensions.getNotes()))) {
                     extensionItem.setNotes(StringUtils.trimToEmpty(customerExtensions.getNotes()));
                     updateExtensionList.add(extensionItem);
