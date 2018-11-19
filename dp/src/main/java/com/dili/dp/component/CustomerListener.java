@@ -56,6 +56,7 @@ public class CustomerListener {
         logger.info("收到消息: " + message);
         String data = new String(message.getBody(), "UTF-8");
         String customerJson = AESUtil.decrypt(data, aesKey);
+        logger.info("消息解密: " + customerJson);
         try {
             Optional<Map<String, Object>> mapOpt = convertAsMap(customerJson);
             mapOpt.ifPresent((jsonMap) -> {
@@ -281,10 +282,12 @@ public class CustomerListener {
         }
 //        logger.info("insertExtensionList size:{}", insertExtensionList.size());
         if (insertExtensionList.size() > 0) {
+            logger.info("新增客户扩展信息:"+insertExtensionList.size()+"条");
             this.customerExtensionsService.batchInsert(insertExtensionList);
         }
 //        logger.info("updateExtensionList size:{}", updateExtensionList.size());
         if (updateExtensionList.size() > 0) {
+            logger.info("修改客户扩展信息:"+updateExtensionList.size()+"条");
             this.customerExtensionsService.batchUpdate(updateExtensionList);
         }
 
