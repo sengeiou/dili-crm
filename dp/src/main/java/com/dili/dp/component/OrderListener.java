@@ -75,6 +75,7 @@ public class OrderListener {
         logger.info("收到消息: " + message);
         String data = new String(message.getBody(), "UTF-8");
         String orderJson = AESUtil.decrypt(data, aesKey);
+        logger.info("消息解密: " + orderJson);
         try {
             Map<Order, List<OrderItem>> orderMap = this.convertOrder(orderJson);
             if (orderMap.isEmpty()) {

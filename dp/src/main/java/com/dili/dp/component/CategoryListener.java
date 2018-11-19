@@ -41,6 +41,7 @@ public class CategoryListener {
 		logger.info("收到消息: "+message);
 		String data = new String(message.getBody(), "UTF-8");
 		String categoryJson = AESUtil.decrypt(data, aesKey);
+		logger.info("消息解密: " + categoryJson);
 		// 将Json转换为map
 		Map<String, Object> map = DtoMessageConverter.convertAsMap(categoryJson);
 		if (map.isEmpty()) {
