@@ -27,8 +27,6 @@ public class FirmProvider extends BatchDisplayTextProviderAdaptor {
 
 	@Override
 	public List<ValuePair<?>> getLookupList(Object obj, Map metaMap, FieldMeta fieldMeta) {
-		//是否要请选择
-		Object withEmptyOptValue=JSONPath.read(String.valueOf(metaMap.get("queryParams")), "/withEmptyOpt");
 		//是否要显示集团
 		Object withGroupOptValue=JSONPath.read(String.valueOf(metaMap.get("queryParams")), "/withGroupOpt");
 		//是否显示所有
@@ -42,9 +40,6 @@ public class FirmProvider extends BatchDisplayTextProviderAdaptor {
 		}).map(f->{
 			return (ValuePair<?>)new ValuePairImpl(f.getName(), f.getCode());
 		}).collect(Collectors.toCollection(()->new ArrayList<ValuePair<?>>()));
-		if(!Boolean.FALSE.equals(withEmptyOptValue)) {
-			resultList.add(0, new ValuePairImpl(EMPTY_ITEM_TEXT, null));
-		}
 		return resultList;
 	}
 

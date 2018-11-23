@@ -40,7 +40,7 @@
                     <tr>
                         <td style="padding:5px;width: 230px;">
                             <input name="firmCode" id="firmCode" style="width:220px;" panelWidth="auto" data-options="editable:false, labelAlign:'right'" panelHeight="auto" label="积分市场:"/>
-                            <#comboProvider _id="firmCode" _provider='firmProvider' _queryParams='{withEmptyOpt:true}'/>
+                            <#comboProvider _id="firmCode" _provider='firmProvider' />
                         </td>
                         <td style="padding:5px;width: 280px;">
                             <input class="easyui-textbox" name="certificate_number" id="certificate_number" style="width:100%" labelAlign="right" data-options="label:'客户证件号:'" />
@@ -126,7 +126,7 @@
             <tr>
                 <td style="padding:5px;">
                     <input name="_firmCode" id="_firmCode" style="width:220px;" panelWidth="auto" data-options="cls:'noborder', labelAlign:'right', editable:false, readonly:true, hasDownArrow:false" panelHeight="auto" label="所属市场:"/>
-                    <#comboProvider _id="_firmCode" _provider='firmProvider' _queryParams='{withEmptyOpt:true}'/>
+                    <#comboProvider _id="_firmCode" _provider='firmProvider' />
                 </td>
             </tr>
             <tr>

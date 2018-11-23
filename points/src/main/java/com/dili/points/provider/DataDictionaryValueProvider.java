@@ -50,7 +50,6 @@ public class DataDictionaryValueProvider extends BatchDisplayTextProviderAdaptor
             return null;
         }
         List<ValuePair<?>> valuePairs = Lists.newArrayList();
-        valuePairs.add(0, new ValuePairImpl(EMPTY_ITEM_TEXT, null));
         List<DataDictionaryValue> dataDictionaryValues = output.getData();
         String excludeCodes = JSONObject.parseObject(queryParams.toString()).getString(EXCLUDE_CODES_KEY);
         List<String> excludeCodeList = null;
@@ -63,7 +62,7 @@ public class DataDictionaryValueProvider extends BatchDisplayTextProviderAdaptor
             DataDictionaryValue dataDictionaryValue1 = dataDictionaryValues.get(i);
             //排除指定编码项
             if(excludeCodeList == null || (excludeCodeList != null && !excludeCodeList.contains(dataDictionaryValue1.getCode()))){
-                valuePairs.add(i+1, new ValuePairImpl(dataDictionaryValue1.getName(), dataDictionaryValue1.getCode()));
+                valuePairs.add(i, new ValuePairImpl(dataDictionaryValue1.getName(), dataDictionaryValue1.getCode()));
             }
         }
         return valuePairs;
