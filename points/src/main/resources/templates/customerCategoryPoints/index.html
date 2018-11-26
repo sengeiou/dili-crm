@@ -23,12 +23,12 @@
                             
                             <td style="padding:5px;">
                                    <input name="firmCode" id="firmCode" style="width:100%;" panelWidth="auto" data-options="editable:false, labelAlign:'right'" panelHeight="auto" label="所属市场:"/>
-                    				<#comboProvider _id="firmCode" _provider='firmProvider' _queryParams='{}'/>
+                    				<#comboProvider _id="firmCode" _provider='firmProvider' _queryParams='{emptyText:"-- 全部 --"}'/>
                             </td>
                             
                             <td style="padding:5px;">
                                     <input name="organizationType" id="organizationType" style="width:100%;" editable="false" labelAlign="right" panelWidth="auto" panelHeight="auto" label="组织类型:"/>
-                                    <#comboProvider _id="organizationType" _provider='dataDictionaryValueProvider' _queryParams='{dd_code:"customer_organization_type"}'/>
+                                    <#comboProvider _id="organizationType" _provider='dataDictionaryValueProvider' _queryParams='{dd_code:"customer_organization_type", emptyText:"-- 全部 --"}'/>
 
                             </td>
                             

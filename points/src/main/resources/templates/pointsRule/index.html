@@ -39,14 +39,14 @@
                             <input name="firmCode" id="firmCode" style="width:100%;" editable="false"
                                    labelAlign="right" panelWidth="auto" panelHeight="auto" label="所属市场:"/>
                             <#comboProvider _id="firmCode" _provider='firmProvider'
-                            _queryParams='{}'/>
+                           _queryParams='{emptyText:"-- 全部 --"}'/>
 
                         </td>
                         <td style="padding:5px;">
                             <input name="customerType" id="customerType" style="width:100%;" editable="false"
                                    labelAlign="right" panelWidth="auto" panelHeight="auto" label="客户类型:"/>
                             <#comboProvider _id="customerType" _provider='dataDictionaryValueProvider'
-                            _queryParams='{dd_code:"customer_type"}'/>
+                            _queryParams='{dd_code:"customer_type", emptyText:"-- 全部 --"}'/>
 
                         </td>
         
@@ -55,12 +55,12 @@
                                    style="width:100%"
                                    labelAlign="right" data-options="label:'交易类型:'"/>
                             <#comboProvider _id="businessType" _provider='dataDictionaryValueProvider'
-                            _queryParams='{dd_code:"business_type"}'/>
+                            _queryParams='{dd_code:"business_type", emptyText:"-- 全部 --"}'/>
                         </td>
                         <td style="padding:5px;">
                             <input class="easyui-combobox" name="yn" panelWidth="auto" panelHeight="auto" editable="false" id="yn" style="width:100%"
                                    labelAlign="right" data-options="label:'状态:'"/>
-                            <#comboProvider _id="yn" _provider='ynProvider' />
+                            <#comboProvider _id="yn" _provider='ynProvider' _queryParams='{emptyText:"-- 全部 --"}'/>
                         </td>
                      </tr>
                     <tr>

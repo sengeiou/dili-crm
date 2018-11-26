@@ -47,8 +47,8 @@ public class CategoryController {
             list = new ArrayList<>();
         }
         Category defaultValue = DTOUtils.newDTO(Category.class);
-        defaultValue.setCategoryId(null);
-        defaultValue.setName("-- 请选择 --");
+        defaultValue.setCategoryId("");
+        defaultValue.setName("-- 全部 --");
         list.add(0, defaultValue);
         return list;
     }

@@ -8,7 +8,7 @@
                 <#nav/>
                 <div style="float:right;"> 
                  	<input name="firmCode" id="firmCode" style="width:100%;" panelWidth="auto" data-options="editable:false, labelAlign:'right'" panelHeight="auto" label="所属市场:" value="${firmCode}"/>
-                    <#comboProvider _id="firmCode" _provider='firmProvider' _queryParams='{required:true}'/>
+                    <#comboProvider _id="firmCode" _provider='firmProvider' _queryParams='{required:true, emptyText:"-- 全部 --"}'/>
                 </div>
                 
             </div>
