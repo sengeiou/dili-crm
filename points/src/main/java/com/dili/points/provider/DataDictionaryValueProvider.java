@@ -113,4 +113,9 @@ public class DataDictionaryValueProvider extends BatchDisplayTextProviderAdaptor
         }
         return ddCode;
     }
+
+    @Override
+    protected boolean ignoreCaseToRef(){
+        return true;
+    }
 }
