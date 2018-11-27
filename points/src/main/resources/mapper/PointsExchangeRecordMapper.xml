@@ -74,7 +74,7 @@
   </update>
   
   <select id="statistics" parameterType="com.dili.points.domain.dto.PointsExchangeRecordDTO" resultMap="statisticsMap">
-      SELECT SUM(quantity) AS quantity,SUM(points) AS points FROM points_exchange_record per
+      SELECT SUM(quantity) AS quantity,SUM(points) AS points FROM points_exchange_record
       <where>
         1 = 1
         <if test="name !=null">
