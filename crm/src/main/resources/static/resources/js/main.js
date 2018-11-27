@@ -63,6 +63,9 @@ function plusXing(str,frontLen,endLen) {
     if(str == undefined || str == null){
         return null;
     }
+    if(typeof str == 'number'){
+        str = "" + str;
+    }
     var len = str.length-frontLen-endLen;
     if(len <= 0){
         return str;

@@ -168,8 +168,7 @@ public class PointsExchangeRecordServiceImpl extends BaseServiceImpl<PointsExcha
     	    return easyuiPageOutput;
     	}
     	pointsExchangeRecordDto.setFirmCodes(firmCodes);
-	    EasyuiPageOutput easyuiPageOutput = this.listEasyuiPageByExample(pointsExchangeRecordDto, useProvider);
-	    return easyuiPageOutput;
+        return this.listEasyuiPageByExample(pointsExchangeRecordDto, useProvider);
     }
     
     /**
