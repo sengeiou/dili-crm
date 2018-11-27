@@ -124,9 +124,9 @@
             if(!$('#form').form("validate")){
                 return;
             }
-            checkCategory('category1Id');
-            checkCategory('category2Id');
-            checkCategory('category3Id');
+            // checkCategory('category1Id');
+            // checkCategory('category2Id');
+            // checkCategory('category3Id');
 
             $("#grid").datagrid("load", bindGridMeta2Form("grid", "form"));
         }
@@ -165,11 +165,9 @@
         function resetCategory(second) {
             var resetUrl = '${contextPath}/category/list.action?parentCategoryId=-1';
             if (!second) {
-                $('#category2Id').combobox('reload', resetUrl);
-                $('#category2Id').combobox('clear');
+                $('#category2Id').combobox('loadData', {});
             }
-            $('#category3Id').combobox('reload', resetUrl);
-            $('#category3Id').combobox('clear');
+            $('#category3Id').combobox('loadData', {});
         }
 
         //表格表头右键菜单
@@ -212,6 +210,9 @@
                 valueField:'categoryId',
                 textField:'name',
                 onSelect:function(record){
+                    if(record.categoryId == null || record.categoryId == ""){
+                        return;
+                    }
                     resetCategory(false);
                     $('#category2Id').combobox('clear');
                     $('#category2Id').combobox('reload', "${contextPath}/category/list.action?parentCategoryId=" + record.categoryId);
@@ -227,6 +228,9 @@
                 valueField:'categoryId',
                 textField:'name',
                 onSelect:function(record){
+                    if(record.categoryId == null || record.categoryId == ""){
+                        return;
+                    }
                     $('#category3Id').combobox('clear');
                     $('#category3Id').combobox('reload', "${contextPath}/category/list.action?parentCategoryId=" + record.categoryId);
                 },
