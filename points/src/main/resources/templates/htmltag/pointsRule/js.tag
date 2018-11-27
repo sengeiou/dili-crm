@@ -256,11 +256,11 @@
         _comboProviderParamObj_conditionType.provider = 'dataDictionaryValueProvider';
         //仅为simpleValueProvider传入默认参数
         if (_comboProviderParamObj_conditionType.provider == "simpleValueProvider") {
-            _comboProviderParamObj_conditionType.queryParams = '{dd_code:"condition_type"}';
+            _comboProviderParamObj_conditionType.queryParams = '{dd_code:"condition_type", required:true}';
             _comboProviderParamObj_conditionType.valueField = 'value';
             _comboProviderParamObj_conditionType.textField = 'text';
         } else {
-            _comboProviderParamObj_conditionType.queryParams = '{dd_code:"condition_type"}';
+            _comboProviderParamObj_conditionType.queryParams = '{dd_code:"condition_type", required:true}';
             _comboProviderParamObj_conditionType.valueField = '';
             _comboProviderParamObj_conditionType.textField = '';
         }
