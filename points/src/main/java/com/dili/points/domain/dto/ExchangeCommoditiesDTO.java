@@ -45,4 +45,9 @@ public interface ExchangeCommoditiesDTO extends ExchangeCommodities {
 	List<String> getFirmCodes();
 	void setFirmCodes(List<String> firmCodes);
 
+    @Operator(Operator.IN)
+    @Column(name = "`id`")
+    List<String> getIds();
+    void setIds(List<String> ids);
+
 }
