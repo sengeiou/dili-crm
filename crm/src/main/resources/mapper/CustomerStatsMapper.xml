@@ -52,4 +52,13 @@
     update customer_stats set customer_count = customer_count + (${customerCount}) where firm_code= #{firmCode} and `date` >= #{date}
     ]]>
   </update>
+
+  <delete id="clearData" parameterType="String">
+    delete from customer_stats
+    <where>
+      <if test="value != null">
+        and firm_code = #{value}
+      </if>
+    </where>
+  </delete>
 </mapper>

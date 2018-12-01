@@ -72,13 +72,62 @@
             <#echarts _id="incrementCustomerStatsChart" _title="客户增量统计" _type="Pie" _url="${contextPath}/customerStats/listIncrement.action?init=true" _data="[]" _options="{legend:{selectedMode:false}}" _nameField="firmCode" _valueField="customerCount" ></#echarts>
             </div>
         </div>
-
     </div>
+
+     <!-- 隐藏请除缓存框 -->
+     <div id="dlg" class="easyui-dialog" resizable="false" constrain="true" shadow="true" draggable="false" title="清空缓存" style="padding:10px" modal="true" border="thin" closed="true"
+          data-options="height: 140,width:210,
+                    buttons: [{
+                        text:'确认',
+                        iconCls:'icon-ok',
+                        handler:clearData
+                    }]">
+         <form id="_form" class="easyui-form" method="post" >
+             <div style="width: 100%;">
+             <input class="easyui-combobox" name="firmCode" id="firmCode" labelWidth="50" data-options="label:'市场:',editable:false,labelAlign:'right',valueField:'code',textField:'name'" panelHeight="auto" />
+             <#comboProvider _id="firmCode" _provider='firmProvider' _queryParams='{emptyText:"-- 全部 --"}'/>
+             </div>
+         </form>
+     </div>
 
     <!-- ====================================================================================================================== -->
     <!-- style & script 分隔线 -->
     <!-- ====================================================================================================================== -->
     <script type="text/javascript">
+        //全局按键事件
+        function getKey(e){
+            e = e || window.event;
+            var keycode = e.which ? e.which : e.keyCode;
+            //如果按下ctrl+alt+r，弹出清空缓存
+            if(e.ctrlKey && e.altKey && keycode == 82){
+                $('#dlg').dialog('open');
+                $('#dlg').dialog('center');
+                $('#_form').form('clear');
+                formFocus("_form", "firmCode");
+            }
+        }
+
+        /**
+         * 清除客户统计数据
+         */
+        function clearData() {
+            $.ajax({
+                type: "POST",
+                url: "${contextPath}/customerStats/clearData.action",
+                data: $("#_form").serializeObject(),
+                dataType: "json",
+                success: function (data) {
+                    if(data.success){
+                        $('#dlg').dialog('close');
+                        alert(data.result);
+                    }
+                },
+                error: function () {
+                    alert('远程拉取数据失败');
+                }
+            });
+        }
+
         //图表查询
         function query() {
             if($("#startDate").datebox("getValue") == ""){
@@ -144,6 +193,7 @@
             $("#startDate").datebox("setValue", lastMonthDate());
             $("#endDate").datebox("setValue", currentDate());
             query();
+            document.addEventListener("keyup",getKey,false);
         })
     </script>
 </#body>

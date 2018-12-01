@@ -340,4 +340,13 @@ public class CustomerStatsServiceImpl extends BaseServiceImpl<CustomerStats, Lon
             customerStats.setStartDate(calendar.getTime());
         }
     }
+
+    /**
+     * 按市场清除客户统计缓存
+     * @param firmCode
+     */
+    @Override
+    public void clearData(String firmCode){
+        getActualDao().clearData(firmCode);
+    }
 }

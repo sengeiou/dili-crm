@@ -67,4 +67,10 @@ public interface CustomerStatsService extends BaseService<CustomerStats, Long> {
      * @param customerStats
      */
     void updateCustomerCount(CustomerStats customerStats);
+
+    /**
+     * 按市场清除客户统计缓存
+     * @param firmCode
+     */
+    void clearData(String firmCode);
 }

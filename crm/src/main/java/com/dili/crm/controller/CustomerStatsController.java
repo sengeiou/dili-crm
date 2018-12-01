@@ -62,10 +62,14 @@ public class CustomerStatsController {
     })
     @RequestMapping(value="/pullData.action", method = {RequestMethod.GET, RequestMethod.POST})
     public @ResponseBody
-    BaseOutput pullData(CustomerStatsDto customerStats) throws Exception {
+    BaseOutput pullData(CustomerStatsDto customerStats) {
         return customerStatsService.pullData(customerStats);
     }
 
-
+    @RequestMapping(value="/clearData.action", method = {RequestMethod.GET, RequestMethod.POST})
+    public @ResponseBody BaseOutput clearData(CustomerStatsDto customerStats) {
+        customerStatsService.clearData(customerStats.getFirmCode());
+        return BaseOutput.success("清除缓存成功");
+    }
 
 }

@@ -31,4 +31,10 @@ public interface CustomerStatsMapper extends MyMapper<CustomerStats> {
      * @param customerStats
      */
     void updateCustomerCount(CustomerStats customerStats);
+
+    /**
+     * 按市场清除客户统计缓存
+     * @param firmCode
+     */
+    void clearData(String firmCode);
 }
