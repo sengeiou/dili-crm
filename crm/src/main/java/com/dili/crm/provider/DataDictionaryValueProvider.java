@@ -102,6 +102,6 @@ public class DataDictionaryValueProvider extends BatchDisplayTextProviderAdaptor
 
     @Override
     protected boolean ignoreCaseToRef(){
-        return false;
+        return true;
     }
 }
