@@ -73,6 +73,8 @@ public class CustomerStatsServiceImpl extends BaseServiceImpl<CustomerStats, Lon
         if(customerStatsDto.getStartDate().after(customerStatsDto.getEndDate())) {
             customerStatsDto.setStartDate(customerStatsDto.getEndDate());
         }
+        //拉取的开始时间必须比查询的开始时间早一点，用于查询客户增量时，必须查前一天的客户量
+        customerStatsDto.setStartDate(DateUtils.addDays(customerStatsDto.getStartDate(), -1));
         customerStatsDto.setFirmCodes(firmCodes);
         //没有结束时间，则取今天为结束时间
         if(customerStatsDto.getEndDate() == null) {
@@ -163,6 +165,8 @@ public class CustomerStatsServiceImpl extends BaseServiceImpl<CustomerStats, Lon
         if(customerStatsDto.getStartDate().before(earliestCreated)){
             customerStatsDto.setStartDate(earliestCreated);
         }
+        //拉取的开始时间必须比查询的开始时间早一点，用于查询客户增量时，必须查前一天的客户量
+        customerStatsDto.setStartDate(DateUtils.addDays(customerStatsDto.getStartDate(), -1));
         // == 先要判断是否有新的市场导入 ==
         //查询客户表有哪些市场的客户
         customer.setSelectColumns(Sets.newHashSet("distinct market"));
