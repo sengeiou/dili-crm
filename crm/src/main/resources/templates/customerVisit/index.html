@@ -69,7 +69,7 @@
                 <table class="easyui-datagrid" title="回访信息" id="grid" fitColumns="true" noheader="true"
                        pagination="true" pageSize="30" pageNumber="1" pagePosition="top"  remoteSort="true"
                        loadMsg="数据加载中..." singleSelect="true" method="post" multiSort="false" sortName="code" sortOrder="desc"
-                       align="center" fit="true" striped="false"  idField="id" data-options="onDblClickRow:openUpdate, onHeaderContextMenu:headerContextMenu">
+                       align="center" fit="true" striped="false"  idField="id" data-options="onDblClickRow:openUpdate, onHeaderContextMenu:headerContextMenu, onLoadSuccess:onLoadSuccess">
                     <thead>
                         <tr>
                             <th width="11%" data-options="field:'code',sortable:'true', order:'desc', align:'center', resizable:'true', fixed:'false'">
@@ -116,6 +116,10 @@
         function openInsert(){
             window.location.href="${contextPath}/customerVisit/edit.html?id=";
             return;
+        }
+
+        var onLoadSuccess = function() {
+            $(this).datagrid("clearSelections");
         }
 
         //打开修改窗口

@@ -218,6 +218,7 @@
         //加载完了必须要重设url，否则删除的时候可能会调用expand
         var onLoadSuccess = function(row, data){
             $(this).treegrid("options").url="${contextPath}/city/listPage.action";
+            $(this).treegrid("clearSelections");
 //            $("#grid").treegrid("expandAll");
 //          展开第一级
             if(data && data.rows){
