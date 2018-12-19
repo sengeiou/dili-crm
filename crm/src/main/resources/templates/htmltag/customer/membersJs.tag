@@ -71,11 +71,11 @@
                 if(ret.success){
                     $("#membersGrid").datagrid("reload");
                 }else{
-                    $.messager.alert('错误',ret.result);
+                    swal('错误',ret.result, 'error');
                 }
             },
             error: function(){
-                $.messager.alert('错误','远程访问失败');
+                swal('错误！', '远程访问失败', 'error');
             }
         });
     }
@@ -85,46 +85,54 @@
         $("#membersGrid").datagrid("selectRow", index);
         var selected = $("#membersGrid").datagrid("getSelected");
         if (null == selected) {
-            $.messager.alert('警告','请选中一条数据');
+            swal('警告','请选中一条数据', 'warning');
             return;
         }
         var selectedId = selected.id;
-        //修改用户时，因为是直接保存数据库，所以，这里也需要删除数据
-        <%if (has(action) && action=="edit"){%>
-        $.messager.confirm('确认','您确认想要删除成员客户吗？',function(r){
-            if (r){
-                $.ajax({
-                    type: "POST",
-                    url: "${contextPath}/customer/deleteMembers.action",
-                    data: {id:selectedId},
-                    processData:true,
-                    dataType: "json",
-                    async : true,
-                    success: function (ret) {
-                        if(ret.success){
-                            $("#membersGrid").datagrid("reload");
-                            $('#membersDlg').dialog('close');
-                        }else{
-                            $.messager.alert('错误',ret.result);
-                        }
-                    },
-                    error: function(){
-                        $.messager.alert('错误','远程访问失败');
+        swal({
+            title : '您确认想要删除成员客户吗？',
+            type : 'question',
+            showCancelButton : true,
+            confirmButtonColor : '#3085d6',
+            cancelButtonColor : '#d33',
+            confirmButtonText : '确定',
+            cancelButtonText : '取消',
+            confirmButtonClass : 'btn btn-success',
+            cancelButtonClass : 'btn btn-danger'
+        }).then(function(flag) {
+            if (flag.dismiss == 'cancel') {
+                return;
+            }
+            //修改用户时，因为是直接保存数据库，所以，这里也需要删除数据
+            <%if (has(action) && action=="edit"){%>
+            $.ajax({
+                type: "POST",
+                url: "${contextPath}/customer/deleteMembers.action",
+                data: {id:selectedId},
+                processData:true,
+                dataType: "json",
+                async : true,
+                success: function (ret) {
+                    if(ret.success){
+                        $("#membersGrid").datagrid("reload");
+                        $('#membersDlg').dialog('close');
+                    }else{
+                        swal('错误',ret.result, 'error');
                     }
-                });
-            }
+                },
+                error: function(){
+                    swal('错误！', '远程访问失败', 'error');
+                }
+            });
+            <%}else {%>
+            //新增用户时，只是记录用户ID，所以，此处需要删除grid，并且移除元素
+            $("#membersGrid").datagrid("deleteRow", index);
+            _members = $.grep(_members, function (n, i) {
+                return n != selectedId;
+            });
+            <%}%>
         });
-        <%}else {%>
-        $.messager.confirm('确认','您确认想要删除成员客户吗？',function(r){
-            if (r) {
-                //新增用户时，只是记录用户ID，所以，此处需要删除grid，并且移除元素
-                $("#membersGrid").datagrid("deleteRow", index);
-                _members = $.grep(_members, function (n, i) {
-                    return n != selectedId;
-                });
-            }
-        });
-        <%}%>
+
     }
     <%}%>
     // ============================   成员客户相关js end  =============================

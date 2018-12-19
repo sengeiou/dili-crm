@@ -199,7 +199,7 @@
             //设置当前选择的回访id
             var visitId = $("#_id").val();
             if (typeof(visitId)=="undefined" || null == visitId || ""==visitId){
-                $.messager.alert('错误','回访ID丢失，请返回列表后，重新操作！','error');
+                swal('错误', '回访ID丢失，请返回列表后，重新操作', 'error');
                 return;
             }
             var param = bindMetadata("eventGrid", true);

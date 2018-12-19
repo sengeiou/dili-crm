@@ -4,7 +4,7 @@
         saveAndExit("${contextPath}/customer/detail.html?id=");
     }
 
-    //保存客户
+    //保存客户并退出
     function saveAndExit(url){
         if(!$('#_form').form("validate")){
             return;
@@ -17,70 +17,88 @@
         <%}%>
         if ($("#_operatingArea").combobox("getValue")){
             if(manualInput){
-                $.messager.alert('错误',"手动输入不合法，请选择经营区域");
+                swal('错误',"手动输入不合法，请选择经营区域", 'error');
                 return;
             }
         }
         var msg = (!url || url == null || url === "") ? "您确认要保存并退出吗？" : "您确认想要保存吗？";
-        $.messager.confirm('确认',msg,function(r) {
-            if (r) {
-                //禁用保存
-                $("#saveBtn").linkbutton("disable");
-                $("#saveAndExitBtn").linkbutton("disable");
-                var selectOperatingArea = $('#_operatingArea').textbox("getValue");
-                if(selectOperatingArea == ''){
-                    $("#selectedAreaLat").val('');
-                    $("#selectedAreaLng").val('');
-                }
+        swal({
+            title : msg,
+            type : 'question',
+            showCancelButton : true,
+            confirmButtonColor : '#3085d6',
+            cancelButtonColor : '#d33',
+            confirmButtonText : '确定',
+            cancelButtonText : '取消',
+            confirmButtonClass : 'btn btn-success',
+            cancelButtonClass : 'btn btn-danger'
+        }).then(function(flag) {
+            if (flag.dismiss == 'cancel') {
+                return;
+            }
+            //禁用保存
+            $("#saveBtn").linkbutton("disable");
+            $("#saveAndExitBtn").linkbutton("disable");
+            var selectOperatingArea = $('#_operatingArea').textbox("getValue");
+            if(selectOperatingArea == ''){
+                $("#selectedAreaLat").val('');
+                $("#selectedAreaLng").val('');
+            }
 
-                var _formData = removeKeyStartWith($("#_form").serializeObject(true),"_");
-                var _url = null;
-                var add = true;
-                <%if(has(action) && action == "add") {%>
-                _url = "${contextPath}/customer/insert.action";
-                <%}else{%>
-                add = false;
-                _url = "${contextPath}/customer/update.action";
-                <%}%>
-                if (add){
-                    _formData.members = _members;
-                }
-                $.ajax({
-                    type: "POST",
-                    url: _url,
-                    data: _formData,
-                    processData:true,
-                    dataType: "json",
-                    traditional: true,
-                    async : true,
-                    success: function (data) {
-                        if(data.code=="200"){
-                            if(url){
-                                url += data.data.id;
-                            }else{
-                                url = "${contextPath}/customer/index.html";
-                            }
-                            $.messager.alert({
-                                title: '提示',
-                                msg: data.result,
-                                fn: function(){
-                                    window.location.href = url;
-                                }
-                            });
+            var _formData = removeKeyStartWith($("#_form").serializeObject(true),"_");
+            var _url = null;
+            var add = true;
+            <%if(has(action) && action == "add") {%>
+            _url = "${contextPath}/customer/insert.action";
+            <%}else{%>
+            add = false;
+            _url = "${contextPath}/customer/update.action";
+            <%}%>
+            if (add){
+                _formData.members = _members;
+            }
+            $.ajax({
+                type: "POST",
+                url: _url,
+                data: _formData,
+                processData:true,
+                dataType: "json",
+                traditional: true,
+                async : true,
+                success: function (data) {
+                    if(data.code=="200"){
+                        if(url){
+                            url += data.data.id;
                         }else{
-                            $("#saveBtn").linkbutton("enable");
-                            $("#saveAndExitBtn").linkbutton("enable");
-                            $.messager.alert('错误',data.result);
+                            url = "${contextPath}/customer/index.html";
                         }
-                    },
-                    error: function(XMLHttpRequest, textStatus, errorThrown){
+                        swal({
+                            title: '提示',
+                            text: data.result,
+                            type:"success",
+                            timer: 1000
+                        }).then(
+                            function (flag) {
+                                // if (dismiss === 'timer' || dismiss == 'overlay' || dismiss == "close") {
+                                    window.location.href = url;
+                                // }
+                            }
+                        )
+
+                    }else{
                         $("#saveBtn").linkbutton("enable");
                         $("#saveAndExitBtn").linkbutton("enable");
-                        $.messager.alert('错误','远程访问失败');
+                        swal('错误',data.result, 'error');
                     }
-                });
-            }
+                },
+                error: function(XMLHttpRequest, textStatus, errorThrown){
+                    $("#saveBtn").linkbutton("enable");
+                    $("#saveAndExitBtn").linkbutton("enable");
+                    swal('错误！', '远程访问失败', 'error');
+                }
+            });
         });
+
     }
 
     //清空客户表单
@@ -145,11 +163,11 @@
                         ,textField:"text"
                     });
                 }else{
-                    $.messager.alert('错误',result.result);
+                    swal('错误',result.result, 'error');
                 }
             },
             error: function(){
-                $.messager.alert('错误','远程访问失败');
+                swal('错误！', '远程访问失败', 'error');
             }
         });
 
@@ -174,7 +192,7 @@
         //组织类型不为企业时，证件号码为必填项
         if (organizationType != "enterprise"){
             if (!newValue){
-                $.messager.alert('警告','组织类型不为企业时，证件号为必填项');
+                swal('警告','组织类型不为企业时，证件号为必填项', 'warning');
                 return false;
             }
         }
@@ -183,24 +201,24 @@
             return true;
         }
         if(newValue.length < 18 || newValue.length > 19){
-            $.messager.alert('警告','证件号不合法');
+            swal('警告','证件号不合法', 'warning');
             return false;
         }
 
         if (isNaN(year) || isNaN(month) || isNaN(day)){
-            $.messager.alert('警告','证件号不合法');
+            swal('警告','证件号不合法', 'warning');
             return false;
         }
         if(parseInt(month)<1 || parseInt(month)>12){
-            $.messager.alert('警告','证件号不合法');
+            swal('警告','证件号不合法', 'warning');
             return false;
         }
         if(parseInt(day)<1 || parseInt(day)>31){
-            $.messager.alert('警告','证件号不合法');
+            swal('警告','证件号不合法', 'warning');
             return false;
         }
         if(parseInt(year)<1900 || parseInt(year)>2100){
-            $.messager.alert('警告','证件号不合法');
+            swal('警告','证件号不合法', 'warning');
             return false;
         }
         return true;
@@ -332,7 +350,7 @@
         var lat=$('#selectedAreaLat').val();
         var lng=$('#selectedAreaLng').val();
         if(selectOperatingArea==''){
-            $.messager.alert('提示','请选择经营区域');
+            swal('提示','请选择经营区域', 'info');
             disableEasyUiControl('confirmSelectedArea',false);
             return ;
         }
@@ -356,12 +374,12 @@
                     selectName();
                     $('#selectOperatingArea').textbox("setValue","");
                 }else{
-                    $.messager.alert('错误',data.result);
+                    swal('错误',data.result, 'error');
                 }
                 disableEasyUiControl('confirmSelectedArea',false);
             },
             error: function(){
-                $.messager.alert('错误','远程访问失败');
+                swal('错误！', '远程访问失败', 'error');
                 disableEasyUiControl('confirmSelectedArea',false);
             }
         });

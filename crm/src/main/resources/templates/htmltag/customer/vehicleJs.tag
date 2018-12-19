@@ -42,7 +42,7 @@
         $("#vehicleGrid").datagrid("selectRow", index);
         var selected = $("#vehicleGrid").datagrid("getSelected");
         if (null == selected) {
-            $.messager.alert('警告','请选中一条数据');
+            swal('警告','请选中一条数据', 'warning');
             return;
         }
         $('#_vehicleForm').form('clear');
@@ -83,11 +83,11 @@
                 if(data.code=="200"){
                     $("#vehicleGrid").datagrid("reload");
                 }else{
-                    $.messager.alert('错误',data.result);
+                    swal('错误',data.result, 'error');
                 }
             },
             error: function(){
-                $.messager.alert('错误','远程访问失败');
+                swal('错误！', '远程访问失败', 'error');
             }
         });
         <%}%>
@@ -101,33 +101,44 @@
         }else{
             var selected = $("#vehicleGrid").datagrid("getSelected");
             if (null == selected) {
-                $.messager.alert('警告','请选中一条数据');
+                swal('警告','请选中一条数据', 'warning');
                 return;
             }
             selectedId = selected.id;
         }
-        $.messager.confirm('确认','您确认想要删除记录吗？',function(r){
-            if (r){
-                $.ajax({
-                    type: "POST",
-                    url: "${contextPath}/vehicle/delete.action",
-                    data: {id:selectedId},
-                    processData:true,
-                    dataType: "json",
-                    async : true,
-                    success: function (data) {
-                        if(data.code=="200"){
-                            $("#vehicleGrid").datagrid("reload");
-                            $('#vehicleDlg').dialog('close');
-                        }else{
-                            $.messager.alert('错误',data.result);
-                        }
-                    },
-                    error: function(){
-                        $.messager.alert('错误','远程访问失败');
-                    }
-                });
+        swal({
+            title : '您确认想要删除记录吗？',
+            type : 'question',
+            showCancelButton : true,
+            confirmButtonColor : '#3085d6',
+            cancelButtonColor : '#d33',
+            confirmButtonText : '确定',
+            cancelButtonText : '取消',
+            confirmButtonClass : 'btn btn-success',
+            cancelButtonClass : 'btn btn-danger'
+        }).then(function(flag) {
+            if (flag.dismiss == 'cancel') {
+                return;
             }
+            $.ajax({
+                type: "POST",
+                url: "${contextPath}/vehicle/delete.action",
+                data: {id:selectedId},
+                processData:true,
+                dataType: "json",
+                async : true,
+                success: function (data) {
+                    if(data.code=="200"){
+                        $("#vehicleGrid").datagrid("reload");
+                        $('#vehicleDlg').dialog('close');
+                    }else{
+                        swal('错误',data.result, 'error');
+                    }
+                },
+                error: function(){
+                    swal('错误！', '远程访问失败', 'error');
+                }
+            });
         });
     }
     <%}%>

@@ -179,7 +179,7 @@
             function openUpdate(){
                 var selected = $("#grid").treegrid("getSelected");
                 if (null == selected) {
-                    $.messager.alert('警告','请选中一条数据');
+                    swal('警告','请选中一条数据', 'warning');
                     return;
                 }
                 window.location.href="${contextPath}/customer/detail.html?id="+selected["id"];

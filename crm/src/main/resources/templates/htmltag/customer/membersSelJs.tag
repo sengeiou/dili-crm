@@ -13,7 +13,7 @@
         if(!row || row == null){
             var selected = $('#selectMembersGrid').datagrid('getSelected');
             if (null == selected) {
-                $.messager.alert('警告','请选中一条数据');
+                swal('警告','请选中一条数据', 'warning');
                 return;
             }
             row = selected;

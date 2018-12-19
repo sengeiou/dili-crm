@@ -17,7 +17,7 @@
         $("#addressGrid").datagrid("selectRow", index);
         var selected = $("#addressGrid").datagrid("getSelected");
         if (null == selected) {
-            $.messager.alert('警告','请选中一条数据');
+            swal('警告','请选中一条数据', 'warning');
             return;
         }
         $('#addressDlg').dialog('open');
@@ -93,13 +93,9 @@
             if(!$('#_addressForm').form("validate")){
                 return;
             }
-            // if(manualInput){
-            //     $.messager.alert('错误',"手动输入不合法，请选择城市");
-            //     return;
-            // }
             var city  = $('#_address_city').textbox("getValue");
             if (null == city || ''==city){
-                $.messager.alert('错误',"输入不合法，请先在地图上选择城市");
+                swal('错误',"输入不合法，请先在地图上选择城市", 'error');
                 return;
             }
             var _formData = removeKeyStartWith($("#_addressForm").serializeObject(),"_address_");
@@ -125,11 +121,11 @@
                     if(data.code=="200"){
                         $("#addressGrid").datagrid("reload");
                     }else{
-                        $.messager.alert('错误',data.result);
+                        swal('错误',data.result, 'error');
                     }
                 },
                 error: function(XMLHttpRequest, textStatus, errorThrown){
-                    $.messager.alert('错误','远程访问失败');
+                    swal('错误！', '远程访问失败', 'error');
                 }
             });
             <%}%>
@@ -143,34 +139,46 @@
             }else{
                 var selected = $("#addressGrid").datagrid("getSelected");
                 if (null == selected) {
-                    $.messager.alert('警告','请选中一条数据');
+                    swal('警告','请选中一条数据', 'warning');
                     return;
                 }
                 selectedId = selected.id;
             }
-            $.messager.confirm('确认','您确认想要删除记录吗？',function(r){
-                if (r){
-                    $.ajax({
-                        type: "POST",
-                        url: "${contextPath}/address/delete.action",
-                        data: {id:selectedId},
-                        processData:true,
-                        dataType: "json",
-                        async : true,
-                        success: function (ret) {
-                            if(ret.success){
-                                $("#addressGrid").datagrid("reload");
-                                $('#addressDlg').dialog('close');
-                            }else{
-                                $.messager.alert('错误',ret.result);
-                            }
-                        },
-                        error: function(){
-                            $.messager.alert('错误','远程访问失败');
-                        }
-                    });
+            swal({
+                title : '您确认想要删除记录吗？',
+                type : 'question',
+                showCancelButton : true,
+                confirmButtonColor : '#3085d6',
+                cancelButtonColor : '#d33',
+                confirmButtonText : '确定',
+                cancelButtonText : '取消',
+                confirmButtonClass : 'btn btn-success',
+                cancelButtonClass : 'btn btn-danger'
+            }).then(function(flag) {
+                if (flag.dismiss == 'cancel') {
+                    return;
                 }
+                $.ajax({
+                    type: "POST",
+                    url: "${contextPath}/address/delete.action",
+                    data: {id:selectedId},
+                    processData:true,
+                    dataType: "json",
+                    async : true,
+                    success: function (ret) {
+                        if(ret.success){
+                            $("#addressGrid").datagrid("reload");
+                            $('#addressDlg').dialog('close');
+                        }else{
+                            swal('错误',ret.result, 'error');
+                        }
+                    },
+                    error: function(){
+                        swal('错误！', '远程访问失败', 'error');
+                    }
+                });
             });
+
         }
     <%}%>
     // ============================   地址相关js end  =============================

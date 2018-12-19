@@ -174,7 +174,7 @@
             <#resource code="updateCustomer">
                 var selected = $("#grid").treegrid("getSelected");
                 if (null == selected) {
-                    $.messager.alert('警告','请选中一条数据');
+                    swal('警告','请选中一条数据', 'warning');
                     return;
                 }
                 window.location.href="${contextPath}/customer/edit.html?id="+selected["id"];
@@ -186,7 +186,7 @@
             <#resource code="viewCustomer">
                 var selected = $("#grid").treegrid("getSelected");
                 if (null == selected) {
-                    $.messager.alert('警告','请选中一条数据');
+                    swal('警告','请选中一条数据', 'warning');
                     return;
                 }
                 window.location.href="${contextPath}/customer/detail.html?id="+selected["id"];
@@ -197,31 +197,42 @@
         function del() {
             var selected = $("#grid").treegrid("getSelected");
             if (null == selected) {
-                $.messager.alert('警告','请选中一条数据');
+                swal('警告','请选中一条数据', 'warning');
                 return;
             }
-            $.messager.confirm('确认','您确认想要删除记录吗？',function(r){
-                if (r){
-                    $.ajax({
-                        type: "POST",
-                        url: "${contextPath}/customer/delete.action",
-                        data: {id:selected.id},
-                        processData:true,
-                        dataType: "json",
-                        async : true,
-                        success: function (data) {
-                            if(data.code=="200"){
-                                $("#grid").treegrid("reload");
-                                $('#dlg').dialog('close');
-                            }else{
-                                $.messager.alert('错误',data.result);
-                            }
-                        },
-                        error: function(){
-                            $.messager.alert('错误','远程访问失败');
-                        }
-                    });
+            swal({
+                title : '您确认想要删除记录吗？',
+                type : 'question',
+                showCancelButton : true,
+                confirmButtonColor : '#3085d6',
+                cancelButtonColor : '#d33',
+                confirmButtonText : '确定',
+                cancelButtonText : '取消',
+                confirmButtonClass : 'btn btn-success',
+                cancelButtonClass : 'btn btn-danger'
+            }).then(function(flag) {
+                if (flag.dismiss == 'cancel') {
+                    return;
                 }
+                $.ajax({
+                    type: "POST",
+                    url: "${contextPath}/customer/delete.action",
+                    data: {id:selected.id},
+                    processData:true,
+                    dataType: "json",
+                    async : true,
+                    success: function (data) {
+                        if(data.code=="200"){
+                            $("#grid").treegrid("reload");
+                            $('#dlg').dialog('close');
+                        }else{
+                            swal('错误',data.result, 'error');
+                        }
+                    },
+                    error: function(){
+                        swal('错误', '远程访问失败', 'error');
+                    }
+                });
             });
         }
         // var markerClusterer=null;
@@ -245,7 +256,7 @@
             var lat = customer.operatingLat;
             var lng = customer.operatingLng;
             if (null == lat || null == lng){
-                $.messager.alert('错误','未设置经营区域地址');
+                swal('错误','未设置经营区域地址', 'error');
                 return;
             }
         	$('#c_name').html(customer.name);
@@ -267,7 +278,7 @@
         	//var rows=[];
         	var selected = $("#"+gridId).treegrid("getSelected");
             if (null == selected) {
-            	$.messager.alert('警告','请选中一条数据');
+                swal('警告','请选中一条数据', 'warning');
                 return;
             }else{
                 showMapDialog(selected);

@@ -131,7 +131,7 @@
         //图表查询
         function query() {
             if($("#startDate").datebox("getValue") == ""){
-                $.messager.alert('警告','请选择开始日期');
+                swal('警告','请选择开始日期', 'warning');
                 return;
             }
             $.messager.progress({

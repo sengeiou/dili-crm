@@ -18,7 +18,7 @@
             </tr>
             <tr>
                 <td style="padding:5px;">
-                    <input name="_contacts_sex" id="_contacts_sex" style="width:100%;" panelWidth="auto" data-options="labelAlign:'right',editable:false" required="true" panelHeight="auto" label="&lowast;性别:" />
+                    <input name="_contacts_sex" id="_contacts_sex" style="width:100%;" panelWidth="auto" data-options="labelAlign:'right',editable:false" required="true" panelHeight="auto" label="性别:" />
                     <#comboProvider _id="_contacts_sex" _provider='sexProvider'/>
                 </td>
             </tr>

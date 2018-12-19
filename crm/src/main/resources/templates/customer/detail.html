@@ -302,11 +302,11 @@
                             ,textField:"text"
                         });
                     }else{
-                        $.messager.alert('错误',result.result);
+                        swal('错误',result.result, 'error');
                     }
                 },
                 error: function(){
-                    $.messager.alert('错误','远程访问失败');
+                    swal('错误', '远程访问失败', 'error');
                 }
             });
 
