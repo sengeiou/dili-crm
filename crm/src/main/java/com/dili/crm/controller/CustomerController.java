@@ -12,6 +12,7 @@ import com.dili.ss.domain.BaseOutput;
 import com.dili.ss.domain.EasyuiPageOutput;
 import com.dili.ss.dto.DTOUtils;
 import com.dili.ss.metadata.ValuePair;
+import com.dili.ss.metadata.ValueProvider;
 import com.dili.ss.metadata.ValueProviderUtils;
 import com.dili.uap.sdk.domain.UserTicket;
 import com.dili.uap.sdk.session.SessionConstants;
@@ -222,6 +223,9 @@ public class CustomerController {
 	public @ResponseBody BaseOutput<String> getCertificateTypeComboboxData(@RequestParam(required = false) String organizationType) throws Exception {
     	Map params = new HashMap(2);
     	params.put("organizationType", organizationType);
+		JSONObject queryParam = new JSONObject();
+		queryParam.put("required", true);
+		params.put(ValueProvider.QUERY_PARAMS_KEY, queryParam);
 		String json = JSONArray.toJSONString(valueProviderUtils.getLookupList("certificateTypeProvider", null, params));
 		return BaseOutput.success("加载成功").setData(json);
 	}

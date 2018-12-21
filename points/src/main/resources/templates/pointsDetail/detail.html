@@ -208,7 +208,7 @@
     function openUpdate(){
         var selected = $("#grid").datagrid("getSelected");
         if (null == selected) {
-            $.messager.alert('警告','请选中一条数据');
+            swal('警告','请选中一条数据', 'warning');
             return;
         }
         $('#dlg').dialog('open');
@@ -243,11 +243,11 @@
                     $("#grid").datagrid("reload");
                     $('#dlg').dialog('close');
                 }else{
-                    $.messager.alert('错误',data.result);
+                    swal('错误',data.result, 'error');
                 }
             },
             error: function(){
-                $.messager.alert('错误','远程访问失败');
+                swal('错误', '远程访问失败', 'error');
             }
         });
     }
@@ -256,11 +256,10 @@
     function del() {
         var selected = $("#grid").datagrid("getSelected");
         if (null == selected) {
-            $.messager.alert('警告','请选中一条数据');
+            swal('警告','请选中一条数据', 'warning');
             return;
         }
-        $.messager.confirm('确认','您确认想要删除记录吗？',function(r){
-            if (r){
+        <#swalConfirm swalTitle="您确认想要删除记录吗？">
                 $.ajax({
                     type: "POST",
                     url: "${contextPath}/pointsDetail/delete.action",
@@ -273,15 +272,14 @@
                             $("#grid").datagrid("reload");
                             $('#dlg').dialog('close');
                         }else{
-                            $.messager.alert('错误',data.result);
+                            swal('错误',data.result, 'error');
                         }
                     },
                     error: function(){
-                        $.messager.alert('错误','远程访问失败');
+                        swal('错误', '远程访问失败', 'error');
                     }
                 });
-            }
-        });
+        </#swalConfirm>
 
     }
     function switchTab(title,index){

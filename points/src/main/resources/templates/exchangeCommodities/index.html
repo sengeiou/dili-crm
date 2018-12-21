@@ -80,7 +80,7 @@
     <div id="dlg" class="easyui-dialog" resizable="false" constrain="true" shadow="true" draggable="false" title="商品信息" style="padding:20px" modal="true" border="thin" closed="true"
          data-options="
 				iconCls: 'icon-save',
-				height: 300,
+				height: 338,
 				buttons: [{
 					text:'确认',
 					iconCls:'icon-ok',
@@ -93,7 +93,7 @@
             <tr>
                 <td style="padding:5px;">
                     <input name="_firmCode" id="_firmCode" style="width:100%;" required data-options="labelAlign:'right',labelWidth:100, editable:false" panelWidth="auto" panelHeight="auto" label="&lowast;所属市场:"/>
-                    <#comboProvider _id="_firmCode" _provider='firmProvider' />
+                    <#comboProvider _id="_firmCode" _provider='firmProvider' _queryParams='{ required:true}'/>
                 </td>
             </tr>
             <tr>
@@ -139,7 +139,7 @@
         function openUpdate(){
             var selected = $("#grid").datagrid("getSelected");
             if (null == selected) {
-                $.messager.alert('警告','请选中一条数据');
+                swal('警告','请选中一条数据', 'warning');
                 return;
             }
             $('#_form').form('clear');
@@ -181,11 +181,11 @@
                         $("#grid").datagrid("reload");
                         $('#dlg').dialog('close');
                     }else{
-                        $.messager.alert('错误',data.result);
+                        swal('错误',data.result, 'error');
                     }
                 },
                 error: function(){
-                    $.messager.alert('错误','远程访问失败');
+                    swal('错误', '远程访问失败', 'error');
                 }
             });
         }
@@ -194,11 +194,10 @@
         function del() {
             var selected = $("#grid").datagrid("getSelected");
             if (null == selected) {
-                $.messager.alert('警告','请选中一条数据');
+                swal('警告','请选中一条数据', 'warning');
                 return;
             }
-            $.messager.confirm('确认','您确认想要删除记录吗？',function(r){
-                if (r){
+            <#swalConfirm swalTitle="您确认想要删除记录吗？">
                     $.ajax({
                         type: "POST",
                         url: "${contextPath}/exchangeCommodities/delete.action",
@@ -211,15 +210,14 @@
                                 $("#grid").datagrid("reload");
                                 $('#dlg').dialog('close');
                             }else{
-                                $.messager.alert('错误',data.result);
+                                swal('错误',data.result, 'error');
                             }
                         },
                         error: function(){
-                            $.messager.alert('错误','远程访问失败');
+                            swal('错误', '远程访问失败', 'error');
                         }
                     });
-                }
-            });
+            </#swalConfirm>
 
         }
         //表格查询

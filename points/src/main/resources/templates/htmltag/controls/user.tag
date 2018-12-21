@@ -6,7 +6,7 @@ showUserDlg();
 function confirmUserBtn() {
 var selected = $('#selectUserGrid').datagrid('getSelected');
 if (null == selected) {
-$.messager.alert('警告','请选中一条数据');
+swal('警告','请选中一条数据', 'warning');
 return;
 }
 $('#${controlId}').textbox('initValue', selected.id);

@@ -84,11 +84,11 @@
                     <tr>
                         <td style="padding-top:10px;padding-left:15px;">
                             <input name="_organizationType" id="_organizationType" style="width:70%;" panelWidth="auto" panelHeight="auto" label="&lowast;组织类型:" required="true" data-options="labelAlign:'right', validType:'length[1,20]', required:true, editable:false, <%if(has(action) && action=='edit'){%>readonly:true,disabled:true,<%}%> onChange:changeOrganizationType"/>
-                            <#comboProvider _id="_organizationType" _provider='dataDictionaryValueProvider' _queryParams='{dd_code:"customer_organization_type"}'/>
+                            <#comboProvider _id="_organizationType" _provider='dataDictionaryValueProvider' _queryParams='{dd_code:"customer_organization_type", required:true}'/>
                         </td>
                         <td style="padding-top:10px;padding-left:15px;">
                             <input name="_market" id="_market" data-options="labelAlign:'right',required:true, editable:false,onLoadSuccess:onComboLoadSuccessSelectOne" style="width:70%;" panelWidth="auto" panelHeight="auto" label="*所属市场:" />
-                            <#comboProvider _id="_market" _provider='firmProvider' />
+                            <#comboProvider _id="_market" _provider='firmProvider' _queryParams='{required:true}'/>
                         </td>
                         <td style="padding-top:10px;padding-left:15px;">
                             <input class="easyui-textbox" name="_mainCategory" id="_mainCategory" style="width:70%;" data-options="labelAlign:'right', label:'主营品类:', validType:'length[0,40]'" />

@@ -100,7 +100,7 @@
             confirmButtonClass : 'btn btn-success',
             cancelButtonClass : 'btn btn-danger'
         }).then(function(flag) {
-            if (flag.dismiss == 'cancel') {
+            if (flag.dismiss == 'cancel' || flag.dismiss == 'overlay' || flag.dismiss == "esc" || flag.dismiss == "close") {
                 return;
             }
             //修改用户时，因为是直接保存数据库，所以，这里也需要删除数据

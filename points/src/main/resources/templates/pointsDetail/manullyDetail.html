@@ -203,7 +203,7 @@
         function openUpdate(){
             var selected = $("#grid").datagrid("getSelected");
             if (null == selected) {
-                $.messager.alert('警告','请选中一条数据');
+                swal('警告','请选中一条数据', 'warning');
                 return;
             }
             $('#dlg').dialog('open');
@@ -238,11 +238,11 @@
                         $("#grid").datagrid("reload");
                         $('#dlg').dialog('close');
                     }else{
-                        $.messager.alert('错误',data.result);
+                        swal('错误',data.result, 'error');
                     }
                 },
                 error: function(){
-                    $.messager.alert('错误','远程访问失败');
+                    swal('错误', '远程访问失败', 'error');
                 }
             });
         }
@@ -251,37 +251,34 @@
         function del() {
             var selected = $("#grid").datagrid("getSelected");
             if (null == selected) {
-                $.messager.alert('警告','请选中一条数据');
+                swal('警告','请选中一条数据', 'warning');
                 return;
             }
-            $.messager.confirm('确认','您确认想要删除记录吗？',function(r){
-                if (r){
-                    $.ajax({
-                        type: "POST",
-                        url: "${contextPath}/pointsDetail/delete.action",
-                        data: {id:selected.id},
-                        processData:true,
-                        dataType: "json",
-                        async : true,
-                        success: function (data) {
-                            if(data.code=="200"){
-                                $("#grid").datagrid("reload");
-                                $('#dlg').dialog('close');
-                            }else{
-                                $.messager.alert('错误',data.result);
-                            }
-                        },
-                        error: function(){
-                            $.messager.alert('错误','远程访问失败');
+            <#swalConfirm swalTitle="您确认想要删除记录吗？">
+                $.ajax({
+                    type: "POST",
+                    url: "${contextPath}/pointsDetail/delete.action",
+                    data: {id:selected.id},
+                    processData:true,
+                    dataType: "json",
+                    async : true,
+                    success: function (data) {
+                        if(data.code=="200"){
+                            $("#grid").datagrid("reload");
+                            $('#dlg').dialog('close');
+                        }else{
+                            swal('错误',data.result, 'error');
                         }
-                    });
-                }
-            });
+                    },
+                    error: function(){
+                        swal('错误', '远程访问失败', 'error');
+                    }
+                });
+            </#swalConfirm>
 
         }
         //表格查询
         function queryGrid() {
-        	
             var opts = $("#grid").datagrid("options");
             if (null == opts.url || "" == opts.url) {
                 opts.url = "${contextPath}/pointsDetail/listPage.action";

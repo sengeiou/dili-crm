@@ -30,11 +30,11 @@
                         $('#_available').textbox("setValue", ret.data.available);
                     }
                 } else {
-                    $.messager.alert('错误', ret.result);
+                    swal('错误',data.result, 'error');
                 }
             },
             error: function () {
-                $.messager.alert('错误', '远程访问失败');
+                swal('错误', '远程访问失败', 'error');
             }
         });
     }
@@ -147,7 +147,7 @@
 <!-- 隐藏编辑框 -->
 <div id="dlg" class="easyui-dialog" resizable="false" constrain="true" shadow="true" draggable="false" title="积分调整" style="padding:20px" modal="true" border="thin" closed="true"
      data-options="
-				height: 400,
+				height: 430,
 				buttons: [{
 					text:'确认',
 					iconCls:'icon-ok',
@@ -155,10 +155,10 @@
 				}]
 			">
     <form id="_form" class="easyui-form" method="post" fit="true">
-        <table width="360px">
+        <table width="400px">
             <tr>
                 <td style="padding:5px;">
-                    <input class="easyui-textbox" name="_certificateNumber" id="_certificateNumber" style="width:100%" data-options="labelAlign:'right',label:'*客户证件号:',required:true,validType:'length[1,40]'" />
+                    <input class="easyui-textbox" name="_certificateNumber" id="_certificateNumber" style="width:100%" labelWidth="90" data-options="labelAlign:'right',label:'*客户证件号:',required:true,validType:'length[1,40]'" />
                 </td>
             </tr>
             <tr>
@@ -241,12 +241,12 @@
     function openDetail(){
         var selected = $("#grid").treegrid("getSelected");
         if (null == selected) {
-            $.messager.alert('警告','请选中一条数据');
+            swal('警告','请选中一条数据', 'warning');
             return;
         }
         var exist = checkCertificateNumberExist(selected);
         if (!exist){
-            $.messager.alert('警告','客户证件号为空，此操作需要维护客户证件号');
+            swal('警告','客户证件号为空，此操作需要维护客户证件号', 'warning');
             return;
         }
         // var certificateNumber=encodeURIComponent(selected["certificateNumber"]);
@@ -278,11 +278,11 @@
                     $("#grid").datagrid("reload");
                     $('#dlg').dialog('close');
                 }else{
-                    $.messager.alert('错误',data.result);
+                    swal('错误',data.result, 'error');
                 }
             },
             error: function(){
-                $.messager.alert('错误','远程访问失败');
+                swal('错误', '远程访问失败', 'error');
             }
         });
     }
@@ -293,32 +293,29 @@
         }
         var _formData = removeKeyStartWith($("#_formClear").serializeObject(),"_");
         var firm =  $("#_firmCodeClear").textbox("getText");
-        $.messager.confirm('确认', '此操作将清空所有客户在【'+firm+'】的所有积分，是否继续？', function (r) {
-            if (r) {
-                $.ajax({
-                    type: "POST",
-                    url: "${contextPath}/customerFirmPoints/clearPoints.action",
-                    data: _formData,
-                    processData:true,
-                    dataType: "json",
-                    async : true,
-                    success: function (data) {
-                        if(data.code=="200"){
-                            $("#grid").datagrid("reload");
-                            $('#dlg_clear').dialog('close');
-                        }else{
-                            $.messager.alert('错误',data.result);
-                        }
-                    },
-                    error: function(){
-                        $.messager.alert('错误','远程访问失败');
+        <#swalConfirm swalTitle="此操作将清空所有客户在【'+firm+'】的所有积分，是否继续？">
+            $.ajax({
+                type: "POST",
+                url: "${contextPath}/customerFirmPoints/clearPoints.action",
+                data: _formData,
+                processData:true,
+                dataType: "json",
+                async : true,
+                success: function (data) {
+                    if(data.code=="200"){
+                        $("#grid").datagrid("reload");
+                        $('#dlg_clear').dialog('close');
+                    }else{
+                        swal('错误',data.result, 'error');
                     }
-                });
-            }else {
-                $('#dlg_clear').dialog('close');
-            }
+                },
+                error: function(){
+                    swal('错误', '远程访问失败', 'error');
+                }
+            });
+        </#swalConfirm>
+        // $('#dlg_clear').dialog('close');
 
-        });
     }
 
     //打开积分调整窗口
@@ -326,7 +323,7 @@
     <#resource code="changeCustomerPoints">
         var selected = $("#grid").datagrid("getSelected");
         // if (null == selected) {
-        //     $.messager.alert('警告','请选中一条数据');
+        //     swal('警告','请选中一条数据', 'warning');
         //     return;
         // }
         // var exist = checkCertificateNumberExist(selected);
@@ -381,7 +378,7 @@
     function openUpdate(){
         var selected = $("#grid").datagrid("getSelected");
         if (null == selected) {
-            $.messager.alert('警告','请选中一条数据');
+            swal('警告','请选中一条数据', 'warning');
             return;
         }
         $('#dlg').dialog('open');
@@ -417,11 +414,11 @@
                     $("#grid").datagrid("reload");
                     $('#dlg').dialog('close');
                 }else{
-                    $.messager.alert('错误',data.result);
+                    swal('错误',data.result, 'error');
                 }
             },
             error: function(){
-                $.messager.alert('错误','远程访问失败');
+                swal('错误', '远程访问失败', 'error');
             }
         });
     }
@@ -430,11 +427,10 @@
     function del() {
         var selected = $("#grid").datagrid("getSelected");
         if (null == selected) {
-            $.messager.alert('警告','请选中一条数据');
+            swal('警告','请选中一条数据', 'warning');
             return;
         }
-        $.messager.confirm('确认','您确认想要删除记录吗？',function(r){
-            if (r){
+        <#swalConfirm swalTitle="您确认想要删除记录吗？">
                 $.ajax({
                     type: "POST",
                     url: "${contextPath}/customerFirmPoints/delete",
@@ -447,15 +443,14 @@
                             $("#grid").datagrid("reload");
                             $('#dlg').dialog('close');
                         }else{
-                            $.messager.alert('错误',data.result);
+                            swal('错误',data.result, 'error');
                         }
                     },
                     error: function(){
-                        $.messager.alert('错误','远程访问失败');
+                        swal('错误', '远程访问失败', 'error');
                     }
                 });
-            }
-        });
+        </#swalConfirm>
 
     }
     //表格查询
@@ -544,11 +539,11 @@
                             $('#_name').textbox("setValue", ret.data.name);
                         }
                     } else {
-                        $.messager.alert('错误', ret.result);
+                        swal('错误',ret.result, 'error');
                     }
                 },
                 error: function () {
-                    $.messager.alert('错误', '远程访问失败');
+                    swal('错误', '远程访问失败', 'error');
                 }
             });
             var tradingFirmCode = $("#_tradingFirmCode").combobox("getValue");

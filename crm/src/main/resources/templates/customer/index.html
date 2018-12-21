@@ -211,7 +211,7 @@
                 confirmButtonClass : 'btn btn-success',
                 cancelButtonClass : 'btn btn-danger'
             }).then(function(flag) {
-                if (flag.dismiss == 'cancel') {
+                if (flag.dismiss == 'cancel' || flag.dismiss == 'overlay' || flag.dismiss == "esc" || flag.dismiss == "close") {
                     return;
                 }
                 $.ajax({
@@ -309,7 +309,6 @@
             }
             $("#grid").treegrid("load", bindTreegridMeta2Form("grid", "form"));
         }
-
 
         //清空客户表单
         function clearForm() {

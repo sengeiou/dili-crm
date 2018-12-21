@@ -30,6 +30,8 @@ public class DataDictionaryValueProvider extends BatchDisplayTextProviderAdaptor
 
     //前台需要传入的参数
     protected static final String DD_CODE_KEY = "dd_code";
+    //根据编码指定获取下拉列表项
+    protected static final String INCLUDE_CODES_KEY = "include_codes";
     //根据编码排除获取下拉列表项
     protected static final String EXCLUDE_CODES_KEY = "exclude_codes";
 
@@ -45,24 +47,40 @@ public class DataDictionaryValueProvider extends BatchDisplayTextProviderAdaptor
         String ddCode = getDdCode(queryParams.toString());
         DataDictionaryValue dataDictionaryValue = DTOUtils.newDTO(DataDictionaryValue.class);
         dataDictionaryValue.setDdCode(ddCode);
+        //远程到UAP查询数据字典值
         BaseOutput<List<DataDictionaryValue>> output = dataDictionaryRpc.list(dataDictionaryValue);
         if(!output.isSuccess()){
             return null;
         }
         List<ValuePair<?>> valuePairs = Lists.newArrayList();
         List<DataDictionaryValue> dataDictionaryValues = output.getData();
+        String includeCodes = JSONObject.parseObject(queryParams.toString()).getString(INCLUDE_CODES_KEY);
         String excludeCodes = JSONObject.parseObject(queryParams.toString()).getString(EXCLUDE_CODES_KEY);
-        List<String> excludeCodeList = null;
-        if(StringUtils.isNotBlank(excludeCodes)){
-            excludeCodeList = Arrays.asList(excludeCodes.trim().split(","));
+        if(StringUtils.isNotBlank(includeCodes)){
+            List<String> includeCodeList = null;
+            includeCodeList = Arrays.asList(includeCodes.trim().split(","));
             //去掉每个项两边的空格
-            excludeCodeList = excludeCodeList.stream().map(t -> t.trim()).collect(Collectors.toList());
-        }
-        for(int i=0; i<dataDictionaryValues.size(); i++) {
-            DataDictionaryValue dataDictionaryValue1 = dataDictionaryValues.get(i);
-            //排除指定编码项
-            if(excludeCodeList == null || (excludeCodeList != null && !excludeCodeList.contains(dataDictionaryValue1.getCode()))){
-                valuePairs.add(i, new ValuePairImpl(dataDictionaryValue1.getName(), dataDictionaryValue1.getCode()));
+            includeCodeList = includeCodeList.stream().map(t -> t.trim()).collect(Collectors.toList());
+            for(int i=0; i<dataDictionaryValues.size(); i++) {
+                DataDictionaryValue dataDictionaryValue1 = dataDictionaryValues.get(i);
+                //添加指定编码项
+                if(includeCodeList.contains(dataDictionaryValue1.getCode())){
+                    valuePairs.add(i, new ValuePairImpl(dataDictionaryValue1.getName(), dataDictionaryValue1.getCode()));
+                }
+            }
+        }else {
+            List<String> excludeCodeList = null;
+            if(StringUtils.isNotBlank(excludeCodes)){
+                excludeCodeList = Arrays.asList(excludeCodes.trim().split(","));
+                //去掉每个项两边的空格
+                excludeCodeList = excludeCodeList.stream().map(t -> t.trim()).collect(Collectors.toList());
+            }
+            for(int i=0; i<dataDictionaryValues.size(); i++) {
+                DataDictionaryValue dataDictionaryValue1 = dataDictionaryValues.get(i);
+                //排除指定编码项
+                if(excludeCodeList == null || (excludeCodeList != null && !excludeCodeList.contains(dataDictionaryValue1.getCode()))){
+                    valuePairs.add(i, new ValuePairImpl(dataDictionaryValue1.getName(), dataDictionaryValue1.getCode()));
+                }
             }
         }
         return valuePairs;

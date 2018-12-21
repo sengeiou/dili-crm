@@ -8,7 +8,7 @@
                 </td>
                 <td style="padding-top:10px;" width="33%">
                     <input class="inputWidth" name="_firmCode" id="_firmCode" data-options="labelAlign:'right',required:true, editable:false,onLoadSuccess:onComboLoadSuccessSelectOne,onSelect:onSelectFirmCode" panelWidth="auto" panelHeight="auto" label="*所属市场:" />
-                    <#comboProvider _id="_firmCode" _provider='firmProvider' />
+                    <#comboProvider _id="_firmCode" _provider='firmProvider' _queryParams='{required:true}'/>
                 </td>
                 <td style="padding-top:10px;padding-left:10px;" width="33%">
                     <input class="easyui-textbox inputWidth" name="userId" id="userId" panelWidth="auto" panelHeight="auto" label="&lowast;回访人:"  required="true"
@@ -27,7 +27,7 @@
                 </td>
                 <td style="padding-top:10px;padding-left:10px;">
                     <input name="_mode" class="easyui-combobox inputWidth" id="_mode"  panelWidth="auto" panelHeight="auto" data-options="labelAlign:'right'" label="&lowast;回访方式:" required="true" editable="false"/>
-                    <#comboProvider _id="_mode" _provider='dataDictionaryValueProvider' _queryParams='{dd_code:"visit_mode"}'/>
+                    <#comboProvider _id="_mode" _provider='dataDictionaryValueProvider' _queryParams='{dd_code:"visit_mode", required:true}'/>
                 </td>
             </tr>
             <tr>

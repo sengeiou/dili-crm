@@ -179,18 +179,17 @@
         var _formData = removeKeyStartWith($("#_exchangeForm").serializeObject(),"_exchange_");
         var availablePoints = $('#_available_points').textbox("getValue");
         if (parseInt(availablePoints) < parseInt(_formData["points"])){
-            $.messager.alert('敬告','可用积分余额不足');
+            swal('警告','可用积分余额不足', 'warning');
             return;
         }
         var availableQuantity = $('#_available_quantity').textbox("getValue");
         if (parseInt(availableQuantity) < parseInt(_formData["quantity"])){
-            $.messager.alert('敬告','可兑商品数量不足');
+            swal('警告','可兑商品数量不足', 'warning');
             return;
         }
         var goodsName = $('#_exchange_exchangeCommoditiesId').textbox("getText");
-        var msg = '请确认需要用'+_formData["points"]+'积分兑换'+_formData["quantity"]+'件'+goodsName+'吗？';
-        $.messager.confirm('确认',msg,function(r) {
-            if(r){
+        // var msg = '请确认需要用'+_formData["points"]+'积分兑换'+_formData["quantity"]+'件'+goodsName+'吗？';
+        <#swalConfirm swalTitle="请确认需要用'+_formData[\'points\']+'积分兑换'+_formData[\'quantity\']+'件'+goodsName+'吗？">
                 var _url = "${contextPath}/pointsExchangeRecord/insert.action";
                 _formData["firmCode"] = $('#_firmCode').val();
                 _formData["customerId"] = $('#_id').val();
@@ -212,15 +211,14 @@
                             $('#_exchangeForm').form('clear');
                             queryCustomer();
                         }else{
-                            $.messager.alert('错误',ret.result);
+                            swal('错误',ret.result, 'error');
                         }
                     },
                     error: function(){
-                        $.messager.alert('错误','远程访问失败');
+                        swal('错误', '远程访问失败', 'error');
                     }
                 });
-            }
-        });
+        </#swalConfirm>
     }
 
     /**
@@ -254,12 +252,11 @@
                     $('#_available_points').textbox("setValue",$('#_points').textbox("getValue"));
                     $('#_exchange_exchangeCommoditiesId').combobox("loadData",ret);
                 }else{
-                    $.messager.alert('敬告','未获取到可兑换的商品信息');
+                    swal('警告', '未获取到可兑换的商品信息', 'warning');
                 }
             },
             error: function(){
-                $.messager.alert('错误','远程访问失败');
-
+                swal('错误', '远程访问失败', 'error');
             }
         });
     }
@@ -271,7 +268,7 @@
         var certificate_number = $('#certificate_number').textbox("getValue");
         var firmCode = $('#firmCode').combobox("getValue");
         if(firmCode == null || firmCode == ''){
-            $.messager.alert('错误','请选择市场');
+            swal('错误','请选择市场', 'error');
             return;
         }
         if (null != certificate_number && '' !=trim(certificate_number)){
@@ -301,13 +298,13 @@
                         $('#_customerForm').form('load', formData);
                         $('#customerDiv').panel("open");
                     }else{
-                        $.messager.alert('错误',ret.result);
+                        swal('错误',ret.result, 'error');
                         $('#customerDiv').panel("close");
                     }
                     disableEasyUiControl('queryBtn',false);
                 },
                 error: function(){
-                    $.messager.alert('错误','远程访问失败');
+                    swal('错误', '远程访问失败', 'error');
                     disableEasyUiControl('queryBtn',false);
                 }
             });

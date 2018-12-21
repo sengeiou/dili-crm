@@ -31,7 +31,7 @@ public class FirmProvider extends BatchDisplayTextProviderAdaptor {
 		Object withGroupOptValue=JSONPath.read(String.valueOf(metaMap.get("queryParams")), "/withGroupOpt");
 		//是否显示所有
 		Object showAll = JSONPath.read(String.valueOf(metaMap.get("queryParams")), "/showAll");
-		List<Firm> list = "true".equalsIgnoreCase(String.valueOf(showAll)) ? firmService.listByExample(null): firmService.getCurrentUserFirms();
+		List<Firm> list = "true".equalsIgnoreCase(String.valueOf(showAll)) ? firmService.listByExample(DTOUtils.newDTO(FirmDto.class)): firmService.getCurrentUserFirms();
 		List<ValuePair<?>> resultList = list.stream().filter((f)->{
 			if(Boolean.FALSE.equals(withGroupOptValue)&&f.getCode().equalsIgnoreCase("group")) {
 				return false;

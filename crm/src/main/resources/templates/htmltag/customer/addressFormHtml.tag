@@ -10,7 +10,7 @@
                 </td>
                 <td  width="15%">
                     <input class="easyui-textbox" name="_address_isDefault" id="_address_isDefault" panelWidth="auto" style="width: 90%;" required="true" panelHeight="auto" label="&lowast;是否默认:"  data-options="labelAlign:'right',validType:'length[1,20]', editable:false<%if(has(action) && (action!="edit" && action!="add")){%>,disabled:true,hasDownArrow:false<%}%>"/>
-                    <#comboProvider _id="_address_isDefault" _provider='isDefaultProvider' />
+                    <#comboProvider _id="_address_isDefault" _provider='isDefaultProvider' _queryParams='{required:true}'/>
                 </td>
                 <td  width="20%">
                     <input class="easyui-textbox" name="_address_city" id="_address_city" panelWidth="auto" style="width: 100%;" required="true" panelHeight="auto" label="&lowast;所在城市:"  data-options="labelAlign:'right',validType:'length[1,20]',disabled:true, editable:false"/>

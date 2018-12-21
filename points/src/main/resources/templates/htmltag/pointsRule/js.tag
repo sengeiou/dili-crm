@@ -25,7 +25,7 @@
         handler: function () {
             var row = $('#dg_0').datagrid('getSelected');
             if (null == row) {
-                $.messager.alert('警告', '请选中一条数据');
+                swal('警告','请选中一条数据', 'warning');
                 return;
             }
             $('#number_form').form('load', row);
@@ -43,7 +43,7 @@
         handler: function () {
             var row = $('#dg_0').datagrid('getSelected');
             if (null == row) {
-                $.messager.alert('警告', '请选中一条数据');
+                swal('警告','请选中一条数据', 'warning');
                 return;
             }
             var index = $('#dg_0').datagrid('getRowIndex');
@@ -70,7 +70,7 @@
         handler: function () {
             var row = $('#dg_1').datagrid('getSelected');
             if (null == row) {
-                $.messager.alert('警告', '请选中一条数据');
+                swal('警告','请选中一条数据', 'warning');
                 return;
             }
             $('#number_form').form('load', row);
@@ -88,7 +88,7 @@
         handler: function () {
             var row = $('#dg_1').datagrid('getSelected');
             if (null == row) {
-                $.messager.alert('警告', '请选中一条数据');
+                swal('警告','请选中一条数据', 'warning');
                 return;
             }
             var index = $('#dg_1').datagrid('getRowIndex');
@@ -111,7 +111,7 @@
         handler: function () {
             var row = $('#dg_2').datagrid('getSelected');
             if (null == row) {
-                $.messager.alert('警告', '请选中一条数据');
+                swal('警告','请选中一条数据', 'warning');
                 return;
             }
             $('#pay_form').form('load', row);
@@ -125,7 +125,7 @@
         handler: function () {
             var row = $('#dg_2').datagrid('getSelected');
             if (null == row) {
-                $.messager.alert('警告', '请选中一条数据');
+                swal('警告','请选中一条数据', 'warning');
                 return;
             }
             var index = $('#dg_2').datagrid('getRowIndex');
