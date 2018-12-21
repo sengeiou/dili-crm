@@ -192,13 +192,13 @@
                 </td>
                 <td >
                     <input class="easyui-textbox"  name="_type" id="_type"  data-options="labelAlign:'right', cls:'noborder', editable:false, readonly:true, hasDownArrow:false, label:'客户类型:'" />
-                    <#comboProvider _id="_type" _provider='dataDictionaryValueProvider' _queryParams='{dd_code:"customer_type"}'/>
+                    <#comboProvider _id="_type" _provider='dataDictionaryValueProvider' _queryParams='{dd_code:"customer_type", required:true}'/>
                 </td>
             </tr>
             <tr>
                 <td>
                     <input class="easyui-textbox" name="_profession" id="_profession"  data-options="labelAlign:'right', cls:'noborder', editable:false, readonly:true, hasDownArrow:false, label:'客户行业:'" />
-                     <#comboProvider _id="_profession" _provider='dataDictionaryValueProvider' _queryParams='{dd_code:"customer_profession"}'/>
+                     <#comboProvider _id="_profession" _provider='dataDictionaryValueProvider' _queryParams='{dd_code:"customer_profession", required:true}'/>
                 </td>
                 
                 <td >
@@ -248,7 +248,6 @@
             //设置经营地区的显示值
             formData["_operatingArea"] = selected["operatingArea"];
             $('#_form').form('load', formData);
-            formFocus("_form", "_name");
             <%}%>
         }
 

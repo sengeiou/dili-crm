@@ -145,38 +145,41 @@ public class CustomerServiceImpl extends BaseServiceImpl<Customer, Long> impleme
 			customer.setParentId(null);
 		}
         super.update(customer);
-        String oldMarket = customer.aget("oldMarket").toString();
-        String oldName = customer.aget("oldName").toString();
-		//异步通知积分系统和拉取客户
-		Customer finalCustomer = customer;
-		new Thread(){
-			@Override
-			public void run() {
-				//修改了客户名称要通知积分系统修改客户品类积分
-				if(!StringUtils.equals(oldName, finalCustomer.getName())){
-					JSONObject jsonObject = new JSONObject();
-					jsonObject.put("id", finalCustomer.getId());
-					jsonObject.put("name", finalCustomer.getName());
-					customerPointsRpc.updateCategoryPoints(jsonObject.toJSONString());
+        //如果是修改客户基本信息，需要判断是否修改了市场和客户名称(添加成员客户不进入此条件)
+        if(customer.aget("oldMarket") != null && customer.aget("oldName") != null) {
+			String oldMarket = customer.aget("oldMarket").toString();
+			String oldName = customer.aget("oldName").toString();
+			//异步通知积分系统和拉取客户
+			Customer finalCustomer = customer;
+			new Thread() {
+				@Override
+				public void run() {
+					//修改了客户名称要通知积分系统修改客户品类积分
+					if (!StringUtils.equals(oldName, finalCustomer.getName())) {
+						JSONObject jsonObject = new JSONObject();
+						jsonObject.put("id", finalCustomer.getId());
+						jsonObject.put("name", finalCustomer.getName());
+						customerPointsRpc.updateCategoryPoints(jsonObject.toJSONString());
+					}
+					//修改了市场，要修改客户统计表
+					//新市场需要增加客户数，老市场需要减少客户数，但是如果是修改客户数，可能会因为某个时间段没有客户统计，而漏掉，所以客户数需要重新统计
+					if (!StringUtils.equals(oldMarket, finalCustomer.getMarket())) {
+						customerStatsService.pullCustomerStatsByMarkets(finalCustomer.getCreated(), new Date(), Lists.newArrayList(oldMarket, finalCustomer.getMarket()));
+						//			CustomerStats domain = DTOUtils.newDTO(CustomerStats.class);
+						//			domain.setDate(DateUtils.formatDate2DateTimeStart(customer.getCreated()));
+						//			domain.setCustomerCount(-1);
+						//			domain.setFirmCode(oldMarket);
+						//			//设置老市场客户数-1
+						//			customerStatsService.updateCustomerCount(domain);
+						//
+						//			domain.setCustomerCount(1);
+						//			domain.setFirmCode(customer.getMarket());
+						//			//设置新市场客户数+1
+						//			customerStatsService.updateCustomerCount(domain);
+					}
 				}
-				//修改了市场，要修改客户统计表
-				//新市场需要增加客户数，老市场需要减少客户数，但是如果是修改客户数，可能会因为某个时间段没有客户统计，而漏掉，所以客户数需要重新统计
-				if(!StringUtils.equals(oldMarket, finalCustomer.getMarket())){
-					customerStatsService.pullCustomerStatsByMarkets(finalCustomer.getCreated(), new Date(), Lists.newArrayList(oldMarket, finalCustomer.getMarket()));
-					//			CustomerStats domain = DTOUtils.newDTO(CustomerStats.class);
-					//			domain.setDate(DateUtils.formatDate2DateTimeStart(customer.getCreated()));
-					//			domain.setCustomerCount(-1);
-					//			domain.setFirmCode(oldMarket);
-					//			//设置老市场客户数-1
-					//			customerStatsService.updateCustomerCount(domain);
-					//
-					//			domain.setCustomerCount(1);
-					//			domain.setFirmCode(customer.getMarket());
-					//			//设置新市场客户数+1
-					//			customerStatsService.updateCustomerCount(domain);
-				}
-			}
-		}.start();
+			}.start();
+		}
         return BaseOutput.success("修改成功").setData(customer);
     }
 
