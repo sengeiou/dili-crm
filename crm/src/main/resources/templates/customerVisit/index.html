@@ -154,6 +154,7 @@
 
         //根据主键删除
         function del() {
+            <#resource code="removeVisit">
             var selected = $("#grid").datagrid("getSelected");
             if (null == selected) {
                 swal('警告','请选中一条数据', 'warning');
@@ -192,7 +193,7 @@
                     }
                 });
             });
-
+        </#resource>
         }
         //表格查询
         function queryGrid() {

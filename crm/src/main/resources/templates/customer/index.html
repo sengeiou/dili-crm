@@ -195,6 +195,7 @@
 
         //根据主键删除客户
         function del() {
+        <#resource code="deleteCustomer">
             var selected = $("#grid").treegrid("getSelected");
             if (null == selected) {
                 swal('警告','请选中一条数据', 'warning');
@@ -234,6 +235,7 @@
                     }
                 });
             });
+        </#resource>
         }
         // var markerClusterer=null;
         var clientLocationMap={map:null,customer:null};
