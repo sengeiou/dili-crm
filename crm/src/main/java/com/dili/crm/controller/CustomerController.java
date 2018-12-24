@@ -156,16 +156,6 @@ public class CustomerController {
 		return customerService.expandEasyuiPageByParentId(parentId);
 	}
 
-    @ApiOperation(value="查询Customer", notes = "查询Customer，返回列表信息")
-    @ApiImplicitParams({
-		@ApiImplicitParam(name="Customer", paramType="form", value = "Customer的form信息", required = false, dataType = "string")
-	})
-    @RequestMapping(value="/list.action", method = {RequestMethod.GET, RequestMethod.POST})
-    public @ResponseBody
-    List<Customer> list(Customer customer){
-        return customerService.list(customer);
-    }
-
     @ApiOperation(value="分页查询Customer", notes = "分页查询Customer，返回easyui分页信息")
     @ApiImplicitParams({
 		@ApiImplicitParam(name="Customer", paramType="form", value = "Customer的form信息", required = false, dataType = "string")

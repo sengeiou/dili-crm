@@ -86,7 +86,7 @@ public class CustomerServiceImpl extends BaseServiceImpl<Customer, Long> impleme
 			if (CollectionUtils.isEmpty(firmCodes)){
 				return new EasyuiPageOutput(0, null);
 			}
-			customerTreeDto.setFirmCodes(firmService.getCurrentUserFirmCodes(customerTreeDto.getUserId()));
+			customerTreeDto.setFirmCodes(firmCodes);
 		}
 	    EasyuiPageOutput easyuiPageOutput = super.listEasyuiPageByExample(customerTreeDto, useProvider);
 	    for(Object rowObj : easyuiPageOutput.getRows()) {
