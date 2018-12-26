@@ -66,7 +66,7 @@
             <div style="height: 810px;width:98%;" >
             <!-- =========================================================统计图表========================================================= -->
             <div id="customerStatsChart" style="width:99%;height:59.9%; " ></div>
-            <#echarts _id="customerStatsChart" _title="客户统计" _type="Line" _url="${contextPath}/customerStats/list.action?init=true" _data="[]" _options="{legend:{selectedMode:false}}" _groupField="firmCode" _nameField="date" _valueField="customerCount" _smooth="true" _options="zoomOption"></#echarts>
+            <#echarts _id="customerStatsChart" _title="客户统计" _type="Line" _url="${contextPath}/customerStats/list.action?init=true" _data="[]"  _groupField="firmCode" _nameField="date" _valueField="customerCount" _smooth="true" _options="zoomOption"></#echarts>
             <!-- =========================================================增量图表========================================================= -->
             <div id="incrementCustomerStatsChart" style="width:99%;height:39.9%;" ></div>
             <#echarts _id="incrementCustomerStatsChart" _title="客户增量统计" _type="Pie" _url="${contextPath}/customerStats/listIncrement.action?init=true" _data="[]" _options="{legend:{selectedMode:false}}" _nameField="firmCode" _valueField="customerCount" ></#echarts>
@@ -146,7 +146,7 @@
                 data: $("#form").serializeObject(),
                 dataType: "json",
                 success: function (data) {
-                    queryChart(customerStatsChart, "Line", "${contextPath}/customerStats/list.action", $("#form").serializeObject(), "date", "customerCount", "firmCode");
+                    queryChart(customerStatsChart, "Line", "${contextPath}/customerStats/list.action", $("#form").serializeObject(), "date", "customerCount", "firmCode", zoomOption);
                     queryChart(incrementCustomerStatsChart, "Pie", "${contextPath}/customerStats/listIncrement.action", $("#form").serializeObject(), "firmCode", "customerCount");
                     $.messager.progress("close");
                     $(".window-mask-opaque").toggleClass("window-mask");
