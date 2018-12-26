@@ -215,23 +215,13 @@ public class CustomerListener {
      */
     @Transactional
     private boolean saveOrUpdate(Customer customer, List<CustomerExtensions> customerExtensionsList, List<Address> address) {
-
-
         Customer customerQueryCondition = DTOUtils.newDTO(Customer.class);
         customerQueryCondition.setCertificateNumber(customer.getCertificateNumber());
-        customerQueryCondition.setCertificateType(customer.getCertificateType());
-//		customerQueryCondition.setOrganizationType(customer.getOrganizationType());
+//        customerQueryCondition.setCertificateType(customer.getCertificateType());
         //用身份证号在crm系统查询用户信息
         List<Customer> list = this.customerService.list(customerQueryCondition);
         if (list != null && list.size() == 1) {
             Customer customerItem = list.get(0);
-//            //更新用户信息
-//            if (customerItem.getSyncTime() == null) {
-//                customerItem.setSyncTime(customerItem.getCreated());
-//            }
-//            if (customer.getSyncTime() == null) {
-//                customer.setSyncTime(new Date());
-//            }
             //上报的客户类型和当前客户类型都不为空，并且不相等，合并客户类型为买卖家
             if (StringUtils.isNotBlank(customer.getType()) && StringUtils.isNotBlank(customerItem.getType()) && !customerItem.getType().equalsIgnoreCase(customer.getType())) {
                 customerItem.setType("purchaseSale");
@@ -251,7 +241,7 @@ public class CustomerListener {
                     customerItem.setSex(sex);
                 }
 //            }
-            customerItem.setSyncTime(customer.getSyncTime());
+            customerItem.setSyncTime(new Date());
             customer = customerItem;
         }
 //        logger.info("customer id:{},name:{},certificateNumber:{},system:{}", customer.getId(), customer.getName(), customer.getCertificateNumber(), customer.getSourceSystem());
