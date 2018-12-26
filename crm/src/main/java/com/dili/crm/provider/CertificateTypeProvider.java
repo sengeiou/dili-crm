@@ -4,6 +4,8 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.dili.ss.metadata.FieldMeta;
 import com.dili.ss.metadata.ValuePair;
+import com.dili.ss.metadata.ValuePairImpl;
+import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
@@ -44,22 +46,30 @@ public class CertificateTypeProvider extends DataDictionaryValueProvider {
             return valuePairs;
         }
         Iterator<ValuePair<?>> iterator = valuePairs.iterator();
-        while(iterator.hasNext()){
-            ValuePair<?> valuePair = iterator.next();
-            //个人
-            if("individuals".equals(organizationType)){
-                //个人没有营业执照
-                if(valuePair.getValue() != null && "businessLicense".equals(valuePair.getValue())) {
-                    iterator.remove();
-                }
-            }else if("enterprise".equals(organizationType)){//企业
-                //企业只有营业执照
-                if(valuePair.getValue() != null && !"businessLicense".equals(valuePair.getValue())) {
+        //个人
+        if("individuals".equals(organizationType)){
+            while(iterator.hasNext()){
+                ValuePair<?> valuePair = iterator.next();
+                //个人没有营业执照和统一社会信用代码
+                if(valuePair.getValue() != null && ("businessLicense".equals(valuePair.getValue()) || "uscc".equals(valuePair.getValue()))) {
                     iterator.remove();
                 }
             }
-            //没有组织类型就取所有的证件类型
+            return valuePairs;
         }
+        //企业
+        else if("enterprise".equals(organizationType)){//企业
+            //企业只有营业执照和统一社会信用代码
+            List<ValuePair<?>> enterpriseValuePairs = Lists.newArrayList();
+            while(iterator.hasNext()){
+                ValuePair<?> valuePair = iterator.next();
+                if(valuePair.getValue().equals("businessLicense") || valuePair.getValue().equals("uscc")){
+                    enterpriseValuePairs.add(new ValuePairImpl(valuePair.getText(), valuePair.getValue()));
+                }
+            }
+            return enterpriseValuePairs;
+        }
+        //没有组织类型就取所有的证件类型
         return valuePairs;
     }
 
