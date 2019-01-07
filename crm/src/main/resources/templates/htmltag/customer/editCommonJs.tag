@@ -367,7 +367,15 @@
         });
     }
 
-
+    $.parser.onComplete = function(){
+        $.messager.progress("close");
+        $(".window-mask-opaque").toggleClass("window-mask");
+        <%if(has(action) && action=="edit"){%>
+        openUpdate();
+        <%}else{%>
+        openInsert();
+        <%}%>
+    }
 
     /**
      * 绑定页面回车事件，以及初始化页面时的光标定位
@@ -380,11 +388,6 @@
      */
     $(function () {
         bindFormEvent("_form", "_name", saveOrUpdate);
-        <%if(has(action) && action=="edit"){%>
-        openUpdate();
-        <%}else{%>
-        openInsert();
-        <%}%>
         listAddress();
         listVehicle();
         listContacts();

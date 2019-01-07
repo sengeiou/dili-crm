@@ -317,11 +317,16 @@
             $('#form').form('clear');
         }
 
+        $.parser.onComplete = function(){
+            $.messager.progress("close");
+            $(".window-mask-opaque").toggleClass("window-mask");
+            openUpdate();
+        }
         /**
          *
          */
         $(function () {
-            openUpdate();
+
         })
     </script>
 </#body>
