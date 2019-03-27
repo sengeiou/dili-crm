@@ -21,6 +21,7 @@
                 return;
             }
         }
+
         var msg = (!url || url == null || url === "") ? "您确认要保存并退出吗？" : "您确认想要保存吗？";
         $.messager.confirm('确认',msg,function(r) {
             if (r) {
@@ -32,7 +33,6 @@
                     $("#selectedAreaLat").val('');
                     $("#selectedAreaLng").val('');
                 }
-
                 var _formData = removeKeyStartWith($("#_form").serializeObject(true),"_");
                 var _url = null;
                 var add = true;
@@ -370,11 +370,6 @@
     $.parser.onComplete = function(){
         $.messager.progress("close");
         $(".window-mask-opaque").toggleClass("window-mask");
-        <%if(has(action) && action=="edit"){%>
-        openUpdate();
-        <%}else{%>
-        openInsert();
-        <%}%>
     }
 
     /**
@@ -388,6 +383,11 @@
      */
     $(function () {
         bindFormEvent("_form", "_name", saveOrUpdate);
+        <%if(has(action) && action=="edit"){%>
+        openUpdate();
+        <%}else{%>
+        openInsert();
+        <%}%>
         listAddress();
         listVehicle();
         listContacts();
