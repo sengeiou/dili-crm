@@ -177,9 +177,10 @@ public class CustomerStatsServiceImpl extends BaseServiceImpl<CustomerStats, Lon
         }
         //查询客户统计表有哪些市场的数据
         List<CustomerStats> customerStatsFirmCodes = getActualDao().selectDistinctFirmCode();
-        //没有新的市场，则直接拉更早的所有市场数据
+        //没有新的市场，则直接拉更早的所有市场数据和最新的数据
         if(CollectionUtils.isEmpty(customerStatsFirmCodes) || customerMarkets.size() == customerStatsFirmCodes.size()){
             pullEarlyData(customerStatsDto);
+            pullLatestData(customerStatsDto);
         }else{//有新的市场，则需要按客户表中的市场分别拉取
             pullDistinctMarketData(customerStatsDto, customerMarkets);
         }
@@ -250,6 +251,29 @@ public class CustomerStatsServiceImpl extends BaseServiceImpl<CustomerStats, Lon
         if (customerStatsDto.getStartDate().before(earliestCustomerStats)) {
             //拉取开始时间到已有数据最早时间的数据
             customerStatsByDates(customerStatsDto.getStartDate(), earliestCustomerStats, customerStatsDto.getFirmCode());
+        }
+    }
+
+    /**
+     * 拉取最近的数据
+     * @param customerStatsDto
+     * @return
+     */
+    private void pullLatestData(CustomerStatsDto customerStatsDto){
+        //查询客户统计表已有数据的最早时间
+        CustomerStatsDto condition = DTOUtils.newDTO(CustomerStatsDto.class);
+        condition.setSelectColumns(Sets.newHashSet("max(date) date"));
+        if(StringUtils.isNotBlank(customerStatsDto.getFirmCode())){
+            condition.setFirmCode(customerStatsDto.getFirmCode());
+        }
+        List<CustomerStats> customerStats = listByExample(condition);
+        //客户统计表已有数据最早时间，因为是max(date)聚合函数，所以一定会有一条数据，不过第一条可能是null
+        //如果客户统计表没数据，则取当前时间为统计表时间
+        Date latestCustomerStats = customerStats.get(0) == null ? new Date() : customerStats.get(0).getDate();
+        //判断结束时间是否晚于CustomerStats表中的已有数据最晚时间，如果更晚,则需要拉取已有数据最晚时间到结束时间的数据
+        if (customerStatsDto.getEndDate().after(latestCustomerStats)) {
+            //拉取开始时间到已有数据最早时间的数据
+            customerStatsByDates(latestCustomerStats, customerStatsDto.getEndDate(), customerStatsDto.getFirmCode());
         }
     }
 

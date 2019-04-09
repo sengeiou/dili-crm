@@ -384,7 +384,10 @@
         });
     }
 
-
+    $.parser.onComplete = function(){
+        $.messager.progress("close");
+        $(".window-mask-opaque").toggleClass("window-mask");
+    }
 
     /**
      * 绑定页面回车事件，以及初始化页面时的光标定位
