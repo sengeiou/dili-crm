@@ -39,7 +39,7 @@ public interface CustomerFirmPointsService extends BaseService<CustomerFirmPoint
      * @param example
      * @return
      */
-    int deleteByExample(Object example);
+    int mapperDeleteByExample(Object example);
     
     /**
      * 保存CustomerFirmPointsDTO信息

@@ -127,8 +127,7 @@ public class PointsRuleServiceImpl extends BaseServiceImpl<PointsRule, Long> imp
     		return new EasyuiPageOutput(0,Collections.emptyList()); 
     	}
     	pointsRule.setFirmCodes(firmCodes);
-	    EasyuiPageOutput easyuiPageOutput = super.listEasyuiPageByExample(pointsRule, useProvider);
-	    return easyuiPageOutput;
+        return super.listEasyuiPageByExample(pointsRule, useProvider);
     }
     /**
      * 生成操作日志

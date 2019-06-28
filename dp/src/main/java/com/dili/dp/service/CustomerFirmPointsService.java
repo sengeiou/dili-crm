@@ -28,13 +28,6 @@ public interface CustomerFirmPointsService extends BaseService<CustomerFirmPoint
      * @return
      */
     CustomerFirmPoints getByCertificateNumberAndFirm(String certificateNumber, String firmCode);
-
-    /**
-     * 根据条件删除信息
-     * @param example
-     * @return
-     */
-    int deleteByExample(Object example);
     
     /**
      * 保存CustomerFirmPointsDTO信息

@@ -4,6 +4,7 @@ import com.dili.points.constant.PointsConstants;
 import com.dili.points.domain.PointsRule;
 import com.dili.points.domain.RuleCondition;
 import com.dili.points.service.RuleConditionService;
+import com.dili.ss.dto.DTO;
 import com.dili.ss.dto.DTOUtils;
 import com.dili.ss.metadata.FieldMeta;
 import com.dili.ss.metadata.ValuePair;
@@ -27,9 +28,9 @@ public class RuleConditionProvider implements ValueProvider {
 
     @Override
     public String getDisplayText(Object o, Map map, FieldMeta fieldMeta) {
-        PointsRule pointsRule = (PointsRule) map.get("_rowData");
+        DTO pointsRuleDto = (DTO) map.get("_rowData");
         RuleCondition example = DTOUtils.newDTO(RuleCondition.class);
-        example.setPointRuleId(pointsRule.getId());
+        example.setPointRuleId((Long)pointsRuleDto.get("id"));
         List<RuleCondition> ruleConditions = ruleConditionService.listByExample(example);
         StringBuilder sb = new StringBuilder();
         String splicer = ";";

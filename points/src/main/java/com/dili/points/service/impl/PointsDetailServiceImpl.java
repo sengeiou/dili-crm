@@ -189,7 +189,7 @@ public class PointsDetailServiceImpl extends BaseServiceImpl<PointsDetail, Long>
         Example.Criteria criteria = example.createCriteria();
         criteria.andIn("certificateNumber", map.keySet());
         criteria.andCondition("trading_firm_code=", firmCode);
-        customerFirmPointsService.deleteByExample(example);
+        customerFirmPointsService.mapperDeleteByExample(example);
         asyncTask.generatePointsDetail(firmPointsList, notes);
         return 1;
     }

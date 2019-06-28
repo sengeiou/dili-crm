@@ -133,7 +133,7 @@ public class DataDictionaryValueProvider extends BatchDisplayTextProviderAdaptor
     }
 
     @Override
-    protected boolean ignoreCaseToRef(){
+    protected boolean ignoreCaseToRef(Map metaMap){
         return true;
     }
 }

@@ -79,11 +79,6 @@ public class CustomerFirmPointsServiceImpl extends BaseServiceImpl<CustomerFirmP
         return customerPoints;
     }
 
-    @Override
-    public int deleteByExample(Object example) {
-        return getActualDao().deleteByExample(example);
-    }
-
     /**
      * 组合客户积分查询排序列sql表前缀
      * @param sort

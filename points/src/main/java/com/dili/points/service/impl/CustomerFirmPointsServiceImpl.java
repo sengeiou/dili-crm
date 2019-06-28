@@ -102,7 +102,7 @@ public class CustomerFirmPointsServiceImpl extends BaseServiceImpl<CustomerFirmP
     }
 
     @Override
-    public int deleteByExample(Object example) {
+    public int mapperDeleteByExample(Object example) {
         return getActualDao().deleteByExample(example);
     }
 

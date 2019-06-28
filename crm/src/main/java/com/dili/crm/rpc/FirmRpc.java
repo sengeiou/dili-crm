@@ -6,7 +6,6 @@ import com.dili.ss.domain.EasyuiPageOutput;
 import com.dili.ss.retrofitful.annotation.POST;
 import com.dili.ss.retrofitful.annotation.Restful;
 import com.dili.ss.retrofitful.annotation.VOBody;
-import com.dili.ss.retrofitful.annotation.VOSingleParameter;
 import com.dili.uap.sdk.domain.DataDictionaryValue;
 import com.dili.uap.sdk.domain.Firm;
 
@@ -31,5 +30,5 @@ public interface FirmRpc {
 	    public BaseOutput<List<Firm>> listByExample(@VOBody FirmDto firm) ;
 	    
 	    @POST("/firmApi/getByCode.api")
-	    public BaseOutput<Firm> getByCode(@VOSingleParameter String code);
+	    public BaseOutput<Firm> getByCode(@VOBody String code);
 	}

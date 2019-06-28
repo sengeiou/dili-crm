@@ -6,7 +6,6 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.web.servlet.support.SpringBootServletInitializer;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.scheduling.annotation.EnableAsync;
-import org.springframework.transaction.annotation.EnableTransactionManagement;
 import tk.mybatis.spring.annotation.MapperScan;
 
 /**
@@ -19,7 +18,6 @@ import tk.mybatis.spring.annotation.MapperScan;
 //@EnableAspectJAutoProxy(proxyTargetClass = true)
 @SpringBootApplication
 //@EnableScheduling
-@EnableTransactionManagement
 @EnableAsync
 //@EnableAutoConfiguration(exclude = {ThymeleafAutoConfiguration.class, VelocityAutoConfiguration.class})
 @MapperScan(basePackages = {"com.dili.points.dao", "com.dili.ss.dao"})

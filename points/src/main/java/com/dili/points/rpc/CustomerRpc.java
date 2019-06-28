@@ -7,7 +7,6 @@ import com.dili.ss.domain.EasyuiPageOutput;
 import com.dili.ss.retrofitful.annotation.POST;
 import com.dili.ss.retrofitful.annotation.Restful;
 import com.dili.ss.retrofitful.annotation.VOBody;
-import com.dili.ss.retrofitful.annotation.VOSingleParameter;
 
 import java.util.List;
 
@@ -28,5 +27,5 @@ public interface CustomerRpc {
     @POST("/customerApi/listPage.api")
     BaseOutput<EasyuiPageOutput> listPage(@VOBody CustomerApiDTO customer);
     @POST("/customerApi/getByCertificateNumber.api")
-    BaseOutput<Customer> getByCertificateNumber(@VOSingleParameter String certificateNumber);
+    BaseOutput<Customer> getByCertificateNumber(@VOBody String certificateNumber);
 }
