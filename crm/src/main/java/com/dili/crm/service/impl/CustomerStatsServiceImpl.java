@@ -348,7 +348,7 @@ public class CustomerStatsServiceImpl extends BaseServiceImpl<CustomerStats, Lon
             customerStats.setFirmCode(market);
         }
         //是否存在指定日期的数据
-        boolean contains = !getActualDao().select(customerStats).isEmpty();
+        boolean contains = !super.listByExample(customerStats).isEmpty();
         Map<String, Object> map = new HashMap<>(2);
         map.put("date", date);
         if(StringUtils.isNotBlank(market)){
@@ -357,7 +357,7 @@ public class CustomerStatsServiceImpl extends BaseServiceImpl<CustomerStats, Lon
         if(contains){
             //如果有数据，并且需要更新，则删了重新插入
             if(update) {
-                getActualDao().delete(customerStats);
+                super.deleteByExample(customerStats);
                 getActualDao().customerStatsByDate(map);
             }//有数据，不需要更新
         }else {
