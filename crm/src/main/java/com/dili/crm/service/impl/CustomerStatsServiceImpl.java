@@ -75,7 +75,7 @@ public class CustomerStatsServiceImpl extends BaseServiceImpl<CustomerStats, Lon
         customerStatsDto.setFirmCodes(firmCodes);
         //没有结束时间，则取今天为结束时间
         if(customerStatsDto.getEndDate() == null) {
-            customerStatsDto.setEndDate(new Date());
+            customerStatsDto.setEndDate(getCurrentDate());
         }
 //        //拉取开始时间的统计数据
 //        customerStatsByDate(customerStatsDto.getStartDate(), false);
@@ -110,7 +110,7 @@ public class CustomerStatsServiceImpl extends BaseServiceImpl<CustomerStats, Lon
     public BaseOutput<List<Map>> listCustomerStats(CustomerStatsDto customerStatsDto) throws Exception {
         //没有结束时间，则取今天为结束时间
         if(customerStatsDto.getEndDate() == null) {
-            customerStatsDto.setEndDate(new Date());
+            customerStatsDto.setEndDate(getCurrentDate());
         }
         //有开始时间，则需要拉取统计数据
 //        if(customerStatsDto.getStartDate() != null) {
@@ -146,6 +146,10 @@ public class CustomerStatsServiceImpl extends BaseServiceImpl<CustomerStats, Lon
         final Date EARLIEST_DATE = DateUtils.dateStr2Date("2018-1-1 0:0:0", "yyyy-MM-dd HH:mm:ss");
         if(customerStatsDto.getStartDate().before(EARLIEST_DATE)){
             customerStatsDto.setStartDate(EARLIEST_DATE);
+        }
+        //没有结束时间，则取今天为结束时间
+        if(customerStatsDto.getEndDate() == null) {
+            customerStatsDto.setEndDate(getCurrentDate());
         }
         //查询客户表客户的最早创建时间
         Customer customer = DTOUtils.newDTO(Customer.class);
@@ -315,6 +319,16 @@ public class CustomerStatsServiceImpl extends BaseServiceImpl<CustomerStats, Lon
             startCalendar.add(Calendar.DAY_OF_MONTH, 1);
         }
         return dates;
+    }
+
+    private Date getCurrentDate(){
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+        String dateStr = sdf.format(new Date());
+        try {
+            return sdf.parse(dateStr);
+        } catch (ParseException e) {
+            return null;
+        }
     }
 
     /**
