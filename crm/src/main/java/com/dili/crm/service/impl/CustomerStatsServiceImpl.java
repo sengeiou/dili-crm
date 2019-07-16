@@ -52,6 +52,43 @@ public class CustomerStatsServiceImpl extends BaseServiceImpl<CustomerStats, Lon
     }
 
     @Override
+    public BaseOutput<List<Map>> listRealTimeCustomerStatsIncrement(CustomerStatsDto customerStatsDto) throws Exception {
+        UserTicket userTicket = SessionContext.getSessionContext().getUserTicket();
+        if(userTicket == null){
+            return BaseOutput.failure("登录超时");
+        }
+        setDefaultDateCondition(customerStatsDto);
+        //默认查一个月
+        initStartDate(customerStatsDto);
+        List<String> firmCodes = firmService.getCurrentUserFirmCodes(userTicket.getId());
+        if (CollectionUtils.isEmpty(firmCodes)){
+            return BaseOutput.success();
+        }
+        customerStatsDto.setFirmCodes(firmCodes);
+        List<CustomerStats> customerStats = getActualDao().listCustomerIncrement(customerStatsDto);
+        return BaseOutput.success().setData(ValueProviderUtils.buildDataByProvider(customerStatsDto, customerStats));
+    }
+
+
+    @Override
+    public BaseOutput<List<Map>> listRealTimeCustomerStats(CustomerStatsDto customerStatsDto) throws Exception {
+        UserTicket userTicket = SessionContext.getSessionContext().getUserTicket();
+        if(userTicket == null){
+            return BaseOutput.failure("登录超时");
+        }
+        setDefaultDateCondition(customerStatsDto);
+        //默认查一个月
+        initStartDate(customerStatsDto);
+        List<String> firmCodes = firmService.getCurrentUserFirmCodes(userTicket.getId());
+        if (CollectionUtils.isEmpty(firmCodes)){
+            return BaseOutput.success();
+        }
+        customerStatsDto.setFirmCodes(firmCodes);
+        List<CustomerStats> customerStats = getActualDao().listCustomerStats(customerStatsDto);
+        return BaseOutput.success().setData(ValueProviderUtils.buildDataByProvider(customerStatsDto, customerStats));
+    }
+
+    @Override
     public BaseOutput<List<Map>> listCustomerStatsIncrement(CustomerStatsDto customerStatsDto) throws Exception {
         if(customerStatsDto.getStartDate() == null) {
             return BaseOutput.failure("开始日期为空");
@@ -77,17 +114,12 @@ public class CustomerStatsServiceImpl extends BaseServiceImpl<CustomerStats, Lon
         if(customerStatsDto.getEndDate() == null) {
             customerStatsDto.setEndDate(getCurrentDate());
         }
-//        //拉取开始时间的统计数据
-//        customerStatsByDate(customerStatsDto.getStartDate(), false);
-//        //拉取结束时间的统计数据
-//        customerStatsByDate(customerStatsDto.getEndDate(), false);
         //查询开始和结束日期的统计数据
         CustomerStatsDto customerStats = DTOUtils.newDTO(CustomerStatsDto.class);
         customerStats.setFirmCodes(firmCodes);
         customerStats.setDate(DateUtils.formatDate2DateTimeStart(customerStatsDto.getEndDate()));
         List<CustomerStats> endCustomerStatsList = listByExample(customerStats);
         if(CollectionUtils.isEmpty(endCustomerStatsList)){
-//            return BaseOutput.failure("无结束日期的统计数据");
             return BaseOutput.success();
         }
         customerStats.setDate(DateUtils.formatDate2DateTimeStart(customerStatsDto.getStartDate()));
@@ -321,16 +353,6 @@ public class CustomerStatsServiceImpl extends BaseServiceImpl<CustomerStats, Lon
         return dates;
     }
 
-    private Date getCurrentDate(){
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-        String dateStr = sdf.format(new Date());
-        try {
-            return sdf.parse(dateStr);
-        } catch (ParseException e) {
-            return null;
-        }
-    }
-
     /**
      * 按指定日期统计客户数
      * @param date
@@ -387,5 +409,60 @@ public class CustomerStatsServiceImpl extends BaseServiceImpl<CustomerStats, Lon
     @Override
     public void clearData(String firmCode){
         getActualDao().clearData(firmCode);
+    }
+
+    /**
+     * 获取当前日期，时间为0
+     * @return
+     */
+    private Date getCurrentDate(){
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+        String dateStr = sdf.format(new Date());
+        try {
+            return sdf.parse(dateStr);
+        } catch (ParseException e) {
+            return null;
+        }
+    }
+
+    /**
+     * 获取指定日期，时间为0
+     * @return
+     */
+    private Date getDate(Date date){
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+        String dateStr = sdf.format(date);
+        try {
+            return sdf.parse(dateStr);
+        } catch (ParseException e) {
+            return null;
+        }
+    }
+
+    /**
+     * 获取指定日期，时间为0
+     * @return
+     */
+    private Date getDate(String date){
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+        try {
+            return sdf.parse(date);
+        } catch (ParseException e) {
+            return null;
+        }
+    }
+
+
+    /**
+     * 设置默认查询条件
+     * @param customerStatsDto
+     */
+    private void setDefaultDateCondition(CustomerStatsDto customerStatsDto){
+        if(customerStatsDto.getStartDate() == null) {
+            customerStatsDto.setStartDate(getDate("2018-01-01"));
+        }
+        if(customerStatsDto.getEndDate() == null) {
+            customerStatsDto.setEndDate(getCurrentDate());
+        }
     }
 }

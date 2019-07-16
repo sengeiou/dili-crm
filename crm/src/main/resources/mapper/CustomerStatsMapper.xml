@@ -46,6 +46,61 @@
     select distinct firm_code from customer_stats
   </select>
 
+  <select id="listCustomerStats" parameterType="com.dili.crm.domain.dto.CustomerStatsDto" resultMap="BaseResultMap">
+    select market firm_code, date(created) date, count(id) customer_count
+    from customer
+    where yn=1
+    <![CDATA[
+    and created <= #{endDate}
+    and created >= #{startDate}
+    ]]>
+    and market in
+    <foreach collection="firmCodes" item="firmCode"  open="(" separator="," close=")">
+      #{firmCode}
+    </foreach>
+    group by market, date(created)
+    UNION
+    select market firm_code, date(#{startDate}) date, count(id) customer_count
+    from customer
+    where yn=1
+    <![CDATA[
+    AND created <= DATE(#{startDate})
+    ]]>
+    and market in
+    <foreach collection="firmCodes" item="firmCode"  open="(" separator="," close=")">
+      #{firmCode}
+    </foreach>
+    group by market
+    UNION
+    select market firm_code, date(#{endDate}) date, count(id) customer_count
+    from customer
+    where yn=1
+    <![CDATA[
+    AND created <= DATE(#{endDate})
+    ]]>
+    and market in
+    <foreach collection="firmCodes" item="firmCode"  open="(" separator="," close=")">
+      #{firmCode}
+    </foreach>
+    group by market
+
+  </select>
+  <!-- 查询客户增量 -->
+  <select id="listCustomerIncrement" parameterType="com.dili.crm.domain.dto.CustomerStatsDto" resultMap="BaseResultMap">
+    select market firm_code, date(created) date,  count(*) customer_count
+    from customer
+    where yn=1
+    <![CDATA[
+    and created <= #{endDate}
+    AND created >= #{startDate}
+    ]]>
+    and market in
+    <foreach collection="firmCodes" item="firmCode"  open="(" separator="," close=")">
+      #{firmCode}
+    </foreach>
+    group by market
+  </select>
+
   <!-- 根据市场和日期修改客户数增量 -->
   <update id="updateCustomerCount">
     <![CDATA[

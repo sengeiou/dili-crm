@@ -1,6 +1,7 @@
 package com.dili.crm.dao;
 
 import com.dili.crm.domain.CustomerStats;
+import com.dili.crm.domain.dto.CustomerStatsDto;
 import com.dili.ss.base.MyMapper;
 
 import java.util.List;
@@ -37,4 +38,19 @@ public interface CustomerStatsMapper extends MyMapper<CustomerStats> {
      * @param firmCode
      */
     void clearData(String firmCode);
+
+    /**
+     * 查询指定时间段的客户增量
+     * @param customerStatsDto
+     * @return
+     */
+    List<CustomerStats> listCustomerIncrement(CustomerStatsDto customerStatsDto);
+
+    /**
+     * 查询客户实时统计
+     * @param customerStatsDto
+     * @return
+     */
+    List<CustomerStats> listCustomerStats(CustomerStatsDto customerStatsDto);
+
 }

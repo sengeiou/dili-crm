@@ -29,12 +29,29 @@ public interface CustomerStatsService extends BaseService<CustomerStats, Long> {
     BaseOutput<List<Map>> listCustomerStats(CustomerStatsDto customerStatsDto) throws Exception;
 
     /**
+     * 查询实时客户统计
+     * @param customerStatsDto
+     * @return
+     * @throws Exception
+     */
+    BaseOutput<List<Map>> listRealTimeCustomerStats(CustomerStatsDto customerStatsDto) throws Exception;
+
+    /**
      * 查询客户增量统计
      * @param customerStatsDto
      * @return
      * @throws Exception
      */
     BaseOutput<List<Map>> listCustomerStatsIncrement(CustomerStatsDto customerStatsDto) throws Exception;
+
+    /**
+     * 查询实时客户增量统计
+     * @param customerStatsDto
+     * @return
+     * @throws Exception
+     */
+    BaseOutput<List<Map>> listRealTimeCustomerStatsIncrement(CustomerStatsDto customerStatsDto) throws Exception;
+
     /**
      * 插入指定日期客户数到客户统计表
      */

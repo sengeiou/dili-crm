@@ -46,6 +46,16 @@ public class CustomerStatsController {
         return customerStatsService.listCustomerStats(customerStats);
     }
 
+    @ApiOperation(value="实时查询客户统计", notes = "查询CustomerStats，返回列表信息")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name="CustomerStats", paramType="form", value = "CustomerStats的form信息", required = false, dataType = "string")
+    })
+    @RequestMapping(value="/listRealTimeStats.action", method = {RequestMethod.GET, RequestMethod.POST})
+    public @ResponseBody
+    BaseOutput<List<Map>> listRealTimeStats(CustomerStatsDto customerStats) throws Exception {
+        return customerStatsService.listRealTimeCustomerStats(customerStats);
+    }
+
     @ApiOperation(value="查询各市场客户增量", notes = "查询各市场客户增量，返回饼图信息")
     @ApiImplicitParams({
             @ApiImplicitParam(name="CustomerStats", paramType="form", value = "CustomerStats的form信息", required = false, dataType = "string")
@@ -55,6 +65,17 @@ public class CustomerStatsController {
     BaseOutput<List<Map>> listIncrement(CustomerStatsDto customerStats) throws Exception {
         return customerStatsService.listCustomerStatsIncrement(customerStats);
     }
+
+    @ApiOperation(value="查询各市场实时客户增量", notes = "查询各市场客户增量，返回饼图信息")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name="CustomerStats", paramType="form", value = "CustomerStats的form信息", required = false, dataType = "string")
+    })
+    @RequestMapping(value="/listRealTimeIncrement.action", method = {RequestMethod.GET, RequestMethod.POST})
+    public @ResponseBody
+    BaseOutput<List<Map>> listRealTimeIncrement(CustomerStatsDto customerStats) throws Exception {
+        return customerStatsService.listRealTimeCustomerStatsIncrement(customerStats);
+    }
+
 
     @ApiOperation(value="拉取各市场客户数据", notes = "拉取各市场客户数据")
     @ApiImplicitParams({
