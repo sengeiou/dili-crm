@@ -70,6 +70,7 @@ public class CustomerController {
 		    throw new RuntimeException("未登录");
 	    }
 		modelMap.put("realName", userTicket.getRealName());
+		modelMap.put("departmentId",userTicket.getDepartmentId());
         return "customer/index";
     }
 
@@ -129,6 +130,9 @@ public class CustomerController {
 		UserTicket userTicket = SessionContext.getSessionContext().getUserTicket();
 		if (userTicket == null) {
 			throw new RuntimeException("未登录");
+		}
+		if(userTicket.getDepartmentId() == null){
+			throw new RuntimeException("请设置当前用户的归属部门，以确认新建客户的归属部门");
 		}
 		Customer customer = DTOUtils.newDTO(Customer.class);
 		customer.setName("temp");

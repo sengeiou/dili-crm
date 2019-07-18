@@ -166,7 +166,11 @@
 
         //打开新增客户窗口
         function openInsert(){
+            <% if (departmentId == null){%>
+            swal('警告','请设置当前用户的归属部门，以确认新建客户的归属部门', 'warning');
+            <%}else{%>
             window.location.href="${contextPath}/customer/add.html";
+            <%}%>
         }
 
         //打开修改客户窗口
