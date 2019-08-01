@@ -7,6 +7,7 @@ import com.dili.ss.metadata.annotation.FieldDef;
 
 import javax.persistence.Column;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 import java.util.Date;
 import java.util.List;
 
@@ -31,4 +32,8 @@ public interface CustomerStatsDto extends CustomerStats, IMybatisForceParams {
     @Operator(Operator.IN)
     List<String> getFirmCodes();
     void setFirmCodes(List<String> firmCodes);
+
+    @Transient
+    List<Date> getDates();
+    void setDates(List<Date> dates);
 }

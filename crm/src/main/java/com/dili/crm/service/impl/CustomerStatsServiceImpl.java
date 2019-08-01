@@ -84,6 +84,8 @@ public class CustomerStatsServiceImpl extends BaseServiceImpl<CustomerStats, Lon
             return BaseOutput.success();
         }
         customerStatsDto.setFirmCodes(firmCodes);
+
+        customerStatsDto.setDates(getDates(customerStatsDto.getStartDate(), customerStatsDto.getEndDate()));
         List<CustomerStats> customerStats = getActualDao().listCustomerStats(customerStatsDto);
         return BaseOutput.success().setData(ValueProviderUtils.buildDataByProvider(customerStatsDto, customerStats));
     }

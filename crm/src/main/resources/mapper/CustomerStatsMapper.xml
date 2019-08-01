@@ -47,43 +47,19 @@
   </select>
 
   <select id="listCustomerStats" parameterType="com.dili.crm.domain.dto.CustomerStatsDto" resultMap="BaseResultMap">
-    select market firm_code, date(created) date, count(id) customer_count
+    <foreach collection="dates" item="date"  separator="union all" >
+    select market firm_code, date(#{date}) date, count(id) customer_count
     from customer
     where yn=1
     <![CDATA[
-    and created <= #{endDate}
-    and created >= #{startDate}
-    ]]>
-    and market in
-    <foreach collection="firmCodes" item="firmCode"  open="(" separator="," close=")">
-      #{firmCode}
-    </foreach>
-    group by market, date(created)
-    UNION
-    select market firm_code, date(#{startDate}) date, count(id) customer_count
-    from customer
-    where yn=1
-    <![CDATA[
-    AND created <= DATE(#{startDate})
+    AND created <= DATE(#{date})
     ]]>
     and market in
     <foreach collection="firmCodes" item="firmCode"  open="(" separator="," close=")">
       #{firmCode}
     </foreach>
     group by market
-    UNION
-    select market firm_code, date(#{endDate}) date, count(id) customer_count
-    from customer
-    where yn=1
-    <![CDATA[
-    AND created <= DATE(#{endDate})
-    ]]>
-    and market in
-    <foreach collection="firmCodes" item="firmCode"  open="(" separator="," close=")">
-      #{firmCode}
     </foreach>
-    group by market
-
   </select>
   <!-- 查询客户增量 -->
   <select id="listCustomerIncrement" parameterType="com.dili.crm.domain.dto.CustomerStatsDto" resultMap="BaseResultMap">
