@@ -104,7 +104,6 @@ public class CustomerApi {
                 }
             }
         }
-        customer.setMarket(CrmConstants.ALL_MARKET);
         customer.setCreatedEnd(DateUtils.addSeconds(new Date(), 0 - CrmConstants.scanTime));
         List<Customer> customers = customerService.listByExample(customer);
         if (CollectionUtils.isNotEmpty(customers)){
