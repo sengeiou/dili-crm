@@ -5,7 +5,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
-import com.dili.ss.util.AESUtil;
+import com.dili.ss.util.AESUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -39,7 +39,7 @@ public class CategoryListener {
 		
 		logger.info("收到消息: "+message);
 		String data = new String(message.getBody(), "UTF-8");
-		String categoryJson = AESUtil.decrypt(data, aesKey);
+		String categoryJson = AESUtils.decrypt(data, aesKey);
 		// 将Json转换为map
 		Map<String, Object> map = DtoMessageConverter.convertAsMap(categoryJson);
 		if (map.isEmpty()) {
@@ -48,7 +48,7 @@ public class CategoryListener {
 		}
 		try {
 			String type = StringUtils.trimToNull(String.valueOf(map.get("type")));
-			if (type == null || type.equalsIgnoreCase("json")) {
+			if (type == null || "json".equalsIgnoreCase(type)) {
 				Map<String, Object> dataMap = (Map<String, Object>) map.get("data");
 
 				// 取出action

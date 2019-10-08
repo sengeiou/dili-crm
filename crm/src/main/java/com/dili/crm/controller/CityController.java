@@ -70,7 +70,7 @@ public class CityController {
 //    	city.setPage(1);
 	    EasyuiPageOutput easyuiPageOutput = cityService.listEasyuiPageByExample(cityDto, true);
 		for(Object rowObj : easyuiPageOutput.getRows()) {
-			if(DTOUtils.isDTOProxy(rowObj)){
+			if(DTOUtils.isProxy(rowObj)){
 				DTOUtils.as(rowObj, CityDto.class).setState("closed");
 			}else {
 				Map rowMap = (Map) rowObj;
@@ -99,7 +99,7 @@ public class CityController {
 		city.mset(metadata);
 		EasyuiPageOutput easyuiPageOutput = cityService.listEasyuiPageByExample(city, true);
 		for(Object rowObj : easyuiPageOutput.getRows()) {
-			if(DTOUtils.isDTOProxy(rowObj)){
+			if(DTOUtils.isProxy(rowObj)){
 				DTOUtils.as(rowObj, CityDto.class).setState("closed");
 			}else {
 				Map rowMap = (Map) rowObj;

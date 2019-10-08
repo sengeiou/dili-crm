@@ -90,7 +90,7 @@ public class CustomerServiceImpl extends BaseServiceImpl<Customer, Long> impleme
 		}
 	    EasyuiPageOutput easyuiPageOutput = super.listEasyuiPageByExample(customerTreeDto, useProvider);
 	    for(Object rowObj : easyuiPageOutput.getRows()) {
-		    if(DTOUtils.isDTOProxy(rowObj)){
+		    if(DTOUtils.isProxy(rowObj)){
 			    DTOUtils.as(rowObj, CityDto.class).setState("closed");
 		    }else {
 			    Map rowMap = (Map) rowObj;
@@ -394,7 +394,7 @@ public class CustomerServiceImpl extends BaseServiceImpl<Customer, Long> impleme
 		customer.mset(metadata);
 		EasyuiPageOutput easyuiPageOutput = this.listEasyuiPageByExample(customer, true);
 		for(Object rowObj : easyuiPageOutput.getRows()) {
-			if(DTOUtils.isDTOProxy(rowObj)){
+			if(DTOUtils.isProxy(rowObj)){
 				DTOUtils.as(rowObj, CustomerTreeDto.class).setState("closed");
 			}else {
 				Map rowMap = (Map) rowObj;

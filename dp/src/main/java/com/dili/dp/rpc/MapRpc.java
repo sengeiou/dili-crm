@@ -1,7 +1,7 @@
 package com.dili.dp.rpc;
 
 import com.dili.http.okhttp.OkHttpUtils;
-import com.dili.ss.util.SystemConfigUtils;
+import com.dili.ss.util.SpringUtil;
 import okhttp3.Response;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -33,7 +33,7 @@ public class MapRpc {
      */
     public String geocoder(Map param) throws IOException {
         if(!param.containsKey("ak")) {
-            param.put("ak", SystemConfigUtils.getProperty("map.ak"));
+            param.put("ak", SpringUtil.getProperty("map.ak"));
         }
         Response resp = OkHttpUtils
                 .post()

@@ -18,7 +18,7 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import com.dili.ss.util.AESUtil;
+import com.dili.ss.util.AESUtils;
 import org.apache.commons.beanutils.BeanUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -105,7 +105,7 @@ public class OrderListener {
 
         logger.info("收到消息: " + message);
         String data = new String(message.getBody(), "UTF-8");
-        String orderJson = AESUtil.decrypt(data, aesKey);
+        String orderJson = AESUtils.decrypt(data, aesKey);
         try {
             Map<Order, List<OrderItem>> orderMap = this.convertOrder(orderJson);
             if (orderMap.isEmpty()) {
@@ -218,7 +218,7 @@ public class OrderListener {
         Map<Order, List<OrderItem>> resultMap = new HashMap<>();
         Map<String, Object> jsonMap = DtoMessageConverter.convertAsMap(json);
         String type = StringUtils.trimToNull(String.valueOf(jsonMap.get("type")));
-        if (type == null || type.equalsIgnoreCase("json")) {
+        if (type == null || "json".equalsIgnoreCase(type)) {
             List<Map<String, Object>> dataMap = (List<Map<String, Object>>) jsonMap.get("data");
             for (Map<String, Object> map : dataMap) {
 

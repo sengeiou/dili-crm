@@ -10,8 +10,8 @@ import com.dili.ss.domain.BaseOutput;
 import com.dili.ss.dto.DTO;
 import com.dili.ss.dto.DTOUtils;
 import com.dili.ss.exception.InternalException;
-import com.dili.ss.util.AESUtil;
-import com.dili.ss.util.SystemConfigUtils;
+import com.dili.ss.util.AESUtils;
+import com.dili.ss.util.SpringUtil;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -55,7 +55,7 @@ public class CustomerListener {
     public void processBootTask(Message message) throws Exception {
         logger.info("收到消息: " + message);
         String data = new String(message.getBody(), "UTF-8");
-        String customerJson = AESUtil.decrypt(data, aesKey);
+        String customerJson = AESUtils.decrypt(data, aesKey);
         logger.info("消息解密: " + customerJson);
         try {
             Optional<Map<String, Object>> mapOpt = convertAsMap(customerJson);
@@ -159,7 +159,7 @@ public class CustomerListener {
     }
 
     private String getMarket() {
-        return SystemConfigUtils.getProperty("customer.market", "hd");
+        return SpringUtil.getProperty("customer.market", "hd");
     }
 
     /**

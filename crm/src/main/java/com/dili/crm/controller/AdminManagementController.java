@@ -4,11 +4,8 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.dili.crm.service.ICardETLService;
 import com.dili.ss.domain.BaseOutput;
-import com.dili.ss.util.AESUtil;
+import com.dili.ss.util.AESUtils;
 import com.dili.ss.util.DateUtils;
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import org.apache.commons.codec.binary.Base64;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.amqp.core.AmqpTemplate;
@@ -21,7 +18,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.util.Date;
-import java.util.HashMap;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 @Controller
@@ -46,7 +42,7 @@ public class AdminManagementController {
     public @ResponseBody
     BaseOutput sendJsonToMQ(String type, String json) throws Exception {
         try {
-            json = AESUtil.encrypt(json, aesKey);
+            json = AESUtils.encrypt(json, aesKey);
             if ("customer".equals(type)) {
                 amqpTemplate.convertAndSend("diligrp.crm.topicExchange", "diligrp.crm.addCustomerKey", json);
             } else if ("order".equals(type)) {
@@ -101,7 +97,7 @@ public class AdminManagementController {
                 data.put("name", "性能测试客户-"+i);
                 data.put("certificateNumber", "51010519770101"+String.format("%04d", i));
                 data.put("phone", "130" + String.format("%08d", i));
-                amqpTemplate.convertAndSend("diligrp.crm.topicExchange", "diligrp.crm.addCustomerKey", AESUtil.encrypt(jo.toJSONString(), aesKey));
+                amqpTemplate.convertAndSend("diligrp.crm.topicExchange", "diligrp.crm.addCustomerKey", AESUtils.encrypt(jo.toJSONString(), aesKey));
 //                amqpTemplate.convertAndSend("diligrp.crm.topicExchange", "diligrp.crm.addCustomerKey", jo.toJSONString());
             }
         } catch (Exception e) {

@@ -14,7 +14,7 @@ import com.dili.crm.service.CustomerService;
 import com.dili.ss.domain.BaseOutput;
 import com.dili.ss.dto.DTO;
 import com.dili.ss.dto.DTOUtils;
-import com.dili.ss.util.AESUtil;
+import com.dili.ss.util.AESUtils;
 import com.dili.ss.util.SystemConfigUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -52,7 +52,7 @@ public class CustomerListener {
     public void processBootTask(Message message) throws Exception {
         logger.info("收到消息: " + message);
         String data = new String(message.getBody(), "UTF-8");
-        String customerJson = AESUtil.decrypt(data, aesKey);
+        String customerJson = AESUtils.decrypt(data, aesKey);
         try {
             Optional<Map<String, Object>> mapOpt = DtoMessageConverter.convertAsMap(customerJson);
             mapOpt.ifPresent((jsonMap) -> {
@@ -210,7 +210,6 @@ public class CustomerListener {
      * @param customerExtensionsList 要插入到或者更新到cmr的帐户信息
      * @return true保存成功, false 保存失败
      */
-    @Transactional
     private boolean saveOrUpdate(Customer customer, List<CustomerExtensions> customerExtensionsList, List<Address> address) {
 
 

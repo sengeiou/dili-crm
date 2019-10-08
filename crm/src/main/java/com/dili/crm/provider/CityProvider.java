@@ -9,7 +9,7 @@ import com.dili.ss.metadata.FieldMeta;
 import com.dili.ss.metadata.ValuePair;
 import com.dili.ss.metadata.ValuePairImpl;
 import com.dili.ss.metadata.ValueProvider;
-import com.dili.ss.util.CharUtil;
+import com.dili.ss.util.CharUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.math.NumberUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -41,7 +41,7 @@ public class CityProvider implements ValueProvider {
         }
         List<ValuePair<?>> buffer = new ArrayList<ValuePair<?>>();
         City city = DTOUtils.newDTO(City.class);
-        if(CharUtil.isChinese(val.toString())) {
+        if(CharUtils.isChinese(val.toString())) {
             city.setMergerName(val.toString());
         }else {
             city.setShortPy(val.toString().toUpperCase());
