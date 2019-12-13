@@ -18,6 +18,7 @@
         <targetServicePackage>com.dili.points.service</targetServicePackage>
         <targetControllerPackage>com.dili.points.controller</targetControllerPackage>
         <templateRootDir>${basedir}/mbg-templates</templateRootDir>
+        <drools.version>7.28.0.Final</drools.version>
     </properties>
 	
 	<!-- 父工程定义 -->
@@ -126,14 +127,24 @@
         <dependency>
             <groupId>com.dili</groupId>
             <artifactId>uap-sdk</artifactId>
-            <version>2.4.1-SNAPSHOT</version>
+            <version>2.4.5-SNAPSHOT</version>
         </dependency>
 
         <!-- 公共信息 -->
         <dependency>
             <groupId>com.dili</groupId>
             <artifactId>commons</artifactId>
-            <version>1.0.18-SNAPSHOT</version>
+            <version>1.0.19-SNAPSHOT</version>
+        </dependency>
+        <dependency>
+            <groupId>org.kie</groupId>
+            <artifactId>kie-spring</artifactId>
+            <version>${drools.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.drools</groupId>
+            <artifactId>drools-compiler</artifactId>
+            <version>${drools.version}</version>
         </dependency>
     </dependencies>
 
