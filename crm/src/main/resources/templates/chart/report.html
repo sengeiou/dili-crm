@@ -35,7 +35,7 @@
                                 let ttIframe = document.getElementById("orders");
                                 if(ttIframe != null){
                                     ttIframe.onload = function(){
-                                        ttIframe.contentWindow.postMessage("http://crm.diligrp.com/resources/css/reportQuery.css", "${chartServer}");
+                                        ttIframe.contentWindow.postMessage("<#config name='url.schema'/>://crm.diligrp.com/resources/css/reportQuery.css", "${chartServer}");
                                     }
                                 }
 							</script>
