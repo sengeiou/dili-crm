@@ -1,39 +1,23 @@
 package com.dili.points.service.impl;
 
-import com.alibaba.fastjson.JSONObject;
 import com.dili.points.constant.PointsConstants;
 import com.dili.points.dao.CustomerFirmPointsMapper;
-import com.dili.points.domain.Customer;
 import com.dili.points.domain.CustomerFirmPoints;
-import com.dili.points.domain.CustomerPoints;
 import com.dili.points.domain.dto.CustomerApiDTO;
 import com.dili.points.domain.dto.CustomerFirmPointsDTO;
-import com.dili.points.domain.dto.CustomerPointsDTO;
 import com.dili.points.rpc.CustomerRpc;
-import com.dili.points.rpc.DataDictionaryRpc;
 import com.dili.points.service.CustomerFirmPointsService;
 import com.dili.points.service.FirmService;
 import com.dili.ss.base.BaseServiceImpl;
 import com.dili.ss.dao.mapper.CommonMapper;
 import com.dili.ss.domain.BaseOutput;
 import com.dili.ss.domain.EasyuiPageOutput;
-import com.dili.ss.dto.DTO;
 import com.dili.ss.dto.DTOUtils;
 import com.dili.ss.exception.AppException;
 import com.dili.ss.metadata.ValueProviderUtils;
 import com.dili.ss.util.POJOUtils;
 import com.dili.uap.sdk.domain.DataDictionaryValue;
-
-import java.math.BigDecimal;
-import java.time.Duration;
-import java.time.Instant;
-import java.time.LocalDate;
-import java.time.ZoneId;
-import java.time.temporal.TemporalAmount;
-import java.util.*;
-import java.util.stream.Collectors;
-
-import com.dili.uap.sdk.session.SessionContext;
+import com.dili.uap.sdk.rpc.DataDictionaryRpc;
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
 import com.google.common.collect.Lists;
@@ -41,6 +25,14 @@ import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.time.Duration;
+import java.time.Instant;
+import java.time.LocalDate;
+import java.time.ZoneId;
+import java.time.temporal.TemporalAmount;
+import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * 由MyBatis Generator工具自动生成
@@ -325,7 +317,7 @@ public class CustomerFirmPointsServiceImpl extends BaseServiceImpl<CustomerFirmP
         condtion.setDdCode("points_daily_limits");
         condtion.setCode(firmCode);
 
-        BaseOutput<List<DataDictionaryValue>> output = this.dataDictionaryRpc.list(condtion);
+        BaseOutput<List<DataDictionaryValue>> output = this.dataDictionaryRpc.listDataDictionaryValue(condtion);
         if (!output.isSuccess() || output.getData() == null || output.getData().size() != 1) {
             throw new AppException("远程查询积分上限出错!");
         }

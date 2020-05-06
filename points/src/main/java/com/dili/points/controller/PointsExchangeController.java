@@ -5,16 +5,12 @@ import com.alibaba.fastjson.JSONObject;
 import com.dili.points.constant.PointsConstants;
 import com.dili.points.domain.Customer;
 import com.dili.points.domain.CustomerFirmPoints;
-import com.dili.points.domain.CustomerPoints;
 import com.dili.points.domain.dto.CustomerApiDTO;
-import com.dili.points.domain.dto.FirmDto;
 import com.dili.points.rpc.CustomerRpc;
 import com.dili.points.service.CustomerFirmPointsService;
 import com.dili.points.service.FirmService;
 import com.dili.ss.domain.BaseOutput;
 import com.dili.ss.dto.DTOUtils;
-import com.dili.uap.sdk.domain.Firm;
-import com.dili.uap.sdk.session.SessionContext;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.apache.commons.collections4.CollectionUtils;
@@ -28,7 +24,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 /**
  * <B>积分兑换功能</B>

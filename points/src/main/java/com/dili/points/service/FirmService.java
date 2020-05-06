@@ -1,7 +1,7 @@
 package com.dili.points.service;
 
-import com.dili.points.domain.dto.FirmDto;
 import com.dili.uap.sdk.domain.Firm;
+import com.dili.uap.sdk.domain.dto.FirmDto;
 
 import java.util.List;
 import java.util.Optional;

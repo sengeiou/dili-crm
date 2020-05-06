@@ -4,12 +4,12 @@ package com.dili.crm.service.impl;
 import java.text.MessageFormat;
 import java.util.List;
 
+import com.dili.uap.sdk.rpc.DataDictionaryRpc;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.dili.crm.provider.FirmProvider;
-import com.dili.crm.rpc.DataDictionaryRpc;
 import com.dili.crm.service.ChartService;
 import com.dili.ss.domain.BaseOutput;
 import com.dili.ss.dto.DTOUtils;
@@ -75,7 +75,7 @@ public class ChartServiceImpl implements ChartService{
 		DataDictionaryValue condtion = DTOUtils.newDTO(DataDictionaryValue.class);
 		condtion.setDdCode("ThirtPartChartUrls");
 		condtion.setName(key);
-		BaseOutput<List<DataDictionaryValue>> output = this.dataDictionaryRpc.list(condtion);
+		BaseOutput<List<DataDictionaryValue>> output = this.dataDictionaryRpc.listDataDictionaryValue(condtion);
 		String url = "";
 		if(output.isSuccess()) {
 			if (output.getData() != null && output.getData().size() == 1) {
@@ -97,7 +97,7 @@ public class ChartServiceImpl implements ChartService{
 		DataDictionaryValue condtion = DTOUtils.newDTO(DataDictionaryValue.class);
 		condtion.setDdCode("firmcode_reportproxy");
 		condtion.setName(firmCode);
-		BaseOutput<List<DataDictionaryValue>> output = this.dataDictionaryRpc.list(condtion);
+		BaseOutput<List<DataDictionaryValue>> output = this.dataDictionaryRpc.listDataDictionaryValue(condtion);
 		String proxyValue = "";
 		if(output.isSuccess()) {
 			if (output.getData() != null && output.getData().size() == 1) {

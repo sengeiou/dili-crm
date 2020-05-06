@@ -1,9 +1,9 @@
 package com.dili.points.provider;
 
-import com.dili.points.rpc.UserRpc;
 import com.dili.ss.domain.BaseOutput;
 import com.dili.ss.metadata.provider.BatchDisplayTextProviderAdaptor;
 import com.dili.uap.sdk.domain.User;
+import com.dili.uap.sdk.rpc.UserRpc;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 

@@ -1,16 +1,16 @@
 package com.dili.crm.service.impl;
 
 import com.alibaba.fastjson.JSONObject;
-import com.dili.crm.domain.dto.FirmDto;
-import com.dili.crm.rpc.DataAuthRpc;
-import com.dili.crm.rpc.FirmRpc;
 import com.dili.crm.service.FirmService;
 import com.dili.ss.domain.BaseOutput;
 import com.dili.ss.dto.DTOUtils;
 import com.dili.uap.sdk.domain.Firm;
 import com.dili.uap.sdk.domain.UserDataAuth;
 import com.dili.uap.sdk.domain.UserTicket;
+import com.dili.uap.sdk.domain.dto.FirmDto;
 import com.dili.uap.sdk.glossary.DataAuthType;
+import com.dili.uap.sdk.rpc.DataAuthRpc;
+import com.dili.uap.sdk.rpc.FirmRpc;
 import com.dili.uap.sdk.session.SessionContext;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;

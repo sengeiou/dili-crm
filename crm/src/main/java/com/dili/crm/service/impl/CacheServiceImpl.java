@@ -2,12 +2,12 @@ package com.dili.crm.service.impl;
 
 import com.dili.crm.cache.CrmCache;
 import com.dili.crm.domain.City;
-import com.dili.crm.domain.Department;
-import com.dili.crm.rpc.DepartmentRpc;
 import com.dili.crm.service.CacheService;
 import com.dili.crm.service.CityService;
 import com.dili.ss.domain.BaseOutput;
 import com.dili.ss.dto.DTOUtils;
+import com.dili.uap.sdk.domain.Department;
+import com.dili.uap.sdk.rpc.DepartmentRpc;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

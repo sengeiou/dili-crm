@@ -4,7 +4,6 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.dili.crm.domain.dto.CustomerChartDTO;
 import com.dili.crm.domain.dto.CustomerVisitChartDTO;
-import com.dili.crm.rpc.DataDictionaryRpc;
 import com.dili.crm.service.ChartService;
 import com.dili.crm.service.CustomerService;
 import com.dili.crm.service.CustomerVisitService;
@@ -13,6 +12,7 @@ import com.dili.ss.domain.BaseOutput;
 import com.dili.ss.dto.DTOUtils;
 import com.dili.ss.metadata.ValueProviderUtils;
 import com.dili.uap.sdk.domain.DataDictionaryValue;
+import com.dili.uap.sdk.rpc.DataDictionaryRpc;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.apache.commons.lang3.StringUtils;
@@ -52,7 +52,7 @@ public class ChartController {
 		DataDictionaryValue dataDictionaryValue = DTOUtils.newDTO(DataDictionaryValue.class);
 		dataDictionaryValue.setDdCode(code);
 		dataDictionaryValue.setCode("chartserver");
-		BaseOutput<List<DataDictionaryValue>> output = dataDictionaryRpc.list(dataDictionaryValue);
+		BaseOutput<List<DataDictionaryValue>> output = dataDictionaryRpc.listDataDictionaryValue(dataDictionaryValue);
 		if (output.isSuccess() && !output.getData().isEmpty()) {
 			return output.getData().get(0).getCode();
 		}

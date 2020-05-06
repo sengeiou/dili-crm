@@ -1,11 +1,11 @@
 package com.dili.crm.provider;
 
-import com.dili.crm.rpc.UserRpc;
 import com.dili.ss.domain.BaseOutput;
 import com.dili.ss.metadata.FieldMeta;
 import com.dili.ss.metadata.ValuePair;
 import com.dili.ss.metadata.ValueProvider;
 import com.dili.uap.sdk.domain.User;
+import com.dili.uap.sdk.rpc.UserRpc;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 

@@ -1,10 +1,10 @@
 package com.dili.points.service.impl;
 
-import com.dili.points.rpc.DataDictionaryRpc;
 import com.dili.points.service.DataDictionaryValueRpcService;
 import com.dili.ss.domain.BaseOutput;
 import com.dili.ss.dto.DTOUtils;
 import com.dili.uap.sdk.domain.DataDictionaryValue;
+import com.dili.uap.sdk.rpc.DataDictionaryRpc;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -23,7 +23,7 @@ public class DataDictionaryValueRpcServiceImpl implements DataDictionaryValueRpc
     public List<DataDictionaryValue> listByDdCode(String ddCode) {
         DataDictionaryValue dataDictionaryValue = DTOUtils.newDTO(DataDictionaryValue.class);
         dataDictionaryValue.setDdCode(ddCode);
-        BaseOutput<List<DataDictionaryValue>> output = dataDictionaryRpc.list(dataDictionaryValue);
+        BaseOutput<List<DataDictionaryValue>> output = dataDictionaryRpc.listDataDictionaryValue(dataDictionaryValue);
         if(output.isSuccess()){
             return output.getData();
         }

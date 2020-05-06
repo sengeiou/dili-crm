@@ -1,7 +1,7 @@
 package com.dili.crm.cache;
 
 import com.dili.crm.domain.City;
-import com.dili.crm.domain.Department;
+import com.dili.uap.sdk.domain.Department;
 
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;

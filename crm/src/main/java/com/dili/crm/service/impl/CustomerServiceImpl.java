@@ -5,11 +5,8 @@ import com.alibaba.fastjson.JSONObject;
 import com.dili.crm.constant.CrmConstants;
 import com.dili.crm.dao.CustomerMapper;
 import com.dili.crm.domain.Customer;
-import com.dili.crm.domain.Department;
 import com.dili.crm.domain.dto.*;
 import com.dili.crm.rpc.CustomerPointsRpc;
-import com.dili.crm.rpc.DepartmentRpc;
-import com.dili.crm.rpc.UserRpc;
 import com.dili.crm.service.*;
 import com.dili.ss.base.BaseServiceImpl;
 import com.dili.ss.domain.BaseOutput;
@@ -18,8 +15,9 @@ import com.dili.ss.dto.DTO;
 import com.dili.ss.dto.DTOUtils;
 import com.dili.ss.dto.IDTO;
 import com.dili.ss.metadata.ValueProviderUtils;
-import com.dili.uap.sdk.domain.User;
+import com.dili.uap.sdk.domain.Department;
 import com.dili.uap.sdk.domain.UserTicket;
+import com.dili.uap.sdk.rpc.DepartmentRpc;
 import com.dili.uap.sdk.session.SessionContext;
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
@@ -61,7 +59,7 @@ public class CustomerServiceImpl extends BaseServiceImpl<Customer, Long> impleme
 	@Autowired
 	private CustomerPointsRpc customerPointsRpc;
 	@Autowired
-    FirmService firmService;
+	FirmService firmService;
 
     @Override
     public List<Customer> list(Customer condtion) {

@@ -3,17 +3,13 @@ package com.dili.crm.controller;
 import com.dili.crm.constant.CrmConstants;
 import com.dili.crm.domain.Customer;
 import com.dili.crm.domain.dto.CustomerTreeDto;
-import com.dili.crm.domain.dto.FirmDto;
 import com.dili.crm.domain.dto.UserDto;
-import com.dili.crm.rpc.UserRpc;
 import com.dili.crm.service.CustomerService;
 import com.dili.crm.service.FirmService;
 import com.dili.ss.domain.BaseOutput;
 import com.dili.ss.dto.DTOUtils;
-import com.dili.uap.sdk.domain.Firm;
 import com.dili.uap.sdk.domain.User;
-import com.dili.uap.sdk.domain.UserTicket;
-import com.dili.uap.sdk.exception.NotLoginException;
+import com.dili.uap.sdk.rpc.UserRpc;
 import com.dili.uap.sdk.session.SessionContext;
 import com.google.common.collect.Lists;
 import org.apache.commons.lang3.StringUtils;
@@ -28,7 +24,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
-import java.util.stream.Collectors;
 
 /**
  * 选择对话框控制器

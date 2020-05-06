@@ -4,7 +4,6 @@ import com.dili.dp.dao.CustomerFirmPointsMapper;
 import com.dili.dp.domain.CustomerFirmPoints;
 import com.dili.dp.domain.dto.CustomerFirmPointsDTO;
 import com.dili.dp.rpc.CustomerRpc;
-import com.dili.dp.rpc.DataDictionaryRpc;
 import com.dili.dp.service.CustomerFirmPointsService;
 import com.dili.ss.base.BaseServiceImpl;
 import com.dili.ss.dao.mapper.CommonMapper;
@@ -13,6 +12,7 @@ import com.dili.ss.dto.DTOUtils;
 import com.dili.ss.exception.AppException;
 import com.dili.ss.util.POJOUtils;
 import com.dili.uap.sdk.domain.DataDictionaryValue;
+import com.dili.uap.sdk.rpc.DataDictionaryRpc;
 import com.google.common.collect.Lists;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -232,7 +232,7 @@ public class CustomerFirmPointsServiceImpl extends BaseServiceImpl<CustomerFirmP
         condtion.setDdCode("points_daily_limits");
         condtion.setCode(firmCode);
 
-        BaseOutput<List<DataDictionaryValue>> output = this.dataDictionaryRpc.list(condtion);
+        BaseOutput<List<DataDictionaryValue>> output = this.dataDictionaryRpc.listDataDictionaryValue(condtion);
         if (!output.isSuccess() || output.getData() == null || output.getData().size() != 1) {
             throw new AppException("远程查询积分上限出错!");
         }

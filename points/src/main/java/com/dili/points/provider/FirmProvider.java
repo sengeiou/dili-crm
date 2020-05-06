@@ -1,7 +1,6 @@
 package com.dili.points.provider;
 
 import com.alibaba.fastjson.JSONPath;
-import com.dili.points.domain.dto.FirmDto;
 import com.dili.points.service.FirmService;
 import com.dili.ss.dto.DTOUtils;
 import com.dili.ss.metadata.FieldMeta;
@@ -9,6 +8,7 @@ import com.dili.ss.metadata.ValuePair;
 import com.dili.ss.metadata.ValuePairImpl;
 import com.dili.ss.metadata.provider.BatchDisplayTextProviderAdaptor;
 import com.dili.uap.sdk.domain.Firm;
+import com.dili.uap.sdk.domain.dto.FirmDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 

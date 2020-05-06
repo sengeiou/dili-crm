@@ -1,7 +1,6 @@
 package com.dili.crm.provider;
 
 import com.alibaba.fastjson.JSONObject;
-import com.dili.crm.rpc.DataDictionaryRpc;
 import com.dili.ss.domain.BaseOutput;
 import com.dili.ss.dto.DTOUtils;
 import com.dili.ss.metadata.FieldMeta;
@@ -9,6 +8,7 @@ import com.dili.ss.metadata.ValuePair;
 import com.dili.ss.metadata.ValuePairImpl;
 import com.dili.ss.metadata.provider.BatchDisplayTextProviderAdaptor;
 import com.dili.uap.sdk.domain.DataDictionaryValue;
+import com.dili.uap.sdk.rpc.DataDictionaryRpc;
 import com.google.common.collect.Lists;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
@@ -40,7 +40,7 @@ public class DataDictionaryValueProvider extends BatchDisplayTextProviderAdaptor
         String ddCode = getDdCode(queryParams.toString());
         DataDictionaryValue dataDictionaryValue = DTOUtils.newDTO(DataDictionaryValue.class);
         dataDictionaryValue.setDdCode(ddCode);
-        BaseOutput<List<DataDictionaryValue>> output = dataDictionaryRpc.list(dataDictionaryValue);
+        BaseOutput<List<DataDictionaryValue>> output = dataDictionaryRpc.listDataDictionaryValue(dataDictionaryValue);
         if(!output.isSuccess()){
             return null;
         }
@@ -62,7 +62,7 @@ public class DataDictionaryValueProvider extends BatchDisplayTextProviderAdaptor
         String ddCode = getDdCode(queryParams.toString());
         DataDictionaryValue dataDictionaryValue = DTOUtils.newDTO(DataDictionaryValue.class);
         dataDictionaryValue.setDdCode(ddCode);
-        BaseOutput<List<DataDictionaryValue>> output = dataDictionaryRpc.list(dataDictionaryValue);
+        BaseOutput<List<DataDictionaryValue>> output = dataDictionaryRpc.listDataDictionaryValue(dataDictionaryValue);
         return output.isSuccess() ? output.getData() : null;
     }
 
