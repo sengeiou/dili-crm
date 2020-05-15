@@ -37,7 +37,7 @@ public class CityProvider implements ValueProvider {
     @Override
     public List<ValuePair<?>> getLookupList(Object val, Map metaMap, FieldMeta fieldMeta) {
         if(null == val || StringUtils.isBlank(val.toString())) {
-            return null;
+            return new ArrayList<ValuePair<?>>();
         }
         List<ValuePair<?>> buffer = new ArrayList<ValuePair<?>>();
         City city = DTOUtils.newDTO(City.class);
